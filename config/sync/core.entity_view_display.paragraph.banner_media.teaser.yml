@@ -18,7 +18,7 @@ content:
     weight: 0
     label: hidden
     settings:
-      view_mode: banner_media_image
+      view_mode: card
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view

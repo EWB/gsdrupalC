@@ -1,0 +1,23 @@
+uuid: b1028a11-3c23-4d7b-b02c-a6c9fafe6803
+langcode: en
+status: true
+dependencies:
+  module:
+    - crop
+    - video_embed_media
+third_party_settings:
+  crop:
+    image_field: null
+id: video_external
+label: 'Video - External'
+description: 'Externally hosted videos.'
+source: video_embed_field
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  source_field: field_video_embed
+field_map:
+  id: field_video_id
+  source: field_video_source_machine_name
+  source_name: field_video_source_human_name
+  image_local_uri: field_video_image_data

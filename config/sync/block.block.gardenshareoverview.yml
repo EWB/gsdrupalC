@@ -1,0 +1,39 @@
+uuid: 604e497d-0262-496f-b52f-96efebc648a9
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:feature_block:cf07c80a-1b16-4a59-bd9e-faae8060fa26'
+  module:
+    - block_content
+    - ctools
+    - system
+  theme:
+    - university_bootstrap
+id: gardenshareoverview
+theme: university_bootstrap
+region: sidebar_first
+weight: -14
+provider: null
+plugin: 'block_content:cf07c80a-1b16-4a59-bd9e-faae8060fa26'
+settings:
+  id: 'block_content:cf07c80a-1b16-4a59-bd9e-faae8060fa26'
+  label: 'GardenShare Overview'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      article: article
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  request_path:
+    id: request_path
+    pages: 'http://new.gardenshare.org/narrative/test'
+    negate: false
+    context_mapping: {  }

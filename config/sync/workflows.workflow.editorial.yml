@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - node.type.article
+    - node.type.entity
     - node.type.location_reference
     - node.type.narrative
     - node.type.page
@@ -100,8 +101,10 @@ type_settings:
   entity_types:
     node:
       - article
+      - entity
       - location_reference
       - narrative
       - page
       - timeline
       - timeline_slide
+  default_moderation_state: draft

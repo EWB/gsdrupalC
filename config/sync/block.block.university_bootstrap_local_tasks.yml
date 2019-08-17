@@ -9,7 +9,7 @@ _core:
 id: university_bootstrap_local_tasks
 theme: university_bootstrap
 region: content
-weight: -7
+weight: -12
 provider: null
 plugin: local_tasks_block
 settings:

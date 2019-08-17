@@ -11,7 +11,7 @@ _core:
 id: university_bootstrap_help
 theme: university_bootstrap
 region: help
-weight: -6
+weight: -15
 provider: null
 plugin: help_block
 settings:

@@ -1,0 +1,29 @@
+uuid: a31da011-2574-4295-ba07-d8f08fc15597
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_accepts
+    - node.type.entity
+    - taxonomy.vocabulary.accepts
+id: node.entity.field_accepts
+field_name: field_accepts
+entity_type: node
+bundle: entity
+label: Accepts
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      accepts: accepts
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

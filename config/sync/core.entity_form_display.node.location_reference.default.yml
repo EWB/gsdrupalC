@@ -8,10 +8,11 @@ dependencies:
     - field.field.node.location_reference.field_geolocation
     - field.field.node.location_reference.field_location_type
     - node.type.location_reference
+    - workflows.workflow.editorial
   module:
     - content_moderation
     - field_group
-    - geolocation
+    - geolocation_google_maps
     - path
     - text
 third_party_settings:

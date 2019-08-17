@@ -1,0 +1,17 @@
+uuid: 139aef4b-45fd-469b-94e4-992fc4f2bad2
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: ewb_gs_front
+label: 'EWB - GS Front'
+code: "#featured {\r\n  text-align:center;\r\n  height: 50vh;\r\n  max-height: 1200px;\r\n  background-size: cover;\r\n  background-image: url(/sites/default/files/media/image/2018-07/IMG_1693.jpg);\r\n  background-attachment: fixed;\r\n  background-position: center bottom;\r\n  position: relative;\r\n  margin-top:-34px;\r\n}\r\n/*.page-header {\r\n    display:none;\r\n}*/\r\n.view-frontpage {\r\n    display:none;\r\n}\r\n#featured-block {\r\n  position: absolute;\r\n  bottom: 47%;\r\n  left: 40%;\r\n}\r\n.front-intro-text {\r\n  font-size:2.2rem;\r\n  margin-bottom:4rem;\r\n}\r\n.front-intro-text H2 {\r\n  font-family: \"Helvetica Neue\",helvetica,arial,sans-serif;\r\n}\r\n#featured-text {\r\n  text-align:center;\r\n  color:#FFFFFF;\r\n  position: relative;\r\n  left: -50%;\r\n}\r\n#featured-text h1 {\r\n  font-size:50px;\r\n  text-shadow: 3px 3px 0px #000;\r\n\r\n}\r\n\r\n.btn-primary {\r\n  box-shadow: 2px 3px 69px #666666;\r\n}\r\n.farmer-week {\r\n  padding:7rem 0 7rem 0;\r\nbackground-color:#000000;\r\n/* background-image: url(/sites/default/files/media/image/2018-08/cornfield.jpg);\r\n     background-size: cover;\r\n  background-attachment: fixed;\r\n  background-position: center bottom; */\r\n}\r\n.farmer-week img {\r\n  display:block;\r\n  padding:1px;\r\n   border:12px solid #FFFFFF;\r\n  margin-left: auto;\r\n  margin-right: auto;\r\n  width: 800px;\r\n}\r\n.featured-farmers {\r\n  background-color:#016a9a;\r\n  padding-top:6rem;\r\n  padding-bottom:8rem;\r\n}\r\n.featured-farmers .view-header {\r\n    color:#FFFFFF;\r\n}\r\n.featured-farmers h2 {\r\n  margin-top:1rem;\r\n}\r\n.featured-farmers h2 a {\r\n  font-size:2rem;\r\n  margin-top:.5rem;\r\n  margin-top:1rem;\r\n  text-decoration:none;\r\n  font-family:\"Helvetica Neue\",\"Helvetica\",\"Arial\",sans-serif;\r\n}\r\n.featured-farmers .card {\r\n  background-color:#FFFFFF;\r\n  padding-bottom:2rem;\r\n  outline: 1rem solid #016a9a;\r\n}\r\n/*.front-video {*/\r\n/*  max-width: 50rem;*/\r\n/*    margin-left: auto;*/\r\n/*    margin-right: auto;*/\r\n/*}*/\r\n.video-responsive{\r\n    overflow:hidden;\r\n    padding-bottom:56.25%;\r\n    position:relative;\r\n    height:0;\r\n}\r\n.video-responsive iframe{\r\n    left:0;\r\n    top:0;\r\n    height:100%;\r\n    width:100%;\r\n    position:absolute;\r\n}\r\n\r\n"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+conditions_require_all: true

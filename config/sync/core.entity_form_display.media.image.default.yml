@@ -7,7 +7,7 @@ dependencies:
     - field.field.media.image.field_image
     - field.field.media.image.field_width
     - image.style.large
-    - media_entity.bundle.image
+    - media.type.image
   module:
     - focal_point
 id: media.image.default
@@ -25,10 +25,11 @@ content:
       offsets: '50,50'
       progress_indicator: throbber
     third_party_settings: {  }
-  moderation_state:
-    type: moderation_state_default
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
     weight: 100
-    settings: {  }
     region: content
     third_party_settings: {  }
 hidden:

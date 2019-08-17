@@ -22,7 +22,7 @@ dependencies:
     - datetime
     - eva
     - image
-    - media_entity
+    - media
     - node
     - options
     - text

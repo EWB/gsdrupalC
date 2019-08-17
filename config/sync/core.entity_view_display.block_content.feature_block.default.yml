@@ -1,0 +1,89 @@
+uuid: 6c0e8d95-79f7-4197-875b-201f2344d291
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.feature_block
+    - field.field.block_content.feature_block.body
+    - field.field.block_content.feature_block.field_featured_image
+  module:
+    - field_group
+    - text
+third_party_settings:
+  field_group:
+    group_column_one:
+      children:
+        - body
+      parent_name: group_container
+      weight: 1
+      format_type: html_element
+      format_settings:
+        label: 'Column One'
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+        id: front-feature-text
+        classes: 'col-sm-6 col-md-6'
+      label: 'Column One'
+      region: content
+    group_column_two:
+      children:
+        - field_featured_image
+      parent_name: group_container
+      weight: 2
+      format_type: html_element
+      format_settings:
+        label: 'Column Two'
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+        id: front-feature
+        classes: 'col-sm-6 col-md-6'
+      label: 'Column Two'
+      region: content
+    group_container:
+      children:
+        - group_column_one
+        - group_column_two
+      parent_name: ''
+      weight: 0
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: container
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Container
+      region: content
+id: block_content.feature_block.default
+targetEntityType: block_content
+bundle: feature_block
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_featured_image:
+    weight: 2
+    label: visually_hidden
+    settings:
+      view_mode: square
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+hidden: {  }

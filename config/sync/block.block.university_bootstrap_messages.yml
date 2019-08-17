@@ -11,7 +11,7 @@ _core:
 id: university_bootstrap_messages
 theme: university_bootstrap
 region: highlighted
-weight: -8
+weight: -11
 provider: null
 plugin: system_messages_block
 settings:

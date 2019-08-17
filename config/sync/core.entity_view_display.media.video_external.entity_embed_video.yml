@@ -10,7 +10,7 @@ dependencies:
     - field.field.media.video_external.field_video_image_data
     - field.field.media.video_external.field_video_source_human_name
     - field.field.media.video_external.field_video_source_machine_name
-    - media_entity.bundle.video_external
+    - media.type.video_external
   module:
     - video_embed_field
 id: media.video_external.entity_embed_video

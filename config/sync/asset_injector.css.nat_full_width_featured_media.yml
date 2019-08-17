@@ -7,7 +7,7 @@ dependencies:
     - system
 id: nat_full_width_featured_media
 label: 'Nat -- Full-width featured media'
-code: "@media (min-width: 768px) {\r\n  .has-featured-media.full-width .featured-media .media.media-image.view-mode-banner-media-image {\r\n    position: relative;\r\n    z-index: 0;\r\n  }\r\n  \r\n  .has-featured-media.full-width .featured-media .media.media-image.view-mode-banner-media-image::before {\r\n    content: \" \";\r\n    position: absolute;\r\n    z-index: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background-color: rgba(0, 0, 0, 0.35);\r\n  }\r\n  \r\n}"
+code: "@media (min-width: 768px) {\r\n  .has-featured-media.full-width .featured-media .media.media-image.view-mode-banner-media-image {\r\n    position: relative;\r\n    z-index: 0;\r\n  }\r\n  \r\n  .has-featured-media.full-width .featured-media .media.media-image.view-mode-banner-media-image::before {\r\n    content: \" \";\r\n    position: absolute;\r\n    z-index: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    /*background-color: rgba(0, 0, 0, 0.35);*/\r\n  }\r\n  \r\n}"
 media: all
 preprocess: true
 conditions:

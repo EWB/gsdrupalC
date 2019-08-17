@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.media.field_video_source_human_name
-    - media_entity.bundle.video_external
+    - media.type.video_external
 id: media.video_external.field_video_source_human_name
 field_name: field_video_source_human_name
 entity_type: media

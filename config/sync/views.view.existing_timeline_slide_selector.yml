@@ -10,7 +10,7 @@ dependencies:
   module:
     - datetime
     - entity_browser
-    - media_entity
+    - media
     - node
     - user
 _core:

@@ -6,7 +6,7 @@ dependencies:
     - system
 id: front_tweaks
 label: 'Front Tweaks'
-code: ".page-header-wrapper {\r\n  display: none;\r\n}"
+code: "/*.page-header-wrapper {\r\n  display: none;\r\n}*/"
 media: all
 preprocess: true
 conditions:

@@ -1,0 +1,8 @@
+uuid: 79fadce4-3ffa-4da9-9065-9fd0d327c315
+langcode: en
+status: true
+dependencies: {  }
+id: feature_block
+label: 'Feature Block'
+revision: 1
+description: 'Used to create calls to action and related front page content'

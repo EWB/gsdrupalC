@@ -1,0 +1,29 @@
+uuid: 437f0ed6-4eb4-49de-b876-564a1a702ba9
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.type
+  module:
+    - facets
+    - system
+  theme:
+    - university_bootstrap
+id: type
+theme: university_bootstrap
+region: sidebar_first
+weight: -15
+provider: null
+plugin: 'facet_block:type'
+settings:
+  id: 'facet_block:type'
+  label: Type
+  provider: facets
+  label_display: visible
+  block_id: type
+visibility:
+  request_path:
+    id: request_path
+    pages: "/entities*\r\n/guide*"
+    negate: false
+    context_mapping: {  }

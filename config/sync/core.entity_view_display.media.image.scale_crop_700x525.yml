@@ -8,7 +8,7 @@ dependencies:
     - field.field.media.image.field_image
     - field.field.media.image.field_width
     - image.style.scale_crop_700x525
-    - media_entity.bundle.image
+    - media.type.image
   module:
     - image
 id: media.image.scale_crop_700x525

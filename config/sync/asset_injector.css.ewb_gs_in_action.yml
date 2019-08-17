@@ -1,0 +1,11 @@
+uuid: ceae04ce-2327-4597-9500-cc6d58f1f2ee
+langcode: en
+status: true
+dependencies: {  }
+id: ewb_gs_in_action
+label: 'EWB - GS in Action'
+code: ".gs-in-action {\r\n  background-color:#3D422C;\r\n  padding-top:8rem;\r\n  padding-bottom:10rem;\r\n}\r\n.gs-in-action h2 {\r\n  color:#FFFFFF;\r\n}\r\n.gs-in-action h1 {\r\n  font-size:2.3rem;\r\n  font-family: \"Helvetica Neue\",\"Helvetica\",\"Arial\",sans-serif;;\r\n}\r\n.gs-in-action .views-row {\r\n  background-color:white;\r\n  padding: 3rem;\r\n  min-height: 530px;\r\n  outline: 1rem solid #737952;\r\n\r\n}\r\n.gs-in-action .img-responsive {\r\n      max-width: 320px;\r\n}\r\n.moderation-state-label {\r\n    font-size: 2rem;\r\n    margin-top: 1rem;\r\n}\r\n\r\n"
+media: all
+preprocess: true
+conditions: {  }
+conditions_require_all: true

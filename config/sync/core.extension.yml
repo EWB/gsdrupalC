@@ -1,4 +1,5 @@
 module:
+  address: 0
   anchor_link: 0
   animate_any: 0
   asset_injector: 0
@@ -9,6 +10,9 @@ module:
   block_class: 0
   block_content: 0
   breakpoint: 0
+  chosen: 0
+  chosen_field: 0
+  chosen_lib: 0
   ckeditor: 0
   color: 0
   color_field: 0
@@ -33,13 +37,20 @@ module:
   entity_reference_unpublished: 0
   eva: 0
   exif_orientation: 0
+  facets: 0
+  facets_range_widget: 0
   field: 0
   field_group: 0
   field_ui: 0
   file: 0
   filter: 0
   focal_point: 0
+  geocoder: 0
+  geocoder_address: 0
+  geocoder_field: 0
   geolocation: 0
+  geolocation_google_maps: 0
+  geolocation_leaflet: 0
   help: 0
   history: 0
   image: 0
@@ -48,9 +59,8 @@ module:
   link: 0
   masonry: 0
   masonry_views: 0
-  media_entity: 0
-  media_entity_browser: 0
-  media_entity_image: 0
+  media: 0
+  media_entity_generic: 0
   menu_block: 0
   menu_ui: 0
   metatag: 0
@@ -61,7 +71,9 @@ module:
   quickedit: 0
   rdf: 0
   responsive_image: 0
-  search: 0
+  search_api: 0
+  search_api_db: 0
+  search_api_db_defaults: 0
   shortcut: 0
   slick: 0
   slick_paragraphs: 0
@@ -84,7 +96,6 @@ module:
   pathauto: 1
   views: 10
   paragraphs: 11
-  better_formats: 100
   standard: 1000
 theme:
   stable: 0

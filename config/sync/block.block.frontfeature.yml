@@ -1,0 +1,35 @@
+uuid: 9aae9a75-27df-47d7-8990-9d7d45b3e06a
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:3df8d339-5c16-4742-b221-3cf99cb789de'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - university_bootstrap
+third_party_settings:
+  block_class:
+    classes: front-hero
+id: frontfeature
+theme: university_bootstrap
+region: content
+weight: -14
+provider: null
+plugin: 'block_content:3df8d339-5c16-4742-b221-3cf99cb789de'
+settings:
+  id: 'block_content:3df8d339-5c16-4742-b221-3cf99cb789de'
+  label: 'Front Feature'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

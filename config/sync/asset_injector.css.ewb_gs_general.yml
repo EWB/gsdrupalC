@@ -1,0 +1,18 @@
+uuid: 1c72c22c-d10e-4e75-bcf8-6d5bbd2f60e9
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: ewb_gs_general
+label: 'EWB - GS General'
+code: "p {\r\n  font-family: \"Helvetica Neue\",helvetica,arial,sans-serif;\r\n  font-weight:300;\r\n\r\n}\r\nbody {\r\n}\r\n\r\nfooter.footer {\r\n  background-color: #42482c;\r\n}"
+media: all
+preprocess: true
+conditions:
+  current_theme:
+    id: current_theme
+    theme:
+      university_bootstrap: university_bootstrap
+    negate: false
+conditions_require_all: true

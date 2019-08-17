@@ -1,0 +1,28 @@
+uuid: 8b2bd3e7-68e5-41fa-b231-d24648b95e5f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_location
+    - node.type.event
+    - node.type.location_reference
+id: node.event.field_event_location
+field_name: field_event_location
+entity_type: node
+bundle: event
+label: 'Event Location'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      location_reference: location_reference
+    sort:
+      field: _none
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

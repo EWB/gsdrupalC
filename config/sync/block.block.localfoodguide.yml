@@ -1,0 +1,31 @@
+uuid: a6612dbb-d0ac-4583-8867-5ec298b1955b
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:feature_block:bf2703b7-74ca-4c9d-b2ef-3a485f634214'
+  module:
+    - block_content
+    - system
+  theme:
+    - university_bootstrap
+id: localfoodguide
+theme: university_bootstrap
+region: content
+weight: -6
+provider: null
+plugin: 'block_content:bf2703b7-74ca-4c9d-b2ef-3a485f634214'
+settings:
+  id: 'block_content:bf2703b7-74ca-4c9d-b2ef-3a485f634214'
+  label: 'Local Food Guide'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

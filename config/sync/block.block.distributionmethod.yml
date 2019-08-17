@@ -1,0 +1,29 @@
+uuid: 5ba2ca0e-474d-4668-8e5c-6153c142b18a
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.distribution_method
+  module:
+    - facets
+    - system
+  theme:
+    - university_bootstrap
+id: distributionmethod
+theme: university_bootstrap
+region: sidebar_first
+weight: -17
+provider: null
+plugin: 'facet_block:distribution_method'
+settings:
+  id: 'facet_block:distribution_method'
+  label: 'Distribution Method'
+  provider: facets
+  label_display: visible
+  block_id: distributionmethod
+visibility:
+  request_path:
+    id: request_path
+    pages: "/entities*\r\n/guide*"
+    negate: false
+    context_mapping: {  }

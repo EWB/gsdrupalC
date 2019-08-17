@@ -1,0 +1,17 @@
+uuid: 1ddbc6b3-9e50-4ba0-8494-9e84d98f54af
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: ewb_local_food_guide_front
+label: 'EWB - Local Food Guide - Front'
+code: "#block-localfoodguide {\r\n  padding:8rem 0 10rem 0;\r\n}\r\n#block-localfoodguide #front-feature-text h3 {\r\n  font-size:4.3rem;\r\n}\r\n#block-localfoodguide #front-feature-text {\r\n  font-size:2.5rem;\r\n}\r\n#block-localfoodguide img {\r\n  max-width:320px;\r\n  height:auto;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+conditions_require_all: true

@@ -1,0 +1,35 @@
+uuid: f94e7e81-2ae8-4fa5-bb01-c90f7984a73c
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:8901d99d-6167-4608-8980-af804bf51637'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - university_bootstrap
+third_party_settings:
+  block_class:
+    classes: front-video
+id: gardensharevideo
+theme: university_bootstrap
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:8901d99d-6167-4608-8980-af804bf51637'
+settings:
+  id: 'block_content:8901d99d-6167-4608-8980-af804bf51637'
+  label: 'GardenShare video'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,8 @@
+uuid: a7b0e670-0c45-4688-a83d-278bde212213
+langcode: en
+status: true
+dependencies: {  }
+name: 'Distribution Method'
+vid: distribution_method
+description: ''
+weight: 0

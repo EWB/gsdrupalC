@@ -1,0 +1,17 @@
+uuid: e4946135-813e-4d77-8a9b-c5800db28783
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: ewb_food_guide_view
+label: 'EWB - Food Guide View'
+code: "body {\r\n  background-color:#42482c;\r\n}\r\nh2 {\r\n  margin-top:1rem;\r\n}\r\n.container-fluid .row {\r\n  /*background-color:#737952;\r\n  background-color:#7B7142;*/\r\n  padding-bottom:8rem;\r\n}\r\n.university-main-content {\r\n\r\n}\r\n.page-header {\r\n  color:#FFFFFF;\r\n}\r\n.university-sidebar {\r\n  margin-top:4rem;\r\n}\r\n.block-facets h2 {\r\n  color:#FFFFFF;\r\n  font-family:\"Helvetica Neue\",\"Helvetica\",\"Arial\",sans-serif;\r\n  font-size:2rem;\r\n  padding-top:2rem;\r\n}\r\n.card h2 a {\r\n  font-size:2rem;\r\n  margin-top:1rem;\r\n  text-decoration:none;\r\n  font-family:\"Helvetica Neue\",\"Helvetica\",\"Arial\",sans-serif;\r\n}\r\n.card h2  {\r\n  font-size:1em;\r\n  margin-top:1em;\r\n  line-height:1em;\r\n  text-decoration:none;\r\n  font-family:\"Helvetica Neue\",\"Helvetica\",\"Arial\",sans-serif;\r\n  min-height:2em;\r\n}\r\n.card {\r\n  background-color:#FFFFFF;\r\n  padding-bottom:2rem;\r\n  /*outline: 1rem solid #737952;*/\r\n      border: 1rem solid #737952\r\n}\r\n\r\n.view-id-entities .views-row {\r\n    min-height: 350px;\r\n}\r\n.view-content {\r\n  padding-bottom:6rem;\r\n}\r\nfooter.footer {\r\n    border-top: 0;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: '/guide*'
+    negate: false
+conditions_require_all: true

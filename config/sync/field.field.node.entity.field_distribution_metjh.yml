@@ -1,0 +1,29 @@
+uuid: 24d9f93e-fb0a-40b3-94a6-ad07b6057663
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_distribution_metjh
+    - node.type.entity
+    - taxonomy.vocabulary.distribution_method
+id: node.entity.field_distribution_metjh
+field_name: field_distribution_metjh
+entity_type: node
+bundle: entity
+label: 'Distribution Method'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      distribution_method: distribution_method
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -4,8 +4,8 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_banner_media
-    - media_entity.bundle.image
-    - media_entity.bundle.video_external
+    - media.type.image
+    - media.type.video_external
     - paragraphs.paragraphs_type.banner_media
 id: paragraph.banner_media.field_banner_media
 field_name: field_banner_media

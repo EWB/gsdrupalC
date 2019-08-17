@@ -1,0 +1,30 @@
+uuid: a945b797-1d74-417b-8f45-016810bd8540
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.backup_of_map
+  module:
+    - system
+    - views
+  theme:
+    - university_bootstrap
+id: views_block__backup_of_map_block_1
+theme: university_bootstrap
+region: sidebar_second
+weight: 0
+provider: null
+plugin: 'views_block:backup_of_map-block_1'
+settings:
+  id: 'views_block:backup_of_map-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: /map2
+    negate: false
+    context_mapping: {  }

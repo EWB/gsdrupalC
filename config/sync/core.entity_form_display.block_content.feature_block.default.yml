@@ -1,0 +1,89 @@
+uuid: 4a31f267-32d9-42ff-8946-89e371dafa8e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.feature_block
+    - entity_browser.browser.entity_embed_image
+    - field.field.block_content.feature_block.body
+    - field.field.block_content.feature_block.field_featured_image
+  module:
+    - entity_browser
+    - field_group
+    - text
+third_party_settings:
+  field_group:
+    group_column_one:
+      children:
+        - body
+      parent_name: ''
+      weight: 1
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: 'col-sm-6 col-md-6'
+        element: div
+        show_label: false
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'Column One'
+      region: content
+    group_column_two:
+      children:
+        - field_featured_image
+      parent_name: ''
+      weight: 2
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: 'col-sm-6 col-md-6'
+        element: div
+        show_label: false
+        label_element: h3
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'Column Two'
+      region: content
+id: block_content.feature_block.default
+targetEntityType: block_content
+bundle: feature_block
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 2
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  field_featured_image:
+    weight: 2
+    settings:
+      entity_browser: entity_embed_image
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_replace: false
+      open: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  moderation_state: true

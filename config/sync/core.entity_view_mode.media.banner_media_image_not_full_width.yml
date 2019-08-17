@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - media_entity
+    - media
 id: media.banner_media_image_not_full_width
 label: 'Banner Media Image Not Full-width'
 targetEntityType: media

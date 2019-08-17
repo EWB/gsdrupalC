@@ -1,0 +1,17 @@
+uuid: add8fead-fcfb-47fc-a7e9-dfed00e92939
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+name: medium_
+label: 'Medium square crop'
+effects:
+  9a594cc2-c35e-4b66-ad67-c5d65f5b270e:
+    uuid: 9a594cc2-c35e-4b66-ad67-c5d65f5b270e
+    id: focal_point_scale_and_crop
+    weight: 1
+    data:
+      width: 320
+      height: 320
+      crop_type: focal_point

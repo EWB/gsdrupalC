@@ -1,22 +1,17 @@
 uuid: a8ef628b-c3ad-44b0-ad19-94e1d2f174fd
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.main
   module:
-    - block_class
     - menu_block
-    - system
   theme:
     - university_bootstrap
-third_party_settings:
-  block_class:
-    classes: ''
 id: mainnavigation_2
 theme: university_bootstrap
 region: sidebar_first
-weight: 0
+weight: -13
 provider: null
 plugin: 'menu_block:main'
 settings:
@@ -27,11 +22,6 @@ settings:
   level: 1
   depth: 2
   expand: 1
-  parent: 'main:menu_link_content:72b488f7-1aff-42f1-a0a9-dfd1b9cabbc5'
+  parent: 'main:'
   suggestion: side
-visibility:
-  request_path:
-    id: request_path
-    pages: "/node/3\r\n/node/4\r\n/node/5\r\n/node/6\r\n/node/31\r\n/node/40\r\n/node/41\r\n/node/42\r\n/node/43\r\n/node/45\r\n/resources/*\r\n/resources/digital-narratives\r\n/resources/digital-narratives/*\r\n/resources/storymaps\r\n/resources/storymaps/*\r\n/resources/images\r\n/resources/images/*"
-    negate: false
-    context_mapping: {  }
+visibility: {  }

@@ -1,0 +1,469 @@
+uuid: bb9c0b8a-60d1-4df4-a601-2325c667d9b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - node.type.narrative
+    - taxonomy.vocabulary.category
+    - user.role.administrator
+    - user.role.editor
+  content:
+    - 'taxonomy_term:category:8a1f377a-bf88-4b7f-8b31-2f4f3444ab03'
+  module:
+    - node
+    - taxonomy
+    - user
+id: gs_in_action
+label: 'GS in Action'
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      access:
+        type: role
+        options:
+          role: {  }
+      cache:
+        type: tag
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: some
+        options:
+          items_per_page: 6
+          offset: 0
+      style:
+        type: default
+        options:
+          grouping: {  }
+          row_class: 'number-{{ counter }} col-xs-12 col-sm-6 col-md-4 col-lg-4'
+          default_row_class: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      fields:
+        rendered_entity:
+          id: rendered_entity
+          table: node
+          field: rendered_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          view_mode: card
+          entity_type: node
+          plugin_id: rendered_entity
+        counter:
+          id: counter
+          table: views
+          field: counter
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          counter_start: 1
+          plugin_id: counter
+        view_node:
+          id: view_node
+          table: node
+          field: view_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: 'read more...'
+          output_url_as_text: false
+          absolute: false
+          entity_type: node
+          plugin_id: entity_link
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            narrative: narrative
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+        field_category_target_id:
+          id: field_category_target_id
+          table: node__field_category
+          field: field_category_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value:
+            1: 1
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: category
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+      sorts:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          order: ASC
+          entity_type: node
+          entity_field: title
+          plugin_id: standard
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exposed: false
+          expose:
+            label: ''
+      title: 'GS in Action'
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          plugin_id: text
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }
+      display_extenders: {  }
+      css_class: container
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - user
+        - 'user.node_grants:view'
+        - user.roles
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+        - 'config:core.entity_view_display.node.article.rss'
+        - 'config:core.entity_view_display.node.article.search_index'
+        - 'config:core.entity_view_display.node.article.search_result'
+        - 'config:core.entity_view_display.node.article.teaser'
+        - 'config:core.entity_view_display.node.entity.card'
+        - 'config:core.entity_view_display.node.entity.default'
+        - 'config:core.entity_view_display.node.entity.teaser'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.location_reference.default'
+        - 'config:core.entity_view_display.node.location_reference.referenced'
+        - 'config:core.entity_view_display.node.location_reference.teaser'
+        - 'config:core.entity_view_display.node.narrative.banner_featured'
+        - 'config:core.entity_view_display.node.narrative.card'
+        - 'config:core.entity_view_display.node.narrative.default'
+        - 'config:core.entity_view_display.node.narrative.teaser'
+        - 'config:core.entity_view_display.node.narrative.teaser_listing'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.search_result'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.timeline.default'
+        - 'config:core.entity_view_display.node.timeline.referenced'
+        - 'config:core.entity_view_display.node.timeline.teaser'
+        - 'config:core.entity_view_display.node.timeline_slide.default'
+        - 'config:core.entity_view_display.node.timeline_slide.teaser'
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: 1
+    display_options:
+      display_extenders: {  }
+      access:
+        type: none
+        options: {  }
+      defaults:
+        access: false
+        header: false
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          tokenize: false
+          content:
+            value: '<h2>GardenShare in Action</h1>'
+            format: basic_html
+          plugin_id: text
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - user
+        - 'user.node_grants:view'
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+        - 'config:core.entity_view_display.node.article.rss'
+        - 'config:core.entity_view_display.node.article.search_index'
+        - 'config:core.entity_view_display.node.article.search_result'
+        - 'config:core.entity_view_display.node.article.teaser'
+        - 'config:core.entity_view_display.node.entity.card'
+        - 'config:core.entity_view_display.node.entity.default'
+        - 'config:core.entity_view_display.node.entity.teaser'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.location_reference.default'
+        - 'config:core.entity_view_display.node.location_reference.referenced'
+        - 'config:core.entity_view_display.node.location_reference.teaser'
+        - 'config:core.entity_view_display.node.narrative.banner_featured'
+        - 'config:core.entity_view_display.node.narrative.card'
+        - 'config:core.entity_view_display.node.narrative.default'
+        - 'config:core.entity_view_display.node.narrative.teaser'
+        - 'config:core.entity_view_display.node.narrative.teaser_listing'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.search_result'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.timeline.default'
+        - 'config:core.entity_view_display.node.timeline.referenced'
+        - 'config:core.entity_view_display.node.timeline.teaser'
+        - 'config:core.entity_view_display.node.timeline_slide.default'
+        - 'config:core.entity_view_display.node.timeline_slide.teaser'
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 2
+    display_options:
+      display_extenders: {  }
+      path: cards
+      access:
+        type: role
+        options:
+          role:
+            administrator: administrator
+            editor: editor
+      defaults:
+        access: false
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - user
+        - 'user.node_grants:view'
+        - user.roles
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
+        - 'config:core.entity_view_display.node.article.rss'
+        - 'config:core.entity_view_display.node.article.search_index'
+        - 'config:core.entity_view_display.node.article.search_result'
+        - 'config:core.entity_view_display.node.article.teaser'
+        - 'config:core.entity_view_display.node.entity.card'
+        - 'config:core.entity_view_display.node.entity.default'
+        - 'config:core.entity_view_display.node.entity.teaser'
+        - 'config:core.entity_view_display.node.event.default'
+        - 'config:core.entity_view_display.node.event.teaser'
+        - 'config:core.entity_view_display.node.location_reference.default'
+        - 'config:core.entity_view_display.node.location_reference.referenced'
+        - 'config:core.entity_view_display.node.location_reference.teaser'
+        - 'config:core.entity_view_display.node.narrative.banner_featured'
+        - 'config:core.entity_view_display.node.narrative.card'
+        - 'config:core.entity_view_display.node.narrative.default'
+        - 'config:core.entity_view_display.node.narrative.teaser'
+        - 'config:core.entity_view_display.node.narrative.teaser_listing'
+        - 'config:core.entity_view_display.node.page.default'
+        - 'config:core.entity_view_display.node.page.search_index'
+        - 'config:core.entity_view_display.node.page.search_result'
+        - 'config:core.entity_view_display.node.page.teaser'
+        - 'config:core.entity_view_display.node.timeline.default'
+        - 'config:core.entity_view_display.node.timeline.referenced'
+        - 'config:core.entity_view_display.node.timeline.teaser'
+        - 'config:core.entity_view_display.node.timeline_slide.default'
+        - 'config:core.entity_view_display.node.timeline_slide.teaser'

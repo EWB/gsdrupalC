@@ -1,0 +1,302 @@
+uuid: afbd85c3-0a18-43d5-bbb2-c831bb79f229
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.entity.body
+    - field.field.node.entity.field_accepts
+    - field.field.node.entity.field_address
+    - field.field.node.entity.field_certifications
+    - field.field.node.entity.field_contact_name
+    - field.field.node.entity.field_csa_pickup_locations
+    - field.field.node.entity.field_distribution_metjh
+    - field.field.node.entity.field_email
+    - field.field.node.entity.field_geolocation_entity
+    - field.field.node.entity.field_hours_days
+    - field.field.node.entity.field_image
+    - field.field.node.entity.field_media
+    - field.field.node.entity.field_phone
+    - field.field.node.entity.field_products
+    - field.field.node.entity.field_type
+    - field.field.node.entity.field_website
+    - node.type.entity
+  module:
+    - address
+    - field_group
+    - geolocation
+    - link
+    - text
+    - user
+third_party_settings:
+  field_group:
+    group_row:
+      children:
+        - group_column_one
+        - group_column_two
+      parent_name: ''
+      weight: 0
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: 'row clearfix'
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Row
+      region: content
+    group_column_one:
+      children:
+        - body
+        - group_grid
+      parent_name: group_row
+      weight: 1
+      format_type: html_element
+      format_settings:
+        label: 'Column One'
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: 'col-sm-5 col-md-5'
+      label: 'Column One'
+      region: content
+    group_column_two:
+      children:
+        - field_media
+        - field_geolocation_entity
+        - field_csa_pickup_locations
+      parent_name: group_row
+      weight: 2
+      format_type: html_element
+      format_settings:
+        label: 'Column Two'
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: 'col-sm-7 col-md-7 pull-right'
+      label: 'Column Two'
+      region: content
+    group_grid:
+      children:
+        - links
+        - field_contact_name
+        - field_address
+        - field_website
+        - field_email
+        - field_phone
+        - field_hours_days
+        - field_accepts
+        - field_products
+        - field_certifications
+        - field_distribution_metjh
+        - field_type
+      parent_name: group_column_one
+      weight: 13
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: flexbox-grid
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+      label: grid
+      region: content
+id: node.entity.default
+targetEntityType: node
+bundle: entity
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 12
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_accepts:
+    weight: 17
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_address:
+    weight: 12
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_certifications:
+    weight: 19
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_contact_name:
+    weight: 11
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_csa_pickup_locations:
+    weight: 12
+    label: above
+    settings:
+      set_marker: '1'
+      title: ''
+      info_text: ''
+      common_map: '0'
+      use_overridden_map_settings: 0
+      map_provider_id: google_maps
+      map_provider_settings:
+        height: 120px
+        width: 120p
+        type: ROADMAP
+        zoom: 10
+        maxZoom: 18
+        minZoom: 0
+        mapTypeControl: 1
+        streetViewControl: 1
+        fullscreenControl: 1
+        gestureHandling: auto
+        draggable: 1
+        style: ''
+        info_auto_display: 1
+        marker_icon_path: ''
+        disableAutoPan: 1
+        zoomControl: 0
+        rotateControl: false
+        scrollwheel: 0
+        preferScrollingToZooming: 0
+        disableDoubleClickZoom: 0
+    third_party_settings: {  }
+    type: geolocation_map
+    region: content
+  field_distribution_metjh:
+    weight: 20
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_email:
+    weight: 14
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: email_mailto
+    region: content
+  field_geolocation_entity:
+    weight: 11
+    label: visually_hidden
+    settings:
+      set_marker: '1'
+      title: ''
+      info_text: ''
+      use_overridden_map_settings: 0
+      common_map: ''
+      map_provider_id: google_maps
+      map_provider_settings:
+        height: 400px
+        width: 200p
+        type: ROADMAP
+        zoom: 10
+        maxZoom: 18
+        minZoom: 0
+        mapTypeControl: 1
+        streetViewControl: 1
+        fullscreenControl: 1
+        gestureHandling: auto
+        draggable: 1
+        style: ''
+        info_auto_display: 1
+        marker_icon_path: ''
+        disableAutoPan: 1
+        zoomControl: 0
+        rotateControl: false
+        scrollwheel: 0
+        preferScrollingToZooming: 0
+        disableDoubleClickZoom: 0
+    third_party_settings: {  }
+    type: geolocation_map
+    region: content
+  field_hours_days:
+    weight: 16
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_media:
+    weight: 10
+    label: visually_hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_phone:
+    weight: 15
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_products:
+    weight: 18
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_type:
+    weight: 21
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_website:
+    weight: 13
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings: {  }
+    type: link
+    region: content
+  links:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  content_moderation_control: true
+  field_image: true

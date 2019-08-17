@@ -1,0 +1,29 @@
+uuid: d78825d7-b335-4105-9caa-ac59d91e497c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.card
+    - field.field.paragraph.banner_media.field_banner_media
+    - field.field.paragraph.banner_media.field_banner_media_caption
+    - field.field.paragraph.banner_media.field_banner_media_credit
+    - field.field.paragraph.banner_media.field_display_options
+    - paragraphs.paragraphs_type.banner_media
+id: paragraph.banner_media.card
+targetEntityType: paragraph
+bundle: banner_media
+mode: card
+content:
+  field_banner_media:
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: card
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+hidden:
+  field_banner_media_caption: true
+  field_banner_media_credit: true
+  field_display_options: true

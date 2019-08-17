@@ -10,7 +10,7 @@ dependencies:
     - image.style.thumbnail
     - paragraphs.paragraphs_type.media
   module:
-    - media_entity
+    - media
     - text
 id: paragraph.media.preview
 targetEntityType: paragraph

@@ -3,10 +3,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - media_entity.bundle.video_external
+    - media.type.video_external
   module:
     - entity_embed
-    - media_entity
+    - media
 label: 'External Video'
 id: external_video
 type_id: entity

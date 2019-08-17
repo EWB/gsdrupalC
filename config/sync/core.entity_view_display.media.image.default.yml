@@ -7,7 +7,7 @@ dependencies:
     - field.field.media.image.field_image
     - field.field.media.image.field_width
     - image.style.scale_800x800
-    - media_entity.bundle.image
+    - media.type.image
   module:
     - colorbox
 id: media.image.default

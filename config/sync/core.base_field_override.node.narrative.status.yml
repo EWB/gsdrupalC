@@ -1,0 +1,22 @@
+uuid: 6d22747c-37e2-426d-b314-87faded3b195
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.narrative
+id: node.narrative.status
+field_name: status
+entity_type: node
+bundle: narrative
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

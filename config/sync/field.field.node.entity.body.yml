@@ -1,0 +1,45 @@
+uuid: cf842700-5ec9-4e14-ad31-b25df8ae1fc0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.entity
+  module:
+    - better_formats
+    - text
+third_party_settings:
+  better_formats:
+    allowed_formats_toggle: 0
+    allowed_formats:
+      basic_html: basic_html
+      iframe: iframe
+      restricted_html: restricted_html
+      simple: simple
+      full_html: full_html
+    default_order_toggle: 0
+    default_order_wrapper:
+      formats:
+        basic_html:
+          weight: '0'
+        iframe:
+          weight: '0'
+        restricted_html:
+          weight: '0'
+        simple:
+          weight: '0'
+        full_html:
+          weight: '1'
+id: node.entity.body
+field_name: body
+entity_type: node
+bundle: entity
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+field_type: text_with_summary

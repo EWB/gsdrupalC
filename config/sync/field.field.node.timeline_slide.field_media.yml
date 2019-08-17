@@ -4,8 +4,8 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_media
-    - media_entity.bundle.image
-    - media_entity.bundle.video_external
+    - media.type.image
+    - media.type.video_external
     - node.type.timeline_slide
 _core:
   default_config_hash: 8x-WOfklWHnKtO6w7ecT56HHpwzqzM-BKpb8QJ0euP8

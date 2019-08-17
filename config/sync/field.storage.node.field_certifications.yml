@@ -1,0 +1,20 @@
+uuid: 5fa6492e-c1d9-433f-be9a-9e9aeffc2365
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_certifications
+field_name: field_certifications
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

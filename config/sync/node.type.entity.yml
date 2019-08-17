@@ -1,0 +1,18 @@
+uuid: 3f90fb2a-c00f-4980-a934-70990643ca15
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Entity
+type: entity
+description: 'Use to add farms, organizations, etc.'
+help: ''
+new_revision: true
+preview_mode: 0
+display_submitted: false

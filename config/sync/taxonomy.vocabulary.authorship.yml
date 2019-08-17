@@ -5,5 +5,4 @@ dependencies: {  }
 name: Authorship
 vid: authorship
 description: 'Use authorship to list authors of content.'
-hierarchy: 0
 weight: 0

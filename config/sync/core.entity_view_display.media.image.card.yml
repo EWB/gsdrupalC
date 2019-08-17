@@ -1,0 +1,34 @@
+uuid: c9b2468f-3006-4ffb-86d5-d081a811a304
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.card
+    - field.field.media.image.field_height
+    - field.field.media.image.field_image
+    - field.field.media.image.field_width
+    - image.style.extra_small_screen_480x270_
+    - media.type.image
+  module:
+    - image
+id: media.image.card
+targetEntityType: media
+bundle: image
+mode: card
+content:
+  field_image:
+    type: image
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: extra_small_screen_480x270_
+      image_link: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_height: true
+  field_width: true
+  name: true
+  thumbnail: true
+  uid: true

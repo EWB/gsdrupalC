@@ -4,11 +4,11 @@ status: true
 dependencies:
   config:
     - image.style.media_entity_browser_thumbnail
-    - media_entity.bundle.image
+    - media.type.image
   module:
     - entity_browser
     - image
-    - media_entity
+    - media
     - user
 _core:
   default_config_hash: MSnbnsWG7VkwgnXIUbEX_BebVc2LygnbeD7UJG3QeLo

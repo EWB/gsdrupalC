@@ -1,0 +1,25 @@
+uuid: d97b2dea-2840-42c0-a545-534f5bf8d6e4
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:feature_block:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+  module:
+    - block_content
+  theme:
+    - university_bootstrap
+id: stayinformed
+theme: university_bootstrap
+region: footer_first
+weight: 0
+provider: null
+plugin: 'block_content:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+settings:
+  id: 'block_content:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+  label: 'Sign up for mailing lists'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

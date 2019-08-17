@@ -1,0 +1,17 @@
+uuid: 55ec7d64-b5c5-4c5b-8e05-45dc51e4bdce
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: ewb_news_and_events
+label: 'EWB - News and Events'
+code: ".view-news-and-events {\r\n  max-width:400px;\r\n  display:block;\r\n  margin-top:4rem;\r\n  margin-bottom:4rem;\r\n  outline-style: solid;\r\n  outline-color: gray;\r\n  outline-width: thin;\r\n}\r\n.view-news-and-events .btn-primary {\r\n    box-shadow: none;\r\n}\r\n.view-news-and-events h2 {\r\n  font-size:2rem;\r\n  font-family:\"Helvetica Neue\",\"Helvetica\",\"Arial\",sans-serif;\r\n}\r\n.view-news-and-events h2 a {\r\n  text-decoration:none;\r\n}\r\n.view-news-and-events .moderation-state-label {\r\n  display:none;\r\n}\r\n.view-news-and-events img {\r\n  float:right;\r\n  max-width:180px;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+conditions_require_all: true

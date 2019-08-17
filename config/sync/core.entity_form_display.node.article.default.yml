@@ -9,8 +9,10 @@ dependencies:
     - field.field.node.article.field_tags
     - image.style.thumbnail
     - node.type.article
+    - workflows.workflow.editorial
   module:
     - comment
+    - content_moderation
     - image
     - path
     - text

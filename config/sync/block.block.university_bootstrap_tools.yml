@@ -13,7 +13,7 @@ _core:
 id: university_bootstrap_tools
 theme: university_bootstrap
 region: sidebar_second
-weight: -5
+weight: -8
 provider: null
 plugin: 'system_menu_block:tools'
 settings:
@@ -23,4 +23,5 @@ settings:
   label_display: visible
   level: 1
   depth: 0
+  expand_all_items: false
 visibility: {  }

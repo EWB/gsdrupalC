@@ -1,0 +1,8 @@
+uuid: e390a20d-72f6-4d71-861e-e928057d9e63
+langcode: en
+status: true
+dependencies: {  }
+name: Accepts
+vid: accepts
+description: ''
+weight: 0

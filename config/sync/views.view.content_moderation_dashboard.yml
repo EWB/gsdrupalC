@@ -829,7 +829,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: '<span class="header-inline-block"><h2>[view:title]</h2></span> <span class="view-all-inline-block"><h3>| <a href="[view:url]" class="btn btn-primary" role="button"><strong>View All Moderated Content</strong></a></h3></span>'
+          content: '<span class="header-inline-block"><h2>[view:title]</h2></span> <span class="view-all-inline-block"><h3>| <strong>View All Moderated Content</strong></h3></span>'
           plugin_id: text_custom
     cache_metadata:
       max-age: -1

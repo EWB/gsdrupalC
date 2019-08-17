@@ -1,0 +1,52 @@
+uuid: 09d10173-169b-4ba3-8af5-a4e81b66ef9a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.narrative.field_authorship
+    - field.field.node.narrative.field_banner_color
+    - field.field.node.narrative.field_banner_media_element
+    - field.field.node.narrative.field_category
+    - field.field.node.narrative.field_paragraph_elements
+    - field.field.node.narrative.field_subtitle
+    - field.field.node.narrative.field_teaser
+    - node.type.narrative
+  module:
+    - entity_reference_revisions
+    - text
+    - user
+id: node.narrative.card
+targetEntityType: node
+bundle: narrative
+mode: card
+content:
+  field_banner_media_element:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: card
+      link: ''
+    third_party_settings: {  }
+  field_teaser:
+    type: text_trimmed
+    weight: 1
+    region: content
+    label: visually_hidden
+    settings:
+      trim_length: 300
+    third_party_settings: {  }
+  links:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  content_moderation_control: true
+  field_authorship: true
+  field_banner_color: true
+  field_category: true
+  field_paragraph_elements: true
+  field_subtitle: true

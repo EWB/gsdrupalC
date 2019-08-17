@@ -1,0 +1,11 @@
+uuid: f3fc1d2b-6331-4a4e-bfb7-80bdd59e6f7b
+langcode: en
+status: false
+dependencies: {  }
+id: ewb_grid_3
+label: 'EWB Grid-3'
+code: "/**\r\n * @file\r\n * This file is used to create a 3 column grid layout.\r\n */\r\n\r\n.grid--3 .views-row {\r\n  margin-bottom: 28px;\r\n  padding: 0 14px;\r\n}\r\n\r\n@media screen and (min-width: 30em) {\r\n  .grid--3 {\r\n    overflow-x: hidden;\r\n  }\r\n  .grid--3 .view-content {\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    margin: 0;\r\n  }\r\n  .grid--3 .views-row {\r\n    display: flex;\r\n    flex-grow: 0;\r\n    flex-shrink: 0;\r\n    flex-basis: calc(50% - 28px);\r\n    margin: 0 14px 28px;\r\n    padding: 0;\r\n  }\r\n}\r\n\r\n@media screen and (min-width: 60em) {\r\n  .grid--3 .views-row {\r\n    flex-grow: 0;\r\n    flex-shrink: 0;\r\n    flex-basis: calc(33% - 28px);\r\n  }\r\n}\r\n\r\n/* 77em == the max width of .container + 1em either side */\r\n@media screen and (min-width: 77em) {\r\n  .grid--3 .view-content {\r\n    margin-left: -14px;\r\n    margin-right: -14px;\r\n  }\r\n}\r\n"
+media: all
+preprocess: true
+conditions: {  }
+conditions_require_all: true

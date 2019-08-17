@@ -5,14 +5,10 @@ dependencies:
   config:
     - system.menu.account
   module:
-    - block_class
     - system
     - user
   theme:
     - university_bootstrap
-third_party_settings:
-  block_class:
-    classes: ''
 _core:
   default_config_hash: R2K_qX0ZUMbUL6ie_-S9tZVjvqmlWKlscikgeRv9vhw
 id: university_bootstrap_account_menu
@@ -28,6 +24,7 @@ settings:
   label_display: '0'
   level: 1
   depth: 2
+  expand_all_items: false
 visibility:
   user_role:
     id: user_role

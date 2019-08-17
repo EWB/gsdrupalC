@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - media_entity
+    - media
 id: media.scale_crop_700x525
 label: 'Scale Crop 700x525'
 targetEntityType: media

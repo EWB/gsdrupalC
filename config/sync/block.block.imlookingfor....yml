@@ -1,0 +1,33 @@
+uuid: ecbada32-ef43-4c4c-af10-33aa130cbf47
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.i-m-looking-for-
+  module:
+    - menu_block
+    - system
+  theme:
+    - university_bootstrap
+id: imlookingfor...
+theme: university_bootstrap
+region: before_content
+weight: -3
+provider: null
+plugin: 'menu_block:i-m-looking-for-'
+settings:
+  id: 'menu_block:i-m-looking-for-'
+  label: 'I''m looking for...'
+  provider: menu_block
+  label_display: visible
+  level: 1
+  depth: 0
+  expand: 0
+  parent: 'i-m-looking-for-:'
+  suggestion: i_m_looking_for_
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

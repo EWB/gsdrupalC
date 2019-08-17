@@ -1,0 +1,27 @@
+uuid: 7652cbe3-ea91-4f9f-910a-324c45805913
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - system
+id: ewb_entities
+label: 'EWB - Entities'
+code: "#main-content {\r\n    background: #42482c;\r\n    color: white;\r\n}\r\n.content {\r\n    background-color: #737952;\r\n    padding: 4rem;\r\n}\r\na {\r\n  color:#fbf850;\r\n}\r\n.field--name-body {\r\n  font-size:2rem;\r\n  line-height:1.2;\r\n}\r\n.field--item img {\r\n  margin-bottom:3rem;\r\n}\r\ninput, button, select, textarea {\r\n  color: black;\r\n}\r\n.flexbox-grid .field {\r\n  -webkit-box-sizing: border-box;\r\n    box-sizing: border-box;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-orient: horizontal;\r\n    -webkit-box-direction: normal;\r\n    -ms-flex-flow: row wrap;\r\n    flex-flow: row wrap;\r\n    list-style: none;\r\n    margin: 0;\r\n    padding: 0;\r\n    \r\n    \r\n    border-bottom: 2px solid rgba(255,255,255,.2);\r\n    color: #fff;\r\n    padding: 8px 0;\r\n}\r\n.flexbox-grid .field--label {\r\n  width: 35%!important;\r\n}\r\n.flexbox-grid .field--item {\r\n      width: 65%!important;\r\n}\r\n.flexbox-grid .field .field--label, .field .field--item {\r\n    -webkit-box-sizing: inherit;\r\n    box-sizing: inherit;\r\n    -webkit-box-flex: 0;\r\n    -ms-flex: 0 0 100%;\r\n    flex: 0 0 100%;\r\n    margin: 0;\r\n    padding: 0;\r\n    \r\n    flex-basis: auto!important;\r\n}\r\n\r\n.field--type-geolocation {\r\n  outline-style: solid;\r\n  outline-color: white;\r\n  outline-width: thick;\r\n}\r\n"
+media: all
+preprocess: true
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      entity: entity
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  current_theme:
+    id: current_theme
+    theme:
+      bootstrap: bootstrap
+      university_bootstrap: university_bootstrap
+    negate: false
+conditions_require_all: true

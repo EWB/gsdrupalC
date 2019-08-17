@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.location_reference.body
+    - field.field.node.location_reference.field_authorship
     - field.field.node.location_reference.field_geolocation
     - field.field.node.location_reference.field_location_type
     - node.type.location_reference

@@ -1,0 +1,17 @@
+uuid: 9e892281-08b7-4129-af8d-832b68d31234
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: ewb_front_mobile
+label: 'EWB - Front Mobile'
+code: "/* Extra small devices (phones, 600px and down) */\r\n@media only screen and (max-width: 600px) { \r\n.front-hero #featured {\r\n  text-align:center;\r\n  height: 30vh;\r\n  max-height: 400px;\r\n  background-size: cover;\r\n  background-image: url(/sites/default/files/media/image/2018-08/sunflower-s.jpg);\r\n  background-attachment: fixed;\r\n  background-position: center bottom;\r\n  position: relative;\r\n  margin-top:-34px;\r\n}\r\n\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+conditions_require_all: true

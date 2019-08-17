@@ -8,7 +8,7 @@ dependencies:
     - field.field.media.image.field_image
     - field.field.media.image.field_width
     - image.style.extra_small_screen_480x270_
-    - media_entity.bundle.image
+    - media.type.image
   module:
     - image
 id: media.image.preview

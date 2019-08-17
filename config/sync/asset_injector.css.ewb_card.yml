@@ -1,0 +1,11 @@
+uuid: 29dcd36f-d1dd-4e57-a335-6f99b437a353
+langcode: en
+status: false
+dependencies: {  }
+id: ewb_card
+label: 'EWB - Card'
+code: "/**\r\n* @file\r\n* This file is used to style the 'Card' view mode.\r\n*/\r\n\r\n.view-mode-card {\r\n  display: flex;\r\n  flex-direction: column;\r\n  width: 100%;\r\n  padding: 1rem;\r\n  border: 1px solid #fcece7;\r\n}\r\n\r\n.view-mode-card .node__title {\r\n  flex-grow: 1;\r\n}\r\n\r\n.view-mode-card .field--name-title {\r\n  text-decoration: none;\r\n  color: #000;\r\n  font-size: 1.424rem;\r\n  font-weight: 400;\r\n}\r\n\r\n.view-mode-card .node__link {\r\n  text-decoration: none;\r\n  color: #000;\r\n  background-color: inherit;\r\n}\r\n\r\n.view-mode-card .node__link:focus,\r\n.view-mode-card .node__link:hover {\r\n  text-decoration: underline;\r\n  color: #000;\r\n}\r\n\r\n.view-mode-card .field--name-field-image img {\r\n  display: block;\r\n  width: 100%;\r\n  margin-bottom: 1.2em;\r\n}\r\n\r\n.view-mode-card .label-items {\r\n  color: #5f635d;\r\n  font-size: 0.889rem;\r\n}\r\n"
+media: all
+preprocess: true
+conditions: {  }
+conditions_require_all: true

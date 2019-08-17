@@ -1,0 +1,31 @@
+uuid: a8b7505e-cb25-41e8-873b-57ea38b09930
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:8901d99d-6167-4608-8980-af804bf51637'
+  module:
+    - block_content
+    - system
+  theme:
+    - university_bootstrap
+id: gardensharevideo_2
+theme: university_bootstrap
+region: sidebar_second
+weight: 0
+provider: null
+plugin: 'block_content:8901d99d-6167-4608-8980-af804bf51637'
+settings:
+  id: 'block_content:8901d99d-6167-4608-8980-af804bf51637'
+  label: 'GardenShare video'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: 'http://new.gardenshare.org/narrative/test'
+    negate: false
+    context_mapping: {  }

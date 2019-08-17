@@ -18,6 +18,7 @@ dependencies:
     - field.field.node.timeline_slide.field_timeline_slide_bg_image
     - field.field.node.timeline_slide.field_type_of_slide
     - node.type.timeline_slide
+    - workflows.workflow.editorial
   module:
     - color_field
     - content_moderation

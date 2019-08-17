@@ -1,0 +1,21 @@
+uuid: 814167bf-74ce-4918-a96c-c943e988b37e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_csa_pickup_locations
+    - node.type.entity
+  module:
+    - geolocation
+id: node.entity.field_csa_pickup_locations
+field_name: field_csa_pickup_locations
+entity_type: node
+bundle: entity
+label: 'CSA Pickup Locations'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: geolocation

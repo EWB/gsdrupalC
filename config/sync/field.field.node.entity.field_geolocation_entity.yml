@@ -1,0 +1,38 @@
+uuid: c5eca328-609d-44e8-bc52-0ac9c2d5ccaa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_geolocation_entity
+    - node.type.entity
+  module:
+    - geocoder_field
+    - geolocation
+third_party_settings:
+  geocoder_field:
+    method: source
+    weight: 0
+    geocode_field: field_address
+    reverse_geocode_field: {  }
+    hidden: false
+    disabled: false
+    plugins:
+      - openstreetmap
+    dumper: geolocation
+    delta_handling: default
+    failure:
+      handling: preserve
+      status_message: true
+      log: true
+id: node.entity.field_geolocation_entity
+field_name: field_geolocation_entity
+entity_type: node
+bundle: entity
+label: GeoLocation
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: geolocation

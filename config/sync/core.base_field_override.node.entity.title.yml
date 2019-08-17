@@ -1,0 +1,18 @@
+uuid: b57541ed-d221-4714-b2da-4402d3bcf05a
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.entity
+id: node.entity.title
+field_name: title
+entity_type: node
+bundle: entity
+label: 'Organization Name'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

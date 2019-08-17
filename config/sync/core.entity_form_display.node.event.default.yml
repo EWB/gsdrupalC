@@ -1,0 +1,153 @@
+uuid: 698921fc-7a22-48ef-8c21-4123d7383198
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.modal_media_entity_browser
+    - field.field.node.event.body
+    - field.field.node.event.field_date
+    - field.field.node.event.field_event_end_date
+    - field.field.node.event.field_event_location
+    - field.field.node.event.field_media
+    - node.type.event
+  module:
+    - content_moderation
+    - datetime
+    - entity_browser
+    - entity_browser_entity_form
+    - field_group
+    - inline_entity_form
+    - path
+    - text
+third_party_settings:
+  field_group:
+    group_date_info:
+      children:
+        - field_date
+        - field_event_end_date
+      parent_name: ''
+      weight: 10
+      format_type: fieldset
+      format_settings:
+        id: date-info-group
+        classes: ''
+        description: ''
+        required_fields: true
+      label: 'Date Info'
+      region: content
+id: node.event.default
+targetEntityType: node
+bundle: event
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 8
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  created:
+    type: datetime_timestamp
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_date:
+    weight: 11
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_event_end_date:
+    weight: 12
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_event_location:
+    weight: 9
+    settings:
+      form_mode: default
+      override_labels: true
+      label_singular: Location
+      label_plural: Locations
+      allow_new: true
+      allow_existing: true
+      match_operator: CONTAINS
+      collapsible: false
+      collapsed: false
+      allow_duplicate: false
+    third_party_settings:
+      entity_browser_entity_form:
+        entity_browser_id: location_browser
+    type: inline_entity_form_complex
+    region: content
+  field_media:
+    weight: 13
+    settings:
+      entity_browser: modal_media_entity_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_replace: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  moderation_state:
+    type: moderation_state_default
+    weight: 6
+    settings: {  }
+    region: content
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 3
+    region: content
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 7
+    region: content
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 4
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+hidden: {  }

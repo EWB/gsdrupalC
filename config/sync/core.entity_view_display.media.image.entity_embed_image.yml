@@ -7,7 +7,7 @@ dependencies:
     - field.field.media.image.field_height
     - field.field.media.image.field_image
     - field.field.media.image.field_width
-    - media_entity.bundle.image
+    - media.type.image
   module:
     - colorbox
 id: media.image.entity_embed_image
