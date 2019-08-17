@@ -1,0 +1,18 @@
+name: gardenshare
+recipe: drupal8
+config:
+  php: '7.2'
+  via: apache
+  webroot: web
+  database: mariadb:10.3.16
+proxy:
+  phpmyadmin:
+    - pma-gardenshare.lndo.site
+services:
+  phpmyadmin:
+    type: phpmyadmin
+tooling:
+  drupal:
+    cmd: /app/vendor/bin/drupal --root=/app/web
+  drush:
+    cmd: /app/vendor/bin/drush
