@@ -1,0 +1,10 @@
+uuid: 413e5298-1977-4a12-93e9-42725e26cc22
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.map_teaser
+label: 'Map teaser'
+targetEntityType: node
+cache: true

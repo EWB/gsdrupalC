@@ -3,9 +3,16 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - field.storage.node.field_address
+    - field.storage.node.field_geolocation_entity
+    - field.storage.node.field_media
+    - field.storage.node.field_type
+    - image.style.medium_
     - node.type.entity
   module:
+    - address
+    - geolocation
+    - media
     - node
     - user
 id: food_guide
@@ -49,54 +56,570 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
-        type: some
+        type: none
         options:
-          items_per_page: 100
           offset: 0
       style:
-        type: grid
-      row:
-        type: 'entity:node'
+        type: maps_common
         options:
-          view_mode: teaser
+          uses_fields: true
+          geolocation_field: field_geolocation_entity
+          data_provider_id: geolocation_field_provider
+          title_field: title
+          label_field: none
+          marker_icon_path: ''
+          marker_row_number: 0
+          dynamic_map:
+            enabled: 1
+            update_handler: boundary_filter_field_geolocation_entity_boundary
+            hide_form: 1
+            views_refresh_delay: '1200'
+          centre:
+            boundary_filter_field_geolocation_entity_boundary:
+              enable: true
+              weight: -10
+              map_center_id: views_boundary_filter
+            fit_bounds:
+              enable: true
+              weight: -9
+              map_center_id: fit_bounds
+              settings:
+                reset_zoom: false
+            client_location:
+              weight: 0
+              enable: false
+              map_center_id: client_location
+            fixed_value:
+              settings:
+                latitude: null
+                longitude: null
+              weight: 0
+              enable: false
+              map_center_id: location_plugins
+            first_row:
+              weight: 0
+              enable: false
+              map_center_id: location_plugins
+            freeogeoip:
+              weight: 0
+              enable: false
+              map_center_id: location_plugins
+          even_empty: 1
+          map_provider_id: leaflet
+          map_provider_settings:
+            map_features:
+              leaflet_gesture_handling:
+                enabled: true
+                weight: -10
+              leaflet_control_zoom:
+                enabled: true
+                weight: -9
+                settings:
+                  position: topleft
+              leaflet_control_scale:
+                enabled: true
+                weight: -8
+                settings:
+                  position: bottomleft
+                  metric: true
+                  imperial: true
+              leaflet_marker_popup:
+                enabled: true
+                weight: -7
+                settings:
+                  info_auto_display: false
+              leaflet_marker_zoom_and_animate:
+                enabled: true
+                weight: -6
+                settings:
+                  marker_zoom_anchor_id: 'map-{{ nid }}'
+              geolocation_marker_scroll_to_id:
+                enabled: true
+                weight: -5
+                settings:
+                  scroll_target_id: 'node-{{ nid }}'
+              leaflet_control_layer:
+                enabled: true
+                weight: -4
+                settings:
+                  position: topright
+                  default_label: false
+                  tile_layer_providers:
+                    OpenStreetMap:
+                      'OpenStreetMap Mapnik':
+                        label: ''
+                        checkbox: false
+                      'OpenStreetMap BlackAndWhite':
+                        label: ''
+                        checkbox: false
+                      'OpenStreetMap DE':
+                        label: ''
+                        checkbox: false
+                      'OpenStreetMap CH':
+                        label: ''
+                        checkbox: false
+                      'OpenStreetMap France':
+                        label: ''
+                        checkbox: false
+                      'OpenStreetMap HOT':
+                        label: ''
+                        checkbox: false
+                      'OpenStreetMap BZH':
+                        label: ''
+                        checkbox: false
+                    OpenTopoMap:
+                      OpenTopoMap:
+                        label: ''
+                        checkbox: false
+                    Thunderforest:
+                      'Thunderforest OpenCycleMap':
+                        label: ''
+                        checkbox: false
+                      'Thunderforest Transport':
+                        label: ''
+                        checkbox: false
+                      'Thunderforest TransportDark':
+                        label: ''
+                        checkbox: false
+                      'Thunderforest SpinalMap':
+                        label: ''
+                        checkbox: false
+                      'Thunderforest Landscape':
+                        label: ''
+                        checkbox: false
+                      'Thunderforest Outdoors':
+                        label: ''
+                        checkbox: false
+                      'Thunderforest Pioneer':
+                        label: ''
+                        checkbox: false
+                    OpenMapSurfer:
+                      'OpenMapSurfer Roads':
+                        label: ''
+                        checkbox: false
+                      'OpenMapSurfer Grayscale':
+                        label: ''
+                        checkbox: false
+                    Hydda:
+                      'Hydda Full':
+                        label: ''
+                        checkbox: false
+                      'Hydda Base':
+                        label: ''
+                        checkbox: false
+                    MapBox:
+                      MapBox:
+                        label: ''
+                        checkbox: false
+                    Stamen:
+                      'Stamen Toner':
+                        label: ''
+                        checkbox: false
+                      'Stamen TonerBackground':
+                        label: ''
+                        checkbox: false
+                      'Stamen TonerLite':
+                        label: ''
+                        checkbox: false
+                      'Stamen Watercolor':
+                        label: ''
+                        checkbox: false
+                      'Stamen Terrain':
+                        label: ''
+                        checkbox: false
+                      'Stamen TerrainBackground':
+                        label: ''
+                        checkbox: false
+                      'Stamen TopOSMRelief':
+                        label: ''
+                        checkbox: false
+                    Esri:
+                      'Esri WorldStreetMap':
+                        label: ''
+                        checkbox: false
+                      'Esri DeLorme':
+                        label: ''
+                        checkbox: false
+                      'Esri WorldTopoMap':
+                        label: ''
+                        checkbox: false
+                      'Esri WorldImagery':
+                        label: ''
+                        checkbox: false
+                      'Esri WorldTerrain':
+                        label: ''
+                        checkbox: false
+                      'Esri WorldShadedRelief':
+                        label: ''
+                        checkbox: false
+                      'Esri WorldPhysical':
+                        label: ''
+                        checkbox: false
+                      'Esri OceanBasemap':
+                        label: ''
+                        checkbox: false
+                      'Esri NatGeoWorldMap':
+                        label: ''
+                        checkbox: false
+                      'Esri WorldGrayCanvas':
+                        label: ''
+                        checkbox: false
+                    HERE:
+                      'HERE normalDay':
+                        label: ''
+                        checkbox: false
+                      'HERE normalDayCustom':
+                        label: ''
+                        checkbox: false
+                      'HERE normalDayGrey':
+                        label: ''
+                        checkbox: false
+                      'HERE normalDayMobile':
+                        label: ''
+                        checkbox: false
+                      'HERE normalDayGreyMobile':
+                        label: ''
+                        checkbox: false
+                      'HERE normalDayTransit':
+                        label: ''
+                        checkbox: false
+                      'HERE normalDayTransitMobile':
+                        label: ''
+                        checkbox: false
+                      'HERE normalNight':
+                        label: ''
+                        checkbox: false
+                      'HERE normalNightMobile':
+                        label: ''
+                        checkbox: false
+                      'HERE normalNightGrey':
+                        label: ''
+                        checkbox: false
+                      'HERE normalNightGreyMobile':
+                        label: ''
+                        checkbox: false
+                      'HERE normalNightTransit':
+                        label: ''
+                        checkbox: false
+                      'HERE normalNightTransitMobile':
+                        label: ''
+                        checkbox: false
+                      'HERE redcuedDay':
+                        label: ''
+                        checkbox: false
+                      'HERE redcuedNight':
+                        label: ''
+                        checkbox: false
+                      'HERE basicMap':
+                        label: ''
+                        checkbox: false
+                      'HERE mapLabels':
+                        label: ''
+                        checkbox: false
+                      'HERE trafficFlow':
+                        label: ''
+                        checkbox: false
+                      'HERE carnavDayGrey':
+                        label: ''
+                        checkbox: false
+                      'HERE hybridDayMobile':
+                        label: ''
+                        checkbox: false
+                      'HERE hybridDayTransit':
+                        label: ''
+                        checkbox: false
+                      'HERE hybridDayGrey':
+                        label: ''
+                        checkbox: false
+                      'HERE pedestrianDay':
+                        label: ''
+                        checkbox: false
+                      'HERE pedestrianNight':
+                        label: ''
+                        checkbox: false
+                      'HERE satelliteDay':
+                        label: ''
+                        checkbox: false
+                      'HERE terrainDay':
+                        label: ''
+                        checkbox: false
+                      'HERE terrainDayMobile':
+                        label: ''
+                        checkbox: false
+                    FreeMapSK:
+                      FreeMapSK:
+                        label: ''
+                        checkbox: false
+                    MtbMap:
+                      MtbMap:
+                        label: ''
+                        checkbox: false
+                    CartoDB:
+                      'CartoDB Positron':
+                        label: ''
+                        checkbox: false
+                      'CartoDB PositronNoLabels':
+                        label: ''
+                        checkbox: false
+                      'CartoDB PositronOnlyLabels':
+                        label: ''
+                        checkbox: false
+                      'CartoDB DarkMatter':
+                        label: ''
+                        checkbox: false
+                      'CartoDB DarkMatterNoLabels':
+                        label: ''
+                        checkbox: false
+                      'CartoDB DarkMatterOnlyLabels':
+                        label: ''
+                        checkbox: false
+                      'CartoDB Voyager':
+                        label: ''
+                        checkbox: false
+                      'CartoDB VoyagerNoLabels':
+                        label: ''
+                        checkbox: false
+                      'CartoDB VoyagerOnlyLabels':
+                        label: ''
+                        checkbox: false
+                      'CartoDB VoyagerLabelsUnder':
+                        label: ''
+                        checkbox: false
+                    HikeBike:
+                      HikeBike:
+                        label: ''
+                        checkbox: false
+                      'HikeBike HillShading':
+                        label: ''
+                        checkbox: false
+                    BasemapAT:
+                      'BasemapAT basemap':
+                        label: ''
+                        checkbox: false
+                      'BasemapAT grau':
+                        label: ''
+                        checkbox: false
+                      'BasemapAT overlay':
+                        label: ''
+                        checkbox: false
+                      'BasemapAT highdpi':
+                        label: ''
+                        checkbox: false
+                      'BasemapAT orthofoto':
+                        label: ''
+                        checkbox: false
+                    NLS:
+                      NLS:
+                        label: ''
+                        checkbox: false
+                    Wikimedia:
+                      Wikimedia:
+                        label: ''
+                        checkbox: false
+                    GeoportailFrance:
+                      'GeoportailFrance parcels':
+                        label: ''
+                        checkbox: false
+                      'GeoportailFrance ignMaps':
+                        label: ''
+                        checkbox: false
+                      'GeoportailFrance maps':
+                        label: ''
+                        checkbox: false
+                      'GeoportailFrance orthos':
+                        label: ''
+                        checkbox: false
+                  tile_providers_options:
+                    Thunderforest:
+                      apikey: ''
+                    MapBox:
+                      accessToken: ''
+                    HERE:
+                      app_id: ''
+                      app_code: ''
+                    GeoportailFrance:
+                      apikey: ''
+              leaflet_tile_layer:
+                weight: 0
+                settings:
+                  tile_layer_provider: 'OpenStreetMap Mapnik'
+                  tile_provider_options:
+                    Thunderforest:
+                      apikey: ''
+                    MapBox:
+                      accessToken: ''
+                    HERE:
+                      app_id: ''
+                      app_code: ''
+                    GeoportailFrance:
+                      apikey: ''
+                enabled: false
+              leaflet_tile_layer_overlay:
+                weight: 0
+                settings:
+                  tile_layer_overlay: OpenInfraMap.Power
+                enabled: false
+              leaflet_custom_tile_layer:
+                weight: 0
+                settings:
+                  tile_layer_url: ''
+                  tile_layer_attribution: ''
+                  tile_layer_subdomains: ''
+                  tile_layer_zoom: null
+                enabled: false
+              leaflet_max_bounds:
+                weight: 0
+                settings:
+                  north: null
+                  south: null
+                  east: null
+                  west: null
+                enabled: false
+              leaflet_marker_icon:
+                weight: 0
+                settings:
+                  marker_icon_path: ''
+                  icon_size:
+                    width: null
+                    height: null
+                  icon_anchor:
+                    x: null
+                    'y': null
+                  popup_anchor:
+                    x: null
+                    'y': null
+                  marker_shadow_path: ''
+                  shadow_size:
+                    width: null
+                    height: null
+                  shadow_anchor:
+                    x: null
+                    'y': null
+                enabled: false
+              leaflet_marker_clusterer:
+                weight: 0
+                enabled: false
+                settings:
+                  cluster_settings:
+                    show_coverage_on_hover: false
+                    zoom_to_bounds_on_click: false
+              leaflet_control_recenter:
+                weight: 0
+                settings:
+                  position: topleft
+                enabled: false
+              leaflet_control_locate:
+                weight: 0
+                settings:
+                  position: topleft
+                enabled: false
+              leaflet_control_geocoder:
+                weight: 0
+                settings:
+                  position: topleft
+                  geocoder: google_geocoding_api
+                  settings:
+                    label: Address
+                    description: 'Enter an address to be localized.'
+                    component_restrictions:
+                      route: ''
+                      locality: ''
+                      administrative_area: ''
+                      postal_code: ''
+                      country: ''
+                    boundary_restriction:
+                      south: ''
+                      west: ''
+                      north: ''
+                      east: ''
+                enabled: false
+              leaflet_control_fullscreen:
+                weight: 0
+                settings:
+                  position: topleft
+                enabled: false
+              leaflet_disable_user_interaction:
+                weight: 0
+                enabled: false
+              leaflet_client_location_indicator:
+                weight: 0
+                enabled: false
+              leaflet_wms:
+                weight: 0
+                settings:
+                  url: ''
+                  version: ''
+                  layers: ''
+                  styles: ''
+                  srs: ''
+                  format: ''
+                  transparent: false
+                  identify: false
+                enabled: false
+            height: 500px
+            width: 100%
+            zoom: '10'
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: true
       fields:
-        title:
-          id: title
+        nid:
+          id: nid
           table: node_field_data
-          field: title
-          entity_type: node
-          entity_field: title
-          label: ''
-          alter:
-            alter_text: false
-            make_link: false
-            absolute: false
-            trim: false
-            word_boundary: false
-            ellipsis: false
-            strip_tags: false
-            html: false
-          hide_empty: false
-          empty_zero: false
-          settings:
-            link_to_entity: true
-          plugin_id: field
+          field: nid
           relationship: none
           group_type: group
           admin_label: ''
-          exclude: false
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
+          hide_empty: false
+          empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: string
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -107,6 +630,374 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: field
+        field_media:
+          id: field_media
+          table: node__field_media
+          field: field_media
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: true
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_thumbnail
+          settings:
+            image_style: medium_
+            image_link: ''
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+        field_address:
+          id: field_address
+          table: node__field_address
+          field: field_address
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: "<p class=\"address\" translate=\"no\">\r\n  {% if field_address__given_name or field_address__family_name %}\r\n    <span class=\"name\">{{ field_address__given_name }} {{ field_address__family_name }}</span>\r\n  {% endif %}\r\n  {% if field_address__organization %}\r\n    <span class=\"name\">{{ field_address__organization }}</span>\r\n  {% endif %}\r\n  {% if field_address__address_line1 %}\r\n    <span class=\"address-line1\">{{ field_address__address_line1 }},</span>\r\n  {% endif %}\r\n  {% if field_address__address_line2 %}\r\n    <span class=\"address-line2\">{{ field_address__address_line2 }},</span>\r\n  {% endif %}\r\n  {% if field_address__dependent_locality %}\r\n    <span class=\"dependent-locality\">{{ field_address__dependent_locality }},</span>\r\n  {% endif %}\r\n  {% if field_address__locality %}\r\n    <span class=\"locality\">{{ field_address__locality }},</span>\r\n  {% endif %}\r\n  {% if field_address__administrative_area %}\r\n    <span class=\"administrative-area\">{{ field_address__administrative_area }}</span>\r\n  {% endif %}\r\n  {% if field_address__postal_code %}\r\n    <span class=\"postal-code\">{{ field_address__postal_code }}</span>\r\n  {% endif %}\r\n</p>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: langcode
+          type: address_default
+          settings: {  }
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        field_type:
+          id: field_type
+          table: node__field_type
+          field: field_type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: true
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "{% if field_media %}\r\n<div class=\"views-field-field-media\">\r\n  <div class=\"field-content\">\r\n    {{ field_media }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n<div class=\"map-list-item-heading\">{{ title }}</div>\r\n{% if field_address %}\r\n<div class=\"views-field-field-address\">\r\n  <div class=\"field-content\">\r\n    {{ field_address }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n{% if field_type %}\r\n<div class=\"views-field-field-type\">\r\n  <span class=\"views-label views-label-field-type\">Type: </span><span class=\"field-content\">{{ field_type }}</span>\r\n</div>\r\n{% endif %}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: '0'
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: '0'
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
+        field_geolocation_entity:
+          id: field_geolocation_entity
+          table: node__field_geolocation_entity
+          field: field_geolocation_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: ''
+          type: geolocation_latlng
+          settings: {  }
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: geolocation_field
       filters:
         status:
           value: '1'
@@ -128,6 +1019,68 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+        field_geolocation_entity_boundary:
+          id: field_geolocation_entity_boundary
+          table: node__field_geolocation_entity
+          field: field_geolocation_entity_boundary
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            lat_north_east: ''
+            lng_north_east: ''
+            lat_south_west: ''
+            lng_south_west: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 'Boundary (field_geolocation_entity)'
+            description: ''
+            use_operator: false
+            operator: field_geolocation_entity_boundary_op
+            identifier: field_geolocation_entity_boundary
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            input_by_geocoding_widget: 0
+            geocoder_plugin_settings:
+              plugin_id: google_geocoding_api
+              settings:
+                label: Address
+                description: 'Enter an address to be localized.'
+                component_restrictions:
+                  route: ''
+                  locality: ''
+                  administrative_area: ''
+                  postal_code: ''
+                  country: ''
+                boundary_restriction:
+                  south: ''
+                  west: ''
+                  north: ''
+                  east: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: geolocation_filter_boundary
       sorts:
         title:
           id: title
@@ -150,27 +1103,576 @@ display:
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
+      css_class: 'map-with-sidebar map-right'
+      use_ajax: true
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
-  page_1:
+      tags:
+        - 'config:field.storage.node.field_address'
+        - 'config:field.storage.node.field_geolocation_entity'
+        - 'config:field.storage.node.field_media'
+        - 'config:field.storage.node.field_type'
+  map:
     display_plugin: page
-    id: page_1
-    display_title: Page
+    id: map
+    display_title: 'Page with master map'
     position: 1
     display_options:
       display_extenders: {  }
       path: food-guide
+      display_description: ''
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_address'
+        - 'config:field.storage.node.field_geolocation_entity'
+        - 'config:field.storage.node.field_media'
+        - 'config:field.storage.node.field_type'
+  map_attachment:
+    display_plugin: attachment
+    id: map_attachment
+    display_title: 'List - Attachment'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      defaults:
+        style: false
+        row: false
+        css_class: false
+        fields: false
+      css_class: 'map-sidebar-left map-list'
+      pager:
+        type: none
+        options:
+          offset: 0
+      attachment_position: after
+      inherit_exposed_filters: true
+      inherit_pager: true
+      render_pager: true
+      displays:
+        map: map
+      style:
+        type: default
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          uses_fields: true
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: true
+      fields:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: nid
+          plugin_id: field
+        field_media:
+          id: field_media
+          table: node__field_media
+          field: field_media
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: true
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_thumbnail
+          settings:
+            image_style: medium_
+            image_link: ''
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: '<span id="node-{{ nid }}">{{ title }}</span>'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+        field_address:
+          id: field_address
+          table: node__field_address
+          field: field_address
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: "<p class=\"address\" translate=\"no\">\r\n  {% if field_address__given_name or field_address__family_name %}\r\n    <span class=\"name\">{{ field_address__given_name }} {{ field_address__family_name }}</span>\r\n  {% endif %}\r\n  {% if field_address__organization %}\r\n    <span class=\"name\">{{ field_address__organization }}</span>\r\n  {% endif %}\r\n  {% if field_address__address_line1 %}\r\n    <span class=\"address-line1\">{{ field_address__address_line1 }},</span>\r\n  {% endif %}\r\n  {% if field_address__address_line2 %}\r\n    <span class=\"address-line2\">{{ field_address__address_line2 }},</span>\r\n  {% endif %}\r\n  {% if field_address__dependent_locality %}\r\n    <span class=\"dependent-locality\">{{ field_address__dependent_locality }},</span>\r\n  {% endif %}\r\n  {% if field_address__locality %}\r\n    <span class=\"locality\">{{ field_address__locality }},</span>\r\n  {% endif %}\r\n  {% if field_address__administrative_area %}\r\n    <span class=\"administrative-area\">{{ field_address__administrative_area }}</span>\r\n  {% endif %}\r\n  {% if field_address__postal_code %}\r\n    <span class=\"postal-code\">{{ field_address__postal_code }}</span>\r\n  {% endif %}\r\n</p>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: langcode
+          type: address_default
+          settings: {  }
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        field_type:
+          id: field_type
+          table: node__field_type
+          field: field_type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: true
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        view_node:
+          id: view_node
+          table: node
+          field: view_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: view
+          output_url_as_text: true
+          absolute: true
+          entity_type: node
+          plugin_id: entity_link
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "<a href=\"{{ view_node }}\" id=\"node-{{ nid }}\" class=\"map-list-item clearfix\">\r\n{% if field_media %}\r\n<div class=\"views-field-field-media\">\r\n  <div class=\"field-content\">\r\n    {{ field_media }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n<div class=\"map-list-item-heading\">{{ title }}</div>\r\n{% if field_address %}\r\n<div class=\"views-field-field-address\">\r\n  <div class=\"field-content\">\r\n    {{ field_address }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n{% if field_type %}\r\n<div class=\"views-field-field-type\">\r\n  <span class=\"views-label views-label-field-type\">Type: </span><span class=\"field-content\">{{ field_type }}</span>\r\n</div>\r\n{% endif %}\r\n</a>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: '0'
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: '0'
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
+        field_geolocation_entity:
+          id: field_geolocation_entity
+          table: node__field_geolocation_entity
+          field: field_geolocation_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: ''
+          type: geolocation_latlng
+          settings: {  }
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: geolocation_field
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.field_address'
+        - 'config:field.storage.node.field_geolocation_entity'
+        - 'config:field.storage.node.field_media'
+        - 'config:field.storage.node.field_type'

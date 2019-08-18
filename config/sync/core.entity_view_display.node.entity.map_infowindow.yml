@@ -1,0 +1,68 @@
+uuid: ea85cbe0-6ea8-4da2-86c2-83ee907e4e07
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.map_infowindow
+    - field.field.node.entity.body
+    - field.field.node.entity.field_accepts
+    - field.field.node.entity.field_address
+    - field.field.node.entity.field_certifications
+    - field.field.node.entity.field_contact_name
+    - field.field.node.entity.field_csa_pickup_locations
+    - field.field.node.entity.field_distribution_metjh
+    - field.field.node.entity.field_email
+    - field.field.node.entity.field_geolocation_entity
+    - field.field.node.entity.field_hours_days
+    - field.field.node.entity.field_image
+    - field.field.node.entity.field_media
+    - field.field.node.entity.field_phone
+    - field.field.node.entity.field_products
+    - field.field.node.entity.field_type
+    - field.field.node.entity.field_website
+    - node.type.entity
+  module:
+    - address
+    - user
+id: node.entity.map_infowindow
+targetEntityType: node
+bundle: entity
+mode: map_infowindow
+content:
+  field_address:
+    weight: -1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: address_plain
+    region: content
+  field_type:
+    weight: 0
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  body: true
+  content_moderation_control: true
+  field_accepts: true
+  field_certifications: true
+  field_contact_name: true
+  field_csa_pickup_locations: true
+  field_distribution_metjh: true
+  field_email: true
+  field_geolocation_entity: true
+  field_hours_days: true
+  field_image: true
+  field_media: true
+  field_phone: true
+  field_products: true
+  field_website: true
+  search_api_excerpt: true

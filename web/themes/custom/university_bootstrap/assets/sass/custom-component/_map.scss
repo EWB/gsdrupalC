@@ -1,0 +1,131 @@
+/**
+ * Map view
+ * 
+ */
+
+.map-with-sidebar {
+  & > .view-content {
+    @media (min-width: $screen-sm-min) {
+      width: 60%;
+    }
+  }
+  &.map-left > .view-content {
+    @media (min-width: $screen-sm-min) {
+      float: left;
+    }
+  }
+  &.map-right > .view-content {
+    @media (min-width: $screen-sm-min) {
+      float: right;
+    }
+  }
+}
+
+.map-sidebar {
+  word-wrap: break-word;
+  border: 1px solid #dddddd;
+  @media (min-width: $screen-sm-min) {
+    width: 40%;
+    max-height: 500px;
+    overflow-y: scroll;
+  }
+}
+
+.map-list-item {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  // Place the border on the list items and negative margin up for better styling
+  margin-bottom: -1px;
+  background-color: $list-group-bg;
+  border-top: 1px solid $list-group-border;
+  border-bottom: 1px solid $list-group-border;
+}
+
+a.map-list-item {
+  text-decoration: none;
+  color: $list-group-link-color;
+
+  .map-list-item-heading {
+    color: $list-group-link-heading-color;
+    font-weight: 500;
+  }
+
+  // Hover state
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    color: $list-group-link-hover-color;
+    background-color: $list-group-hover-bg;
+  }
+}
+
+.map-list-item {
+  // Disabled state
+  &.disabled,
+  &.disabled:hover,
+  &.disabled:focus {
+    background-color: $list-group-disabled-bg;
+    color: $list-group-disabled-color;
+    cursor: $cursor-disabled;
+
+    // Force color to inherit for custom content
+    .map-list-item-heading {
+      color: inherit;
+    }
+    .map-list-item-text {
+      color: $list-group-disabled-text-color;
+    }
+  }
+
+  // Active class on item itself, not parent
+  &.active,
+  &.active:hover,
+  &.active:focus {
+    z-index: 2; // Place active items above their siblings for proper border styling
+    color: $list-group-active-color;
+    background-color: $list-group-active-bg;
+    border-color: $list-group-active-border;
+
+    // Force color to inherit for custom content
+    .map-list-item-heading,
+    .map-list-item-heading > small,
+    .map-list-item-heading > .small {
+      color: inherit;
+    }
+    .map-list-item-text {
+      color: $list-group-active-text-color;
+    }
+  }
+}
+
+.map-list-item-heading {
+  margin-top: 0;
+  margin-bottom: 5px;
+  line-height: 1.1;
+}
+.map-list-item-text {
+  margin-bottom: 0;
+  line-height: 1.3;
+}
+
+.map-list-item .views-field-field-media {
+    float: left;
+    width: 100px;
+    margin-right: 15px;
+}
+
+.map-list-item .address {
+    font-size: 14px;
+    line-height: 1.1;
+    font-family: "Avenir","Helvetica",sans-serif;
+    margin-top: 0;
+}
+
+.map-list-item .views-field-field-type {
+    font-size: 14px;
+}
+
+.map-details-panel {
+  
+}

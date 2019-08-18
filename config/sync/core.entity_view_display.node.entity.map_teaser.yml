@@ -1,0 +1,78 @@
+uuid: 4b8634c4-c7fa-49a5-8736-e4e7337285b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.map_teaser
+    - field.field.node.entity.body
+    - field.field.node.entity.field_accepts
+    - field.field.node.entity.field_address
+    - field.field.node.entity.field_certifications
+    - field.field.node.entity.field_contact_name
+    - field.field.node.entity.field_csa_pickup_locations
+    - field.field.node.entity.field_distribution_metjh
+    - field.field.node.entity.field_email
+    - field.field.node.entity.field_geolocation_entity
+    - field.field.node.entity.field_hours_days
+    - field.field.node.entity.field_image
+    - field.field.node.entity.field_media
+    - field.field.node.entity.field_phone
+    - field.field.node.entity.field_products
+    - field.field.node.entity.field_type
+    - field.field.node.entity.field_website
+    - image.style.medium_
+    - node.type.entity
+  module:
+    - address
+    - media
+    - user
+id: node.entity.map_teaser
+targetEntityType: node
+bundle: entity
+mode: map_teaser
+content:
+  field_address:
+    weight: -2
+    label: visually_hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: address_plain
+    region: content
+  field_media:
+    weight: -3
+    label: visually_hidden
+    settings:
+      image_style: medium_
+      image_link: ''
+    third_party_settings: {  }
+    type: media_thumbnail
+    region: content
+  field_type:
+    weight: -1
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  body: true
+  content_moderation_control: true
+  field_accepts: true
+  field_certifications: true
+  field_contact_name: true
+  field_csa_pickup_locations: true
+  field_distribution_metjh: true
+  field_email: true
+  field_geolocation_entity: true
+  field_hours_days: true
+  field_image: true
+  field_phone: true
+  field_products: true
+  field_website: true
+  search_api_excerpt: true
