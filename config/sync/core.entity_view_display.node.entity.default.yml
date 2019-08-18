@@ -55,7 +55,6 @@ third_party_settings:
       weight: 1
       format_type: html_element
       format_settings:
-        label: 'Column One'
         element: div
         show_label: false
         label_element: h3
@@ -75,7 +74,6 @@ third_party_settings:
       weight: 2
       format_type: html_element
       format_settings:
-        label: 'Column Two'
         element: div
         show_label: false
         label_element: h3
@@ -88,7 +86,6 @@ third_party_settings:
       region: content
     group_grid:
       children:
-        - links
         - field_contact_name
         - field_address
         - field_website
@@ -188,6 +185,14 @@ content:
         scrollwheel: 0
         preferScrollingToZooming: 0
         disableDoubleClickZoom: 0
+      data_provider_settings: {  }
+      centre:
+        fit_bounds:
+          enable: true
+          weight: -101
+          map_center_id: fit_bounds
+          settings:
+            reset_zoom: true
     third_party_settings: {  }
     type: geolocation_map
     region: content
@@ -237,6 +242,14 @@ content:
         scrollwheel: 0
         preferScrollingToZooming: 0
         disableDoubleClickZoom: 0
+      data_provider_settings: {  }
+      centre:
+        fit_bounds:
+          enable: true
+          weight: -101
+          map_center_id: fit_bounds
+          settings:
+            reset_zoom: true
     third_party_settings: {  }
     type: geolocation_map
     region: content
@@ -293,10 +306,11 @@ content:
     type: link
     region: content
   links:
-    weight: 10
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   content_moderation_control: true
   field_image: true
+  search_api_excerpt: true
