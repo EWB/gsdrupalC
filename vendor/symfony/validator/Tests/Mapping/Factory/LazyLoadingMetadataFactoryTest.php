@@ -97,7 +97,7 @@ class LazyLoadingMetadataFactoryTest extends TestCase
                   [$this->equalTo(self::PARENT_CLASS)],
                   [$this->equalTo(self::INTERFACE_A_CLASS)]
               )
-              ->willReturn(false);
+              ->will($this->returnValue(false));
         $cache->expects($this->exactly(2))
               ->method('write')
               ->withConsecutive(
@@ -172,12 +172,12 @@ class LazyLoadingMetadataFactoryTest extends TestCase
         $cache
             ->expects($this->any())
             ->method('write')
-            ->willReturnCallback(function ($metadata) { serialize($metadata); })
+            ->will($this->returnCallback(function ($metadata) { serialize($metadata); }))
         ;
 
         $cache->expects($this->any())
             ->method('read')
-            ->willReturn(false);
+            ->will($this->returnValue(false));
 
         $metadata = $factory->getMetadataFor(self::PARENT_CLASS);
         $metadata->addConstraint(new Callback(function () {}));

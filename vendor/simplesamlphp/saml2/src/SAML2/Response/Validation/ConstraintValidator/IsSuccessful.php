@@ -23,6 +23,7 @@ class IsSuccessful implements ConstraintValidator
         }
     }
 
+
     /**
      * @param array $responseStatus
      *
@@ -33,10 +34,11 @@ class IsSuccessful implements ConstraintValidator
         return sprintf(
             '%s%s%s',
             $this->truncateStatus($responseStatus['Code']),
-            $responseStatus['SubCode'] ? '/' . $this->truncateStatus($responseStatus['SubCode']) : '',
-            $responseStatus['Message'] ? ' ' . $responseStatus['Message'] : ''
+            $responseStatus['SubCode'] ? '/'.$this->truncateStatus($responseStatus['SubCode']) : '',
+            $responseStatus['Message'] ? ' '.$responseStatus['Message'] : ''
         );
     }
+
 
     /**
      * Truncate the status if it is prefixed by its urn.

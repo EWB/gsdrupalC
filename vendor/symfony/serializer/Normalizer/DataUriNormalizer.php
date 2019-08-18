@@ -32,7 +32,7 @@ class DataUriNormalizer implements NormalizerInterface, DenormalizerInterface
     ];
 
     /**
-     * @var MimeTypeGuesserInterface|null
+     * @var MimeTypeGuesserInterface
      */
     private $mimeTypeGuesser;
 

@@ -28,9 +28,12 @@ regions:
   page_top: 'Page top'
   page_bottom: 'Page bottom'
 
-libraries:
-  - 'university_bootstrap/global-styling'
-  - 'university_bootstrap/bootstrap-scripts'
+# Libraries-extend is used to attach libraries to other libraries. If the
+# original library is conditionally included, the library it is extended with
+# will be included under the same conditions.
+libraries-extend:
+  bootstrap/framework:
+    - university_bootstrap/framework
 
 ckeditor_stylesheets:
   - css/style.css

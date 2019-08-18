@@ -17,7 +17,7 @@ interface EntryInterface
      * Get the specified author
      *
      * @param  int $index
-     * @return array<string, string>|null
+     * @return string|null
      */
     public function getAuthor($index = 0);
 

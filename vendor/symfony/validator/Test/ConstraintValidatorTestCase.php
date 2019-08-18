@@ -109,7 +109,7 @@ abstract class ConstraintValidatorTestCase extends TestCase
         $validator->expects($this->any())
             ->method('inContext')
             ->with($context)
-            ->willReturn($contextualValidator);
+            ->will($this->returnValue($contextualValidator));
 
         return $context;
     }
@@ -174,7 +174,7 @@ abstract class ConstraintValidatorTestCase extends TestCase
         $validator->expects($this->at(2 * $i))
             ->method('atPath')
             ->with($propertyPath)
-            ->willReturn($validator);
+            ->will($this->returnValue($validator));
         $validator->expects($this->at(2 * $i + 1))
             ->method('validate')
             ->with($value, $this->logicalOr(null, [], $this->isInstanceOf('\Symfony\Component\Validator\Constraints\Valid')), $group);
@@ -186,7 +186,7 @@ abstract class ConstraintValidatorTestCase extends TestCase
         $contextualValidator->expects($this->at(2 * $i))
             ->method('atPath')
             ->with($propertyPath)
-            ->willReturn($contextualValidator);
+            ->will($this->returnValue($contextualValidator));
         $contextualValidator->expects($this->at(2 * $i + 1))
             ->method('validate')
             ->with($value, $constraints, $group);

@@ -34,7 +34,7 @@ class FunctionNode extends AbstractNode
      * @param string        $name
      * @param Token[]       $arguments
      */
-    public function __construct(NodeInterface $selector, $name, array $arguments = [])
+    public function __construct(NodeInterface $selector, $name, array $arguments = array())
     {
         $this->selector = $selector;
         $this->name = strtolower($name);

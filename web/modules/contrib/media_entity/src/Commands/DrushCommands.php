@@ -37,11 +37,10 @@ class DrushCommands extends DrushCommandsBase {
    * @aliases mecu,media-entity-check-upgrade
    */
   public function mediaEntityCheckUpgrade() {
-    drush_bootstrap_to_phase(DRUSH_BOOTSTRAP_DRUPAL_FULL);
     $logger = $this->logger();
     // This command is useless if the DB updates have already been run.
     if (drupal_get_installed_schema_version('media_entity') >= 8201) {
-      $logger(dt('Your site has already run the media_entity DB updates. If you believe this is not correct, you should consider rolling back your database to a previous backup and try again.'));
+      $logger->success(dt('Your site has already run the media_entity DB updates. If you believe this is not correct, you should consider rolling back your database to a previous backup and try again.'));
       return;
     }
 

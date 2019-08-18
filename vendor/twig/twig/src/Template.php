@@ -227,10 +227,7 @@ abstract class Template implements \Twig_TemplateInterface
 
                 throw $e;
             } catch (\Exception $e) {
-                $e = new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
-                $e->guess();
-
-                throw $e;
+                throw new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
             }
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false);
@@ -253,11 +250,7 @@ abstract class Template implements \Twig_TemplateInterface
      */
     public function renderParentBlock($name, array $context, array $blocks = [])
     {
-        if ($this->env->isDebug()) {
-            ob_start();
-        } else {
-            ob_start(function () { return ''; });
-        }
+        ob_start();
         $this->displayParentBlock($name, $context, $blocks);
 
         return ob_get_clean();
@@ -278,11 +271,7 @@ abstract class Template implements \Twig_TemplateInterface
      */
     public function renderBlock($name, array $context, array $blocks = [], $useBlocks = true)
     {
-        if ($this->env->isDebug()) {
-            ob_start();
-        } else {
-            ob_start(function () { return ''; });
-        }
+        ob_start();
         $this->displayBlock($name, $context, $blocks, $useBlocks);
 
         return ob_get_clean();
@@ -351,9 +340,6 @@ abstract class Template implements \Twig_TemplateInterface
         return array_unique($names);
     }
 
-    /**
-     * @return Template|TemplateWrapper
-     */
     protected function loadTemplate($template, $templateName = null, $line = null, $index = null)
     {
         try {
@@ -366,7 +352,7 @@ abstract class Template implements \Twig_TemplateInterface
             }
 
             if ($template === $this->getTemplateName()) {
-                $class = \get_class($this);
+                $class = get_class($this);
                 if (false !== $pos = strrpos($class, '___', -1)) {
                     $class = substr($class, 0, $pos);
                 }
@@ -395,16 +381,6 @@ abstract class Template implements \Twig_TemplateInterface
     }
 
     /**
-     * @internal
-     *
-     * @return Template
-     */
-    protected function unwrap()
-    {
-        return $this;
-    }
-
-    /**
      * Returns all blocks.
      *
      * This method is for internal use only and should never be called
@@ -425,11 +401,7 @@ abstract class Template implements \Twig_TemplateInterface
     public function render(array $context)
     {
         $level = ob_get_level();
-        if ($this->env->isDebug()) {
-            ob_start();
-        } else {
-            ob_start(function () { return ''; });
-        }
+        ob_start();
         try {
             $this->display($context);
         } catch (\Exception $e) {
@@ -466,10 +438,7 @@ abstract class Template implements \Twig_TemplateInterface
 
             throw $e;
         } catch (\Exception $e) {
-            $e = new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
-            $e->guess();
-
-            throw $e;
+            throw new RuntimeError(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
         }
     }
 

@@ -114,6 +114,13 @@ class GeolocationGoogleMapsSettings extends ConfigFormBase {
       '#description' => $this->t('Attention: setting this option has major usage implications. See <a href=":google_client_id_link">Google Maps Authentication documentation</a>.', [':google_client_id_link' => 'https://developers.google.com/maps/documentation/javascript/get-api-key#client-id']),
     ];
 
+    $form['parameters']['channel'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t("Google Maps API Channel ID - 'channel'"),
+      '#default_value' => empty($custom_parameters['channel']) ?: $custom_parameters['channel'],
+      '#description' => $this->t('Channel parameter for tracking map usage.'),
+    ];
+
     $form['use_current_language'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Use current interface language in Google Maps'),

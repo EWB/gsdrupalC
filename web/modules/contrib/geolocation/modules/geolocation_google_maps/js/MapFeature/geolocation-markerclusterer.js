@@ -85,6 +85,12 @@
             });
           });
 
+          map.addUpdatedCallback(function (map, mapSettings) {
+            if (typeof map.markerClusterer !== 'undefined') {
+              map.markerClusterer.clearMarkers();
+            }
+          });
+
           return true;
         },
         drupalSettings

@@ -130,7 +130,7 @@ abstract class AbstractFeed implements FeedInterface
      */
     public function current()
     {
-        if (0 === strpos($this->getType(), 'rss')) {
+        if (substr($this->getType(), 0, 3) == 'rss') {
             $reader = new Reader\Entry\Rss($this->entries[$this->key()], $this->key(), $this->getType());
         } else {
             $reader = new Reader\Entry\Atom($this->entries[$this->key()], $this->key(), $this->getType());
@@ -172,7 +172,7 @@ abstract class AbstractFeed implements FeedInterface
      */
     public function saveXml()
     {
-        return $this->getDomDocument()->saveXML();
+        return $this->getDomDocument()->saveXml();
     }
 
     /**
@@ -263,7 +263,7 @@ abstract class AbstractFeed implements FeedInterface
      * Return an Extension object with the matching name (postfixed with _Feed)
      *
      * @param string $name
-     * @return \Zend\Feed\Reader\Extension\AbstractFeed|null
+     * @return \Zend\Feed\Reader\Extension\AbstractFeed
      */
     public function getExtension($name)
     {
@@ -282,10 +282,8 @@ abstract class AbstractFeed implements FeedInterface
             if (in_array($extension, $all['core'])) {
                 continue;
             }
-            if (! $manager->has($extension)) {
-                throw new Exception\RuntimeException(
-                    sprintf('Unable to load extension "%s"; cannot find class', $extension)
-                );
+            if (!$manager->has($extension)) {
+                throw new Exception\RuntimeException(sprintf('Unable to load extension "%s"; cannot find class', $extension));
             }
             $plugin = $manager->get($extension);
             $plugin->setDomDocument($this->getDomDocument());

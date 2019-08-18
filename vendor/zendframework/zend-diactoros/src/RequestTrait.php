@@ -1,7 +1,9 @@
 <?php
 /**
- * @see       https://github.com/zendframework/zend-diactoros for the canonical source repository
- * @copyright Copyright (c) 2015-2017 Zend Technologies USA Inc. (http://www.zend.com)
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @see       http://github.com/zendframework/zend-diactoros for the canonical source repository
+ * @copyright Copyright (c) 2015-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
@@ -10,15 +12,6 @@ namespace Zend\Diactoros;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
-
-use function array_keys;
-use function get_class;
-use function gettype;
-use function is_object;
-use function is_string;
-use function preg_match;
-use function sprintf;
-use function strtolower;
 
 /**
  * Trait with common request behaviors.

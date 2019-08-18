@@ -7,7 +7,6 @@
 
 // This empty file needs to be here so that drush commands that automatically
 // include .module files on enabled modules don't complain.
-
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\media_entity\Media;
@@ -34,7 +33,6 @@ function media_entity_entity_type_build(array &$entity_types) {
         'label' => 'name',
         'langcode' => 'langcode',
         'uuid' => 'uuid',
-        'published' => 'status',
       ],
       'revision_metadata_keys' => [
         'revision_user' => 'revision_user',

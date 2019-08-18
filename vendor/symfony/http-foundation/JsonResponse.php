@@ -18,7 +18,7 @@ namespace Symfony\Component\HttpFoundation;
  * object. It is however recommended that you do return an object as it
  * protects yourself against XSSI and JSON-JavaScript Hijacking.
  *
- * @see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/AJAX_Security_Cheat_Sheet.md#always-return-json-with-an-object-on-the-outside
+ * @see https://www.owasp.org/index.php/OWASP_AJAX_Security_Guidelines#Always_return_JSON_with_an_Object_on_the_outside
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
@@ -55,10 +55,10 @@ class JsonResponse extends Response
      *
      * Example:
      *
-     *     return JsonResponse::create(['key' => 'value'])
+     *     return JsonResponse::create($data, 200)
      *         ->setSharedMaxAge(300);
      *
-     * @param mixed $data    The JSON response data
+     * @param mixed $data    The json response data
      * @param int   $status  The response status code
      * @param array $headers An array of response headers
      *
@@ -70,18 +70,7 @@ class JsonResponse extends Response
     }
 
     /**
-     * Factory method for chainability.
-     *
-     * Example:
-     *
-     *     return JsonResponse::fromJsonString('{"key": "value"}')
-     *         ->setSharedMaxAge(300);
-     *
-     * @param string|null $data    The JSON response string
-     * @param int         $status  The response status code
-     * @param array       $headers An array of response headers
-     *
-     * @return static
+     * Make easier the creation of JsonResponse from raw json.
      */
     public static function fromJsonString($data = null, $status = 200, $headers = [])
     {
@@ -171,10 +160,6 @@ class JsonResponse extends Response
                         throw $e->getPrevious() ?: $e;
                     }
                     throw $e;
-                }
-
-                if (\PHP_VERSION_ID >= 70300 && (JSON_THROW_ON_ERROR & $this->encodingOptions)) {
-                    return $this->setJson($data);
                 }
             }
         }

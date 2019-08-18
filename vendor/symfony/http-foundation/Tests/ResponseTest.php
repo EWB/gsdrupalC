@@ -1001,3 +1001,14 @@ class StringableObject
 class DefaultResponse extends Response
 {
 }
+
+class ExtendedResponse extends Response
+{
+    public function setLastModified(\DateTime $date = null)
+    {
+    }
+
+    public function getDate()
+    {
+    }
+}

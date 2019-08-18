@@ -49,7 +49,7 @@ EOF
         $node = new SetNode(true, $names, $values, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-ob_start(function () { return ''; });
+ob_start();
 echo "foo";
 \$context["foo"] = ('' === \$tmp = ob_get_clean()) ? '' : new Markup(\$tmp, \$this->env->getCharset());
 EOF

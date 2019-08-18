@@ -77,22 +77,10 @@ class EmailLexer extends AbstractLexer
 
     protected $previous;
 
-    private static $nullToken = [
-        'value' => '',
-        'type' => null,
-        'position' => 0,
-    ];
-
-    public function __construct()
-    {
-        $this->previous = $this->token = self::$nullToken;
-    }
-
     public function reset()
     {
         $this->hasInvalidTokens = false;
         parent::reset();
-        $this->previous = $this->token = self::$nullToken;
     }
 
     public function hasInvalidTokens()
@@ -101,7 +89,7 @@ class EmailLexer extends AbstractLexer
     }
 
     /**
-     * @param string $type
+     * @param $type
      * @throws \UnexpectedValueException
      * @return boolean
      */
@@ -134,10 +122,8 @@ class EmailLexer extends AbstractLexer
     public function moveNext()
     {
         $this->previous = $this->token;
-        $hasNext = parent::moveNext();
-        $this->token = $this->token ?: self::$nullToken;
 
-        return $hasNext;
+        return parent::moveNext();
     }
 
     /**
@@ -203,7 +189,7 @@ class EmailLexer extends AbstractLexer
     }
 
     /**
-     * @param string $value
+     * @param $value
      * @return bool
      */
     protected function isNullType($value)
@@ -216,7 +202,7 @@ class EmailLexer extends AbstractLexer
     }
 
     /**
-     * @param string $value
+     * @param $value
      * @return bool
      */
     protected function isUTF8Invalid($value)

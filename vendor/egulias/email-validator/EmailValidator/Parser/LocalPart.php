@@ -21,8 +21,8 @@ class LocalPart extends Parser
         $closingQuote = false;
         $openedParenthesis = 0;
 
-        while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT && null === $this->lexer->getPrevious()['type']) {
+        while ($this->lexer->token['type'] !== EmailLexer::S_AT && $this->lexer->token) {
+            if ($this->lexer->token['type'] === EmailLexer::S_DOT && !$this->lexer->getPrevious()) {
                 throw new DotAtStart();
             }
 
@@ -86,7 +86,7 @@ class LocalPart extends Parser
 
         $this->lexer->moveNext();
 
-        while ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE && null !== $this->lexer->token['type']) {
+        while ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE && $this->lexer->token) {
             $parseAgain = false;
             if (isset($special[$this->lexer->token['type']]) && $setSpecialsWarning) {
                 $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();

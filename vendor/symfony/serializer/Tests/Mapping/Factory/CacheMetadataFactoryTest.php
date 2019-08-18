@@ -31,7 +31,7 @@ class CacheMetadataFactoryTest extends TestCase
         $decorated
             ->expects($this->once())
             ->method('getMetadataFor')
-            ->willReturn($metadata)
+            ->will($this->returnValue($metadata))
         ;
 
         $factory = new CacheClassMetadataFactory($decorated, new ArrayAdapter());
@@ -47,7 +47,7 @@ class CacheMetadataFactoryTest extends TestCase
         $decorated
             ->expects($this->once())
             ->method('hasMetadataFor')
-            ->willReturn(true)
+            ->will($this->returnValue(true))
         ;
 
         $factory = new CacheClassMetadataFactory($decorated, new ArrayAdapter());

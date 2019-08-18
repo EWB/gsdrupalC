@@ -2,10 +2,15 @@
 
 namespace Drupal\Tests\simplesamlphp_auth\Unit\Service;
 
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Routing\AdminContext;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\simplesamlphp_auth\Service\SimplesamlphpAuthManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use SimpleSAML\Auth\Simple;
+use SimpleSAML\Configuration;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,7 +35,7 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
   /**
    * A mocked SimpleSAML configuration instance.
    *
-   * @var \SimpleSAML_Configuration|\PHPUnit_Framework_MockObject_MockObject
+   * @var \SimpleSAML\Configuration|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $simplesamlConfig;
 
@@ -40,6 +45,41 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
    * @var \SimpleSAML\Auth\Simple|\PHPUnit_Framework_MockObject_MockObject
    */
   public $instance;
+
+  /**
+   * A mocked current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $currentUser;
+
+  /**
+   * A mocked AdminContext.
+   *
+   * @var \Drupal\Core\Routing\AdminContext|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $adminContext;
+
+  /**
+   * A mocked ModuleHandlerInterface.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $moduleHandler;
+
+  /**
+   * A mocked RequestStack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $requestStack;
+
+  /**
+   * A mocked messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $messenger;
 
   /**
    * {@inheritdoc}
@@ -59,7 +99,7 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
       ],
     ]);
 
-    $this->instance = $this->getMockBuilder('\SimpleSAML\Auth\Simple')
+    $this->instance = $this->getMockBuilder(Simple::class)
       ->setMethods([
         'isAuthenticated',
         'requireAuth',
@@ -69,7 +109,32 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->simplesamlConfig = $this->getMockBuilder('\SimpleSAML_Configuration')
+    $this->currentUser = $this->getMockBuilder(AccountInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->adminContext = $this->getMockBuilder(AdminContext::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->moduleHandler = $this->getMockBuilder(ModuleHandlerInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->moduleHandler->expects($this->any())
+      ->method('getImplementations')
+      ->with($this->equalTo('simplesamlphp_auth_allow_login'))
+      ->will($this->returnValue([]));
+
+    $this->requestStack = $this->getMockBuilder(RequestStack::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->messenger = $this->getMockBuilder(MessengerInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->simplesamlConfig = $this->getMockBuilder(Configuration::class)
       ->setMethods(['getValue'])
       ->disableOriginalConstructor()
       ->getMock();
@@ -78,12 +143,32 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
     $request = $this->getMockBuilder(Request::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $request_stack = $this->getMock(RequestStack::class);
-    $request_stack->expects($this->any())
+
+    $this->requestStack->expects($this->any())
       ->method('getCurrentRequest')
       ->will($this->returnValue($request));
-    $container->set('request_stack', $request_stack);
+    $container->set('request_stack', $this->requestStack);
     \Drupal::setContainer($container);
+
+  }
+
+  /**
+   * Get a new manager instance using mocked constructor arguments.
+   *
+   * @return \Drupal\simplesamlphp_auth\Service\SimplesamlphpAuthManager
+   *   A mocked manager.
+   */
+  protected function getManagerInContext() {
+    return new SimplesamlphpAuthManager(
+      $this->configFactory,
+      $this->currentUser,
+      $this->adminContext,
+      $this->moduleHandler,
+      $this->requestStack,
+      $this->messenger,
+      $this->instance,
+      $this->simplesamlConfig
+    );
   }
 
   /**
@@ -93,13 +178,7 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
    * @covers ::isActivated
    */
   public function testIsActivated() {
-    // Test isActivated() method.
-    $simplesaml = new SimplesamlphpAuthManager(
-      $this->configFactory,
-      $this->instance,
-      $this->simplesamlConfig
-    );
-
+    $simplesaml = $this->getManagerInContext();
     $return = $simplesaml->isActivated();
     $this->assertTrue($return);
   }
@@ -117,12 +196,7 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     // Test isAuthenticated() method.
-    $simplesaml = new SimplesamlphpAuthManager(
-      $this->configFactory,
-      $this->instance,
-      $this->simplesamlConfig
-    );
-
+    $simplesaml = $this->getManagerInContext();
     $return = $simplesaml->isAuthenticated();
     $this->assertTrue($return);
   }
@@ -139,12 +213,7 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
       ->method('requireAuth');
 
     // Test externalAuthenticate() method.
-    $simplesaml = new SimplesamlphpAuthManager(
-      $this->configFactory,
-      $this->instance,
-      $this->simplesamlConfig
-    );
-
+    $simplesaml = $this->getManagerInContext();
     $simplesaml->externalAuthenticate();
   }
 
@@ -156,18 +225,13 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
    */
   public function testGetStorage() {
     // Set expectations for config.
-    $this->simplesamlConfig->expects($this->once())
+    $this->simplesamlConfig->expects($this->any())
       ->method('getValue')
       ->with($this->equalTo('store.type'))
       ->will($this->returnValue('sql'));
 
     // Test getStorage() method.
-    $simplesaml = new SimplesamlphpAuthManager(
-      $this->configFactory,
-      $this->instance,
-      $this->simplesamlConfig
-    );
-
+    $simplesaml = $this->getManagerInContext();
     $return = $simplesaml->getStorage();
     $this->assertEquals('sql', $return);
   }
@@ -196,12 +260,7 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
       ->will($this->returnValue($data));
 
     // Test attribute methods.
-    $simplesaml = new SimplesamlphpAuthManager(
-      $this->configFactory,
-      $this->instance,
-      $this->simplesamlConfig
-    );
-
+    $simplesaml = $this->getManagerInContext();
     $this->assertEquals('ext_user_123', $simplesaml->getAuthname());
     $this->assertEquals('External User', $simplesaml->getDefaultName());
     $this->assertEquals('ext_user_123@example.com', $simplesaml->getDefaultEmail());
@@ -224,11 +283,7 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
       ->method('getAttributes')
       ->will($this->returnValue(['uid' => ['ext_user_123']]));
 
-    $simplesaml = new SimplesamlphpAuthManager(
-      $this->configFactory,
-      $this->instance,
-      $this->simplesamlConfig
-    );
+    $simplesaml = $this->getManagerInContext();
     $simplesaml->getAttribute('name');
   }
 
@@ -251,24 +306,9 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
       ->method('getAttributes')
       ->will($this->returnValue($data));
 
-    $container = new ContainerBuilder();
-    $module_handler = $this->getMock(ModuleHandlerInterface::class);
-    $module_handler->expects($this->any())
-      ->method('getImplementations')
-      ->with($this->equalTo('simplesamlphp_auth_allow_login'))
-      ->will($this->returnValue([]));
-    $container->set('module_handler', $module_handler);
-    \Drupal::setContainer($container);
-
     // Test allowUserByAttribute method.
-    $simplesaml = new SimplesamlphpAuthManager(
-      $this->configFactory,
-      $this->instance,
-      $this->simplesamlConfig
-    );
-
-    $return = $simplesaml->allowUserByAttribute();
-    $this->assertTrue($return);
+    $simplesaml = $this->getManagerInContext();
+    $this->assertTrue($simplesaml->allowUserByAttribute());
   }
 
   /**
@@ -286,12 +326,7 @@ class SimplesamlphpAuthManagerTest extends UnitTestCase {
       ->with($this->equalTo($redirect_path));
 
     // Test logout() method.
-    $simplesaml = new SimplesamlphpAuthManager(
-      $this->configFactory,
-      $this->instance,
-      $this->simplesamlConfig
-    );
-
+    $simplesaml = $this->getManagerInContext();
     $simplesaml->logout($redirect_path);
   }
 

@@ -251,7 +251,7 @@ class Parser implements \Twig_ParserInterface
 
     public function peekBlockStack()
     {
-        return isset($this->blockStack[\count($this->blockStack) - 1]) ? $this->blockStack[\count($this->blockStack) - 1] : null;
+        return $this->blockStack[\count($this->blockStack) - 1];
     }
 
     public function popBlockStack()
@@ -334,18 +334,10 @@ class Parser implements \Twig_ParserInterface
 
     public function getImportedSymbol($type, $alias)
     {
-        if (null !== $this->peekBlockStack()) {
-            foreach ($this->importedSymbols as $functions) {
-                if (isset($functions[$type][$alias])) {
-                    if (\count($this->blockStack) > 1) {
-                        return null;
-                    }
-
-                    return $functions[$type][$alias];
-                }
+        foreach ($this->importedSymbols as $functions) {
+            if (isset($functions[$type][$alias])) {
+                return $functions[$type][$alias];
             }
-        } else {
-            return isset($this->importedSymbols[0][$type][$alias]) ? $this->importedSymbols[0][$type][$alias] : null;
         }
     }
 

@@ -497,6 +497,18 @@ class PropertyConstructorDummy
     }
 }
 
+class PropertyCamelizedDummy
+{
+    private $kevinDunglas;
+    public $fooBar;
+    public $bar_foo;
+
+    public function __construct($kevinDunglas = null)
+    {
+        $this->kevinDunglas = $kevinDunglas;
+    }
+}
+
 class StaticPropertyDummy
 {
     private static $property = 'value';

@@ -1,23 +1,18 @@
 <?php
 /**
- * @see       https://github.com/zendframework/zend-diactoros for the canonical source repository
- * @copyright Copyright (c) 2015-2018 Zend Technologies USA Inc. (http://www.zend.com)
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @see       http://github.com/zendframework/zend-diactoros for the canonical source repository
+ * @copyright Copyright (c) 2015-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
 namespace Zend\Diactoros\Response;
 
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
+use Zend\Diactoros\RelativeStream;
 
-use function is_array;
-use function preg_match;
-use function strlen;
-use function substr;
-
-/**
- * @deprecated since 1.8.0. The package zendframework/zend-httphandlerrunner
- *     now provides this functionality.
- */
 class SapiStreamEmitter implements EmitterInterface
 {
     use SapiEmitterTrait;
@@ -33,9 +28,15 @@ class SapiStreamEmitter implements EmitterInterface
      */
     public function emit(ResponseInterface $response, $maxBufferLength = 8192)
     {
-        $this->assertNoPreviousOutput();
-        $this->emitHeaders($response);
+        if (headers_sent()) {
+            throw new RuntimeException('Unable to emit response; headers already sent');
+        }
+
+        $response = $this->injectContentLength($response);
+
         $this->emitStatusLine($response);
+        $this->emitHeaders($response);
+        $this->flush();
 
         $range = $this->parseContentRange($response->getHeaderLine('Content-Range'));
 

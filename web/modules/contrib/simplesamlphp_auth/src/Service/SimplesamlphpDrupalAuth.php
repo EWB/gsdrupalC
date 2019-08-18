@@ -8,11 +8,16 @@ use Drupal\user\UserInterface;
 use Drupal\Core\Session\AccountInterface;
 use Psr\Log\LoggerInterface;
 use Drupal\externalauth\ExternalAuthInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Service to link SimpleSAMLphp authentication with Drupal users.
  */
 class SimplesamlphpDrupalAuth {
+
+  use StringTranslationTrait;
 
   /**
    * SimpleSAMLphp Authentication helper.
@@ -57,6 +62,20 @@ class SimplesamlphpDrupalAuth {
   protected $currentUser;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * {@inheritdoc}
    *
    * @param SimplesamlphpAuthManager $simplesaml_auth
@@ -71,14 +90,20 @@ class SimplesamlphpDrupalAuth {
    *   The ExternalAuth service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in user.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
-  public function __construct(SimplesamlphpAuthManager $simplesaml_auth, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger, ExternalAuthInterface $externalauth, AccountInterface $account) {
+  public function __construct(SimplesamlphpAuthManager $simplesaml_auth, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger, ExternalAuthInterface $externalauth, AccountInterface $account, MessengerInterface $messenger, ModuleHandlerInterface $module_handler) {
     $this->simplesamlAuth = $simplesaml_auth;
     $this->config = $config_factory->get('simplesamlphp_auth.settings');
     $this->entityTypeManager = $entity_type_manager;
     $this->logger = $logger;
     $this->externalauth = $externalauth;
     $this->currentUser = $account;
+    $this->messenger = $messenger;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -127,7 +152,8 @@ class SimplesamlphpDrupalAuth {
 
       // We're not allowed to register new users on the site through simpleSAML.
       // We let the user know about this and redirect to the user/login page.
-      drupal_set_message(t("We are sorry. While you have successfully authenticated, you are not yet entitled to access this site. Please ask the site administrator to provision access for you."));
+      $this->messenger
+        ->addMessage($this->t('We are sorry. While you have successfully authenticated, you are not yet entitled to access this site. Please ask the site administrator to provision access for you.'), 'status');
       $this->simplesamlAuth->logout(base_path());
 
       return FALSE;
@@ -157,7 +183,8 @@ class SimplesamlphpDrupalAuth {
         }
         // User is not permitted to login to Drupal via SAML.
         // Log out of SAML and redirect to the front page.
-        drupal_set_message(t('We are sorry, your user account is not SAML enabled.'));
+        $this->messenger
+          ->addMessage($this->t('We are sorry, your user account is not SAML enabled.'), 'status');
         $this->simplesamlAuth->logout(base_path());
         return FALSE;
       }
@@ -169,8 +196,8 @@ class SimplesamlphpDrupalAuth {
         // Allow other modules to decide if there is an existing Drupal user,
         // based on the supplied SAML atttributes.
         $attributes = $this->simplesamlAuth->getAttributes();
-        foreach (\Drupal::moduleHandler()->getImplementations('simplesamlphp_auth_existing_user') as $module) {
-          $return_value = \Drupal::moduleHandler()->invoke($module, 'simplesamlphp_auth_existing_user', [$attributes]);
+        foreach ($this->moduleHandler->getImplementations('simplesamlphp_auth_existing_user') as $module) {
+          $return_value = $this->moduleHandler->invoke($module, 'simplesamlphp_auth_existing_user', [$attributes]);
           if ($return_value instanceof UserInterface) {
             $account = $return_value;
             if ($this->config->get('debug')) {
@@ -192,7 +219,8 @@ class SimplesamlphpDrupalAuth {
       }
       catch (\Exception $ex) {
         watchdog_exception('simplesamlphp_auth', $ex);
-        drupal_set_message(t('Error registering user: An account with this username already exists.'), 'error');
+        $this->messenger
+          ->addMessage($this->t('Error registering user: An account with this username already exists.'), 'error');
       }
     }
 
@@ -223,8 +251,12 @@ class SimplesamlphpDrupalAuth {
         if ($existing_account = reset($account_search)) {
           if ($this->currentUser->id() != $existing_account->id()) {
             $existing = TRUE;
-            $this->logger->critical("Error on synchronizing name attribute for uid %new_uid: an account with the username %username and uid %existing_uid already exists.", ['%username' => $name, '%new_uid' => $this->currentUser->id(), '%existing_uid' => $existing_account->id()]);
-            drupal_set_message(t('Error synchronizing username: an account with this username already exists.'), 'error');
+            $logger_params = [
+              '%username' => $name, '%new_uid' => $this->currentUser->id(),
+              '%existing_uid' => $existing_account->id(),
+            ];
+            $this->logger->critical("Error on synchronizing name attribute for uid %new_uid: an account with the username %username and uid %existing_uid already exists.", $logger_params);
+            $this->messenger->addMessage($this->t('Error synchronizing username: an account with this username already exists.'), 'error');
           }
         }
 
@@ -234,18 +266,18 @@ class SimplesamlphpDrupalAuth {
       }
       else {
         $this->logger->critical("Error on synchronizing name attribute: no username available for Drupal user %id.", ['%id' => $account->id()]);
-        drupal_set_message(t('Error synchronizing username: no username is provided by SAML.'), 'error');
+        $this->messenger->addMessage($this->t('Error synchronizing username: no username is provided by SAML.'), 'error');
       }
     }
 
-    if ($sync_mail) {
+    if ($sync_mail && $this->config->get('mail_attr')) {
       $mail = $this->simplesamlAuth->getDefaultEmail();
       if ($mail) {
         $account->setEmail($mail);
       }
       else {
         $this->logger->critical("Error on synchronizing mail attribute: no email address available for Drupal user %id.", ['%id' => $account->id()]);
-        drupal_set_message(t('Error synchronizing mail: no email address is provided by SAML.'), 'error');
+        $this->messenger->addMessage($this->t('Error synchronizing mail: no email address is provided by SAML.'), 'error');
       }
     }
 
@@ -308,7 +340,7 @@ class SimplesamlphpDrupalAuth {
     }
 
     $attributes = $this->simplesamlAuth->getAttributes();
-    \Drupal::modulehandler()->alter('simplesamlphp_auth_user_roles', $roles, $attributes);
+    $this->moduleHandler->alter('simplesamlphp_auth_user_roles', $roles, $attributes);
     return $roles;
   }
 

@@ -49,7 +49,10 @@ class Atom extends AbstractEntry implements EntryInterface
     }
 
     /**
-     * @inheritdoc
+     * Get the specified author
+     *
+     * @param  int $index
+     * @return string|null
      */
     public function getAuthor($index = 0)
     {
@@ -196,7 +199,7 @@ class Atom extends AbstractEntry implements EntryInterface
      */
     public function getLink($index = 0)
     {
-        if (! array_key_exists('links', $this->data)) {
+        if (!array_key_exists('links', $this->data)) {
             $this->getLinks();
         }
 
@@ -266,7 +269,7 @@ class Atom extends AbstractEntry implements EntryInterface
 
         $commentcount = $this->getExtension('Thread')->getCommentCount();
 
-        if (! $commentcount) {
+        if (!$commentcount) {
             $commentcount = $this->getExtension('Atom')->getCommentCount();
         }
 

@@ -89,6 +89,17 @@
 
           map.wrapper.find('.geolocation-location').hide();
         });
+
+        map.addUpdatedCallback(function (map, mapSettings) {
+          map.settings = $.extend(map.settings, mapSettings.settings);
+          map.wrapper = mapSettings.wrapper;
+          mapSettings.wrapper.find('.geolocation-map-container').replaceWith(map.container);
+          map.lat = mapSettings.lat;
+          map.lng = mapSettings.lng;
+          if (typeof mapSettings.map_center !== 'undefined') {
+            map.mapCenter = mapSettings.map_center;
+          }
+        });
       });
     },
     detach: function (context, drupalSettings) {}

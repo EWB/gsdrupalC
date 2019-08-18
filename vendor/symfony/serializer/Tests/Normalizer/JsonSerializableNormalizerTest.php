@@ -50,11 +50,11 @@ class JsonSerializableNormalizerTest extends TestCase
         $this->serializer
             ->expects($this->once())
             ->method('normalize')
-            ->willReturnCallback(function ($data) {
+            ->will($this->returnCallback(function ($data) {
                 $this->assertArraySubset(['foo' => 'a', 'bar' => 'b', 'baz' => 'c'], $data);
 
                 return 'string_object';
-            })
+            }))
         ;
 
         $this->assertEquals('string_object', $this->normalizer->normalize(new JsonSerializableDummy()));
@@ -70,11 +70,11 @@ class JsonSerializableNormalizerTest extends TestCase
         $this->serializer
             ->expects($this->once())
             ->method('normalize')
-            ->willReturnCallback(function ($data, $format, $context) {
+            ->will($this->returnCallback(function ($data, $format, $context) {
                 $this->normalizer->normalize($data['qux'], $format, $context);
 
                 return 'string_object';
-            })
+            }))
         ;
 
         $this->assertEquals('string_object', $this->normalizer->normalize(new JsonSerializableDummy()));

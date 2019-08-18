@@ -43,7 +43,7 @@ class ImmutableEventDispatcherTest extends TestCase
         $this->innerDispatcher->expects($this->once())
             ->method('dispatch')
             ->with('event', $event)
-            ->willReturn('result');
+            ->will($this->returnValue('result'));
 
         $this->assertSame('result', $this->dispatcher->dispatch('event', $event));
     }
@@ -53,7 +53,7 @@ class ImmutableEventDispatcherTest extends TestCase
         $this->innerDispatcher->expects($this->once())
             ->method('getListeners')
             ->with('event')
-            ->willReturn('result');
+            ->will($this->returnValue('result'));
 
         $this->assertSame('result', $this->dispatcher->getListeners('event'));
     }
@@ -63,7 +63,7 @@ class ImmutableEventDispatcherTest extends TestCase
         $this->innerDispatcher->expects($this->once())
             ->method('hasListeners')
             ->with('event')
-            ->willReturn('result');
+            ->will($this->returnValue('result'));
 
         $this->assertSame('result', $this->dispatcher->hasListeners('event'));
     }

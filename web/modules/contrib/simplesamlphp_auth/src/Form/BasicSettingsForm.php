@@ -100,7 +100,7 @@ class BasicSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Cookie only accessible over HTTP protocol'),
       '#default_value' => $config->get('httponly'),
-      '#description' => $this->t('Cookie will be made accessible only through the HTTP protocol. This means that the cookie won\'t be accessible by scripting languages, such as JavaScript.'),
+      '#description' => $this->t("Cookie will be made accessible only through the HTTP protocol. This means that the cookie won't be accessible by scripting languages, such as JavaScript."),
     ];
 
     return parent::buildForm($form, $form_state);

@@ -13,9 +13,6 @@ use DOMDocument;
 use DOMElement;
 use DOMXPath;
 
-/**
- * @deprecated This (abstract) class is deprecated. Use Zend\Feed\Reader\Entry\AbstractEntry instead.
- */
 abstract class AbstractEntry
 {
     /**
@@ -124,7 +121,7 @@ abstract class AbstractEntry
         $dom = new DOMDocument('1.0', $this->getEncoding());
         $entry = $dom->importNode($this->getElement(), true);
         $dom->appendChild($entry);
-        return $dom->saveXML();
+        return $dom->saveXml();
     }
 
     /**
@@ -144,7 +141,7 @@ abstract class AbstractEntry
      */
     public function getXpath()
     {
-        if (! $this->xpath) {
+        if (!$this->xpath) {
             $this->setXpath(new DOMXPath($this->getDomDocument()));
         }
         return $this->xpath;
@@ -210,10 +207,8 @@ abstract class AbstractEntry
      *
      * @return void
      */
-    // @codingStandardsIgnoreStart
     protected function _loadExtensions()
     {
-        // @codingStandardsIgnoreEnd
         $all = Reader::getExtensions();
         $feed = $all['entry'];
         foreach ($feed as $extension) {

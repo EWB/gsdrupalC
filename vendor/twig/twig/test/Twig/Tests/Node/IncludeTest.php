@@ -76,17 +76,13 @@ EOF
         $node = new IncludeNode($expr, $vars, true, true, 1);
         $tests[] = [$node, <<<EOF
 // line 1
-\$__internal_%s = null;
 try {
-    \$__internal_%s =     \$this->loadTemplate("foo.twig", null, 1);
+    \$this->loadTemplate("foo.twig", null, 1)->display(twig_to_array(["foo" => true]));
 } catch (LoaderError \$e) {
     // ignore missing template
 }
-if (\$__internal_%s) {
-    \$__internal_%s->display(twig_to_array(["foo" => true]));
-}
 EOF
-        , null, true];
+        ];
 
         return $tests;
     }

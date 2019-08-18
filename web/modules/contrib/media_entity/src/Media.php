@@ -2,11 +2,19 @@
 
 namespace Drupal\media_entity;
 
-use Drupal\Core\Entity\EditorialContentEntityBase;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
-final class Media extends EditorialContentEntityBase {
+/**
+ * Defines the media entity class.
+ *
+ * This is a fake in order to make the upgrade process work. It has
+ * no functionality and should never be used.
+ *
+ * @internal
+ */
+final class Media extends ContentEntityBase {
 
   /**
    * {@inheritdoc}
@@ -73,15 +81,12 @@ final class Media extends EditorialContentEntityBase {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['status']
-      ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => TRUE,
-        ],
-        'weight' => 100,
-      ])
-      ->setDisplayConfigurable('form', TRUE);
+    $fields['status'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Publishing status'))
+      ->setDescription(t('A boolean indicating whether the media is published.'))
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))

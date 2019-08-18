@@ -676,7 +676,7 @@ class PEAR_ErrorStack {
      * @return boolean
      * @since PEAR1.5.0a1
      */
-    static function staticPop($package)
+    function staticPop($package)
     {
         if ($package) {
             if (!isset($GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package])) {

@@ -189,8 +189,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
             if (\is_array($value)) {
                 $this->flatten($value, $result, $keySeparator, $parentKey.$key.$keySeparator);
             } else {
-                // Ensures an actual value is used when dealing with true and false
-                $result[$parentKey.$key] = false === $value ? 0 : (true === $value ? 1 : $value);
+                $result[$parentKey.$key] = $value;
             }
         }
     }

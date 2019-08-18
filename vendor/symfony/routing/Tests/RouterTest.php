@@ -88,7 +88,7 @@ class RouterTest extends TestCase
 
         $this->loader->expects($this->once())
             ->method('load')->with('routing.yml', 'ResourceType')
-            ->willReturn($routeCollection);
+            ->will($this->returnValue($routeCollection));
 
         $this->assertSame($routeCollection, $this->router->getRouteCollection());
     }
@@ -102,7 +102,7 @@ class RouterTest extends TestCase
 
         $this->loader->expects($this->once())
             ->method('load')->with('routing.yml', null)
-            ->willReturn(new RouteCollection());
+            ->will($this->returnValue(new RouteCollection()));
 
         $this->assertInstanceOf('Symfony\\Component\\Routing\\Matcher\\UrlMatcher', $this->router->getMatcher());
     }
@@ -124,7 +124,7 @@ class RouterTest extends TestCase
 
         $this->loader->expects($this->once())
             ->method('load')->with('routing.yml', null)
-            ->willReturn(new RouteCollection());
+            ->will($this->returnValue(new RouteCollection()));
 
         $this->assertInstanceOf('Symfony\\Component\\Routing\\Generator\\UrlGenerator', $this->router->getGenerator());
     }

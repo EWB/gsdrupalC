@@ -64,9 +64,9 @@ class InlineFragmentRendererTest extends TestCase
         $resolver
             ->expects($this->once())
             ->method('getController')
-            ->willReturn(function (\stdClass $object, Bar $object1) {
+            ->will($this->returnValue(function (\stdClass $object, Bar $object1) {
                 return new Response($object1->getBar());
-            })
+            }))
         ;
 
         $kernel = new HttpKernel(new EventDispatcher(), $resolver, new RequestStack());
@@ -85,9 +85,9 @@ class InlineFragmentRendererTest extends TestCase
         $resolver
             ->expects($this->once())
             ->method('getController')
-            ->willReturn(function (\stdClass $object, Bar $object1) {
+            ->will($this->returnValue(function (\stdClass $object, Bar $object1) {
                 return new Response($object1->getBar());
-            })
+            }))
         ;
 
         $kernel = new HttpKernel(new EventDispatcher(), $resolver, new RequestStack(), new ArgumentResolver());
@@ -162,18 +162,18 @@ class InlineFragmentRendererTest extends TestCase
         $controllerResolver
             ->expects($this->once())
             ->method('getController')
-            ->willReturn(function () {
+            ->will($this->returnValue(function () {
                 ob_start();
                 echo 'bar';
                 throw new \RuntimeException();
-            })
+            }))
         ;
 
         $argumentResolver = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Controller\\ArgumentResolverInterface')->getMock();
         $argumentResolver
             ->expects($this->once())
             ->method('getArguments')
-            ->willReturn([])
+            ->will($this->returnValue([]))
         ;
 
         $kernel = new HttpKernel(new EventDispatcher(), $controllerResolver, new RequestStack(), $argumentResolver);

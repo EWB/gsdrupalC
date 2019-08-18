@@ -97,7 +97,7 @@ function hook_simplesamphp_auth_account_authname_alter(&$authname, \Drupal\user\
  * @param array $attributes
  *   The SimpleSAMLphp attributes for this user.
  *
- * @return \Drupal\user\UserInterface | bool
+ * @return \Drupal\user\UserInterface|bool
  *   The pre-existing Drupal user to be SAML-enabled, or FALSE if none found.
  */
 function hook_simplesamlphp_auth_existing_user($attributes) {

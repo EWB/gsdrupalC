@@ -81,6 +81,7 @@ class ChosenConfigForm extends ConfigFormBase {
       ));
       return $form;
     }
+    $form = parent::buildForm($form, $form_state);
 
     // Chosen settings:
     $chosen_conf = $this->configFactory->get('chosen.settings');
@@ -107,6 +108,13 @@ class ChosenConfigForm extends ConfigFormBase {
       '#options' => array_merge(['0' => t('Always apply')], range(1, 25)),
       '#default_value' => $chosen_conf->get('disable_search_threshold'),
       '#description' => $this->t('The minimum number of options to apply Chosen search box. Example : choosing 10 will only apply Chosen search if the number of options is greater or equal to 10.'),
+    ];
+
+    $form['max_shown_results'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Maximum shown results'),
+      '#default_value' => $chosen_conf->get('max_shown_results'),
+      '#description' => $this->t('Only show the first (n) matching options in the results. This can be used to increase performance for selects with very many options. Leave blank to show all results.'),
     ];
 
     $form['minimum_width'] = [
@@ -214,11 +222,6 @@ class ChosenConfigForm extends ConfigFormBase {
       '#default_value' => $chosen_conf->get('no_results_text'),
     ];
 
-    $form['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Submit'),
-    ];
-
     return $form;
   }
 
@@ -237,6 +240,7 @@ class ChosenConfigForm extends ConfigFormBase {
       ->set('minimum_single', $form_state->getValue('minimum_single'))
       ->set('minimum_multiple', $form_state->getValue('minimum_multiple'))
       ->set('disable_search_threshold', $form_state->getValue('disable_search_threshold'))
+      ->set('max_shown_results', $form_state->getValue('max_shown_results'))
       ->set('minimum_width', $form_state->getValue('minimum_width'))
       ->set('use_relative_width', $form_state->getValue('use_relative_width'))
       ->set('jquery_selector', $form_state->getValue('jquery_selector'))

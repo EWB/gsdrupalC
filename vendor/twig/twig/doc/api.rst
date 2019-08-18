@@ -10,14 +10,16 @@ Basics
 
 Twig uses a central object called the **environment** (of class
 ``\Twig\Environment``). Instances of this class are used to store the
-configuration and extensions, and are used to load templates.
+configuration and extensions, and are used to load templates from the file
+system or other locations.
 
-Most applications create one ``\Twig\Environment`` object on application
-initialization and use that to load templates. In some cases, it might be useful
-to have multiple environments side by side, with different configurations.
+Most applications will create one ``\Twig\Environment`` object on application
+initialization and use that to load templates. In some cases it's however
+useful to have multiple environments side by side, if different configurations
+are in use.
 
-The typical way to configure Twig to load templates for an application looks
-roughly like this::
+The simplest way to configure Twig to load templates for your application
+looks roughly like this::
 
     require_once '/path/to/lib/Twig/Autoloader.php';
     Twig_Autoloader::register();
@@ -27,8 +29,8 @@ roughly like this::
         'cache' => '/path/to/compilation_cache',
     ]);
 
-This creates a template environment with a default configuration and a loader
-that looks up templates in the ``/path/to/templates/`` directory. Different
+This will create a template environment with the default settings and a loader
+that looks up the templates in the ``/path/to/templates/`` folder. Different
 loaders are available and you can also write your own if you want to load
 templates from a database or other resources.
 
@@ -51,7 +53,7 @@ returns a ``\Twig\TemplateWrapper`` instance::
 
 .. note::
 
-    Before Twig 1.28, use ``loadTemplate()`` instead which returns a
+    Before Twig 1.28, you should use ``loadTemplate()`` instead which returns a
     ``\Twig\Template`` instance.
 
 To render the template with some variables, call the ``render()`` method::
@@ -60,7 +62,7 @@ To render the template with some variables, call the ``render()`` method::
 
 .. note::
 
-    The ``display()`` method is a shortcut to output the rendered template.
+    The ``display()`` method is a shortcut to output the template directly.
 
 You can also load and render the template in one fell swoop::
 
@@ -155,14 +157,14 @@ Compilation Cache
 
 All template loaders can cache the compiled templates on the filesystem for
 future reuse. It speeds up Twig a lot as templates are only compiled once; and
-the performance boost is even larger if you use a PHP accelerator such as
-OPCache. See the ``cache`` and ``auto_reload`` options of ``\Twig\Environment``
-above for more information.
+the performance boost is even larger if you use a PHP accelerator such as APC.
+See the ``cache`` and ``auto_reload`` options of ``\Twig\Environment`` above
+for more information.
 
 Built-in Loaders
 ~~~~~~~~~~~~~~~~
 
-Here is a list of the built-in loaders:
+Here is a list of the built-in loaders Twig provides:
 
 ``\Twig\Loader\FilesystemLoader``
 .................................
@@ -222,8 +224,8 @@ the directory might be different from the one used on production servers)::
 ``\Twig\Loader\ArrayLoader``
 ............................
 
-``\Twig\Loader\ArrayLoader`` loads a template from a PHP array. It is passed an
-array of strings bound to template names::
+``\Twig\Loader\ArrayLoader`` loads a template from a PHP array. It's passed an array
+of strings bound to template names::
 
     $loader = new \Twig\Loader\ArrayLoader([
         'index.html' => 'Hello {{ name }}!',
@@ -237,11 +239,11 @@ projects where storing all templates in a single PHP file might make sense.
 
 .. tip::
 
-    When using the ``Array`` loaders with a cache mechanism, you should know
-    that a new cache key is generated each time a template content "changes"
-    (the cache key being the source code of the template). If you don't want to
-    see your cache grows out of control, you need to take care of clearing the
-    old cache file by yourself.
+    When using the ``Array`` or ``String`` loaders with a cache mechanism, you
+    should know that a new cache key is generated each time a template content
+    "changes" (the cache key being the source code of the template). If you
+    don't want to see your cache grows out of control, you need to take care
+    of clearing the old cache file by yourself.
 
 ``\Twig\Loader\ChainLoader``
 ............................
@@ -260,10 +262,13 @@ projects where storing all templates in a single PHP file might make sense.
 
     $twig = new \Twig\Environment($loader);
 
-When looking for a template, Twig tries each loader in turn and returns as soon
-as the template is found. When rendering the ``index.html`` template from the
-above example, Twig will load it with ``$loader2`` but the ``base.html``
-template will be loaded from ``$loader1``.
+When looking for a template, Twig will try each loader in turn and it will
+return as soon as the template is found. When rendering the ``index.html``
+template from the above example, Twig will load it with ``$loader2`` but the
+``base.html`` template will be loaded from ``$loader1``.
+
+``\Twig\Loader\ChainLoader`` accepts any loader that implements
+``\Twig\Loader\LoaderInterface``.
 
 .. note::
 
@@ -321,34 +326,28 @@ is still fresh, given the last modification time, or ``false`` otherwise.
 Using Extensions
 ----------------
 
-Twig extensions are packages that add new features to Twig. Register an
-extension via the ``addExtension()`` method::
+Twig extensions are packages that add new features to Twig. Using an
+extension is as simple as using the ``addExtension()`` method::
 
     $twig->addExtension(new \Twig\Extension\SandboxExtension());
 
 Twig comes bundled with the following extensions:
 
-* *Twig\Extension\CoreExtension*: Defines all the core features of Twig.
+* *Twig_Extension_Core*: Defines all the core features of Twig.
 
-* *Twig\Extension\DebugExtension*: Defines the ``dump`` function to help debug
-  template variables.
+* *Twig_Extension_Escaper*: Adds automatic output-escaping and the possibility
+  to escape/unescape blocks of code.
 
-* *Twig\Extension\EscaperExtension*: Adds automatic output-escaping and the
-  possibility to escape/unescape blocks of code.
-
-* *Twig\Extension\SandboxExtension*: Adds a sandbox mode to the default Twig
+* *Twig_Extension_Sandbox*: Adds a sandbox mode to the default Twig
   environment, making it safe to evaluate untrusted code.
 
-* *Twig\Extension\ProfilerExtension*: Enabled the built-in Twig profiler (as of
-  Twig 1.18).
+* *Twig_Extension_Profiler*: Enabled the built-in Twig profiler (as of Twig
+  1.18).
 
-* *Twig\Extension\OptimizerExtension*: Optimizes the node tree before
-  compilation.
+* *Twig_Extension_Optimizer*: Optimizes the node tree before compilation.
 
-* *Twig\Extension\StringLoaderExtension*: Defined the ``template_from_string``
-   function to allow loading templates from string in a template.
-
-The Core, Escaper, and Optimizer extensions are registered by default.
+The core, escaper, and optimizer extensions do not need to be added to the
+Twig environment, as they are registered by default.
 
 Built-in Extensions
 -------------------
@@ -385,7 +384,7 @@ output escaping strategy::
 If set to ``html``, all variables in templates are escaped (using the ``html``
 escaping strategy), except those using the ``raw`` filter:
 
-.. code-block:: twig
+.. code-block:: jinja
 
     {{ article.to_html|raw }}
 
@@ -393,7 +392,7 @@ You can also change the escaping mode locally by using the ``autoescape`` tag
 (see the :doc:`autoescape<tags/autoescape>` doc for the syntax used before
 Twig 1.8):
 
-.. code-block:: twig
+.. code-block:: jinja
 
     {% autoescape 'html' %}
         {{ var }}
@@ -410,7 +409,7 @@ The escaping rules are implemented as follows:
 * Literals (integers, booleans, arrays, ...) used in the template directly as
   variables or filter arguments are never automatically escaped:
 
-  .. code-block:: twig
+  .. code-block:: jinja
 
         {{ "Twig<br />" }} {# won't be escaped #}
 
@@ -420,7 +419,7 @@ The escaping rules are implemented as follows:
 * Expressions which the result is always a literal or a variable marked safe
   are never automatically escaped:
 
-  .. code-block:: twig
+  .. code-block:: jinja
 
         {{ foo ? "Twig<br />" : "<br />Twig" }} {# won't be escaped #}
 
@@ -435,13 +434,13 @@ The escaping rules are implemented as follows:
 
 * Escaping is applied before printing, after any other filter is applied:
 
-  .. code-block:: twig
+  .. code-block:: jinja
 
         {{ var|upper }} {# is equivalent to {{ var|upper|escape }} #}
 
 * The `raw` filter should only be used at the end of the filter chain:
 
-  .. code-block:: twig
+  .. code-block:: jinja
 
         {{ var|raw|upper }} {# will be escaped #}
 
@@ -452,7 +451,7 @@ The escaping rules are implemented as follows:
   ``escape('html')`` are marked safe for HTML, ``escape('js')`` is marked
   safe for JavaScript, ``raw`` is marked safe for everything.
 
-  .. code-block:: twig
+  .. code-block:: jinja
 
         {% autoescape 'js' %}
             {{ var|escape('html') }} {# will be escaped for HTML and JavaScript #}
@@ -502,7 +501,7 @@ The policy object is the first argument of the sandbox constructor::
 By default, the sandbox mode is disabled and should be enabled when including
 untrusted template code by using the ``sandbox`` tag:
 
-.. code-block:: twig
+.. code-block:: jinja
 
     {% sandbox %}
         {% include 'user.html' %}
@@ -538,8 +537,7 @@ compatible format::
     file_put_contents('/path/to/profile.prof', $dumper->dump($profile));
 
 Upload the profile to visualize it (create a `free account
-<https://blackfire.io/signup?utm_source=twig&utm_medium=doc&utm_campaign=profiler>`_
-first):
+<https://blackfire.io/signup>`_ first):
 
 .. code-block:: sh
 
@@ -563,17 +561,13 @@ Twig supports the following optimizations:
 
 * ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_ALL``, enables all optimizations
   (this is the default value).
-
 * ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_NONE``, disables all optimizations.
   This reduces the compilation time, but it can increase the execution time
   and the consumed memory.
-
 * ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_FOR``, optimizes the ``for`` tag by
   removing the ``loop`` variable creation whenever possible.
-
 * ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_RAW_FILTER``, removes the ``raw``
   filter whenever possible.
-
 * ``\Twig\NodeVisitor\OptimizerNodeVisitor::OPTIMIZE_VAR_ACCESS``, simplifies the creation
   and access of variables in the compiled templates whenever possible.
 

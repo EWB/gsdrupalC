@@ -3,9 +3,6 @@
 namespace Drupal\simplesamlphp_auth_test;
 
 use Drupal\simplesamlphp_auth\Service\SimplesamlphpAuthManager;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use SimpleSAML\Auth\Simple;
-use SimpleSAML_Configuration;
 
 /**
  * Mock SimplesamlphpAuthManager class for testing purposes.
@@ -17,22 +14,7 @@ class SimplesamlphpAuthTestManager extends SimplesamlphpAuthManager {
    *
    * @var bool
    */
-  protected $authenticated;
-
-  /**
-   * {@inheritdoc}
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
-   * @param \SimpleSAML\Auth\Simple $instance
-   *   Simple instance.
-   * @param \SimpleSAML_Configuration $config
-   *   SimpleSAML_Configuration instance.
-   */
-  public function __construct(ConfigFactoryInterface $config_factory, Simple $instance = NULL, SimpleSAML_Configuration $config = NULL) {
-    $this->config = $config_factory->get('simplesamlphp_auth.settings');
-    $this->authenticated = FALSE;
-  }
+  protected $authenticated = FALSE;
 
   /**
    * {@inheritdoc}

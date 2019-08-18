@@ -291,11 +291,11 @@ abstract class FileValidatorTest extends ConstraintValidatorTestCase
         $file
             ->expects($this->once())
             ->method('getPathname')
-            ->willReturn($this->path);
+            ->will($this->returnValue($this->path));
         $file
             ->expects($this->once())
             ->method('getMimeType')
-            ->willReturn('image/jpg');
+            ->will($this->returnValue('image/jpg'));
 
         $constraint = new File([
             'mimeTypes' => ['image/png', 'image/jpg'],
@@ -315,11 +315,11 @@ abstract class FileValidatorTest extends ConstraintValidatorTestCase
         $file
             ->expects($this->once())
             ->method('getPathname')
-            ->willReturn($this->path);
+            ->will($this->returnValue($this->path));
         $file
             ->expects($this->once())
             ->method('getMimeType')
-            ->willReturn('image/jpg');
+            ->will($this->returnValue('image/jpg'));
 
         $constraint = new File([
             'mimeTypes' => ['image/*'],
@@ -339,11 +339,11 @@ abstract class FileValidatorTest extends ConstraintValidatorTestCase
         $file
             ->expects($this->once())
             ->method('getPathname')
-            ->willReturn($this->path);
+            ->will($this->returnValue($this->path));
         $file
             ->expects($this->once())
             ->method('getMimeType')
-            ->willReturn('application/pdf');
+            ->will($this->returnValue('application/pdf'));
 
         $constraint = new File([
             'mimeTypes' => ['image/png', 'image/jpg'],
@@ -369,11 +369,11 @@ abstract class FileValidatorTest extends ConstraintValidatorTestCase
         $file
             ->expects($this->once())
             ->method('getPathname')
-            ->willReturn($this->path);
+            ->will($this->returnValue($this->path));
         $file
             ->expects($this->once())
             ->method('getMimeType')
-            ->willReturn('application/pdf');
+            ->will($this->returnValue('application/pdf'));
 
         $constraint = new File([
             'mimeTypes' => ['image/*', 'image/jpg'],

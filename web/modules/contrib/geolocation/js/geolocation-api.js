@@ -68,6 +68,14 @@
  */
 
 /**
+ * Callback when and only when map is updated.
+ *
+ * @callback GeolocationMapUpdatedCallback
+ *
+ * @param {GeolocationMapInterface, GeolocationMapSettings} map - Geolocation map.
+ */
+
+/**
  * @typedef {Object} GeolocationCoordinates
 
  * @property {Number} lat
@@ -108,12 +116,13 @@
  * @property {function({GeolocationMapPopulatedCallback})} addPopulatedCallback - Adds a callback that will be called when map is fully loaded.
  * @property {function()} initializedCallback - Executes {GeolocationMapInitializedCallbacks[]} for this map.
  * @property {function({GeolocationMapInitializedCallback})} addInitializedCallback - Adds a callback that will be called when map provider becomes available.
- * @property {function({GeolocationMapSettings})} update - Update existing map by settings.
+ * @property {function({GeolocationMapSettings})} updatedCallback - Executes {GeolocationMapUpdatedCallbacks[]} for this map.
+ * @property {function({GeolocationMapUpdatedCallbacks})} addUpdatedCallback - Adds a callback that will be called when and only when an already existing map is updated.
  *
  * @property {function({GeolocationMapMarker}):{GeolocationMapMarker}} setMapMarker - Set marker on map.
  * @property {function({GeolocationMapMarker})} removeMapMarker - Remove single marker.
  * @property {function()} removeMapMarkers - Remove all markers from map.
- *s
+ *
  * @property {function({string})} setZoom - Set zoom.
  * @property {function():{GeolocationCoordinates}} getCenter - Get map center coordinates.
  * @property {function({string})} setCenter - Center map by plugin.
@@ -203,16 +212,6 @@
     },
     removeControls: function () {
       // Stub.
-    },
-    update: function (mapSettings) {
-      this.settings = $.extend(this.settings, mapSettings.settings);
-      this.wrapper = mapSettings.wrapper;
-      mapSettings.wrapper.find('.geolocation-map-container').replaceWith(this.container);
-      this.lat = mapSettings.lat;
-      this.lng = mapSettings.lng;
-      if (typeof mapSettings.map_center !== 'undefined') {
-        this.mapCenter = mapSettings.map_center;
-      }
     },
     setZoom: function (zoom) {
       // Stub.
@@ -352,6 +351,17 @@
         this.initializedCallbacks.push(callback);
       }
     },
+    updatedCallback: function (mapSettings) {
+      var that = this;
+      this.updatedCallbacks = this.updatedCallbacks || [];
+      this.updatedCallbacks.forEach(function (callback) {
+        callback(that, mapSettings);
+      });
+    },
+    addUpdatedCallback: function (callback) {
+      this.updatedCallbacks = this.updatedCallbacks || [];
+      this.updatedCallbacks.push(callback);
+    },
     centerUpdatedCallback: function (coordinates, accuracy, identifier) {
       this.centerUpdatedCallbacks = this.centerUpdatedCallbacks || [];
       $.each(this.centerUpdatedCallbacks, function (index, callback) {
@@ -475,7 +485,7 @@
     }
     else {
       map = existingMap;
-      map.update(mapSettings);
+      map.updatedCallback(mapSettings);
     }
 
     if (!map) {

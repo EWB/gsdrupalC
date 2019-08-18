@@ -119,7 +119,7 @@ abstract class AbstractFeed
      * Set the XPath query
      *
      * @param  DOMXPath $xpath
-     * @return AbstractFeed
+     * @return AbstractEntry
      */
     public function setXpath(DOMXPath $xpath = null)
     {

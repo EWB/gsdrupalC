@@ -8,9 +8,9 @@
 
 namespace SAML2\XML\saml;
 
-
 use SAML2\Constants;
 use SAML2\DOMDocumentFactory;
+use Webmozart\Assert\Assert;
 
 abstract class BaseIDType
 {
@@ -63,12 +63,56 @@ abstract class BaseIDType
         $this->element = $xml;
 
         if ($xml->hasAttribute('NameQualifier')) {
-            $this->NameQualifier = $xml->getAttribute('NameQualifier');
+            $this->setNameQualifier($xml->getAttribute('NameQualifier'));
         }
 
         if ($xml->hasAttribute('SPNameQualifier')) {
-            $this->SPNameQualifier = $xml->getAttribute('SPNameQualifier');
+            $this->setSPNameQualifier($xml->getAttribute('SPNameQualifier'));
         }
+    }
+
+
+    /**
+     * Collect the value of the NameQualifier-property
+     * @return string|null
+     */
+    public function getNameQualifier()
+    {
+        return $this->NameQualifier;
+    }
+
+
+    /**
+     * Set the value of the NameQualifier-property
+     * @param string|null $nameQualifier
+     * @return void
+     */
+    public function setNameQualifier($nameQualifier = null)
+    {
+        Assert::nullOrString($nameQualifier);
+        $this->NameQualifier = $nameQualifier;
+    }
+
+
+    /**
+     * Collect the value of the SPNameQualifier-property
+     * @return string|null
+     */
+    public function getSPNameQualifier()
+    {
+        return $this->SPNameQualifier;
+    }
+
+
+    /**
+     * Set the value of the SPNameQualifier-property
+     * @param string|null $spNameQualifier
+     * @return void
+     */
+    public function setSPNameQualifier($spNameQualifier = null)
+    {
+        Assert::nullOrString($spNameQualifier);
+        $this->SPNameQualifier = $spNameQualifier;
     }
 
 
@@ -80,8 +124,8 @@ abstract class BaseIDType
      */
     public function toXML(\DOMElement $parent = null)
     {
-        assert(is_string($this->NameQualifier) || is_null($this->NameQualifier));
-        assert(is_string($this->SPNameQualifier) || is_null($this->SPNameQualifier));
+        Assert::nullOrString($this->getNameQualifier());
+        Assert::nullOrString($this->getSPNameQualifier());
 
         if ($parent === null) {
             $parent = DOMDocumentFactory::create();
@@ -92,12 +136,12 @@ abstract class BaseIDType
         $element = $doc->createElementNS(Constants::NS_SAML, $this->nodeName);
         $parent->appendChild($element);
 
-        if ($this->NameQualifier !== null) {
-            $element->setAttribute('NameQualifier', $this->NameQualifier);
+        if ($this->getNameQualifier() !== null) {
+            $element->setAttribute('NameQualifier', $this->getNameQualifier());
         }
 
-        if ($this->SPNameQualifier !== null) {
-            $element->setAttribute('SPNameQualifier', $this->SPNameQualifier);
+        if ($this->getSPNameQualifier() !== null) {
+            $element->setAttribute('SPNameQualifier', $this->getSPNameQualifier());
         }
 
         return $element;

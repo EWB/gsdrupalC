@@ -59,7 +59,7 @@ public function getfoo(\$__foo__ = null, \$__bar__ = "Foo"$declaration)
 
     \$blocks = [];
 
-    ob_start(function () { return ''; });
+    ob_start();
     try {
         echo "foo";
     } catch (\Exception \$e) {

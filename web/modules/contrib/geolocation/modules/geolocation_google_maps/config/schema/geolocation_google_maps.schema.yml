@@ -33,6 +33,9 @@ geolocation_google_maps.settings:
         client:
           type: string
           label: 'Client ID'
+        channel:
+          type: string
+          label: 'Channel ID'
         libraries:
           type: sequence
           label: 'Libraries'
@@ -63,6 +66,22 @@ geolocation.geocoder.google_geocoding_api:
         postal_code:
           type: string
           label: 'Postal Code'
+    boundary_restriction:
+      type: mapping
+      label: 'Boundaries'
+      mapping:
+        south:
+          type: string
+          label: 'South'
+        west:
+          type: string
+          label: 'West'
+        north:
+          type: string
+          label: 'North'
+        east:
+          type: string
+          label: 'East'
 
 geolocation.map_provider.google_maps:
   type: geolocation_map_provider

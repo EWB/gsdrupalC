@@ -35,18 +35,18 @@ class Translator implements TranslatorInterface
     /**
      * @var ParserInterface[]
      */
-    private $shortcutParsers = [];
+    private $shortcutParsers = array();
 
     /**
      * @var Extension\ExtensionInterface[]
      */
-    private $extensions = [];
+    private $extensions = array();
 
-    private $nodeTranslators = [];
-    private $combinationTranslators = [];
-    private $functionTranslators = [];
-    private $pseudoClassTranslators = [];
-    private $attributeMatchingTranslators = [];
+    private $nodeTranslators = array();
+    private $combinationTranslators = array();
+    private $functionTranslators = array();
+    private $pseudoClassTranslators = array();
+    private $attributeMatchingTranslators = array();
 
     public function __construct(ParserInterface $parser = null)
     {
@@ -77,7 +77,7 @@ class Translator implements TranslatorInterface
         }
 
         $string = $element;
-        $parts = [];
+        $parts = array();
         while (true) {
             if (false !== $pos = strpos($string, "'")) {
                 $parts[] = sprintf("'%s'", substr($string, 0, $pos));
