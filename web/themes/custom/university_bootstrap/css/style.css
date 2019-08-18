@@ -11283,6 +11283,9 @@ footer.footer .nav > li > a:hover, footer.footer .nav > li > a:focus {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
+.map-list-item:hover, .map-list-item:focus {
+  background-color: #f5f5f5;
+}
 
 a.map-list-item {
   text-decoration: none;
@@ -11290,12 +11293,10 @@ a.map-list-item {
 }
 a.map-list-item .map-list-item-heading {
   color: #333;
-  font-weight: 500;
 }
 a.map-list-item:hover, a.map-list-item:focus {
   text-decoration: none;
   color: #555;
-  background-color: #f5f5f5;
 }
 
 .map-list-item.disabled, .map-list-item.disabled:hover, .map-list-item.disabled:focus {
@@ -11329,6 +11330,9 @@ a.map-list-item:hover, a.map-list-item:focus {
 }
 
 .map-list-item-heading {
+  font-family: "Avenir", "Helvetica", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
   margin-top: 0;
   margin-bottom: 5px;
   line-height: 1.1;
@@ -11348,12 +11352,34 @@ a.map-list-item:hover, a.map-list-item:focus {
 .map-list-item .address {
   font-size: 14px;
   line-height: 1.1;
-  font-family: "Avenir","Helvetica",sans-serif;
+  font-family: "Avenir", "Helvetica", sans-serif;
   margin-top: 0;
 }
 
 .map-list-item .views-field-field-type {
   font-size: 14px;
+}
+
+.view-id-food_guide .leaflet-popup-content-wrapper {
+  border-radius: 0;
+}
+
+.view-id-food_guide .leaflet-popup-content {
+  margin: 0;
+}
+
+.map-infowindow .map-infowindow-inner {
+  padding: 10px;
+}
+
+.map-infowindow-heading {
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.map-infowindow .address {
+  margin-top: 0;
 }
 
 .narrative.full {

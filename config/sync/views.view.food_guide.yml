@@ -8,12 +8,18 @@ dependencies:
     - field.storage.node.field_media
     - field.storage.node.field_type
     - image.style.medium_
+    - image.style.small_square_crop
     - node.type.entity
+    - taxonomy.vocabulary.distribution_method
+    - taxonomy.vocabulary.products
+    - taxonomy.vocabulary.type
   module:
     - address
+    - better_exposed_filters
     - geolocation
     - media
     - node
+    - taxonomy
     - user
 id: food_guide
 label: 'Food Guide'
@@ -46,15 +52,55 @@ display:
           query_comment: ''
           query_tags: {  }
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+          input_required: false
+          text_input_required: 'Select any filter and click on Apply to see results'
+          bef:
+            general:
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              autosubmit: false
+              autosubmit_exclude_textfield: false
+              autosubmit_hide: false
+            field_geolocation_entity_boundary:
+              bef_format: default
+              more_options:
+                is_secondary: false
+                rewrite:
+                  filter_rewrite_values: ''
+            field_type_target_id:
+              bef_format: bef
+              more_options:
+                bef_select_all_none: false
+                bef_collapsible: false
+                is_secondary: false
+                rewrite:
+                  filter_rewrite_values: ''
+            field_distribution_metjh_target_id:
+              bef_format: bef
+              more_options:
+                bef_select_all_none: false
+                bef_collapsible: false
+                is_secondary: false
+                rewrite:
+                  filter_rewrite_values: ''
+            field_products_target_id:
+              bef_format: bef
+              more_options:
+                bef_select_all_none: false
+                bef_collapsible: false
+                is_secondary: false
+                rewrite:
+                  filter_rewrite_values: ''
+          text_input_required_format: basic_html
       pager:
         type: none
         options:
@@ -684,7 +730,7 @@ display:
           click_sort_column: target_id
           type: media_thumbnail
           settings:
-            image_style: medium_
+            image_style: small_square_crop
             image_link: ''
           group_column: target_id
           group_columns: {  }
@@ -893,12 +939,12 @@ display:
           field: nothing
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Map infowindow (Global: Custom text)'
           label: ''
           exclude: false
           alter:
             alter_text: true
-            text: "{% if field_media %}\r\n<div class=\"views-field-field-media\">\r\n  <div class=\"field-content\">\r\n    {{ field_media }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n<div class=\"map-list-item-heading\">{{ title }}</div>\r\n{% if field_address %}\r\n<div class=\"views-field-field-address\">\r\n  <div class=\"field-content\">\r\n    {{ field_address }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n{% if field_type %}\r\n<div class=\"views-field-field-type\">\r\n  <span class=\"views-label views-label-field-type\">Type: </span><span class=\"field-content\">{{ field_type }}</span>\r\n</div>\r\n{% endif %}"
+            text: "<div class=\"map-infowindow\">\r\n{% if field_media %}\r\n<div class=\"views-field-field-media\">\r\n  <div class=\"field-content\">\r\n    {{ field_media }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n<div class=\"map-infowindow-inner\">\r\n<div class=\"map-infowindow-heading\">{{ title }}</div>\r\n{% if field_address %}\r\n<div class=\"views-field-field-address\">\r\n  <div class=\"field-content\">\r\n    {{ field_address }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n{% if field_type %}\r\n<div class=\"views-field-field-type\">\r\n  <span class=\"views-label views-label-field-type\">Type: </span><span class=\"field-content\">{{ field_type }}</span>\r\n</div>\r\n{% endif %}\r\n</div>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -1081,6 +1127,150 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: geolocation_filter_boundary
+        field_type_target_id:
+          id: field_type_target_id
+          table: node__field_type
+          field: field_type_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_type_target_id_op
+            label: Type
+            description: ''
+            use_operator: false
+            operator: field_type_target_id_op
+            identifier: field_type_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              anonymous: anonymous
+              authenticated: authenticated
+              administrator: administrator
+              contributor: contributor
+              editor: editor
+              p: p
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: type
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_distribution_metjh_target_id:
+          id: field_distribution_metjh_target_id
+          table: node__field_distribution_metjh
+          field: field_distribution_metjh_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_distribution_metjh_target_id_op
+            label: 'Distribution Method'
+            description: ''
+            use_operator: false
+            operator: field_distribution_metjh_target_id_op
+            identifier: field_distribution_metjh_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: distribution_method
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_products_target_id:
+          id: field_products_target_id
+          table: node__field_products
+          field: field_products_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_products_target_id_op
+            label: Products
+            description: ''
+            use_operator: false
+            operator: field_products_target_id_op
+            identifier: field_products_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: products
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
       sorts:
         title:
           id: title
@@ -1111,6 +1301,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -1133,6 +1324,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -1319,7 +1511,7 @@ display:
           label: ''
           exclude: true
           alter:
-            alter_text: true
+            alter_text: false
             text: '<span id="node-{{ nid }}">{{ title }}</span>'
             make_link: false
             path: ''
@@ -1558,12 +1750,12 @@ display:
           field: nothing
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Map teaser (Global: Custom text)'
           label: ''
           exclude: false
           alter:
             alter_text: true
-            text: "<a href=\"{{ view_node }}\" id=\"node-{{ nid }}\" class=\"map-list-item clearfix\">\r\n{% if field_media %}\r\n<div class=\"views-field-field-media\">\r\n  <div class=\"field-content\">\r\n    {{ field_media }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n<div class=\"map-list-item-heading\">{{ title }}</div>\r\n{% if field_address %}\r\n<div class=\"views-field-field-address\">\r\n  <div class=\"field-content\">\r\n    {{ field_address }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n{% if field_type %}\r\n<div class=\"views-field-field-type\">\r\n  <span class=\"views-label views-label-field-type\">Type: </span><span class=\"field-content\">{{ field_type }}</span>\r\n</div>\r\n{% endif %}\r\n</a>"
+            text: "<div id=\"node-{{ nid }}\" class=\"map-list-item clearfix\">\r\n{% if field_media %}\r\n<div class=\"views-field-field-media\">\r\n  <div class=\"field-content\">\r\n    {{ field_media }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n<h2 class=\"map-list-item-heading\">{{ title }}</h2>\r\n{% if field_address %}\r\n<div class=\"views-field-field-address\">\r\n  <div class=\"field-content\">\r\n    {{ field_address }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n{% if field_type %}\r\n<div class=\"views-field-field-type\">\r\n  <span class=\"views-label views-label-field-type\">Type: </span><span class=\"field-content\">{{ field_type }}</span>\r\n</div>\r\n{% endif %}\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -1669,6 +1861,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:

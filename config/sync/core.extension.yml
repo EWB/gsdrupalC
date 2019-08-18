@@ -4,6 +4,7 @@ module:
   animate_any: 0
   asset_injector: 0
   automated_cron: 0
+  better_exposed_filters: 0
   blazy: 0
   blazy_ui: 0
   block: 0
