@@ -1,0 +1,11 @@
+uuid: 61d3e183-1eec-441d-a9ac-8911e95845e2
+langcode: en
+status: true
+dependencies: {  }
+id: view_food_guide
+label: 'View: Food Guide'
+code: ".view-id-food_guide .views-exposed-form legend {\r\n    margin: 0;\r\n}\r\n.view-id-food_guide .views-exposed-form .fieldset-wrapper {\r\n    padding-bottom: 1em;\r\n}\r\n\r\n.view-id-food_guide .views-exposed-form .radio {\r\n    margin-right: 1em;\r\n}\r\n\r\n.view-id-food_guide .views-exposed-form .radio input{\r\n    margin-right: .2em;\r\n}"
+media: all
+preprocess: true
+conditions: {  }
+conditions_require_all: true

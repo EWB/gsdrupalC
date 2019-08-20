@@ -1,0 +1,14 @@
+uuid: 174ee91c-aad7-454d-9d69-bce628195d17
+langcode: en
+status: true
+dependencies: {  }
+id: view_food_guide
+label: 'View: Food Guide'
+code: "(function ($) {\r\n  /**\r\n   * Load remote content after the main page loaded.\r\n   */\r\n  Drupal.behaviors.my_module_load_remote_content = {\r\n    attach: function(context, settings) {\r\n      if ($('.view-id-food_guide').length > 0){\r\n        $('.view-id-food_guide [data-drupal-selector=\"edit-field-type-target-id\"] input').change(function(){\r\n          var selected = $('[data-drupal-selector=\"edit-field-type-target-id\"] input:checked').val();\r\n          if(selected === 18 || selected === 17) {\r\n            alert(\"turn on\");\r\n          } else {\r\n            alert(\"turn off\");\r\n          }    \r\n        });\r\n      }\r\n    }\r\n  };\r\n})(jQuery);"
+noscript: ''
+noscriptRegion: {  }
+jquery: true
+header: true
+preprocess: true
+conditions: {  }
+conditions_require_all: true
