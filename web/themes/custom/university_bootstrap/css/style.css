@@ -11275,6 +11275,7 @@ footer.footer .nav > li > a:hover, footer.footer .nav > li > a:focus {
 }
 
 .map-list-item {
+  font-size: 14px;
   position: relative;
   display: block;
   padding: 10px 15px;
@@ -11350,14 +11351,9 @@ a.map-list-item:hover, a.map-list-item:focus {
 }
 
 .map-list-item .address {
-  font-size: 14px;
-  line-height: 1.1;
   font-family: "Avenir", "Helvetica", sans-serif;
+  line-height: 1.1;
   margin-top: 0;
-}
-
-.map-list-item .views-field-field-type {
-  font-size: 14px;
 }
 
 .view-id-food_guide .leaflet-popup-content-wrapper {

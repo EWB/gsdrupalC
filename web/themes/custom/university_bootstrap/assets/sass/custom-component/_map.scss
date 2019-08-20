@@ -32,6 +32,7 @@
 }
 
 .map-list-item {
+  font-size: 14px;
   position: relative;
   display: block;
   padding: 10px 15px;
@@ -123,14 +124,9 @@ a.map-list-item {
 }
 
 .map-list-item .address {
-    font-size: 14px;
-    line-height: 1.1;
-    font-family: $font-family-sans-serif;
-    margin-top: 0;
-}
-
-.map-list-item .views-field-field-type {
-    font-size: 14px;
+  font-family: $font-family-sans-serif;
+  line-height: 1.1;
+  margin-top: 0;
 }
 
 // Map infowindow styling.
