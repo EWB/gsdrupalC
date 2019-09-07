@@ -73,7 +73,8 @@ Bootstrap Framework
 @import "../../bootstrap/assets/stylesheets/bootstrap/code";
 @import "../../bootstrap/assets/stylesheets/bootstrap/grid";
 @import "../../bootstrap/assets/stylesheets/bootstrap/tables";
-@import "../../bootstrap/assets/stylesheets/bootstrap/forms";
+@import "custom-component/forms";
+// @import "../../bootstrap/assets/stylesheets/bootstrap/forms";
 @import "../../bootstrap/assets/stylesheets/bootstrap/buttons";
 
 // Components
@@ -146,7 +147,7 @@ Custom Stuffs
 @import "custom-component/content-container";
 @import "custom-component/fonts";
 @import "custom-component/footer";
-@import "custom-component/forms";
+// @import "custom-component/forms";
 @import "custom-component/labels";
 @import "custom-component/map";
 @import "custom-component/narrative";
