@@ -1,14 +1,14 @@
-uuid: 9a544884-def9-4829-8507-2a3bfb63e320
+uuid: 6b36921d-b745-48c5-b978-6bd22faf0074
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.card
+    - node.type.entity
   module:
     - node
     - user
-id: test_3_kat
-label: 'Test 3 kat'
+id: test_3
+label: Test-3
 module: views
 description: ''
 tag: ''
@@ -25,7 +25,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'administer blocks'
+          perm: 'access content'
       cache:
         type: tag
         options: {  }
@@ -48,17 +48,37 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
-        type: some
+        type: mini
         options:
-          items_per_page: 5
+          items_per_page: 10
           offset: 0
+          id: 0
+          total_pages: null
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          tags:
+            previous: ‹‹
+            next: ››
       style:
-        type: grid
-      row:
-        type: 'entity:node'
+        type: default
         options:
-          relationship: none
-          view_mode: card
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      row:
+        type: fields
+        options:
+          inline: {  }
+          separator: ''
+          hide_empty: false
+          default_field_elements: true
       fields:
         title:
           id: title
@@ -119,49 +139,41 @@ display:
           expose:
             operator: ''
           group: 1
-      sorts:
-        created:
-          id: created
+        type:
+          id: type
           table: node_field_data
-          field: created
-          order: DESC
+          field: type
+          value:
+            entity: entity
           entity_type: node
-          entity_field: created
-          plugin_id: date
+          entity_field: type
+          plugin_id: bundle
+      sorts:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          order: ASC
+          entity_type: node
+          entity_field: title
+          plugin_id: standard
           relationship: none
           group_type: group
           admin_label: ''
           exposed: false
           expose:
             label: ''
-          granularity: second
-      title: 'Test 3 kat'
       header: {  }
       footer: {  }
       empty: {  }
       relationships: {  }
       arguments: {  }
-      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - 'user.node_grants:view'
-        - user.permissions
-      tags: {  }
-  block_1:
-    display_plugin: block
-    id: block_1
-    display_title: Block
-    position: 1
-    display_options:
-      display_extenders: {  }
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }

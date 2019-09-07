@@ -65,7 +65,7 @@ display:
           text_input_required: 'Select any filter and click on Apply to see results'
           bef:
             general:
-              allow_secondary: true
+              allow_secondary: false
               secondary_label: Filters
               autosubmit: false
               autosubmit_exclude_textfield: false
@@ -121,7 +121,7 @@ display:
           marker_icon_path: ''
           marker_row_number: 0
           dynamic_map:
-            enabled: 1
+            enabled: 0
             update_handler: boundary_filter_field_geolocation_entity_boundary
             hide_form: 1
             views_refresh_delay: '1200'
@@ -132,22 +132,22 @@ display:
               map_center_id: views_boundary_filter
             fit_bounds:
               enable: true
+              settings:
+                reset_zoom: true
               weight: -9
               map_center_id: fit_bounds
-              settings:
-                reset_zoom: false
             client_location:
               weight: 0
               enable: false
               map_center_id: client_location
-            first_row:
-              weight: 0
-              enable: false
-              map_center_id: location_plugins
             fixed_value:
               settings:
                 latitude: null
                 longitude: null
+              weight: 0
+              enable: false
+              map_center_id: location_plugins
+            first_row:
               weight: 0
               enable: false
               map_center_id: location_plugins
@@ -198,7 +198,7 @@ display:
                   tile_layer_providers:
                     OpenStreetMap:
                       'OpenStreetMap Mapnik':
-                        label: ''
+                        label: Default
                         checkbox: false
                       'OpenStreetMap BlackAndWhite':
                         label: ''
@@ -295,8 +295,8 @@ display:
                         label: ''
                         checkbox: false
                       'Esri WorldImagery':
-                        label: ''
-                        checkbox: false
+                        checkbox: true
+                        label: Satellite
                       'Esri WorldTerrain':
                         label: ''
                         checkbox: false
@@ -491,7 +491,7 @@ display:
                     GeoportailFrance:
                       apikey: ''
               leaflet_tile_layer:
-                weight: 0
+                weight: -3
                 settings:
                   tile_layer_provider: 'OpenStreetMap Mapnik'
                   tile_provider_options:
@@ -506,12 +506,12 @@ display:
                       apikey: ''
                 enabled: false
               leaflet_tile_layer_overlay:
-                weight: 0
+                weight: -2
                 settings:
                   tile_layer_overlay: OpenInfraMap.Power
                 enabled: false
               leaflet_custom_tile_layer:
-                weight: 0
+                weight: -1
                 settings:
                   tile_layer_url: ''
                   tile_layer_attribution: ''
@@ -526,8 +526,13 @@ display:
                   east: null
                   west: null
                 enabled: false
+              leaflet_control_recenter:
+                weight: 1
+                settings:
+                  position: topleft
+                enabled: false
               leaflet_marker_icon:
-                weight: 0
+                weight: 2
                 settings:
                   marker_icon_path: ''
                   icon_size:
@@ -548,24 +553,19 @@ display:
                     'y': null
                 enabled: false
               leaflet_marker_clusterer:
-                weight: 0
+                weight: 3
                 enabled: false
                 settings:
                   cluster_settings:
                     show_coverage_on_hover: false
                     zoom_to_bounds_on_click: false
-              leaflet_control_recenter:
-                weight: 0
-                settings:
-                  position: topleft
-                enabled: false
               leaflet_control_locate:
-                weight: 0
+                weight: 4
                 settings:
                   position: topleft
                 enabled: false
               leaflet_control_geocoder:
-                weight: 0
+                weight: 5
                 settings:
                   position: topleft
                   geocoder: google_geocoding_api
@@ -585,18 +585,18 @@ display:
                       east: ''
                 enabled: false
               leaflet_control_fullscreen:
-                weight: 0
+                weight: 6
                 settings:
                   position: topleft
                 enabled: false
               leaflet_disable_user_interaction:
-                weight: 0
+                weight: 7
                 enabled: false
               leaflet_client_location_indicator:
-                weight: 0
+                weight: 8
                 enabled: false
               leaflet_wms:
-                weight: 0
+                weight: 9
                 settings:
                   url: ''
                   version: ''
@@ -609,7 +609,7 @@ display:
                 enabled: false
             height: 500px
             width: 100%
-            zoom: '10'
+            zoom: '9'
       row:
         type: fields
         options:
@@ -1088,7 +1088,7 @@ display:
             description: ''
             use_operator: false
             operator: combine_op
-            identifier: search
+            identifier: text
             required: false
             remember: false
             multiple: false
@@ -1114,8 +1114,6 @@ display:
             group_items: {  }
           fields:
             title: title
-            field_address: field_address
-            nothing: nothing
           plugin_id: combine
         field_type_target_id:
           id: field_type_target_id
@@ -1137,7 +1135,7 @@ display:
             identifier: field_type_target_id
             required: false
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               anonymous: anonymous
               authenticated: authenticated
@@ -1185,7 +1183,7 @@ display:
             identifier: field_distribution_metjh_target_id
             required: false
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
@@ -1233,7 +1231,7 @@ display:
             identifier: field_products_target_id
             required: false
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
@@ -1811,7 +1809,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div id=\"node-{{ nid }}\" class=\"map-list-item clearfix\">\r\n{% if field_media %}\r\n<div class=\"views-field-field-media\">\r\n  <div class=\"field-content\">\r\n    {{ field_media }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n<h2 class=\"map-list-item-heading\">{{ title }}</h2>\r\n{% if field_address %}\r\n<div class=\"views-field-field-address\">\r\n  <div class=\"field-content\">\r\n    {{ field_address }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n{% if field_type %}\r\n<div class=\"views-field-field-type\">\r\n  <span class=\"views-label views-label-field-type\">Type: </span><span class=\"field-content\">{{ field_type }}</span>\r\n</div>\r\n{% endif %}\r\n<div class=\"views-field-field-show-on-map\">\r\n<span class=\"field-content\"><a href=\"#map-{{ nid }}\" class=\"geolocation-marker-zoom\">Show <span class=\"visually-hidden\">{{ title }}</span>on map</a></span>\r\n</div>\r\n<div class=\"views-field-field-readmore\">\r\n<span class=\"field-content\"><a href=\"{{ view_node }}\">Read more<span class=\"visually-hidden\"> about {{ title }}</span></a></span>\r\n</div>\r\n</div>"
+            text: "<div id=\"node-{{ nid }}\" class=\"map-list-item clearfix\">\r\n{% if field_media %}\r\n<div class=\"views-field-field-media\">\r\n  <div class=\"field-content\">\r\n    {{ field_media }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n<h2 class=\"map-list-item-heading\">{{ title }}</h2>\r\n{% if field_address %}\r\n<div class=\"views-field-field-address\">\r\n  <div class=\"field-content\">\r\n    {{ field_address }}\r\n  </div>\r\n</div>\r\n{% endif %}\r\n{% if field_type %}\r\n<div class=\"views-field-field-type\">\r\n  <span class=\"views-label views-label-field-type\">Type: </span><span class=\"field-content\">{{ field_type }}</span>\r\n</div>\r\n{% endif %}\r\n<div class=\"views-field-field-show-on-map\">\r\n<span class=\"field-content\"><a href=\"#map-{{ nid }}\" class=\"geolocation-marker-zoom\">Show <span class=\"visually-hidden\">{{ title }}</span>on map</a></span>\r\n</div>\r\n<div class=\"views-field-field-readmore\">\r\n<span class=\"field-content\"><a href=\"{{ view_node }}\">View full listing<span class=\"visually-hidden\"> about {{ title }}</span></a></span>\r\n</div>\r\n</div>"
             make_link: false
             path: ''
             absolute: false

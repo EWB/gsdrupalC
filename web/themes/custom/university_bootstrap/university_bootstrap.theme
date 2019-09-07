@@ -11,6 +11,7 @@
  */
 function university_bootstrap_preprocess_page(&$variables) {
   $node = \Drupal::routeMatch()->getParameter('node');
+  $view_id = \Drupal::routeMatch()->getParameter('view_id');
 
   if(!is_object($node) && is_int((int) $node)) {
     $node = Drupal\node\Entity\Node::load($node);
@@ -26,6 +27,9 @@ function university_bootstrap_preprocess_page(&$variables) {
     }
   }
   elseif ($variables['is_front']) {
+    $variables['template_type'] = "edge-to-edge";
+  }
+  elseif (!empty($view_id) && $view_id == 'food_guide') {
     $variables['template_type'] = "edge-to-edge";
   }
   else {

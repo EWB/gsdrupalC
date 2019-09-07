@@ -1,0 +1,14 @@
+uuid: 15194d48-6e3e-4062-a766-8e4800961d1b
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.footer
+id: paragraph.footer.default
+targetEntityType: paragraph
+bundle: footer
+mode: default
+content: {  }
+hidden:
+  created: true
+  status: true

@@ -913,7 +913,7 @@ display:
         type: none
         options:
           offset: 0
-      attachment_position: after
+      attachment_position: before
       inherit_exposed_filters: true
       inherit_pager: true
       render_pager: true
@@ -927,7 +927,7 @@ display:
           data_provider_id: geolocation_field_provider
           title_field: none
           label_field: none
-          marker_icon_path: ''
+          marker_icon_path: '{{ field_type_1 }}'
           marker_row_number: 0
           dynamic_map:
             enabled: 1
@@ -1337,18 +1337,19 @@ display:
                   west: null
                 enabled: false
               leaflet_marker_icon:
+                enabled: true
                 weight: 1
                 settings:
-                  marker_icon_path: ''
+                  marker_icon_path: '{{ field_type_1 }}'
                   icon_size:
-                    width: null
-                    height: null
+                    width: 30
+                    height: 30
                   icon_anchor:
-                    x: null
-                    'y': null
+                    x: 15
+                    'y': 15
                   popup_anchor:
-                    x: null
-                    'y': null
+                    x: 10
+                    'y': 10
                   marker_shadow_path: ''
                   shadow_size:
                     width: null
@@ -1356,7 +1357,6 @@ display:
                   shadow_anchor:
                     x: null
                     'y': null
-                enabled: false
               leaflet_marker_clusterer:
                 weight: 2
                 enabled: false
@@ -1912,6 +1912,69 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: geolocation_field
+        field_type_1:
+          id: field_type_1
+          table: node__field_type
+          field: field_type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: '{{ ("Farm" in field_type_1|render|render)?"https://s3.amazonaws.com/com.cartodb.users-assets.production/production/jonmrich/assets/20150203194453red_pin.png":"https://unpkg.com/leaflet@1.3.3/dist/images/marker-icon.png"}}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
     cache_metadata:
       max-age: -1
       contexts:

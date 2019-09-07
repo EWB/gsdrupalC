@@ -1,9 +1,10 @@
-uuid: e88f303b-dc74-432e-a7bd-3532f3976364
+uuid: a6711be6-eade-41b8-b26a-7270fd47df85
 langcode: en
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.node.full
   module:
-    - blazy
     - node
     - user
 id: test
@@ -52,9 +53,11 @@ display:
           items_per_page: 5
           offset: 0
       style:
-        type: blazy
+        type: grid
       row:
-        type: fields
+        type: 'entity:node'
+        options:
+          view_mode: full
       fields:
         title:
           id: title

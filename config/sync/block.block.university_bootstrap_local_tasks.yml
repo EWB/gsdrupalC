@@ -2,6 +2,8 @@ uuid: 5ad7f8ff-8874-4278-84ad-b9c186f70642
 langcode: en
 status: true
 dependencies:
+  module:
+    - system
   theme:
     - university_bootstrap
 _core:
@@ -16,7 +18,12 @@ settings:
   id: local_tasks_block
   label: Tabs
   provider: core
-  label_display: '0'
+  label_display: visible
   primary: true
   secondary: true
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: what-people-are-saying
+    negate: false
+    context_mapping: {  }
