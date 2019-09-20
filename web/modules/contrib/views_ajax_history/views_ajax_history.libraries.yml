@@ -1,0 +1,11 @@
+history:
+  version: VERSION
+  js:
+    js/views_ajax_history.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.form
+    - core/drupal.ajax

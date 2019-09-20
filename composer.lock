@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0116f0941505ab994b36c32c7340344d",
+    "content-hash": "4f5486f817947dce78c1e0795a281d35",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -133,7 +133,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/daneden/animate.css/zipball/ab5fe9dae4fdb936eee698ce1850a263008f0a99",
-                "reference": "ab5fe9dae4fdb936eee698ce1850a263008f0a99"
+                "reference": "ab5fe9dae4fdb936eee698ce1850a263008f0a99",
+                "shasum": null
             },
             "type": "bower-asset"
         },
@@ -148,7 +149,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/dinbror/blazy/zipball/5becad405976695e6016ba301be4f22ba61d5b95",
-                "reference": "5becad405976695e6016ba301be4f22ba61d5b95"
+                "reference": "5becad405976695e6016ba301be4f22ba61d5b95",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -166,7 +168,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/jackmoore/colorbox/zipball/bac78120c6ca9e63370cc317ab6f400129cd6608",
-                "reference": "bac78120c6ca9e63370cc317ab6f400129cd6608"
+                "reference": "bac78120c6ca9e63370cc317ab6f400129cd6608",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.3.2"
@@ -184,7 +187,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/desandro/matches-selector/zipball/42ee1cbab7469454d140bdab04d2ceed9c68b85e",
-                "reference": "42ee1cbab7469454d140bdab04d2ceed9c68b85e"
+                "reference": "42ee1cbab7469454d140bdab04d2ceed9c68b85e",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -202,7 +206,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/enyo/dropzone/zipball/08b9e0a763b54a685404dea523a9c54242fbe1b9",
-                "reference": "08b9e0a763b54a685404dea523a9c54242fbe1b9"
+                "reference": "08b9e0a763b54a685404dea523a9c54242fbe1b9",
+                "shasum": null
             },
             "type": "bower-asset"
         },
@@ -217,7 +222,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/metafizzy/ev-emitter/zipball/1baa3a03d8e07f665b0eb797661fcc2b0d2a5736",
-                "reference": "1baa3a03d8e07f665b0eb797661fcc2b0d2a5736"
+                "reference": "1baa3a03d8e07f665b0eb797661fcc2b0d2a5736",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -235,7 +241,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/metafizzy/fizzy-ui-utils/zipball/72feb9fc3d6de25696291941121bb3ec2db8221e",
-                "reference": "72feb9fc3d6de25696291941121bb3ec2db8221e"
+                "reference": "72feb9fc3d6de25696291941121bb3ec2db8221e",
+                "shasum": null
             },
             "require": {
                 "bower-asset/desandro-matches-selector": ">=2.0.0,<3.0.0"
@@ -256,7 +263,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/desandro/get-size/zipball/6879e7f15b4b6e19ca392b6955edfa8d4aa6f787",
-                "reference": "6879e7f15b4b6e19ca392b6955edfa8d4aa6f787"
+                "reference": "6879e7f15b4b6e19ca392b6955edfa8d4aa6f787",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -274,7 +282,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/desandro/imagesloaded/zipball/67c4e57453120935180c45c6820e7d3fbd2ea1f9",
-                "reference": "67c4e57453120935180c45c6820e7d3fbd2ea1f9"
+                "reference": "67c4e57453120935180c45c6820e7d3fbd2ea1f9",
+                "shasum": null
             },
             "require": {
                 "bower-asset/ev-emitter": ">=1.0.0,<2.0.0"
@@ -295,7 +304,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/15bc73803f76bc53b654b9fdbbbc096f56d7c03d",
-                "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d"
+                "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -313,7 +323,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/recurser/jquery-simple-color/zipball/ebe0b2c0db639584e81499bd29d6619abb9a2599",
-                "reference": "ebe0b2c0db639584e81499bd29d6619abb9a2599"
+                "reference": "ebe0b2c0db639584e81499bd29d6619abb9a2599",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -331,7 +342,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
-                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.6"
@@ -352,7 +364,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/simeydotme/jQuery-ui-Slider-Pips/zipball/371b31caf991070db89cda0a17dcc30410122ea2",
-                "reference": "371b31caf991070db89cda0a17dcc30410122ea2"
+                "reference": "371b31caf991070db89cda0a17dcc30410122ea2",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.10.2",
@@ -374,7 +387,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/jozefizso/bower-jquery-easing/zipball/7ddc8b25d24c78bbae8d00a3ae43bf3f274ec8b5",
-                "reference": "7ddc8b25d24c78bbae8d00a3ae43bf3f274ec8b5"
+                "reference": "7ddc8b25d24c78bbae8d00a3ae43bf3f274ec8b5",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.2.1"
@@ -386,13 +400,14 @@
             "version": "v4.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/desandro/masonry.git",
+                "url": "git@github.com:desandro/masonry.git",
                 "reference": "3b0883cf4a4a046896719b9cf282ea74be7ffecd"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/desandro/masonry/zipball/3b0883cf4a4a046896719b9cf282ea74be7ffecd",
-                "reference": "3b0883cf4a4a046896719b9cf282ea74be7ffecd"
+                "reference": "3b0883cf4a4a046896719b9cf282ea74be7ffecd",
+                "shasum": null
             },
             "require": {
                 "bower-asset/get-size": ">=2.0.2,<3.0.0",
@@ -414,7 +429,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/metafizzy/outlayer/zipball/bf31c5748bf84fcc2c553d1199a6ecaf0ebd9878",
-                "reference": "bf31c5748bf84fcc2c553d1199a6ecaf0ebd9878"
+                "reference": "bf31c5748bf84fcc2c553d1199a6ecaf0ebd9878",
+                "shasum": null
             },
             "require": {
                 "bower-asset/ev-emitter": ">=1.0.0,<2.0.0",
@@ -437,7 +453,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/kenwheeler/slick/zipball/0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee",
-                "reference": "0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee"
+                "reference": "0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.7"
@@ -458,7 +475,8 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/bgrins/spectrum/zipball/98454b55521cfb495f628db28af01100c029ef76",
-                "reference": "98454b55521cfb495f628db28af01100c029ef76"
+                "reference": "98454b55521cfb495f628db28af01100c029ef76",
+                "shasum": null
             },
             "require": {
                 "bower-asset/jquery": ">=1.7.2"
@@ -1960,8 +1978,7 @@
             "homepage": "https://www.drupal.org/project/better_formats",
             "support": {
                 "source": "https://git.drupalcode.org/project/better_formats"
-            },
-            "time": "2018-04-24T13:52:26+00:00"
+            }
         },
         {
             "name": "drupal/blazy",
@@ -4201,8 +4218,7 @@
             "support": {
                 "source": "http://git.drupal.org/project/geolocation.git",
                 "issues": "https://www.drupal.org/project/issues/geolocation"
-            },
-            "time": "2019-06-15T07:52:33+00:00"
+            }
         },
         {
             "name": "drupal/inline_entity_form",
@@ -4807,8 +4823,7 @@
             "homepage": "https://www.drupal.org/project/media_entity_image_exif",
             "support": {
                 "source": "https://git.drupalcode.org/project/media_entity_image_exif"
-            },
-            "time": "2018-01-03T17:59:39+00:00"
+            }
         },
         {
             "name": "drupal/menu_block",
@@ -5577,6 +5592,65 @@
             "homepage": "https://www.drupal.org/project/video_embed_field",
             "support": {
                 "source": "https://git.drupalcode.org/project/video_embed_field"
+            }
+        },
+        {
+            "name": "drupal/views_ajax_history",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/views_ajax_history.git",
+                "reference": "8.x-1.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_ajax_history-8.x-1.2.zip",
+                "reference": "8.x-1.2",
+                "shasum": "97c19dd21327025a58deec6200e008b3c794b022"
+            },
+            "require": {
+                "drupal/core": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.2",
+                    "datestamp": "1562339886",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "amateescu",
+                    "homepage": "https://www.drupal.org/user/729614"
+                },
+                {
+                    "name": "joelpittet",
+                    "homepage": "https://www.drupal.org/user/160302"
+                },
+                {
+                    "name": "kalman.hosszu",
+                    "homepage": "https://www.drupal.org/user/267481"
+                },
+                {
+                    "name": "nod_",
+                    "homepage": "https://www.drupal.org/user/598310"
+                }
+            ],
+            "description": "Add bookmarking abilities to AJAX Views.",
+            "homepage": "https://www.drupal.org/project/views_ajax_history",
+            "support": {
+                "source": "https://git.drupalcode.org/project/views_ajax_history"
             }
         },
         {
@@ -6682,7 +6756,9 @@
             "version": "1.8.0-RC1",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/sortablejs/-/sortablejs-1.8.0-rc1.tgz"
+                "url": "https://registry.npmjs.org/sortablejs/-/sortablejs-1.8.0-rc1.tgz",
+                "reference": null,
+                "shasum": null
             },
             "type": "npm-asset",
             "license": [

@@ -87,6 +87,7 @@
         "drupal/tvi": "^1.0",
         "drupal/twig_tweak": "^1.9",
         "drupal/video_embed_field": "^2.0",
+        "drupal/views_ajax_history": "^1.2",
         "drupal/views_bulk_operations": "^2.3",
         "drupal/views_timelinejs": "^3.1",
         "drush/drush": "^8.1.17",
