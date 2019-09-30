@@ -11954,17 +11954,6 @@
         "name": "webflo/drupal-core-strict",
         "version": "8.7.6",
         "version_normalized": "8.7.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/webflo/drupal-core-strict.git",
-            "reference": "8c51141d4cc9fc30312b71e3be83adb9efd8f389"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/webflo/drupal-core-strict/zipball/8c51141d4cc9fc30312b71e3be83adb9efd8f389",
-            "reference": "8c51141d4cc9fc30312b71e3be83adb9efd8f389",
-            "shasum": ""
-        },
         "require": {
             "asm89/stack-cors": "1.2.0",
             "brumann/polyfill-unserialize": "v1.0.3",
