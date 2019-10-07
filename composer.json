@@ -39,6 +39,7 @@
         "drupal/anchor_link": "^1.6",
         "drupal/animate_any": "^1.1",
         "drupal/asset_injector": "^2.2",
+        "drupal/backup_migrate": "^4.0",
         "drupal/better_exposed_filters": "^3.0",
         "drupal/better_formats": "1.x-dev",
         "drupal/blazy": "^1.0",
