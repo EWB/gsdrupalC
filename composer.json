@@ -178,6 +178,11 @@
             "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "web/themes/custom/{$name}": ["type:drupal-custom-theme"],
             "drush/contrib/{$name}": ["type:drupal-drush"]
+        },
+        "patches": {
+          "drupal/core": {
+            "Error: Call to a member function getLabel() after enable layout_builder":"https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch"
+          }
         }
     }
 }
