@@ -153,11 +153,13 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function acceptExposedInput($input) {
-    $return = parent::acceptExposedInput($input);
+    parent::acceptExposedInput($input);
 
     if (
       array_key_exists('lat', $input)
+      && $input['lat'] !== ''
       && array_key_exists('lng', $input)
+      && $input['lng'] !== ''
     ) {
       $this->value['lat'] = (float) $input['lat'];
       $this->value['lng'] = (float) $input['lng'];
@@ -166,8 +168,11 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
     if (!empty($input['center'])) {
       $this->value['center'] = $input['center'];
     }
+    else {
+      $this->value['center'] = [];
+    }
 
-    return $return;
+    return TRUE;
   }
 
   /**
@@ -187,14 +192,14 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
       ];
     }
     else {
-      $center = $this->locationInputManager->getCoordinates($this->value['center'], $this->options['location_input'], $this);
+      $center = $this->locationInputManager->getCoordinates((array) $this->value['center'], $this->options['location_input'], $this);
     }
 
     if (
       empty($center)
       || !is_numeric($center['lat'])
       || !is_numeric($center['lng'])
-      || !is_numeric($this->value['value'])
+      || empty($this->value['value'])
     ) {
       return;
     }

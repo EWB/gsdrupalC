@@ -4,6 +4,7 @@
  */
 
 /**
+ * @property {String} drupalSettings.geolocation.geocoder.google_geocoding_api.autocompleteMinLength
  * @property {Object} drupalSettings.geolocation.geocoder.google_geocoding_api.componentRestrictions
  * @property {Object} drupalSettings.geolocation.geocoder.google_geocoding_api.bounds
  * @property {String[]} drupalSettings.geolocation.geocoder.google_geocoding_api.inputIds
@@ -20,9 +21,18 @@
 
   Drupal.geolocation.geocoder.googleGeocodingAPI = {};
 
+  var minLength = 1;
+  if (
+    typeof drupalSettings.geolocation.geocoder.google_geocoding_api.autocompleteMinLength !== 'undefined'
+    && parseInt(drupalSettings.geolocation.geocoder.google_geocoding_api.autocompleteMinLength)
+  ) {
+    minLength = parseInt(drupalSettings.geolocation.geocoder.google_geocoding_api.autocompleteMinLength);
+  }
+
   Drupal.geolocation.geocoder.googleGeocodingAPI.attach = function (geocoderInput) {
     geocoderInput.once().autocomplete({
       autoFocus: true,
+      minLength: minLength,
       source: function (request, response) {
         if (typeof Drupal.geolocation.geocoder.googleGeocodingAPI.geocoder === 'undefined') {
           Drupal.geolocation.geocoder.googleGeocodingAPI.geocoder = new google.maps.Geocoder();

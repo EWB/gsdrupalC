@@ -58,7 +58,6 @@ class GoogleMaps extends GoogleMapsProviderBase {
       [
         'minZoom' => static::$MINZOOMLEVEL,
         'maxZoom' => static::$MAXZOOMLEVEL,
-        'rotateControl' => FALSE,
         'gestureHandling' => 'auto',
         'map_features' => [
           'marker_infowindow' => [
@@ -103,8 +102,6 @@ class GoogleMaps extends GoogleMapsProviderBase {
    */
   public function getSettings(array $settings) {
     $settings = parent::getSettings($settings);
-
-    $settings['rotateControl'] = (bool) $settings['rotateControl'];
 
     $settings['minZoom'] = (int) $settings['minZoom'];
     $settings['maxZoom'] = (int) $settings['maxZoom'];
@@ -157,18 +154,6 @@ class GoogleMaps extends GoogleMapsProviderBase {
         ['\Drupal\Core\Render\Element\Number', 'preRenderNumber'],
         ['\Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'],
       ],
-    ];
-
-    $form['control_settings'] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Controls'),
-    ];
-    $form['rotateControl'] = [
-      '#group' => $parents_string . 'control_settings',
-      '#type' => 'checkbox',
-      '#title' => $this->t('Rotate control'),
-      '#description' => $this->t('Show rotate control.'),
-      '#default_value' => $settings['rotateControl'],
     ];
 
     $form['behavior_settings'] = [

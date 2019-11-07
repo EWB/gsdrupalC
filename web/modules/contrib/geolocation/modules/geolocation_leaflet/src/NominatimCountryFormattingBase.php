@@ -17,43 +17,43 @@ class NominatimCountryFormattingBase extends GeocoderCountryFormattingBase imple
     $address_elements = parent::format($atomics);
 
     if (
-      $atomics['houseNumber']
-      && $atomics['road']
+      isset($atomics['houseNumber'])
+      && isset($atomics['road'])
     ) {
       $address_elements['addressLine1'] = $atomics['houseNumber'] . ' ' . $atomics['road'];
     }
-    elseif ($atomics['road']) {
+    elseif (isset($atomics['road'])) {
       $address_elements['addressLine1'] = $atomics['road'];
     }
 
     if (
-      $atomics['city']
-      && $atomics['village']
+      isset($atomics['city'])
+      && isset($atomics['village'])
       && $atomics['city'] !== $atomics['village']
     ) {
       $address_elements['addressLine2'] = $atomics['village'];
     }
     elseif (
-      $atomics['suburb']
+      isset($atomics['suburb'])
     ) {
       $address_elements['addressLine2'] = $atomics['suburb'];
     }
 
-    if ($atomics['city']) {
+    if (isset($atomics['city'])) {
       $address_elements['locality'] = $atomics['city'];
     }
     elseif (
       empty($atomics['city'])
-      && $atomics['county']
+      && isset($atomics['county'])
     ) {
       $address_elements['locality'] = $atomics['county'];
     }
 
-    if ($atomics['postcode']) {
+    if (isset($atomics['postcode'])) {
       $address_elements['postalCode'] = $atomics['postcode'];
     }
 
-    if ($atomics['countryCode']) {
+    if (isset($atomics['countryCode'])) {
       $address_elements['countryCode'] = $atomics['countryCode'];
     }
 

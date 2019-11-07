@@ -14,6 +14,9 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
  */
 class GeolocationGoogleGeocoderWidgetTest extends GeolocationJavascriptTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public $adminUser;
 
   /**

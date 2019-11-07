@@ -85,16 +85,14 @@ class MapTypeStyle extends MapFeatureBase {
     $render_array['#attached'] = BubbleableMetadata::mergeAttachments(
       empty($render_array['#attached']) ? [] : $render_array['#attached'],
       [
-        'library' => [
-          'geolocation_google_maps/mapfeature.' . $this->getPluginId(),
-        ],
         'drupalSettings' => [
           'geolocation' => [
             'maps' => [
               $render_array['#id'] => [
-                $this->getPluginId() => [
-                  'enable' => TRUE,
-                  'style' => $feature_settings['style'],
+                'settings' => [
+                  'google_map_settings' => [
+                    'style' => $feature_settings['style'],
+                  ],
                 ],
               ],
             ],

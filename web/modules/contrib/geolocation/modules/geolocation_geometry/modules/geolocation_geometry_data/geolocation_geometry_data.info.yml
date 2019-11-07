@@ -1,0 +1,8 @@
+name: Geolocation Geometry Data
+type: module
+description: Requires gasparesganga/php-shapefile library.
+core: 8.x
+package: Geolocation
+dependencies:
+  - geolocation_geometry
+  - taxonomy

@@ -36,6 +36,7 @@
   padding: 0 1em;
   z-index: 3;
   border: 0;
+  width: auto;
 }
 
 .geolocation-map-control input.location:focus {

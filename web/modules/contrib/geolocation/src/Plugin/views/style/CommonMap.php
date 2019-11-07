@@ -21,6 +21,11 @@ use Drupal\Component\Utility\NestedArray;
  */
 class CommonMap extends GeolocationStyleBase {
 
+  /**
+   * Map ID.
+   *
+   * @var bool|string
+   */
   protected $mapId = FALSE;
 
   /**
@@ -309,7 +314,7 @@ class CommonMap extends GeolocationStyleBase {
         ];
         foreach ($this->view->displayHandlers->getInstanceIds() as $instance_id) {
           $display_instance = $this->view->displayHandlers->get($instance_id);
-          if ($display_instance->getPluginId() == 'page') {
+          if (in_array($display_instance->getPluginId(), ['page', 'block'])) {
             $update_targets[$instance_id] = $display_instance->display['display_title'];
           }
         }
@@ -318,7 +323,7 @@ class CommonMap extends GeolocationStyleBase {
             '#title' => $this->t('Dynamic map update target'),
             '#type' => 'select',
             '#default_value' => $this->options['dynamic_map']['update_target'],
-            '#description' => $this->t("Non-page displays will only update themselves. Most likely a page view should be updated instead."),
+            '#description' => $this->t("Targets other than page or block can only update themselves."),
             '#options' => $update_targets,
             '#states' => [
               'visible' => [

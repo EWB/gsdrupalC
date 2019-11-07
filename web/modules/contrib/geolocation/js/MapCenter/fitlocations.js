@@ -3,7 +3,7 @@
  * Fit locations.
  */
 
-(function ($, Drupal) {
+(function (Drupal) {
 
   'use strict';
 
@@ -11,16 +11,18 @@
   Drupal.geolocation.mapCenter = Drupal.geolocation.mapCenter || {};
 
   /**
-   * @param centerOption.settings.reset_zoom {Boolean}
+   * @param {GeolocationMapInterface} map
+   * @param {GeolocationCenterOption} centerOption
+   * @param {Boolean} centerOption.settings.reset_zoom
    */
   Drupal.geolocation.mapCenter.fit_bounds = function (map, centerOption) {
     map.fitMapToMarkers();
 
     if (centerOption.settings.reset_zoom) {
-      map.setZoom();
+      map.setZoom(undefined, true);
     }
 
     return false;
   }
 
-})(jQuery, Drupal);
+})(Drupal);

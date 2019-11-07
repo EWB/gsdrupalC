@@ -25,7 +25,7 @@ class FreeGeoIp extends LocationBase implements LocationInterface {
       return [];
     }
 
-    $json = file_get_contents("http://freegeoip.net/json/" . $ip);
+    $json = file_get_contents("http://freegeoip.live/json/" . $ip);
     if (empty($json)) {
       return [];
     }

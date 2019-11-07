@@ -51,7 +51,7 @@ class Yandex extends GeocoderBase implements GeocoderInterface {
       return FALSE;
     }
 
-    $config = \Drupal::config('yandex_maps.settings');
+    $config = \Drupal::config('geolocation_yandex.settings');
 
     $lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
@@ -59,7 +59,7 @@ class Yandex extends GeocoderBase implements GeocoderInterface {
       'query' => [
         'geocode' => $address,
         'format' => 'json',
-        'apikey' => $config->get('key'),
+        'apikey' => $config->get('api_key'),
         'lang' => strtolower($lang) . '_' . strtoupper($lang),
       ],
     ]);

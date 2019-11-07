@@ -30,6 +30,8 @@ class Photon extends GeocoderBase implements GeocoderInterface {
   protected function getDefaultSettings() {
     $default_settings = parent::getDefaultSettings();
 
+    $default_settings['autocomplete_min_length'] = 1;
+
     $default_settings['location_priority'] = [
       'lat' => '',
       'lng' => '',
@@ -46,6 +48,14 @@ class Photon extends GeocoderBase implements GeocoderInterface {
     $settings = $this->getSettings();
 
     $form = parent::getOptionsForm();
+
+    $form['autocomplete_min_length'] = [
+      '#title' => $this->t('Autocomplete minimal input length'),
+      '#type' => 'number',
+      '#min' => 1,
+      '#step' => 1,
+      '#default_value' => $settings['autocomplete_min_length'],
+    ];
 
     $form['location_priority'] = [
       '#type' => 'geolocation_input',
@@ -77,6 +87,7 @@ class Photon extends GeocoderBase implements GeocoderInterface {
           'geolocation' => [
             'geocoder' => [
               $this->getPluginId() => [
+                'autocompleteMinLength' => empty($this->configuration['autocomplete_min_length']) ? 1 : (int) $this->configuration['autocomplete_min_length'],
                 'locationPriority' => [
                   'lat' => $settings['location_priority']['lat'],
                   'lon' => $settings['location_priority']['lng'],

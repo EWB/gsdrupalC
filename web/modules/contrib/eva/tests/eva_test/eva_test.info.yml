@@ -2,7 +2,7 @@ name: Eva test
 type: module
 description: Support module for testing.
 package: Testing
-# core: 8.x
+core: 8.x
 dependencies:
   - drupal:eva
   - drupal:node
@@ -10,8 +10,7 @@ dependencies:
   - drupal:user
   - drupal:text
 
-# Information added by Drupal.org packaging script on 2019-06-21
-version: '8.x-2.0-rc3'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2019-11-05
+version: '8.x-2.0'
 project: 'eva'
-datestamp: 1561127474
+datestamp: 1572917287

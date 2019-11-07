@@ -19,6 +19,14 @@
   Drupal.geolocation.geocoder.googlePlacesAPI = {};
   drupalSettings.geolocation.geocoder.google_places_api = drupalSettings.geolocation.geocoder.google_places_api || {};
 
+  var minLength = 1;
+  if (
+      typeof drupalSettings.geolocation.geocoder.google_places_api.autocompleteMinLength !== 'undefined'
+      && parseInt(drupalSettings.geolocation.geocoder.google_places_api.autocompleteMinLength)
+  ) {
+    minLength = parseInt(drupalSettings.geolocation.geocoder.google_places_api.autocompleteMinLength);
+  }
+
   /**
    * @param {HTMLElement} context Context
    */
@@ -30,6 +38,7 @@
 
     autocomplete.once().autocomplete({
       autoFocus: true,
+      minLength: minLength,
       source: function (request, response) {
         var autocompleteResults = [];
         var componentRestrictions = {};
@@ -40,7 +49,8 @@
         Drupal.geolocation.geocoder.googlePlacesAPI.autocompleteService.getPlacePredictions(
           {
             input: request.term,
-            componentRestrictions: componentRestrictions
+            componentRestrictions: componentRestrictions,
+            sessionToken: Drupal.geolocation.geocoder.googlePlacesAPI.sessionToken
           },
 
           function (results, status) {
@@ -114,6 +124,8 @@
       Drupal.geolocation.google.addLoadedCallback(function () {
         if (typeof Drupal.geolocation.geocoder.googlePlacesAPI.service === 'undefined') {
           Drupal.geolocation.geocoder.googlePlacesAPI.service = new google.maps.places.PlacesService(attribution_block[0]);
+          // Create a new session token.
+          Drupal.geolocation.geocoder.googlePlacesAPI.sessionToken = new google.maps.places.AutocompleteSessionToken();
           Drupal.geolocation.geocoder.googlePlacesAPI.autocompleteService = new google.maps.places.AutocompleteService();
 
           Drupal.geolocation.geocoder.googlePlacesAPI.attach(context);

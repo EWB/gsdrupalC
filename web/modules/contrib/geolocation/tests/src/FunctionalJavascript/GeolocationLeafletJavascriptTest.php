@@ -117,8 +117,6 @@ class GeolocationLeafletJavascriptTest extends GeolocationJavascriptTestBase {
     $this->assertSession()->elementExists('css', '.geolocation-location');
     $result = $this->assertSession()->waitForElementVisible('css', 'img[title="Location 2"]');
     $this->assertNotEmpty($result);
-    $this->getSession()->getPage()->find('css', 'img[title="Location 2"]')->click();
-    $this->assertSession()->elementExists('css', '.leaflet-popup-content');
   }
 
 }

@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Geolocation Geometry.
+ */
+
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_uninstall().
+ */
+function geolocation_geometry_data_uninstall() {
+  $field_storage_config = FieldStorageConfig::loadByName('taxonomy_term', 'field_geometry_data_geometry');
+  if ($field_storage_config) {
+    $field_storage_config->delete();
+  }
+
+}

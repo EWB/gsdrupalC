@@ -17,6 +17,11 @@ use Drupal\Core\Render\BubbleableMetadata;
  */
 class Dummy extends GeocoderBase {
 
+  /**
+   * Test targets.
+   *
+   * @var array
+   */
   public static $targets = [
     'Berlin' => [
       'lat' => 52.517037,

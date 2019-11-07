@@ -56,7 +56,7 @@ class FocalPointPreviewController extends ControllerBase {
   public function __construct(ImageFactory $image_factory, RequestStack $request_stack) {
     $this->imageFactory = $image_factory;
     $this->request = $request_stack->getCurrentRequest();
-    $this->fileStorage = $this->entityManager()->getStorage('file');
+    $this->fileStorage = $this->entityTypeManager()->getStorage('file');
   }
 
   /**
@@ -125,11 +125,10 @@ class FocalPointPreviewController extends ControllerBase {
     else {
       // There are no styles that use a focal point effect to preview.
       $image_styles_url = Url::fromRoute('entity.image_style.collection')->toString();
-      drupal_set_message(
+      $this->messenger()->addWarning(
         $this->t('You must have at least one <a href=":url">image style</a> defined that uses a focal point effect in order to preview.',
           [':url' => $image_styles_url]
-        ),
-        'warning'
+        )
       );
     }
 

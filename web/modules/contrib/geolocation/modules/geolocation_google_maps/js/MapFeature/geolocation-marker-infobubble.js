@@ -57,7 +57,7 @@
 
 /* global InfoBubble */
 
-(function ($, Drupal) {
+(function (Drupal) {
 
   'use strict';
 
@@ -103,7 +103,7 @@
                   arrowStyle: featureSettings.arrowStyle,
 
                   hideCloseButton: !featureSettings.closeButton,
-                  closeButtonSrc: featureSettings.closeButtonSrc,
+                  closeSrc: featureSettings.closeButtonSrc,
                   backgroundClassName: 'infobubble',
                   backgroundColor: featureSettings.backgroundColor,
                   minWidth: featureSettings.minWidth,
@@ -131,4 +131,4 @@
     },
     detach: function (context, drupalSettings) {}
   };
-})(jQuery, Drupal);
+})(Drupal);

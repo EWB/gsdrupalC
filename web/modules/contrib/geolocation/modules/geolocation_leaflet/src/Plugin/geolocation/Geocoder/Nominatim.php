@@ -23,6 +23,11 @@ use Drupal\Core\Url;
  */
 class Nominatim extends GeocoderBase implements GeocoderInterface {
 
+  /**
+   * Nominatim base URL.
+   *
+   * @var string
+   */
   protected static $nominatimBaseUrl = 'https://nominatim.openstreetmap.org';
 
   /**

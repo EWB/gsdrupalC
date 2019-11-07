@@ -51,6 +51,9 @@ plugin.plugin_configuration.geolocation.map_feature.map_restriction:
         west:
           type: string
           label: 'West'
+        strict:
+          type: boolean
+          label: 'strictBounds'
 
 plugin.plugin_configuration.geolocation.map_feature.marker_clusterer:
   type: geolocation.map_feature_settings
@@ -316,9 +319,33 @@ plugin.plugin_configuration.geolocation.map_feature.control_zoom:
           type: string
           label: 'Style'
 
+plugin.plugin_configuration.geolocation.map_feature.control_rotate:
+  type: geolocation_google_maps.map_control_feature_settings
+  label: 'Control Rotate'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        behavior:
+          type: string
+          label: 'Behavior'
+
 plugin.plugin_configuration.geolocation.map_feature.control_streetview:
   type: geolocation_google_maps.map_control_feature_settings
   label: 'Control Streetview'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        behavior:
+          type: string
+          label: 'Behavior'
+
+plugin.plugin_configuration.geolocation.map_feature.control_fullscreen:
+  type: geolocation_google_maps.map_control_feature_settings
+  label: 'Control Fullscreen'
   mapping:
     settings:
       type: mapping

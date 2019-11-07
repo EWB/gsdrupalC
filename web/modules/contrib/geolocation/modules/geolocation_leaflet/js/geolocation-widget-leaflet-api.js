@@ -3,7 +3,7 @@
  * Javascript for the map geocoder widget.
  */
 
-(function ($, Drupal) {
+(function (Drupal) {
   'use strict';
 
   /**
@@ -79,4 +79,4 @@
 
   Drupal.geolocation.widget.addWidgetProvider('geolocation_leaflet', 'GeolocationLeafletMapWidget');
 
-})(jQuery, Drupal);
+})(Drupal);

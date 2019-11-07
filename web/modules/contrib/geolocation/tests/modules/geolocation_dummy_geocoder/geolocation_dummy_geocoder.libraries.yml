@@ -1,5 +1,5 @@
 geocoder:
-  version: 8.x-2.x
+  version: 8.x-3.x
   js:
     js/geolocation-dummy-geocoder.js: {}
   dependencies:

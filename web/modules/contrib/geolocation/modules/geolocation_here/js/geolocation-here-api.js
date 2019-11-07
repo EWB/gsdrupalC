@@ -92,7 +92,7 @@
   }
   GeolocationHereMap.prototype = Object.create(Drupal.geolocation.GeolocationMapBase.prototype);
   GeolocationHereMap.prototype.constructor = GeolocationHereMap;
-  GeolocationHereMap.prototype.setZoom = function (zoom) {
+  GeolocationHereMap.prototype.setZoom = function (zoom, defer) {
     if (typeof zoom === 'undefined') {
       zoom = this.settings.here_settings.zoom;
     }
@@ -127,6 +127,11 @@
     this.hereMap.removeObject(marker);
   };
   GeolocationHereMap.prototype.fitBoundaries = function (boundaries, identifier) {
+    boundaries = this.denormalizeBoundaries(boundaries);
+    if (!boundaries) {
+      return;
+    }
+
     if (!this.hereMap.getViewBounds().equals(boundaries)) {
       this.hereMap.setViewBounds(boundaries);
       Drupal.geolocation.GeolocationMapBase.prototype.fitBoundaries.call(this, boundaries, identifier);
@@ -156,6 +161,39 @@
   GeolocationHereMap.prototype.getCenter = function () {
     var center = this.hereMap.getCenter();
     return {lat: center.lat, lng: center.lng};
+  };
+  GeolocationHereMap.prototype.normalizeBoundaries = function (boundaries) {
+    if (boundaries instanceof H.geo.Rect) {
+      return {
+        north: boundaries.getTop(),
+        east: boundaries.getLeft(),
+        south: boundaries.getBottom(),
+        west: boundaries.getRight()
+      };
+    }
+
+    return false;
+  };
+  GeolocationHereMap.prototype.denormalizeBoundaries = function (boundaries) {
+    if (typeof boundaries === 'undefined') {
+      return false;
+    }
+
+    if (boundaries instanceof H.geo.Rect) {
+      return boundaries;
+    }
+
+    if (Drupal.geolocation.GeolocationMapBase.prototype.boundariesNormalized.call(this, boundaries)) {
+      return new H.geo.Rect(boundaries.north, boundaries.west, boundaries.south, boundaries.east);
+    }
+    else {
+      boundaries = Drupal.geolocation.GeolocationMapBase.prototype.normalizeBoundaries.call(this, boundaries);
+      if (boundaries) {
+        return new H.geo.Rect(boundaries.north, boundaries.west, boundaries.south, boundaries.east);
+      }
+    }
+
+    return false;
   };
 
   Drupal.geolocation.GeolocationHereMap = GeolocationHereMap;

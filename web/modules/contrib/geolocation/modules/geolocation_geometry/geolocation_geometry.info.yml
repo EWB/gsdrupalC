@@ -1,0 +1,7 @@
+name: Geolocation - Geometry (Experimental)
+type: module
+description: Provide geometry based fields and integration
+core: 8.x
+package: Geolocation
+dependencies:
+  - geolocation

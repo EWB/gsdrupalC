@@ -9,9 +9,9 @@
  * Implements hook_library_info_build().
  */
 function geolocation_yandex_library_info_build() {
-  $config = \Drupal::config('yandex_maps.settings');
+  $config = \Drupal::config('geolocation_yandex.settings');
 
-  $api_key = $config->get('key');
+  $api_key = $config->get('api_key');
 
   $lang = \Drupal::languageManager()->getCurrentLanguage();
 

@@ -29,7 +29,7 @@ class GeolocationField extends EntityField {
    * {@inheritdoc}
    */
   protected function documentSelfTokens(&$tokens) {
-    $tokens = parent::documentSelfTokens($tokens);
+    parent::documentSelfTokens($tokens);
     $tokens['{{ ' . $this->options['id'] . '__lat_sex }}'] = $this->t('Latitude in sexagesimal notation.');
     $tokens['{{ ' . $this->options['id'] . '__lng_sex }}'] = $this->t('Longitude in sexagesimal notation.');
   }
@@ -38,7 +38,7 @@ class GeolocationField extends EntityField {
    * {@inheritdoc}
    */
   protected function addSelfTokens(&$tokens, $item) {
-    $tokens = parent::addSelfTokens($tokens, $item);
+    parent::addSelfTokens($tokens, $item);
     if (empty($item['raw'])) {
       return;
     }

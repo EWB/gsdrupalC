@@ -3,7 +3,7 @@
  * Control Zoom.
  */
 
-(function ($, Drupal) {
+(function (Drupal) {
 
   'use strict';
 
@@ -35,4 +35,4 @@
     detach: function (context, drupalSettings) {}
   };
 
-})(jQuery, Drupal);
+})(Drupal);

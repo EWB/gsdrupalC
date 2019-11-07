@@ -3,7 +3,7 @@
  * Views boundary argument center.
  */
 
-(function ($, Drupal) {
+(function (Drupal) {
 
   'use strict';
 
@@ -31,4 +31,4 @@
     return false;
   }
 
-})(jQuery, Drupal);
+})(Drupal);

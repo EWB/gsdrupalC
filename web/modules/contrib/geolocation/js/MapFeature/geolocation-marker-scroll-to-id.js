@@ -25,19 +25,17 @@
          * @param {GeolocationMapFeatureSettings} featureSettings
          */
         function (map, featureSettings) {
-          map.addPopulatedCallback(function (map) {
-            $.each(map.mapMarkers, function (index, marker) {
-              marker.addListener('click', function () {
-                var id = marker.locationWrapper.data('scroll-target-id');
+          map.addMarkerAddedCallback(function (marker) {
+            marker.addListener('click', function () {
+              var id = marker.locationWrapper.data('scroll-target-id');
 
-                var target = $('#' + id + ':visible').first();
+              var target = $('#' + id + ':visible').first();
 
-                if (target.length === 1) {
-                  $('html, body').animate({
-                    scrollTop: target.offset().top
-                  }, 'slow');
-                }
-              });
+              if (target.length === 1) {
+                $('html, body').animate({
+                  scrollTop: target.offset().top
+                }, 'slow');
+              }
             });
           });
 

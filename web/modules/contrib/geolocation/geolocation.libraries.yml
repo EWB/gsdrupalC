@@ -5,7 +5,7 @@
 #
 
 geolocation.api:
-  version: 8.x-2.x
+  version: 8.x-3.x
   js:
     js/geolocation-api.js: {}
   dependencies:
@@ -14,7 +14,7 @@ geolocation.api:
     - core/jquery.once
 
 geolocation.geocoder.api:
-  version: 8.x-2.x
+  version: 8.x-3.x
   js:
     js/geolocation-geocoder-api.js: {}
   dependencies:
@@ -22,14 +22,14 @@ geolocation.geocoder.api:
     - core/jquery.ui.autocomplete
 
 geolocation.widget.api:
-  version: 1.x
+  version: 8.x-3.x
   js:
     js/geolocation-widget-api.js: {}
   dependencies:
     - geolocation/geolocation.api
 
 geolocation.widget.map:
-  version: 8.x-2.x
+  version: 8.x-3.x
   js:
     js/geolocation-widget-map.js: {}
   dependencies:
@@ -43,7 +43,7 @@ geolocation.widget.map:
 #
 
 geolocation.map:
-  version: 8.x-2.x
+  version: 8.x-3.x
   css:
     theme:
       css/geolocation-map.css: {}
@@ -68,6 +68,10 @@ geolocation.commonmap:
 map_center.fitlocations:
   js:
     js/MapCenter/fitlocations.js: {}
+
+map_center.fixed_boundaries:
+  js:
+    js/MapCenter/fixedBoundaries.js: {}
 
 map_center.client_location:
   js:
@@ -103,7 +107,7 @@ location_input.geocoder:
 
 # Geolocation views filter geocoder function.
 geolocation.views.filter.geocoder:
-  version: 8.x-2.x
+  version: 8.x-3.x
   js:
     js/geolocation-views-filter-geocoder.js: {}
   dependencies:
@@ -117,7 +121,7 @@ geolocation.views.filter.geocoder:
 
 # HTML5 widget library.
 geolocation.widgets.html5:
-  version: 1.x
+  version: 8.x-3.x
   css:
     theme:
       css/geolocation-widget-html5.css: {}

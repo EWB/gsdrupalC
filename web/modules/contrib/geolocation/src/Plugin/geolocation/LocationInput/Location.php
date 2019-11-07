@@ -25,6 +25,11 @@ class Location extends LocationInputBase implements LocationInputInterface {
    */
   protected $locationManager;
 
+  /**
+   * Location Plugin ID.
+   *
+   * @var string
+   */
   protected $locationPluginId = '';
 
   /**

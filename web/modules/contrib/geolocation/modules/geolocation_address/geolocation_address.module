@@ -57,6 +57,7 @@ function geolocation_address_geolocation_field_map_widget_alter(&$element, $cont
               'address_field' => $settings['address_field'],
               'sync_mode' => $settings['sync_mode'],
               'direction' => $settings['direction'],
+              'ignore' => $settings['ignore'],
             ],
           ],
         ],
@@ -141,6 +142,7 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
       'sync_mode' => 'auto',
       'direction' => 'duplex',
       'button_position' => NULL,
+      'ignore' => '',
     ],
     $settings
   );
@@ -300,6 +302,20 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
       'visible' => [
         ':input[name="' . $form_parent_name . '[enable]"]' => ['checked' => TRUE],
       ],
+    ],
+  ];
+
+  $element['ignore'] = [
+    '#type' => 'checkboxes',
+    '#title' => t('Ignore address elements'),
+    '#default_value' => $settings['ignore'],
+    '#options' => [
+      'organization' => 'organization',
+      'address-line1' => 'address-line1',
+      'address-line2' => 'address-line2',
+      'locality' => 'locality',
+      'administrative-area' => 'administrative-area',
+      'postal-code' => 'postal-code',
     ],
   ];
 

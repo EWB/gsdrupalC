@@ -25,7 +25,7 @@
  * @property {CommonMapSettings[]} drupalSettings.geolocation.commonMap
  */
 
-(function ($, window, Drupal, drupalSettings) {
+(function ($, window, Drupal) {
   'use strict';
 
   /**
@@ -93,6 +93,10 @@
   Drupal.geolocation.commonMap.dynamicMapViewsAjaxSettings = function (commonMapSettings) {
     // Make sure to load current form DOM element, which will change after every AJAX operation.
     var view = $('.view-id-' + commonMapSettings.dynamic_map.update_view_id + '.view-display-id-' + commonMapSettings.dynamic_map.update_view_display_id);
+    if (view.length === 0) {
+      console.error("Geolocation - No common map container found.");
+      return;
+    }
 
     if (typeof commonMapSettings.dynamic_map.boundary_filter === 'undefined') {
       return;
@@ -122,4 +126,4 @@
     return ajaxSettings;
   };
 
-})(jQuery, window, Drupal, drupalSettings);
+})(jQuery, window, Drupal);

@@ -132,7 +132,7 @@ class FocalPointImageWidget extends ImageWidget {
     // Override the default Image Widget template when using the Media Library
     // module so we can use the image field's preview rather than the preview
     // provided by Media Library.
-    if ($form['#form_id'] == 'media_library_upload_form') {
+    if ($form['#form_id'] == 'media_library_upload_form' || $form['#form_id'] == 'media_library_add_form') {
       $element['#theme'] = 'focal_point_media_library_image_widget';
       unset($form['media'][0]['preview']);
     }

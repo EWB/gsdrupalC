@@ -69,6 +69,10 @@ class FirstRow extends LocationBase implements LocationInterface {
       /** @var \Drupal\geolocation\Plugin\Field\FieldType\GeolocationItem $item */
       $item = $entity->{$geolocation_field->definition['field_name']}->first();
 
+      if (empty($item)) {
+        return parent::getCoordinates($location_option_id, $location_option_settings, $context);
+      }
+
       return [
         'lat' => $item->get('lat')->getValue(),
         'lng' => $item->get('lng')->getValue(),

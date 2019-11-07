@@ -77,9 +77,17 @@
 
 /**
  * @typedef {Object} GeolocationCoordinates
-
+ *
  * @property {Number} lat
  * @property {Number} lng
+ */
+
+/**
+ * @typedef {Object} GeolocationCenterOption
+ *
+ * @property {Object} map_center_id
+ * @property {Object} option_id
+ * @property {Object} settings
  */
 
 /**
@@ -123,7 +131,7 @@
  * @property {function({GeolocationMapMarker})} removeMapMarker - Remove single marker.
  * @property {function()} removeMapMarkers - Remove all markers from map.
  *
- * @property {function({string})} setZoom - Set zoom.
+ * @property {function({string}?, {Boolean}?)} setZoom - Set zoom.
  * @property {function():{GeolocationCoordinates}} getCenter - Get map center coordinates.
  * @property {function({string})} setCenter - Center map by plugin.
  * @property {function({GeolocationCoordinates}, {Number}?, {string}?)} setCenterByCoordinates - Center map on coordinates.
@@ -213,7 +221,7 @@
     removeControls: function () {
       // Stub.
     },
-    setZoom: function (zoom) {
+    setZoom: function (zoom, defer) {
       // Stub.
     },
     getCenter: function () {
@@ -227,27 +235,29 @@
       this.setZoom();
       this.setCenterByCoordinates({lat: this.lat, lng: this.lng});
 
-      var that = this;
+      if (typeof this.mapCenter !== 'undefined') {
 
-      Object
-        // .values(this.mapCenter) // Reenable once IE11 is dead. Hopefully soon.
-        .keys(that.mapCenter).map(function (item) { return that.mapCenter[item]; }) // IE11 fix from #3046802.
-        .sort(function (a, b) {
-          return a.weight - b.weight;
-        })
-        .forEach(
-          /**
-           * @param {Object} centerOption
-           * @param {Object} centerOption.map_center_id
-           * @param {Object} centerOption.option_id
-           * @param {Object} centerOption.settings
-           */
-          function (centerOption) {
-            if (typeof Drupal.geolocation.mapCenter[centerOption.map_center_id] === 'function') {
-              return Drupal.geolocation.mapCenter[centerOption.map_center_id](that, centerOption);
+        var that = this;
+
+        Object
+          // .values(this.mapCenter) // Reenable once IE11 is dead. Hopefully soon.
+          .keys(that.mapCenter).map(function (item) {
+            return that.mapCenter[item];
+          }) // IE11 fix from #3046802.
+          .sort(function (a, b) {
+            return a.weight - b.weight;
+          })
+          .forEach(
+            /**
+             * @param {GeolocationCenterOption} centerOption
+             */
+            function (centerOption) {
+              if (typeof Drupal.geolocation.mapCenter[centerOption.map_center_id] === 'function') {
+                return Drupal.geolocation.mapCenter[centerOption.map_center_id](that, centerOption);
+              }
             }
-          }
-        );
+          );
+      }
     },
     setCenterByCoordinates: function (coordinates, accuracy, identifier) {
       this.centerUpdatedCallback(coordinates, accuracy, identifier);
@@ -449,6 +459,59 @@
       });
 
       return locations;
+    },
+    boundariesNormalized: function (boundaries) {
+      if (typeof boundaries.north === 'number'
+          && typeof boundaries.east === 'number'
+          && typeof boundaries.south === 'number'
+          && typeof boundaries.west === 'number'
+      ) {
+        return true;
+      }
+
+      return false;
+    },
+    normalizeBoundaries: function (boundaries) {
+      var that = this;
+
+      if (that.boundariesNormalized(boundaries)) {
+        return boundaries;
+      }
+
+      if (
+          typeof boundaries.north !== 'undefined'
+          && typeof boundaries.south !== 'undefined'
+          && typeof boundaries.east !== 'undefined'
+          && typeof boundaries.west !== 'undefined'
+      ) {
+        var castBoundaries = {
+          north: Number(boundaries.north),
+          east: Number(boundaries.east),
+          south: Number(boundaries.south),
+          west: Number(boundaries.west)
+        };
+
+        if (that.boundariesNormalized(castBoundaries)) {
+          return castBoundaries;
+        }
+      }
+
+      $.each(Drupal.geolocation.MapProviders, function (type, name) {
+        if (typeof Drupal.geolocation[name].prototype.normalizeBoundaries !== 'undefined') {
+          var normalizedBoundaries = Drupal.geolocation[name].prototype.normalizeBoundaries.call(null, boundaries);
+        }
+
+        if (that.boundariesNormalized(normalizedBoundaries)) {
+          boundaries = normalizedBoundaries;
+          return false;
+        }
+      });
+
+      if (that.boundariesNormalized(boundaries)) {
+        return boundaries;
+      }
+
+      return false;
     }
   };
 
@@ -589,36 +652,37 @@
        * @param {GeolocationMapFeatureSettings} mapSettings[featureId] - Feature settings for current map
        */
       function (mapId, mapSettings) {
-        if (
-          typeof mapSettings[featureId] !== 'undefined'
-          && mapSettings[featureId].enable
-        ) {
-          var map = Drupal.geolocation.getMapById(mapId);
-          if (!map) {
-            return;
-          }
+        if (typeof mapSettings[featureId] === 'undefined') {
+          return;
+        }
+        if (!mapSettings[featureId].enable) {
+          return;
+        }
+        var map = Drupal.geolocation.getMapById(mapId);
+        if (!map) {
+          return;
+        }
 
-          map.features = map.features || {};
-          map.features[featureId] = map.features[featureId] || {};
-          if (typeof map.features[featureId].executed === 'undefined') {
-            map.features[featureId].executed = false;
-          }
+        map.features = map.features || {};
+        map.features[featureId] = map.features[featureId] || {};
+        if (typeof map.features[featureId].executed === 'undefined') {
+          map.features[featureId].executed = false;
+        }
 
+        if (map.features[featureId].executed) {
+          return;
+        }
+
+        map.addPopulatedCallback(function (map) {
           if (map.features[featureId].executed) {
             return;
           }
+          var result = callback(map, mapSettings[featureId]);
 
-          map.addPopulatedCallback(function (map) {
-            if (map.features[featureId].executed) {
-              return;
-            }
-            var result = callback(map, mapSettings[featureId]);
-
-            if (result === true) {
-              map.features[featureId].executed = true;
-            }
-          });
-        }
+          if (result === true) {
+            map.features[featureId].executed = true;
+          }
+        });
       }
     );
   };

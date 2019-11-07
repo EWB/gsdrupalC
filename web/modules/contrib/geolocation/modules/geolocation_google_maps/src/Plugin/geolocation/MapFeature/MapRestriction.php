@@ -26,6 +26,7 @@ class MapRestriction extends MapFeatureBase {
       'south' => '',
       'east' => '',
       'west' => '',
+      'strict' => TRUE,
     ];
   }
 
@@ -59,6 +60,11 @@ class MapRestriction extends MapFeatureBase {
       '#size' => 15,
       '#default_value' => $settings['west'],
     ];
+    $form['strict'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('strictBounds'),
+      '#default_value' => $settings['strict'],
+    ];
 
     return $form;
   }
@@ -87,6 +93,7 @@ class MapRestriction extends MapFeatureBase {
                   'south' => $feature_settings['south'],
                   'east' => $feature_settings['east'],
                   'west' => $feature_settings['west'],
+                  'strict' => $feature_settings['strict'],
                 ],
               ],
             ],

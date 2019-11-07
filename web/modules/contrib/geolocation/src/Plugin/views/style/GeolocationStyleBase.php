@@ -17,13 +17,45 @@ use Drupal\Component\Render\PlainTextOutput;
  */
 abstract class GeolocationStyleBase extends StylePluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected $usesFields = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected $usesRowPlugin = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected $usesRowClass = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected $usesGrouping = FALSE;
 
+  /**
+   * Title field.
+   *
+   * @var bool|string
+   */
   protected $titleField = FALSE;
+
+  /**
+   * Label field.
+   *
+   * @var bool|string
+   */
   protected $labelField = FALSE;
+
+  /**
+   * Icon field.
+   *
+   * @var bool|string
+   */
   protected $iconField = FALSE;
 
   /**

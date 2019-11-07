@@ -28,6 +28,9 @@ plugin.plugin_configuration.geolocation.map_feature.leaflet_marker_clusterer:
             zoom_to_bounds_on_click:
               type: boolean
               label: 'Setting'
+        disable_clustering_at_zoom:
+          type: integer
+          label: 'Max Zoom for clustering'
 
 geolocation.map_feature_settings.leaflet.control:
   type: geolocation.map_feature_settings
@@ -72,7 +75,7 @@ plugin.plugin_configuration.geolocation.map_feature.leaflet_control_recenter:
   label: 'Control Recenter'
 
 plugin.plugin_configuration.geolocation.map_feature.leaflet_control_scale:
-  type: geolocation.map_feature_settings
+  type: geolocation.map_feature_settings.leaflet.control
   label: 'Control Scale'
   mapping:
     settings:
@@ -87,7 +90,7 @@ plugin.plugin_configuration.geolocation.map_feature.leaflet_control_scale:
           label: 'Imperial'
 
 plugin.plugin_configuration.geolocation.map_feature.leaflet_control_layer:
-  type: geolocation.map_feature_settings
+  type: geolocation.map_feature_settings.leaflet.control
   label: 'Control Layer'
   mapping:
     settings:

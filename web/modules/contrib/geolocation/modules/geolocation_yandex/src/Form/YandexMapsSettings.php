@@ -16,12 +16,12 @@ class YandexMapsSettings extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->configFactory->get('yandex_maps.settings');
+    $config = $this->configFactory->get('geolocation_yandex.settings');
 
-    $form['key'] = [
+    $form['api_key'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Yandex Maps Key'),
-      '#default_value' => $config->get('key'),
+      '#title' => $this->t('Yandex Maps API Key'),
+      '#default_value' => $config->get('api_key'),
       '#description' => $this->t('Yandex Maps requires users to sign up at <a href="https://developer.tech.yandex.ru/">developer.tech.yandex.ru</a>.'),
     ];
 
@@ -40,7 +40,7 @@ class YandexMapsSettings extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'yandex_maps.settings',
+      'geolocation_yandex.settings',
     ];
   }
 
@@ -48,8 +48,8 @@ class YandexMapsSettings extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->configFactory()->getEditable('yandex_maps.settings');
-    $config->set('key', $form_state->getValue('key'));
+    $config = $this->configFactory()->getEditable('geolocation_yandex.settings');
+    $config->set('api_key', $form_state->getValue('api_key'));
 
     $config->save();
 

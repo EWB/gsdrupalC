@@ -17,12 +17,11 @@
    */
   Drupal.behaviors.geolocationMarkerZoomByAnchor = {
     attach: function (context, drupalSettings) {
-
       $('a.geolocation-marker-zoom').once('geolocation-marker-zoom-by-anchor').click(function (e) {
         e.preventDefault();
         var markerAnchor = $(this).attr('href').split('#').pop();
         Drupal.geolocation.executeFeatureOnAllMaps(
-            'marker_zoom_by_anchor',
+            'marker_zoom_to_animate',
 
             /**
              * @param {GeolocationGoogleMap} map - Current map.

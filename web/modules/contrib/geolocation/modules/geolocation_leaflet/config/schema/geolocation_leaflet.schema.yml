@@ -16,6 +16,9 @@ geolocation.geocoder.photon:
   type: geolocation_geocoder
   label: 'Photon geocoder'
   mapping:
+    autocomplete_min_length:
+      type: integer
+      label: 'Autocomplete MinLength'
     location_priority:
       type: geolocation.element.input
       label: 'Location Priority'

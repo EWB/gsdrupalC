@@ -68,11 +68,11 @@ class GeolocationTokenFormatter extends FormatterBase {
       '#description' => $this->t('Enter any text or HTML to be shown for each value. Tokens will be replaced as available. The "token" module greatly expands the number of available tokens as well as provides a comfortable token browser.'),
     ];
     if (!empty($settings['tokenized_text']['value'])) {
-      $form['tokenized_text']['#default_value'] = $settings['tokenized_text']['value'];
+      $element['tokenized_text']['#default_value'] = $settings['tokenized_text']['value'];
     }
 
     if (!empty($settings['info_text']['format'])) {
-      $form['tokenized_text']['#format'] = $settings['tokenized_text']['format'];
+      $element['tokenized_text']['#format'] = $settings['tokenized_text']['format'];
     }
 
     $element['token_help'] = $this->dataProvider->getTokenHelp();

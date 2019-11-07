@@ -27,6 +27,7 @@ class LeafletMarkerClusterer extends MapFeatureBase {
       'show_coverage_on_hover' => TRUE,
       'zoom_to_bounds_on_click' => TRUE,
     ];
+    $default_settings['disable_clustering_at_zoom'] = 0;
 
     return $default_settings;
   }
@@ -46,7 +47,18 @@ class LeafletMarkerClusterer extends MapFeatureBase {
       '#type' => 'checkboxes',
       '#options' => $options,
       '#title' => $this->t('Marker Cluster default settings'),
-      '#default_value' => $settings['cluster_settings'],
+      '#default_value' => array_keys(array_filter($settings['cluster_settings'])),
+    ];
+
+    $form['disable_clustering_at_zoom'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#max' => 20,
+      '#step' => 1,
+      '#size' => 2,
+      '#title' => $this->t('Disable clustering at zoom'),
+      '#description' => $this->t('If set, at this zoom level and below, markers will not be clustered.'),
+      '#default_value' => $settings['disable_clustering_at_zoom'],
     ];
 
     return $form;
@@ -73,8 +85,9 @@ class LeafletMarkerClusterer extends MapFeatureBase {
               $render_array['#id'] => [
                 $this->getPluginId() => [
                   'enable' => TRUE,
-                  'showCoverageOnHover' => is_string($cluster_settings['show_coverage_on_hover']) ? TRUE : FALSE,
-                  'zoomToBoundsOnClick' => is_string($cluster_settings['zoom_to_bounds_on_click']) ? TRUE : FALSE,
+                  'showCoverageOnHover' => $cluster_settings['show_coverage_on_hover'],
+                  'zoomToBoundsOnClick' => $cluster_settings['zoom_to_bounds_on_click'],
+                  'disableClusteringAtZoom' => (int) $feature_settings['disable_clustering_at_zoom'],
                 ],
               ],
             ],

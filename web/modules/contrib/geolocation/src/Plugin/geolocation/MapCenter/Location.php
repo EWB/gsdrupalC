@@ -25,6 +25,11 @@ class Location extends MapCenterBase implements MapCenterInterface {
    */
   protected $locationManager;
 
+  /**
+   * Location Plugin ID.
+   *
+   * @var string
+   */
   protected $locationPluginId = '';
 
   /**
@@ -51,14 +56,50 @@ class Location extends MapCenterBase implements MapCenterInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSettingsForm($option_id = NULL, array $settings = [], $context = NULL) {
-    if (!$this->locationManager->hasDefinition($option_id)) {
+  public function getSettingsForm($location_plugin_id = NULL, array $settings = [], $context = NULL) {
+    if (!$this->locationManager->hasDefinition($location_plugin_id)) {
       return [];
     }
 
+    $form = [];
+
     /** @var \Drupal\geolocation\LocationInterface $location_plugin */
-    $location_plugin = $this->locationManager->createInstance($option_id);
-    $form = $location_plugin->getSettingsForm($location_plugin->getPluginId(), $settings, $context);
+    $location_plugin = $this->locationManager->createInstance($location_plugin_id);
+    $location_options = $location_plugin->getAvailableLocationOptions($context);
+
+    if (!$location_options) {
+      return [];
+    }
+
+    $option_id = NULL;
+
+    if (!empty($settings['location_option_id'])) {
+      $settings['location_option_id'];
+      $option_id = $settings['location_option_id'];
+    }
+
+    if (count($location_options) == 1) {
+      $option_id = key($location_options);
+      $form['location_option_id'] = [
+        '#type' => 'value',
+        '#value' => $option_id,
+      ];
+    }
+    else {
+      $options = [];
+      foreach ($location_options as $location_option_id => $location_option_definition) {
+        $options[$location_option_id] = $location_option_definition['name'];
+      }
+      $form['location_option_id'] = [
+        '#type' => 'select',
+        '#options' => $options,
+        '#default_value' => $option_id,
+      ];
+    }
+
+    /** @var \Drupal\geolocation\LocationInterface $location_plugin */
+    $location_plugin = $this->locationManager->createInstance($location_plugin_id);
+    $form = array_merge_recursive($form, $location_plugin->getSettingsForm($option_id, $settings, $context));
 
     return $form;
   }
@@ -73,9 +114,12 @@ class Location extends MapCenterBase implements MapCenterInterface {
     foreach ($this->locationManager->getDefinitions() as $location_plugin_id => $location_plugin_definition) {
       /** @var \Drupal\geolocation\LocationInterface $location_plugin */
       $location_plugin = $this->locationManager->createInstance($location_plugin_id);
-      foreach ($location_plugin->getAvailableLocationOptions($context) as $location_id => $location_label) {
-        $options[$location_id] = $location_label;
+      $location_options = $location_plugin->getAvailableLocationOptions($context);
+
+      if (!$location_options) {
+        continue;
       }
+      $options[$location_plugin_id] = $location_plugin_definition['name'];
     }
 
     return $options;
@@ -84,20 +128,25 @@ class Location extends MapCenterBase implements MapCenterInterface {
   /**
    * {@inheritdoc}
    */
-  public function alterMap(array $map, $center_option_id, array $center_option_settings, $context = NULL) {
-    if (!$this->locationManager->hasDefinition($center_option_id)) {
+  public function alterMap(array $map, $center_plugin_id, array $center_option_settings, $context = NULL) {
+    if (!$this->locationManager->hasDefinition($center_plugin_id)) {
       return $map;
     }
 
     /** @var \Drupal\geolocation\LocationInterface $location */
-    $location = $this->locationManager->createInstance($center_option_id);
+    $location = $this->locationManager->createInstance($center_plugin_id);
 
-    $map_center = $location->getCoordinates($center_option_id, $center_option_settings, $context);
-    if (empty($map_center)) {
-      return FALSE;
+    if (!empty($center_option_settings['location_option_id'])) {
+      $center_option_id = $center_option_settings['location_option_id'];
+    }
+    else {
+      $center_option_id = $center_plugin_id;
     }
 
-    $map['#centre'] = $map_center;
+    $map_center = $location->getCoordinates($center_option_id, $center_option_settings, $context);
+    if (!empty($map_center)) {
+      $map['#centre'] = $map_center;
+    }
 
     return $map;
   }

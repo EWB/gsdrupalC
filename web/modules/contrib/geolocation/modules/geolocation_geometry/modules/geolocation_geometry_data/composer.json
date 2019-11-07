@@ -1,0 +1,11 @@
+{
+    "name": "drupal/address",
+    "type": "drupal-module",
+    "description": "Import data from http://www.naturalearthdata.com/.",
+    "homepage": "http://drupal.org/project/geolocation",
+    "license": "GPL-2.0+",
+    "require": {
+        "gasparesganga/php-shapefile": ">=2.4"
+    },
+    "minimum-stability": "dev"
+}

@@ -95,8 +95,6 @@
      * @param {Object} drupalSettings
      * @param {Object} drupalSettings.geolocation
      * @param {Object} drupalSettings.geolocation.addressIntegration
-     * @param {Object} drupalSettings.path
-     * @param {String} drupalSettings.path.baseUrl
      */
     attach: function (context, drupalSettings) {
       /**
@@ -120,6 +118,13 @@
         }
 
         if (typeof widget.addressEnabled === 'undefined') {
+          var elements = [];
+          $.each(addressIntegrationSettings.ignore, function (key, value) {
+              if (!value) {
+                elements.push(key);
+              }
+            }
+          );
           widget = $.extend(widget, {
             addressEnabled: true,
             settings: addressIntegrationSettings,
@@ -131,14 +136,7 @@
               addressInput = $(addressInput);
               var addressString = '';
               $.each(
-                  [
-                    'organization',
-                    'address-line1',
-                    'address-line2',
-                    'locality',
-                    'administrative-area',
-                    'postal-code'
-                  ],
+                  elements,
                   function (index, property) {
                     if (addressInput.find('.' + property).length) {
                       addressString = addressString + ', ' + addressInput.find('.' + property).val()
@@ -157,7 +155,7 @@
             },
             addressToCoordinates: function (address) {
               return $.getJSON(
-                  drupalSettings.path.baseUrl + 'geolocation/address/geocoder/geocode',
+                  Drupal.url('geolocation/address/geocoder/geocode'),
                   {
                     geocoder: this.settings.geocoder,
                     geocoder_settings: this.settings.geocoder_settings,
@@ -168,7 +166,7 @@
             },
             coordinatesToAddress: function (latitude, longitude) {
               return $.getJSON(
-                  drupalSettings.path.baseUrl + 'geolocation/address/geocoder/reverse',
+                  Drupal.url('geolocation/address/geocoder/reverse'),
                   {
                     geocoder: this.settings.geocoder,
                     geocoder_settings: this.settings.geocoder_settings,

@@ -14,7 +14,7 @@ leaflet:
 
 # Leaflet integration library.
 geolocation.leaflet:
-  version: 8.x-2.x
+  version: 8.x-3.x
   dependencies:
     - core/drupalSettings
     - geolocation_leaflet/leaflet
@@ -35,7 +35,7 @@ commonmap.leaflet:
 
 # Leaflet widget API.
 widget.api.leaflet:
-  version: 1.x
+  version: 8.x-3.x
   js:
     js/geolocation-widget-leaflet-api.js: {}
   dependencies:
@@ -43,7 +43,7 @@ widget.api.leaflet:
     - geolocation_leaflet/geolocation.leaflet
 
 widget.leaflet:
-  version: 1.x
+  version: 8.x-3.x
   js:
     js/geolocation-leaflet-maps-widget.js: {}
   dependencies:
@@ -52,7 +52,7 @@ widget.leaflet:
 
 # Photon geocoder function.
 geocoder.photon:
-  version: 8.x-2.x
+  version: 8.x-3.x
   js:
     js/photon-geocoder.js: {}
   dependencies:
@@ -287,6 +287,9 @@ mapfeature.leaflet_control_fullscreen:
 
 # Control Tile layer
 mapfeature.leaflet_control_layer:
+  css:
+    component:
+      css/geolocation-control-layer.css: {}
   js:
     js/MapFeature/geolocation-control-layer.js: {}
   dependencies:

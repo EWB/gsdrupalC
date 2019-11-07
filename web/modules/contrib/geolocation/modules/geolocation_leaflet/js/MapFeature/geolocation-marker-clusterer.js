@@ -3,8 +3,7 @@
  * Marker Clusterer.
  */
 
-(function ($, Drupal) {
-
+(function (Drupal) {
   'use strict';
 
   /**
@@ -25,20 +24,25 @@
          * @param {GeolocationMapFeatureSettings} featureSettings - Settings for current feature.
          * @param {String} featureSettings.zoomToBoundsOnClick - Settings for current feature.
          * @param {String} featureSettings.showCoverageOnHover - Settings for current feature.
+         * @param {int} featureSettings.disableClusteringAtZoom - Settings for current feature.
          *
          * @see https://github.com/Leaflet/Leaflet.markercluster
          */
         function (map, featureSettings) {
           var options = {
             showCoverageOnHover: false,
-            zoomToBoundsOnClick: false
+            zoomToBoundsOnClick: false,
+            disableClusteringAtZoom: null
           };
 
           if (featureSettings.zoomToBoundsOnClick) {
-            options.zoomToBoundsOnClick = true
+            options.zoomToBoundsOnClick = true;
           }
           if (featureSettings.showCoverageOnHover) {
-            options.showCoverageOnHover = true
+            options.showCoverageOnHover = true;
+          }
+          if (featureSettings.disableClusteringAtZoom) {
+            options.disableClusteringAtZoom = featureSettings.disableClusteringAtZoom;
           }
 
           var cluster = L.markerClusterGroup(options);
@@ -61,6 +65,6 @@
         drupalSettings
       );
     },
-    detach: function (context, drupalSettings) {}
+    detach: function (context, drupalSettings) { }
   };
-})(jQuery, Drupal);
+})(Drupal);

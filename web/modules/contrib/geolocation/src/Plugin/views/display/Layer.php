@@ -25,8 +25,19 @@ use Drupal\views\Plugin\views\display\Attachment;
  */
 class Layer extends Attachment {
 
+  /**
+   * {@inheritdoc}
+   */
   protected $usesAJAX = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected $usesAttachments = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected $usesAreas = FALSE;
 
   /**

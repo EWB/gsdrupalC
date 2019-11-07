@@ -1,6 +1,6 @@
 /**
  * @file
- *   Javascript for the Dummy geocoder.
+ * Javascript for the Dummy geocoder.
  */
 
 (function ($, Drupal) {
@@ -11,7 +11,7 @@
   }
 
   /**
-   * Attach geocoder input for Dummy
+   * Attach geocoder input for Dummy.
    */
   Drupal.behaviors.geolocationGeocoderDummy = {
     attach: function (context) {
@@ -23,7 +23,7 @@
           return;
         }
 
-        $.ajax(drupalSettings.path.baseUrl + 'geolocation_dummy_geocoder/geocode/' + that.val()).done(function (data) {
+        $.ajax(Drupal.url('geolocation_dummy_geocoder/geocode/' + that.val())).done(function (data) {
           if (data.length < 3) {
             return;
           }

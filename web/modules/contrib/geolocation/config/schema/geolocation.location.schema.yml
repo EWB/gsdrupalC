@@ -6,6 +6,10 @@ plugin.plugin_configuration.geolocation.location.freeogeoip:
   type: geolocation.location_settings
   label: 'Freegeoip'
 
+plugin.plugin_configuration.geolocation.location.ipstack:
+  type: geolocation.location_settings
+  label: 'IpStack'
+
 plugin.plugin_configuration.geolocation.location.views_boundary_argument:
   type: geolocation.location_settings
   label: 'Views Boundary Argument'

@@ -93,7 +93,7 @@ class ViewsProximityFilter extends LocationBase implements LocationInterface {
       ];
     }
 
-    return $this->locationInputManager->getCoordinates($filter->value['center'], $filter->options['location_input'], $filter);
+    return $this->locationInputManager->getCoordinates((array) $filter->value['center'], $filter->options['location_input'], $filter);
   }
 
 }

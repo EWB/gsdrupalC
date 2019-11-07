@@ -12,6 +12,7 @@
  * @property {String} south
  * @property {String} east
  * @property {String} west
+ * @property {Boolean} strict
  */
 
 (function ($, Drupal) {
@@ -46,7 +47,7 @@
                     east: parseFloat(featureSettings.east),
                     west: parseFloat(featureSettings.west)
                   },
-                strictBounds: true
+                strictBounds: Boolean(featureSettings.strict)
                 }
               });
             });

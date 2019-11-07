@@ -47,6 +47,9 @@ geolocation.geocoder.google_geocoding_api:
   type: geolocation_geocoder
   label: 'Google Geocoding API'
   mapping:
+    autocomplete_min_length:
+      type: integer
+      label: 'Autocomplete MinLength'
     component_restrictions:
       type: mapping
       label: 'Components'

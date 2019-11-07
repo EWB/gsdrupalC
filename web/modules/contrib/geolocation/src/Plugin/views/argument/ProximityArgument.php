@@ -21,7 +21,16 @@ class ProximityArgument extends Formula {
 
   use ProximityTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   protected $operator = '<';
+
+  /**
+   * Distance.
+   *
+   * @var int
+   */
   protected $distance = 0;
 
   /**

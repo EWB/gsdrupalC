@@ -46,7 +46,7 @@ class ViewsEntityArgument extends LocationBase implements LocationInterface {
       return parent::getCoordinates($location_option_id, $location_option_settings, $context);
     }
 
-    /** @var \Drupal\geolocation\Plugin\views\argument\ProximityArgument $handler */
+    /** @var \Drupal\geolocation\Plugin\views\argument\EntityArgument $handler */
     $handler = $displayHandler->getHandler('argument', $location_option_id);
     if (empty($handler)) {
       return FALSE;

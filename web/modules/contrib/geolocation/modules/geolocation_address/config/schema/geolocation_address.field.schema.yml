@@ -5,3 +5,26 @@ field.formatter.settings.geolocation_address:
     data_provider_settings:
       label: 'Data provider settings'
       type: geolocation.data_provider.geolocation_address_field_provider
+field.widget.third_party.geolocation_address:
+  type: mapping
+  label: 'Address integration settings'
+  mapping:
+    enable:
+      type: boolean
+    address_field:
+      type: string
+    geocoder:
+      type: string
+    geocoder_settings:
+      type: mapping
+      mapping:
+        label:
+          type: string
+        description:
+          type: string
+    sync_mode:
+      type: string
+    button_position:
+      type: string
+    direction:
+      type: string

@@ -31,7 +31,7 @@
      * @param {LocationInputClientLocationSettings[]} drupalSettings.geolocation.locationInput.clientLocation
      */
     attach: function (context, drupalSettings) {
-      $.each(drupalSettings.geolocation.locationInput.clientLocation, function(index, settings) {
+      $.each(drupalSettings.geolocation.locationInput.clientLocation, function (index, settings) {
         var input = $('.location-input-client-location.' + settings.identifier, context).once('location-input-processed').first();
         if (
           navigator.geolocation
@@ -50,7 +50,7 @@
               latitudeInput.val(position.coords.latitude);
               longitudeInput.val(position.coords.longitude);
               if (settings.autoSubmit) {
-                input.closest('form').submit();
+                input.closest('form').find('input.js-form-submit').first().click();
               }
             }
             return false;

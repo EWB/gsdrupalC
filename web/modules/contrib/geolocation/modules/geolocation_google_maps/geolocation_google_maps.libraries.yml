@@ -1,6 +1,6 @@
 # Geolocation Google Maps API integration library.
 googlemapsapi:
-  version: 8.x-2.x
+  version: 8.x-3.x
   dependencies:
     - core/drupalSettings
     - geolocation/geolocation.api
@@ -17,7 +17,7 @@ commonmap.google:
 
 # Google Maps geocoder function.
 geocoder.googlegeocodingapi:
-  version: 8.x-2.x
+  version: 8.x-3.x
   js:
     js/geolocation-google-geocoding-api-geocoder.js: {}
   dependencies:
@@ -27,7 +27,7 @@ geocoder.googlegeocodingapi:
 
 # Google widget API.
 widget.api.google:
-  version: 1.x
+  version: 8.x-3.x
   js:
     js/geolocation-widget-google-api.js: {}
   dependencies:
@@ -35,17 +35,45 @@ widget.api.google:
     - geolocation_google_maps/googlemapsapi
 
 widget.google:
-  version: 1.x
+  version: 8.x-3.x
   js:
     js/geolocation-google-maps-widget.js: {}
   dependencies:
     - geolocation/geolocation.widget
     - geolocation_google_maps/widget.api.google
 
+widget.google_maps.geojson:
+  version: 8.x-3.x
+  js:
+    js/geolocation-geometry-widget-google-maps.js: {}
+  dependencies:
+    - core/jquery.once
+    - geolocation/geolocation.map
 
 #
 # Map Features
 #
+
+# Layer bicycle.
+mapfeature.google_maps_layer_bicycling:
+  js:
+    js/MapFeature/geolocation-layer-bicycle.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# Layer transit.
+mapfeature.google_maps_layer_transit:
+  js:
+    js/MapFeature/geolocation-layer-transit.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# Layer traffic.
+mapfeature.google_maps_layer_traffic:
+  js:
+    js/MapFeature/geolocation-layer-traffic.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
 
 # Drawing support.
 mapfeature.drawing:
@@ -146,13 +174,6 @@ mapfeature.marker_label:
   dependencies:
     - geolocation_google_maps/googlemapsapi
 
-# MapTypeStyle support.
-mapfeature.map_type_style:
-  js:
-    js/MapFeature/geolocation-maptypestyle.js: {}
-  dependencies:
-    - geolocation_google_maps/googlemapsapi
-
 # MapDisablePOI support.
 mapfeature.map_disable_poi:
   js:
@@ -210,6 +231,20 @@ mapfeature.control_zoom:
 mapfeature.control_streetview:
   js:
     js/MapFeature/geolocation-control-streetview.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# Control Rotate.
+mapfeature.control_rotate:
+  js:
+    js/MapFeature/geolocation-control-rotate.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# Control Fullscreen.
+mapfeature.control_fullscreen:
+  js:
+    js/MapFeature/geolocation-control-fullscreen.js: {}
   dependencies:
     - geolocation_google_maps/googlemapsapi
 

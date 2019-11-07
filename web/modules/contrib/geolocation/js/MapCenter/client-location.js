@@ -3,13 +3,17 @@
  * Client location center.
  */
 
-(function ($, Drupal) {
+(function (Drupal) {
 
   'use strict';
 
   Drupal.geolocation = Drupal.geolocation || {};
   Drupal.geolocation.mapCenter = Drupal.geolocation.mapCenter || {};
 
+  /**
+   * @param {GeolocationMapInterface} map
+   * @param {GeolocationCenterOption} centerOption
+   */
   Drupal.geolocation.mapCenter.client_location = function (map, centerOption) {
     if (navigator.geolocation) {
       var successCallback = function (position) {
@@ -22,4 +26,4 @@
     return true;
   }
 
-})(jQuery, Drupal);
+})(Drupal);

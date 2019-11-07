@@ -36,7 +36,7 @@
             longitudeInput.val(address.geometry.location.lng());
 
             if (settings.autoSubmit) {
-              input.closest('form').submit();
+              input.closest('form').find('input.js-form-submit').first().click();
             }
           }, settings.identifier);
 

@@ -6,7 +6,7 @@ views.style.geolocation_source:
       type: string
       label: 'Data provider ID'
     data_provider_settings:
-      type: geolocation.data_provider[%parent.data_provider_id]
+      type: geolocation.data_provider.[%parent.data_provider_id]
       label: 'Data provider settings'
     geolocation_field:
       type: string
