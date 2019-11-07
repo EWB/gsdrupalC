@@ -12,7 +12,7 @@ dependencies:
 id: views_block__news_and_events_block_1_2
 theme: university_bootstrap
 region: content
-weight: 0
+weight: -7
 provider: null
 plugin: 'views_block:news_and_events-block_1'
 settings:

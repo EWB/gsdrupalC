@@ -32,14 +32,14 @@ bundle: entity
 mode: map_teaser
 content:
   field_address:
-    weight: -2
+    weight: 1
     label: visually_hidden
     settings: {  }
     third_party_settings: {  }
     type: address_plain
     region: content
   field_media:
-    weight: -3
+    weight: 0
     label: visually_hidden
     settings:
       image_style: medium_
@@ -48,7 +48,7 @@ content:
     type: media_thumbnail
     region: content
   field_type:
-    weight: -1
+    weight: 2
     label: inline
     settings:
       link: true
@@ -56,13 +56,14 @@ content:
     type: entity_reference_label
     region: content
   links:
-    weight: 1
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   body: true
   content_moderation_control: true
+  entity_food_guide_preview_entity_view_1: true
   field_accepts: true
   field_certifications: true
   field_contact_name: true

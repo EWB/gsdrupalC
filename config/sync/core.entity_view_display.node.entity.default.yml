@@ -68,7 +68,7 @@ third_party_settings:
     group_column_two:
       children:
         - field_media
-        - field_geolocation_entity
+        - entity_food_guide_preview_entity_view_1
         - field_csa_pickup_locations
       parent_name: group_row
       weight: 2
@@ -123,6 +123,11 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  entity_food_guide_preview_entity_view_1:
+    weight: 12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_accepts:
     weight: 17
     label: above
@@ -155,7 +160,7 @@ content:
     type: string
     region: content
   field_csa_pickup_locations:
-    weight: 12
+    weight: 13
     label: above
     settings:
       set_marker: '1'
@@ -210,48 +215,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: email_mailto
-    region: content
-  field_geolocation_entity:
-    weight: 11
-    label: visually_hidden
-    settings:
-      set_marker: '1'
-      title: ''
-      info_text: ''
-      use_overridden_map_settings: 0
-      common_map: ''
-      map_provider_id: google_maps
-      map_provider_settings:
-        height: 400px
-        width: 200p
-        type: ROADMAP
-        zoom: 10
-        maxZoom: 18
-        minZoom: 0
-        mapTypeControl: 1
-        streetViewControl: 1
-        fullscreenControl: 1
-        gestureHandling: auto
-        draggable: 1
-        style: ''
-        info_auto_display: 1
-        marker_icon_path: ''
-        disableAutoPan: 1
-        zoomControl: 0
-        rotateControl: false
-        scrollwheel: 0
-        preferScrollingToZooming: 0
-        disableDoubleClickZoom: 0
-      data_provider_settings: {  }
-      centre:
-        fit_bounds:
-          enable: true
-          weight: -101
-          map_center_id: fit_bounds
-          settings:
-            reset_zoom: true
-    third_party_settings: {  }
-    type: geolocation_map
     region: content
   field_hours_days:
     weight: 16
@@ -312,5 +275,6 @@ content:
     third_party_settings: {  }
 hidden:
   content_moderation_control: true
+  field_geolocation_entity: true
   field_image: true
   search_api_excerpt: true

@@ -16,7 +16,7 @@ third_party_settings:
 id: views_block__news_and_events_block_1
 theme: university_bootstrap
 region: content
-weight: -9
+weight: -12
 provider: null
 plugin: 'views_block:news_and_events-block_1'
 settings:

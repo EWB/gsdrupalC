@@ -11,7 +11,7 @@ _core:
 id: university_bootstrap_content
 theme: university_bootstrap
 region: content
-weight: -11
+weight: -14
 provider: null
 plugin: system_main_block
 settings:

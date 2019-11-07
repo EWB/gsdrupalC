@@ -44,6 +44,7 @@ content:
     third_party_settings: {  }
 hidden:
   content_moderation_control: true
+  entity_food_guide_preview_entity_view_1: true
   field_accepts: true
   field_address: true
   field_certifications: true

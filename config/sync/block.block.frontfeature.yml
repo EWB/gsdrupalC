@@ -16,7 +16,7 @@ third_party_settings:
 id: frontfeature
 theme: university_bootstrap
 region: content
-weight: -14
+weight: -17
 provider: null
 plugin: 'block_content:3df8d339-5c16-4742-b221-3cf99cb789de'
 settings:

@@ -12,7 +12,7 @@ dependencies:
 id: events
 theme: university_bootstrap
 region: content
-weight: 0
+weight: -9
 provider: null
 plugin: 'block_content:1f8c047f-418d-466a-9b85-27e3bb40e996'
 settings:

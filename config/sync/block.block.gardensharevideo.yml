@@ -16,7 +16,7 @@ third_party_settings:
 id: gardensharevideo
 theme: university_bootstrap
 region: content
-weight: 0
+weight: -8
 provider: null
 plugin: 'block_content:8901d99d-6167-4608-8980-af804bf51637'
 settings:
