@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0766e1a824621dd2f331a07dbe1aa109",
+    "content-hash": "ac143fcf3038a15ce7f8e48c877cfdce",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -127,14 +127,13 @@
             "version": "3.7.2",
             "source": {
                 "type": "git",
-                "url": "git@github.com:daneden/animate.css.git",
+                "url": "https://github.com/daneden/animate.css.git",
                 "reference": "ab5fe9dae4fdb936eee698ce1850a263008f0a99"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/daneden/animate.css/zipball/ab5fe9dae4fdb936eee698ce1850a263008f0a99",
-                "reference": "ab5fe9dae4fdb936eee698ce1850a263008f0a99",
-                "shasum": null
+                "reference": "ab5fe9dae4fdb936eee698ce1850a263008f0a99"
             },
             "type": "bower-asset"
         },
@@ -149,8 +148,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/dinbror/blazy/zipball/5becad405976695e6016ba301be4f22ba61d5b95",
-                "reference": "5becad405976695e6016ba301be4f22ba61d5b95",
-                "shasum": null
+                "reference": "5becad405976695e6016ba301be4f22ba61d5b95"
             },
             "type": "bower-asset",
             "license": [
@@ -162,14 +160,13 @@
             "version": "1.6.4",
             "source": {
                 "type": "git",
-                "url": "git@github.com:jackmoore/colorbox.git",
+                "url": "https://github.com/jackmoore/colorbox.git",
                 "reference": "bac78120c6ca9e63370cc317ab6f400129cd6608"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/jackmoore/colorbox/zipball/bac78120c6ca9e63370cc317ab6f400129cd6608",
-                "reference": "bac78120c6ca9e63370cc317ab6f400129cd6608",
-                "shasum": null
+                "reference": "bac78120c6ca9e63370cc317ab6f400129cd6608"
             },
             "require": {
                 "bower-asset/jquery": ">=1.3.2"
@@ -187,8 +184,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/desandro/matches-selector/zipball/42ee1cbab7469454d140bdab04d2ceed9c68b85e",
-                "reference": "42ee1cbab7469454d140bdab04d2ceed9c68b85e",
-                "shasum": null
+                "reference": "42ee1cbab7469454d140bdab04d2ceed9c68b85e"
             },
             "type": "bower-asset",
             "license": [
@@ -206,8 +202,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/enyo/dropzone/zipball/08b9e0a763b54a685404dea523a9c54242fbe1b9",
-                "reference": "08b9e0a763b54a685404dea523a9c54242fbe1b9",
-                "shasum": null
+                "reference": "08b9e0a763b54a685404dea523a9c54242fbe1b9"
             },
             "type": "bower-asset"
         },
@@ -222,8 +217,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/metafizzy/ev-emitter/zipball/1baa3a03d8e07f665b0eb797661fcc2b0d2a5736",
-                "reference": "1baa3a03d8e07f665b0eb797661fcc2b0d2a5736",
-                "shasum": null
+                "reference": "1baa3a03d8e07f665b0eb797661fcc2b0d2a5736"
             },
             "type": "bower-asset",
             "license": [
@@ -241,8 +235,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/metafizzy/fizzy-ui-utils/zipball/72feb9fc3d6de25696291941121bb3ec2db8221e",
-                "reference": "72feb9fc3d6de25696291941121bb3ec2db8221e",
-                "shasum": null
+                "reference": "72feb9fc3d6de25696291941121bb3ec2db8221e"
             },
             "require": {
                 "bower-asset/desandro-matches-selector": ">=2.0.0,<3.0.0"
@@ -263,8 +256,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/desandro/get-size/zipball/6879e7f15b4b6e19ca392b6955edfa8d4aa6f787",
-                "reference": "6879e7f15b4b6e19ca392b6955edfa8d4aa6f787",
-                "shasum": null
+                "reference": "6879e7f15b4b6e19ca392b6955edfa8d4aa6f787"
             },
             "type": "bower-asset",
             "license": [
@@ -282,8 +274,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/desandro/imagesloaded/zipball/67c4e57453120935180c45c6820e7d3fbd2ea1f9",
-                "reference": "67c4e57453120935180c45c6820e7d3fbd2ea1f9",
-                "shasum": null
+                "reference": "67c4e57453120935180c45c6820e7d3fbd2ea1f9"
             },
             "require": {
                 "bower-asset/ev-emitter": ">=1.0.0,<2.0.0"
@@ -304,8 +295,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/15bc73803f76bc53b654b9fdbbbc096f56d7c03d",
-                "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d",
-                "shasum": null
+                "reference": "15bc73803f76bc53b654b9fdbbbc096f56d7c03d"
             },
             "type": "bower-asset",
             "license": [
@@ -323,8 +313,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/recurser/jquery-simple-color/zipball/ebe0b2c0db639584e81499bd29d6619abb9a2599",
-                "reference": "ebe0b2c0db639584e81499bd29d6619abb9a2599",
-                "shasum": null
+                "reference": "ebe0b2c0db639584e81499bd29d6619abb9a2599"
             },
             "type": "bower-asset",
             "license": [
@@ -342,8 +331,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
-                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc",
-                "shasum": null
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
             },
             "require": {
                 "bower-asset/jquery": ">=1.6"
@@ -364,8 +352,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/simeydotme/jQuery-ui-Slider-Pips/zipball/371b31caf991070db89cda0a17dcc30410122ea2",
-                "reference": "371b31caf991070db89cda0a17dcc30410122ea2",
-                "shasum": null
+                "reference": "371b31caf991070db89cda0a17dcc30410122ea2"
             },
             "require": {
                 "bower-asset/jquery": ">=1.10.2",
@@ -387,8 +374,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/jozefizso/bower-jquery-easing/zipball/7ddc8b25d24c78bbae8d00a3ae43bf3f274ec8b5",
-                "reference": "7ddc8b25d24c78bbae8d00a3ae43bf3f274ec8b5",
-                "shasum": null
+                "reference": "7ddc8b25d24c78bbae8d00a3ae43bf3f274ec8b5"
             },
             "require": {
                 "bower-asset/jquery": ">=1.2.1"
@@ -406,8 +392,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/desandro/masonry/zipball/3b0883cf4a4a046896719b9cf282ea74be7ffecd",
-                "reference": "3b0883cf4a4a046896719b9cf282ea74be7ffecd",
-                "shasum": null
+                "reference": "3b0883cf4a4a046896719b9cf282ea74be7ffecd"
             },
             "require": {
                 "bower-asset/get-size": ">=2.0.2,<3.0.0",
@@ -429,8 +414,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/metafizzy/outlayer/zipball/bf31c5748bf84fcc2c553d1199a6ecaf0ebd9878",
-                "reference": "bf31c5748bf84fcc2c553d1199a6ecaf0ebd9878",
-                "shasum": null
+                "reference": "bf31c5748bf84fcc2c553d1199a6ecaf0ebd9878"
             },
             "require": {
                 "bower-asset/ev-emitter": ">=1.0.0,<2.0.0",
@@ -453,8 +437,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/kenwheeler/slick/zipball/0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee",
-                "reference": "0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee",
-                "shasum": null
+                "reference": "0f40c9d6a02a5c08b5f4dd80fdada3a854a59bee"
             },
             "require": {
                 "bower-asset/jquery": ">=1.7"
@@ -475,8 +458,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/bgrins/spectrum/zipball/98454b55521cfb495f628db28af01100c029ef76",
-                "reference": "98454b55521cfb495f628db28af01100c029ef76",
-                "shasum": null
+                "reference": "98454b55521cfb495f628db28af01100c029ef76"
             },
             "require": {
                 "bower-asset/jquery": ">=1.7.2"
@@ -2043,7 +2025,8 @@
             "homepage": "https://www.drupal.org/project/better_formats",
             "support": {
                 "source": "https://git.drupalcode.org/project/better_formats"
-            }
+            },
+            "time": "2018-04-24T13:52:26+00:00"
         },
         {
             "name": "drupal/blazy",
@@ -3142,6 +3125,10 @@
                     "homepage": "https://www.drupal.org/user/3260690"
                 },
                 {
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
+                },
+                {
                     "name": "slashrsm",
                     "homepage": "https://www.drupal.org/user/744628"
                 },
@@ -4037,7 +4024,7 @@
                 },
                 "drupal": {
                     "version": "8.x-3.0-rc1",
-                    "datestamp": "1558647185",
+                    "datestamp": "1558678323",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -4892,7 +4879,8 @@
             "homepage": "https://www.drupal.org/project/media_entity_image_exif",
             "support": {
                 "source": "https://git.drupalcode.org/project/media_entity_image_exif"
-            }
+            },
+            "time": "2018-01-03T17:59:39+00:00"
         },
         {
             "name": "drupal/menu_block",
@@ -6016,14 +6004,14 @@
             "authors": [
                 {
                     "name": "Nicholas Humfrey",
-                    "role": "Developer",
                     "email": "njh@aelius.com",
-                    "homepage": "http://www.aelius.com/njh/"
+                    "homepage": "http://www.aelius.com/njh/",
+                    "role": "Developer"
                 },
                 {
                     "name": "Alexey Zakhlestin",
-                    "role": "Developer",
-                    "email": "indeyets@gmail.com"
+                    "email": "indeyets@gmail.com",
+                    "role": "Developer"
                 }
             ],
             "description": "EasyRdf is a PHP library designed to make it easy to consume and produce RDF.",
@@ -6219,9 +6207,9 @@
             "authors": [
                 {
                     "name": "Oscar Otero",
-                    "role": "Developer",
                     "email": "oom@oscarotero.com",
-                    "homepage": "http://oscarotero.com"
+                    "homepage": "http://oscarotero.com",
+                    "role": "Developer"
                 }
             ],
             "description": "PHP gettext manager",
@@ -6830,9 +6818,7 @@
             "version": "1.8.0-RC1",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/sortablejs/-/sortablejs-1.8.0-rc1.tgz",
-                "reference": null,
-                "shasum": null
+                "url": "https://registry.npmjs.org/sortablejs/-/sortablejs-1.8.0-rc1.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -7026,18 +7012,18 @@
             "authors": [
                 {
                     "name": "Greg Beaver",
-                    "role": "Helper",
-                    "email": "cellog@php.net"
+                    "email": "cellog@php.net",
+                    "role": "Helper"
                 },
                 {
                     "name": "Andrei Zmievski",
-                    "role": "Lead",
-                    "email": "andrei@php.net"
+                    "email": "andrei@php.net",
+                    "role": "Lead"
                 },
                 {
                     "name": "Stig Bakken",
-                    "role": "Developer",
-                    "email": "stig@php.net"
+                    "email": "stig@php.net",
+                    "role": "Developer"
                 }
             ],
             "description": "More info available on: http://pear.php.net/package/Console_Getopt",
@@ -7135,8 +7121,8 @@
             "authors": [
                 {
                     "name": "Christian Weiske",
-                    "role": "Lead",
-                    "email": "cweiske@php.net"
+                    "email": "cweiske@php.net",
+                    "role": "Lead"
                 }
             ],
             "description": "Minimal set of PEAR core files to be used as composer dependency",
@@ -7419,16 +7405,16 @@
         },
         {
             "name": "robrichards/xmlseclibs",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robrichards/xmlseclibs.git",
-                "reference": "406c68ac9124db033d079284b719958b829cb830"
+                "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/406c68ac9124db033d079284b719958b829cb830",
-                "reference": "406c68ac9124db033d079284b719958b829cb830",
+                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/0a53d3c3aa87564910cae4ed01416441d3ae0db5",
+                "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5",
                 "shasum": ""
             },
             "require": {
@@ -7453,7 +7439,7 @@
                 "xml",
                 "xmldsig"
             ],
-            "time": "2018-11-15T11:59:02+00:00"
+            "time": "2019-11-05T11:44:22+00:00"
         },
         {
             "name": "simplesamlphp/saml2",
@@ -9376,19 +9362,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org"
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "role": "Project Founder",
-                    "email": "armin.ronacher@active-4.com"
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
                 },
                 {
                     "name": "Twig Team",
-                    "role": "Contributors",
-                    "homepage": "https://twig.symfony.com/contributors"
+                    "homepage": "https://twig.symfony.com/contributors",
+                    "role": "Contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -10641,9 +10627,9 @@
             "authors": [
                 {
                     "name": "Franck Nijhof",
-                    "role": "Developer / IT Manager",
                     "email": "franck.nijhof@dealerdirect.com",
-                    "homepage": "http://www.frenck.nl"
+                    "homepage": "http://www.frenck.nl",
+                    "role": "Developer / IT Manager"
                 }
             ],
             "description": "PHP_CodeSniffer Standards Composer Installer Plugin",
@@ -10984,13 +10970,13 @@
             "authors": [
                 {
                     "name": "Justin Bishop",
-                    "role": "Developer",
-                    "email": "jubishop@gmail.com"
+                    "email": "jubishop@gmail.com",
+                    "role": "Developer"
                 },
                 {
                     "name": "Anthon Pang",
-                    "role": "Fork Maintainer",
-                    "email": "apang@softwaredevelopment.ca"
+                    "email": "apang@softwaredevelopment.ca",
+                    "role": "Fork Maintainer"
                 }
             ],
             "description": "PHP WebDriver for Selenium 2",
@@ -11156,8 +11142,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "role": "Developer",
-                    "homepage": "http://frankkleine.de/"
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
@@ -11428,8 +11414,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sb@sebastian-bergmann.de"
+                    "email": "sb@sebastian-bergmann.de",
+                    "role": "lead"
                 }
             ],
             "description": "Library that provides collection, processing, and rendering functionality for PHP code coverage information.",
@@ -11476,8 +11462,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sb@sebastian-bergmann.de"
+                    "email": "sb@sebastian-bergmann.de",
+                    "role": "lead"
                 }
             ],
             "description": "FilterIterator implementation that filters files based on a list of suffixes.",
@@ -11518,8 +11504,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sebastian@phpunit.de"
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
                 }
             ],
             "description": "Simple template engine.",
@@ -11567,8 +11553,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sb@sebastian-bergmann.de"
+                    "email": "sb@sebastian-bergmann.de",
+                    "role": "lead"
                 }
             ],
             "description": "Utility class for timing",
@@ -11686,8 +11672,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sebastian@phpunit.de"
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
                 }
             ],
             "description": "The PHP Unit Testing framework.",
@@ -12120,8 +12106,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sebastian@phpunit.de"
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
                 }
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
