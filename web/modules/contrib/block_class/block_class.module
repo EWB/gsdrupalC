@@ -10,6 +10,7 @@ use Drupal\block\Entity\Block;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\block\BlockInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_ENTITY_TYPE_presave().
@@ -70,7 +71,7 @@ function block_class_help($route_name, RouteMatchInterface $route_match) {
 
       $output .= '<h3>' . t('Installation note') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Enable the module on <a href=":extend_link">extend menu</a>.', [':extend_link' => \Drupal::url('system.modules_list')]) . '</dt>';
+      $output .= '<dt>' . t('Enable the module on <a href=":extend_link">extend menu</a>.', [':extend_link' => Url::fromRoute('system.modules_list')->toString()]) . '</dt>';
       $output .= '</dl>';
 
       $output .= '<h3>' . t('Usage') . '</h3>';

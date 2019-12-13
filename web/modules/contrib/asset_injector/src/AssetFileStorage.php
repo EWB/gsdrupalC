@@ -2,10 +2,10 @@
 
 namespace Drupal\asset_injector;
 
+use Drupal\Core\File\FileSystemInterface;
+
 /**
  * Class AssetFileStorage.
- *
- * @package Drupal\asset_injector
  *
  * This asset file storage class implements a content-addressed file system
  * where each file is stored in a location like so:
@@ -20,9 +20,12 @@ namespace Drupal\asset_injector;
  * with a file name that is unique by their content, and only deleted on cache
  * flush.
  *
- * Also see comments on caching in @see asset_injector_page_attachments().
+ * @see asset_injector_page_attachments().
+ * @package Drupal\asset_injector
  */
 final class AssetFileStorage {
+
+  const DIRECTORY_URI = 'public://asset_injector';
 
   /**
    * Asset with file storage.
@@ -51,8 +54,9 @@ final class AssetFileStorage {
     $internal_uri = self::internalFileUri();
     if (!is_file($internal_uri)) {
       $directory = dirname($internal_uri);
-      file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-      file_unmanaged_save_data($this->asset->getCode(), $internal_uri, FILE_EXISTS_REPLACE);
+      $file_system = self::getFileSystemService();
+      $file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+      $file_system->saveData($this->asset->getCode(), $internal_uri, FileSystemInterface::EXISTS_REPLACE);
     }
     return $internal_uri;
   }
@@ -67,7 +71,7 @@ final class AssetFileStorage {
     $pattern = $this->internalFileUri(TRUE);
     $paths = glob($pattern);
     foreach ($paths as $path) {
-      file_unmanaged_delete($path);
+      self::getFileSystemService()->delete($path);
     }
   }
 
@@ -84,10 +88,10 @@ final class AssetFileStorage {
     $name = $this->asset->id();
     $extension = $this->asset->extension();
     $hash = $pattern ? '*' : md5($this->asset->getCode());
-    $all_assets_directory = self::internalDirectoryUri();
+    $all_assets_directory = self::DIRECTORY_URI;
     if ($pattern) {
       // glob() does not understand stream wrappers. Sigh.
-      $all_assets_directory = \Drupal::service('file_system')
+      $all_assets_directory = self::getFileSystemService()
         ->realpath($all_assets_directory);
     }
     $internal_uri = "$all_assets_directory/$extension/$name-$hash.$extension";
@@ -95,13 +99,13 @@ final class AssetFileStorage {
   }
 
   /**
-   * Get our directory.
+   * Get the Drupal file system service.
    *
-   * @return string
-   *   Directory of the assets.
+   * @return \Drupal\Core\File\FileSystemInterface
+   *   File System service.
    */
-  protected static function internalDirectoryUri() {
-    return 'public://asset_injector';
+  protected static function getFileSystemService() {
+    return \Drupal::service('file_system');
   }
 
   /**
@@ -110,9 +114,8 @@ final class AssetFileStorage {
    * @see asset_injector_cache_flush()
    */
   public static function deleteAllFiles() {
-    $internal_uri = self::internalDirectoryUri();
-    if (file_exists($internal_uri)) {
-      file_unmanaged_delete_recursive($internal_uri);
+    if (file_exists(self::DIRECTORY_URI)) {
+      self::getFileSystemService()->deleteRecursive(self::DIRECTORY_URI);
     }
   }
 

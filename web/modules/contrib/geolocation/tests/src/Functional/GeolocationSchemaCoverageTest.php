@@ -31,6 +31,11 @@ class GeolocationSchemaCoverageTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test MapProviders.
    */
   public function testMapProvidersDefaults() {

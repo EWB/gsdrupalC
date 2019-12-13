@@ -38,38 +38,6 @@ abstract class AssetInjectorBase extends ConfigEntityBase implements AssetInject
   public $code;
 
   /**
-   * Themes to apply.
-   *
-   * @var array
-   * @deprecated
-   */
-  public $themes;
-
-  /**
-   * Whitelist/blacklist pages.
-   *
-   * @var bool
-   * @deprecated
-   */
-  public $visibility;
-
-  /**
-   * Pages to whitelist/blacklist.
-   *
-   * @var string
-   * @deprecated
-   */
-  public $pages;
-
-  /**
-   * Node type to apply asset.
-   *
-   * @var string
-   * @deprecated
-   */
-  public $nodeType;
-
-  /**
    * Require all conditions.
    *
    * @var bool
@@ -103,16 +71,6 @@ abstract class AssetInjectorBase extends ConfigEntityBase implements AssetInject
    * @var \Drupal\Core\Executable\ExecutableManagerInterface
    */
   protected $conditionPluginManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(array $values, $entity_type) {
-    parent::__construct($values, $entity_type);
-    if (empty($this->conditions)) {
-      $this->convertConditionProperties();
-    }
-  }
 
   /**
    * {@inheritdoc}
@@ -249,46 +207,6 @@ abstract class AssetInjectorBase extends ConfigEntityBase implements AssetInject
       $this->conditionPluginManager = \Drupal::service('plugin.manager.condition');
     }
     return $this->conditionPluginManager;
-  }
-
-  /**
-   * Convert legacy code from object properties to condition plugins.
-   */
-  public function convertConditionProperties() {
-    $conditions = [];
-
-    if (!empty($this->pages)) {
-      $conditions['request_path'] = [
-        'id' => 'request_path',
-        'pages' => $this->pages,
-        'negate' => !$this->visibility,
-      ];
-    }
-
-    if (!empty($this->nodeType)) {
-      $conditions['node_type'] = [
-        'id' => 'node_type',
-        'bundles' => is_array($this->nodeType) ? $this->nodeType : [$this->nodeType => $this->nodeType],
-        'negate' => FALSE,
-        'context_mapping' => ['node' => '@node.node_route_context:node'],
-      ];
-    }
-
-    if (!empty($this->themes)) {
-      $conditions['current_theme'] = [
-        'id' => 'current_theme',
-        'theme' => $this->themes,
-        'negate' => FALSE,
-      ];
-    }
-
-    // Since injectors since 2.0 will not have the themes, nodeType, etc
-    // properties, its safe to overwrite the existing conditions since they
-    // would be an empty array until this point.
-    if ($conditions) {
-      $this->conditions_require_all = TRUE;
-      $this->set('conditions', $conditions);
-    }
   }
 
 }

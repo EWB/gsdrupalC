@@ -1,0 +1,14 @@
+# Drupal 8.x-1.2 2019-07-08
+-------------------------
+# Added support for following jQuery events:
+     - Click
+     - Hover
+     - Mouse Out
+     - Mouse Down
+     - Mouse Up
+     - Mouse Enter
+     - Mouse Leave
+     - Mouse Move
+# Refactored code to match the recent coding standards.
+# Fixed other minor issues.
+# Changed libraries path from "/librariea/animate.css" to "/libraries/animate_any"

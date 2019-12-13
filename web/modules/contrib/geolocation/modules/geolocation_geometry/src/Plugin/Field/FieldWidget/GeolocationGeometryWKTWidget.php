@@ -15,7 +15,14 @@ use Drupal\Core\Url;
  *   id = "geolocation_geometry_wkt",
  *   label = @Translation("Geolocation Geometry WKT"),
  *   field_types = {
- *     "geolocation_geometry"
+ *     "geolocation_geometry_geometry",
+ *     "geolocation_geometry_geometrycollection",
+ *     "geolocation_geometry_point",
+ *     "geolocation_geometry_linestring",
+ *     "geolocation_geometry_polygon",
+ *     "geolocation_geometry_multipoint",
+ *     "geolocation_geometry_multilinestring",
+ *     "geolocation_geometry_multipolygon",
  *   }
  * )
  */
@@ -30,7 +37,7 @@ class GeolocationGeometryWKTWidget extends WidgetBase {
 
     $element['wkt'] = [
       '#type' => 'textarea',
-      '#title' => $this->t('WKT / Well Known Text'),
+      '#title' => $this->t('WKT / Well Known Text') . '(' . $element['#title'] . ')',
       '#default_value' => isset($items[$delta]->wkt) ? $items[$delta]->wkt : NULL,
       '#empty_value' => '',
       '#description' => $this->t('Please enter valid %wikipedia.', ['%wikipedia' => $description_link]),

@@ -2,10 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) 
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Previous releases are documented in [github releases](https://github.com/oscarotero/Gettext/releases)
+
+## [4.8.2] - 2019-12-02
+### Fixed
+- UTF-8 handling for VueJs extractor [#242]
+
+## [4.8.1] - 2019-11-15
+### Fixed
+- Php error when scanning for a single domain but other string found [#238]
+
+## [4.8.0] - 2019-11-04
+### Changed
+- Many `private` properties and methods were changed to `protected` in order to improve the extensibility [#231]
+
+### Fixed
+- PHP 7.4 support [#230]
+
+## [4.7.0] - 2019-10-07
+### Added
+- Support for UnitID in Xliff [#221] [#224] [#225]
+- Support for scan multiple domains at the same time [#223]
+
+### Fixed
+- New lines in windows [#218] [#226]
 
 ## [4.6.3] - 2019-07-15
 ### Added
@@ -122,7 +145,21 @@ Previous releases are documented in [github releases](https://github.com/oscarot
 [#213]: https://github.com/oscarotero/Gettext/issues/213
 [#214]: https://github.com/oscarotero/Gettext/issues/214
 [#215]: https://github.com/oscarotero/Gettext/issues/215
+[#218]: https://github.com/oscarotero/Gettext/issues/218
+[#221]: https://github.com/oscarotero/Gettext/issues/221
+[#223]: https://github.com/oscarotero/Gettext/issues/223
+[#224]: https://github.com/oscarotero/Gettext/issues/224
+[#225]: https://github.com/oscarotero/Gettext/issues/225
+[#226]: https://github.com/oscarotero/Gettext/issues/226
+[#230]: https://github.com/oscarotero/Gettext/issues/230
+[#231]: https://github.com/oscarotero/Gettext/issues/231
+[#238]: https://github.com/oscarotero/Gettext/issues/238
+[#242]: https://github.com/oscarotero/Gettext/issues/242
 
+[4.8.2]: https://github.com/oscarotero/Gettext/compare/v4.8.1...v4.8.2
+[4.8.1]: https://github.com/oscarotero/Gettext/compare/v4.8.0...v4.8.1
+[4.8.0]: https://github.com/oscarotero/Gettext/compare/v4.7.0...v4.8.0
+[4.7.0]: https://github.com/oscarotero/Gettext/compare/v4.6.3...v4.7.0
 [4.6.3]: https://github.com/oscarotero/Gettext/compare/v4.6.2...v4.6.3
 [4.6.2]: https://github.com/oscarotero/Gettext/compare/v4.6.1...v4.6.2
 [4.6.1]: https://github.com/oscarotero/Gettext/compare/v4.6.0...v4.6.1

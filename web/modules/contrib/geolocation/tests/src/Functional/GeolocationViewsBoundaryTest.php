@@ -31,6 +31,11 @@ class GeolocationViewsBoundaryTest extends BrowserTestBase {
   protected $viewsPath = 'geolocation-demo/boundary-filter-fixed-values';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the boundary filter.
    */
   public function testProximityNoLocations() {

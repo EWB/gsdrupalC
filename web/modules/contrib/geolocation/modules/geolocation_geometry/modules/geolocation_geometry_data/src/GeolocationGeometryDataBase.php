@@ -12,11 +12,33 @@ use ShapeFile\ShapeFileException;
  */
 abstract class GeolocationGeometryDataBase {
 
+  /**
+   * URI to archive.
+   *
+   * @var string
+   */
   public $archiveUri = '';
+
+  /**
+   * Filename of archive.
+   *
+   * @var string
+   */
   public $archiveFilename = '';
+
+  /**
+   * Directory extract of archive.
+   *
+   * @var string
+   */
   public $shapeDirectory = '';
+
+  /**
+   * Extracted filename.
+   *
+   * @var string
+   */
   public $shapeFilename = '';
-  public $configDirectory = '';
 
   /**
    * Shape file.
@@ -37,7 +59,7 @@ abstract class GeolocationGeometryDataBase {
       [[$this, 'import'], []],
     ];
 
-    $batch = [
+    return [
       'title' => t('Import Shapefile'),
       'finished' => [$this, 'finished'],
       'operations' => $operations,
@@ -45,7 +67,6 @@ abstract class GeolocationGeometryDataBase {
       'init_message' => t('Import is starting.'),
       'error_message' => t('Something went horribly wrong.'),
     ];
-    return $batch;
   }
 
   /**
@@ -55,7 +76,7 @@ abstract class GeolocationGeometryDataBase {
    *   Batch return.
    */
   public function download() {
-    $destination = file_directory_temp() . '/' . $this->archiveFilename;
+    $destination = \Drupal::service('file_system')->getTempDirectory() . '/' . $this->archiveFilename;
 
     if (!is_file($destination)) {
       $client = \Drupal::httpClient();
@@ -65,7 +86,7 @@ abstract class GeolocationGeometryDataBase {
     $zip = new \ZipArchive();
     $res = $zip->open($destination);
     if ($res === TRUE) {
-      $zip->extractTo(file_directory_temp() . '/' . $this->shapeDirectory);
+      $zip->extractTo(\Drupal::service('file_system')->getTempDirectory() . '/' . $this->shapeDirectory);
       $zip->close();
     }
     else {
@@ -84,7 +105,7 @@ abstract class GeolocationGeometryDataBase {
     $logger = \Drupal::logger('geolocation_geometry_natural_earth_us_states');
 
     try {
-      $this->shapeFile = new ShapeFile(file_directory_temp() . '/' . $this->shapeDirectory . '/' . $this->shapeFilename);
+      $this->shapeFile = new ShapeFile(\Drupal::service('file_system')->getTempDirectory() . '/' . $this->shapeDirectory . '/' . $this->shapeFilename);
     }
     catch (ShapeFileException $e) {
       $logger->warning($e->getMessage());

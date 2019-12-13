@@ -2,9 +2,11 @@
 
 namespace Drupal\animate_any\Form;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a confirmation form for deleting Animation data from Animation list.
@@ -12,6 +14,24 @@ use Drupal\Core\Url;
 class AnimateDeleteForm extends ConfirmFormBase {
 
   private $id;
+
+  /**
+   * @var \Drupal\Core\Database\Connection
+   */
+  private $database;
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('database')
+    );
+  }
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(Connection $database) {
+    $this->database = $database;
+  }
 
   public function getFormId() {
     return 'animate_delete_form';
@@ -47,9 +67,9 @@ class AnimateDeleteForm extends ConfirmFormBase {
     $aid = $this->id;
 
     if (is_numeric($aid)) {
-      $delete = \Drupal::database()->delete('animate_any_settings')->condition('aid', $aid)->execute();
+      $delete = $this->database->delete('animate_any_settings')->condition('aid', $aid)->execute();
       if ($delete) {
-        drupal_set_message($this->t('Record deleted successfully.'));
+        $this->messenger()->addMessage($this->t('Record deleted successfully.'));
       }
     }
   }

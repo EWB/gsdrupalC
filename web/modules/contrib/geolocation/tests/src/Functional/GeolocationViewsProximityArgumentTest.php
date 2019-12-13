@@ -31,6 +31,11 @@ class GeolocationViewsProximityArgumentTest extends BrowserTestBase {
   protected $viewsPath = 'geolocation-demo/proximity_argument_and_sort';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the CommonMap style.
    */
   public function testProximityNoLocations() {

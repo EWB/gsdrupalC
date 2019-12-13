@@ -1,8 +1,8 @@
 <?php
 
 /**
- * 
- * Animation option.
+ *
+ * Animation options.
  */
 function animate_any_options() {
   return [
@@ -88,7 +88,6 @@ function animate_any_options() {
  */
 
 function animate_any_page_attachments(&$page) {
-
   $connection = \Drupal::database();
   $fetch = $connection->select("animate_any_settings", "a");
   $fetch->fields('a');
@@ -97,4 +96,22 @@ function animate_any_page_attachments(&$page) {
   // Pass json variable to animate_any.js.
   $page['#attached']['library'][] = 'animate_any/animate';
   $page['#attached']['drupalSettings']['animate']['animation_data'] = $json_data;
+}
+
+/**
+ * jQuery event options.
+ */
+function animate_on_event() {
+  return [
+    'none' => t('-- No event --'),
+    'scroll' => t('Scroll'),
+    'click' => t('Click'),
+    'mouseover' => t('Hover'),
+    'mouseout' => t('Mouse Out'),
+    'mousedown' => t('Mouse Down'),
+    'mouseup' => t('Mouse Up'),
+    'mouseenter' => t('Mouse Enter'),
+    'mouseleave' => t('Mouse Leave'),
+    'mousemove' => t('Mouse Move'),
+  ];
 }

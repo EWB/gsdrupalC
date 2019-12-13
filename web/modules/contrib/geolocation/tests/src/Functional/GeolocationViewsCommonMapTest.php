@@ -26,6 +26,11 @@ class GeolocationViewsCommonMapTest extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the boundary filter.
    */
   public function testStaticCommonMap() {

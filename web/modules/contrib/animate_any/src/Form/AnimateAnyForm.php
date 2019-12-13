@@ -2,13 +2,33 @@
 
 namespace Drupal\animate_any\Form;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the Animate Any form.
  */
 class AnimateAnyForm extends FormBase {
+
+  /**
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('database')
+    );
+  }
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(Connection $database) {
+    $this->database = $database;
+  }
 
   /**
    * Function to get Form ID.
@@ -22,16 +42,16 @@ class AnimateAnyForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Fetch animate.css from library.
-    $animate_css = DRUPAL_ROOT . '/libraries/animate.css/animate.css';
+    $animate_css = DRUPAL_ROOT . '/libraries/animate_any/animate.css';
     // Check animate.css file exists.
     if (!file_exists($animate_css)) {
-      drupal_set_message($this->t('animate.css library is missing.'), 'warning');
+      $this->messenger()->addMessage($this->t('animate.css library is missing.'), 'warning');
     }
     // Building add more form element to add animation.
     $form['#attached']['library'][] = 'animate_any/animate';
 
     $form['parent_class'] = [
-      '#title' => 'Add Parent Class / ID',
+      '#title' => $this->t('Add Parent Class / ID'),
       '#description' => $this->t('You can add body class like <em>body.front (for front page)</em> OR class with dot(.) prefix and Id with hash(#) prefix.'),
       '#type' => 'textfield',
     ];
@@ -50,19 +70,25 @@ class AnimateAnyForm extends FormBase {
 
     $field_deltas = $form_state->get('field_deltas');
     if (is_null($field_deltas)) {
-      $field_deltas = \NULL;
+      $field_deltas = NULL;
       $form_state->set('field_deltas', $field_deltas);
     }
-    if (!\is_null($field_deltas)) {
+    if (!is_null($field_deltas)) {
       for ($delta = 0; $delta < $field_deltas; $delta++) {
         $section_identity = [
-          '#title' => 'Add section class/Id',
+          '#title' => $this->t('Add section class/Id'),
           '#description' => $this->t('Add class with dot(.) prefix and Id with hash(#) prefix.'),
           '#type' => 'textfield',
           '#size' => 20,
         ];
+        $section_event = [
+          '#title' => $this->t('Select event'),
+          '#type' => 'select',
+          '#options' => animate_on_event(),
+          '#attributes' => ['class' => ['select_event']],
+        ];
         $section_animation = [
-          '#title' => 'Select animation',
+          '#title' => $this->t('Select animation'),
           '#type' => 'select',
           '#options' => animate_any_options(),
           '#attributes' => ['class' => ['select_animate']],
@@ -86,17 +112,20 @@ class AnimateAnyForm extends FormBase {
 
         $form['animate_fieldset'][$delta] = [
           'section_identity' => &$section_identity,
+          'section_event' => &$section_event,
           'section_animation' => &$section_animation,
           'animation' => &$animation,
           'remove' => &$remove,
         ];
         $form['animate_fieldset']['#rows'][$delta] = [
           ['data' => &$section_identity],
+          ['data' => &$section_event],
           ['data' => &$section_animation],
           ['data' => &$animation],
           ['data' => &$remove],
         ];
         unset($section_identity);
+        unset($section_event);
         unset($section_animation);
         unset($animation);
         unset($remove);
@@ -129,9 +158,8 @@ class AnimateAnyForm extends FormBase {
    * Validate for Animate Any Settings Form.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-    $op = (string) $form_state->getValue('op');
-    if ($op == 'Save Settings') {
+    $op = (string)$form_state->getValue('op');
+    if ($op == $this->t('Save Settings')) {
       $parent = $form_state->getValue('parent_class');
       if (empty($parent)) {
         $form_state->setRebuild();
@@ -140,11 +168,15 @@ class AnimateAnyForm extends FormBase {
       foreach ($form_state->getValue('animate_fieldset') as $key => $value) {
         if (empty($value['section_identity'])) {
           $form_state->setRebuild();
-          $form_state->setErrorByName("animate_fieldset][{$key}][section_identity", $this->t("Please select section identity for row @key", ['@key' => $key]));
+          $form_state->setErrorByName("animate_fieldset][{$key}][section_identity", $this->t("Please select section identity for row @key", ['@key' => $key + 1]));
+        }
+        if ($value['section_event'] == 'none') {
+          $form_state->setRebuild();
+          $form_state->setErrorByName("animate_fieldset][{$key}][section_event", $this->t("Please select section event for row @key", ['@key' => $key + 1]));
         }
         if ($value['section_animation'] == 'none') {
           $form_state->setRebuild();
-          $form_state->setErrorByName("animate_fieldset][{$key}][section_animation", $this->t("Please select section animation for row @key", ['@key' => $key]));
+          $form_state->setErrorByName("animate_fieldset][{$key}][section_animation", $this->t("Please select section animation for row @key", ['@key' => $key + 1]));
         }
       }
     }
@@ -154,20 +186,16 @@ class AnimateAnyForm extends FormBase {
    * Submit for Animate Any Settings Form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $op = (string) $form_state->getValue('op');
-    if ($op == 'Save Settings') {
-
+    $op = (string)$form_state->getValue('op');
+    if ($op == $this->t('Save Settings')) {
       $parent = $form_state->getValue('parent_class');
       $identifiers = json_encode($form_state->getValue('animate_fieldset'));
-
-      $db = \Drupal::database();
-      $result = $db->insert('animate_any_settings')
-              ->fields([
-                'parent' => $parent,
-                'identifier' => $identifiers,
-              ])->execute();
-
-      drupal_set_message($this->t('Animation added for @parent.', ['@parent' => $parent]));
+      $this->database->insert('animate_any_settings')
+        ->fields([
+          'parent' => $parent,
+          'identifier' => $identifiers,
+        ])->execute();
+      $this->messenger()->addMessage($this->t('Animation added for @parent.', ['@parent' => $parent]));
     }
   }
 

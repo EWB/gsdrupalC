@@ -2,13 +2,33 @@
 
 namespace Drupal\animate_any\Form;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a edit form for edit/update the animation data from Animation list.
  */
 class AnimateEditForm extends FormBase {
+
+  /**
+   * @var \Drupal\Core\Database\Connection
+   */
+  private $database;
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('database')
+    );
+  }
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(Connection $database) {
+    $this->database = $database;
+  }
 
   /**
    * {@inheritdoc}
@@ -19,7 +39,7 @@ class AnimateEditForm extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state, $element = NULL) {
 
-    $fetch = \Drupal::database()->select("animate_any_settings", "a");
+    $fetch = $this->database->select("animate_any_settings", "a");
     $fetch->fields('a');
     $fetch->condition('a.aid', $element);
     $fetch_results = $fetch->execute()->fetchAssoc();
@@ -56,6 +76,13 @@ class AnimateEditForm extends FormBase {
         '#default_value' => $value->section_identity,
         '#description' => $this->t("Add class with dot(.) prefix and Id with hash(#) prefix."),
       ];
+      $section_event = [
+        '#title' => $this->t('Select event'),
+        '#type' => 'select',
+        '#options' => animate_on_event(),
+        '#attributes' => ['class' => ['select_event']],
+        '#default_value' => $value->section_event,
+      ];
       $section_animation = [
         '#type' => 'select',
         '#options' => animate_any_options(),
@@ -70,16 +97,19 @@ class AnimateEditForm extends FormBase {
       ];
       $form['animate_fieldset'][$key] = [
         'section_identity' => &$section_identity,
+        'section_event' => &$section_event,
         'section_animation' => &$section_animation,
         'animation' => &$animation,
       ];
       $form['animate_fieldset']['#rows'][$key] = [
         ['data' => &$section_identity],
+        ['data' => &$section_event],
         ['data' => &$section_animation],
         ['data' => &$animation],
       ];
 
       unset($section_identity);
+      unset($section_event);
       unset($section_animation);
       unset($animation);
     }
@@ -96,18 +126,22 @@ class AnimateEditForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
-    $op = (string) $form_state->getValue('op');
-    if ($op == 'Update Settings') {
+    $op = (string)$form_state->getValue('op');
+    if ($op == $this->t('Update Settings')) {
       $parent = $form_state->getValue('parent_class');
       if (empty($parent)) {
         $form_state->setErrorByName("parent_class", $this->t("Please select parent class"));
       }
       foreach ($form_state->getValue('animate_fieldset') as $key => $value) {
         if (empty($value['section_identity'])) {
-          $form_state->setErrorByName("animate_fieldset][{$key}][section_identity", $this->t("Please select section identity for row @key", ['@key' => $key]));
+          $form_state->setErrorByName("animate_fieldset][{$key}][section_identity", $this->t("Please select section identity for row @key", ['@key' => $key  + 1]));
+        }
+        if ($value['section_event'] == 'none') {
+          $form_state->setRebuild();
+          $form_state->setErrorByName("animate_fieldset][{$key}][section_event", $this->t("Please select section event for row @key", ['@key' => $key  + 1]));
         }
         if ($value['section_animation'] == 'none') {
-          $form_state->setErrorByName("animate_fieldset][{$key}][section_animation", $this->t("Please select section animation for row @key", ['@key' => $key]));
+          $form_state->setErrorByName("animate_fieldset][{$key}][section_animation", $this->t("Please select section animation for row @key", ['@key' => $key  + 1]));
         }
       }
     }
@@ -121,7 +155,7 @@ class AnimateEditForm extends FormBase {
     $parent = $form_state->getvalue('parent_class');
     $aid = $form_state->getvalue('aid');
     $identifiers = json_encode($form_state->getvalue('animate_fieldset'));
-    $data = \Drupal::database()->update('animate_any_settings');
+    $data = $this->database->update('animate_any_settings');
     $data->fields([
       'parent' => $parent,
       'identifier' => $identifiers,
@@ -129,7 +163,7 @@ class AnimateEditForm extends FormBase {
     $data->condition('aid', $aid);
     $valid = $data->execute();
     if ($valid) {
-      drupal_set_message(t('Animation settings updated.'));
+      $this->messenger()->addMessage($this->t('Animation settings updated.'));
     }
   }
 

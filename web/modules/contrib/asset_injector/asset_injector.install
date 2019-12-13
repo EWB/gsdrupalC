@@ -5,14 +5,17 @@
  * Contains install and uninstall hooks.
  */
 
+use Drupal\Core\File\FileSystemInterface;
+
 /**
  * Implements hook_requirements().
  */
 function asset_injector_requirements($phase) {
   $requirements = [];
   $uri = 'public://asset_injector';
-  $directory = file_stream_wrapper_uri_normalize($uri);
-  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  $directory = \Drupal::service('stream_wrapper_manager')->normalizeUri($uri);
+  \Drupal::service('file_system')
+    ->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
   $requirements['asset_injector'] = [
     'title' => t('Asset Injector'),
     'value' => is_writable($directory) ? t('Directory is writable') : t('Directory not writable'),
@@ -27,8 +30,8 @@ function asset_injector_requirements($phase) {
  */
 function asset_injector_uninstall() {
   $uri = 'public://asset_injector';
-  $directory = file_stream_wrapper_uri_normalize($uri);
-  file_unmanaged_delete_recursive($directory);
+  $directory = \Drupal::service('stream_wrapper_manager')->normalizeUri($uri);
+  \Drupal::service('file_system')->deleteRecursive($directory);
 }
 
 /**

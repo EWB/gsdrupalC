@@ -12,6 +12,9 @@ geolocation_plugin_base_settings:
       type: mapping
       label: 'Settings'
       mapping:
+        location_option_id:
+          type: string
+          label: 'Location option ID'
 
 geolocation_map_provider:
   type: mapping

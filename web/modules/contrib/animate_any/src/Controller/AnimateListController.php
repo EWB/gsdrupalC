@@ -9,8 +9,37 @@ namespace Drupal\animate_any\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Render\RendererInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AnimateListController extends ControllerBase {
+
+  /**
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  private $renderer;
+
+  /**
+   * @var \Drupal\Core\Database\Connection
+   */
+  private $database;
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('renderer'),
+      $container->get('database')
+    );
+  }
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(RendererInterface $render, Connection $database) {
+    $this->renderer = $render;
+    $this->database = $database;
+  }
 
   public function animate_list() {
     $header = [];
@@ -20,7 +49,7 @@ class AnimateListController extends ControllerBase {
     $header[] = ['data' => $this->t('Operation')];
 
     // Fetch Animate Data.
-    $fetch = \Drupal::database()->select("animate_any_settings", "a");
+    $fetch = $this->database->select("animate_any_settings", "a");
     $fetch->fields('a');
     $fetch->orderBy('aid', 'DESC');
     $table_sort = $fetch->extend('Drupal\Core\Database\Query\TableSortExtender')->orderByHeader($header);
@@ -29,11 +58,12 @@ class AnimateListController extends ControllerBase {
     foreach ($fetch_results as $items) {
       $mini_header = [];
       $mini_header[] = ['data' => $this->t('Section')];
+      $mini_header[] = ['data' => $this->t('Event')];
       $mini_header[] = ['data' => $this->t('Animation')];
       $mini_rows = [];
       $data = \json_decode($items->identifier);
       foreach ($data as $value) {
-        $mini_rows[] = [$value->section_identity, $value->section_animation];
+        $mini_rows[] = [$value->section_identity, $value->section_event, $value->section_animation];
       }
       $mini_output = [];
       $mini_output['mini_list'] = [
@@ -42,7 +72,7 @@ class AnimateListController extends ControllerBase {
         '#rows' => $mini_rows,
       ];
 
-      $identifiers = drupal_render($mini_output);
+      $identifiers = $this->renderer->render($mini_output);
 
       $links = [];
 
@@ -67,7 +97,8 @@ class AnimateListController extends ControllerBase {
         $items->aid, $items->parent, $identifiers, $operation,
       ];
     }
-    $add = \Drupal::l($this->t('Add Animation'), Url::fromUri('internal:/admin/config/animate_any', ['attributes' => ['class' => ['button']]]));
+    $url = Url::fromUri('internal:/admin/config/animate_any', ['attributes' => ['class' => ['button']]]);
+    $add = Link::fromTextAndUrl($this->t('Add Animation'), $url)->toString();
     $add_link = '<ul class="action-links"><li>' . $add . '</li></ul>';
 
     $empty = '<div role="contentinfo" aria-label="Status message" class="messages messages--warning">No record found.</div>';

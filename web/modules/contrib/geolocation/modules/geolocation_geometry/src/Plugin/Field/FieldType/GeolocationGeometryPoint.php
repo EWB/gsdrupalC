@@ -10,6 +10,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * @FieldType(
  *   id = "geolocation_geometry_point",
  *   label = @Translation("Geolocation Geometry - Point"),
+ *   category = @Translation("Spatial fields"),
  *   description = @Translation("This field stores spatial geometry data."),
  *   default_widget = "geolocation_geometry_wkt",
  *   default_formatter = "geolocation_geometry_wkt"
@@ -23,7 +24,7 @@ class GeolocationGeometryPoint extends GeolocationGeometryBase {
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
 
-    $schema['columns']['geometry']['pgsql_type'] = 'point';
+    $schema['columns']['geometry']['pgsql_type'] = "geometry('POINT')";
     $schema['columns']['geometry']['mysql_type'] = 'point';
 
     return $schema;

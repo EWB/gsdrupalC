@@ -8,8 +8,9 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * Plugin implementation of the 'geolocation' field type.
  *
  * @FieldType(
- *   id = "geolocation_geometry_geometry_collection",
+ *   id = "geolocation_geometry_geometrycollection",
  *   label = @Translation("Geolocation Geometry - Geometry Collection"),
+ *   category = @Translation("Spatial fields"),
  *   description = @Translation("This field stores spatial geometry data."),
  *   default_widget = "geolocation_geometry_wkt",
  *   default_formatter = "geolocation_geometry_wkt"
@@ -23,7 +24,7 @@ class GeolocationGeometryGeometryCollection extends GeolocationGeometryBase {
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
 
-    $schema['columns']['geometry']['pgsql_type'] = 'geometrycollection';
+    $schema['columns']['geometry']['pgsql_type'] = "geometry('GEOMETRYCOLLECTION')";
     $schema['columns']['geometry']['mysql_type'] = 'geometrycollection';
 
     return $schema;

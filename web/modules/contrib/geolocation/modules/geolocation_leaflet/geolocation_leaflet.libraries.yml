@@ -171,10 +171,8 @@ leaflet.wms:
     name: MIT
     url: https://github.com/heigeo/leaflet.wms/blob/gh-pages/LICENSE
     gpl-compatible: true
-  cdn:
-    /libraries/leaflet.wms/: //raw.githubusercontent.com/heigeo/leaflet.wms/gh-pages/
   js:
-    /libraries/leaflet.wms/dist/leaflet.wms.js: { type: external, minified: true }
+    'https//cdn.jsdelivr.net/gh/heigeo/leaflet.wms@0.2.0/dist/leaflet.wms.min.js': { type: external, minified: true }
 
 mapfeature.leaflet_wms:
   js:

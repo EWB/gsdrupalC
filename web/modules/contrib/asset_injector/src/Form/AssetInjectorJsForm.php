@@ -84,7 +84,7 @@ class AssetInjectorJsForm extends AssetInjectorFormBase {
       '#tree' => TRUE,
     ];
 
-    foreach (system_list('theme') as $name => $theme) {
+    foreach ($this->themeHandler->listInfo() as $name => $theme) {
       if (isset($theme->info['hidden']) && $theme->info['hidden']) {
         continue;
       }
