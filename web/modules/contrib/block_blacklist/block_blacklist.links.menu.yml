@@ -1,0 +1,7 @@
+block_blacklist.settings:
+  title: 'Block Blacklist Settings'
+  route_name: block_blacklist.settings
+  description: 'Remove blocks from the system.'
+  parent: system.admin_config_system
+  weight: 99
+

@@ -1,0 +1,11 @@
+8.x-4.1, 2019-03-03
+-------------------
+- Fix #2990981: Make all layouts compatible with Layout Builder.
+
+8.x-4.0, 2017-05-23
+-------------------
+- Fix #2875034: Compatibility with Drupal 8.3.1 and Panels 4.0.
+
+Radix Layouts 8.x-3.0, 2017-01-31
+-------------------
+- Fix #2838675: YAML syntax errors in radix_layouts.layouts.yml.

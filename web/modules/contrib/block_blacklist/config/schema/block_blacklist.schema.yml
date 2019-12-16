@@ -1,0 +1,22 @@
+block_blacklist.settings:
+  type: config_object
+  label: 'Block Blacklist settings'
+  mapping:
+    system_match:
+      type: string
+      label: "Strings to match for system blocks"
+    system_prefix:
+      type: string
+      label: "Strings to use as prefixes for system blocks"
+    system_regex:
+      type: string
+      label: "Strings to use as regexes for system blocks"
+    layout_match:
+      type: string
+      label: "Strings to match for Layout Builder blocks"
+    layout_prefix:
+      type: string
+      label: "Strings to use as prefixes for Layout Builder blocks"
+    layout_regex:
+      type: string
+      label: "Strings to use as regexes for Layout Builder blocks"

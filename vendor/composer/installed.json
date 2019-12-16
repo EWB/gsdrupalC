@@ -2793,6 +2793,55 @@
         }
     },
     {
+        "name": "drupal/block_blacklist",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/block_blacklist.git",
+            "reference": "8.x-1.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/block_blacklist-8.x-1.0.zip",
+            "reference": "8.x-1.0",
+            "shasum": "61fffe5742c6873c62d2afc76ffc892e3574e2a1"
+        },
+        "require": {
+            "drupal/core": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0",
+                "datestamp": "1552606684",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "KarenS",
+                "homepage": "https://www.drupal.org/user/45874"
+            }
+        ],
+        "description": "Remove unnecessary blocks from the block list for better system performance.",
+        "homepage": "https://www.drupal.org/project/block_blacklist",
+        "support": {
+            "source": "https://git.drupalcode.org/project/block_blacklist"
+        }
+    },
+    {
         "name": "drupal/block_class",
         "version": "1.1.0",
         "version_normalized": "1.1.0.0",
@@ -2955,6 +3004,60 @@
             "docs": "https://drupal-bootstrap.org",
             "issues": "https://www.drupal.org/project/issues/bootstrap",
             "irc": "irc://irc.freenode.org/drupal-bootstrap"
+        }
+    },
+    {
+        "name": "drupal/bootstrap_barrio",
+        "version": "4.22.0",
+        "version_normalized": "4.22.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/bootstrap_barrio.git",
+            "reference": "8.x-4.22"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/bootstrap_barrio-8.x-4.22.zip",
+            "reference": "8.x-4.22",
+            "shasum": "93613bd20cd59997d60d6ce036384d46dfb3fce2"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-theme",
+        "extra": {
+            "branch-alias": {
+                "dev-4.x": "4.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-4.22",
+                "datestamp": "1551325387",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Alberto Siles",
+                "homepage": "https://www.drupal.org/user/2824325",
+                "email": "alberto@siles.pe"
+            },
+            {
+                "name": "hatuhay",
+                "homepage": "https://www.drupal.org/user/827704"
+            }
+        ],
+        "description": "Bootstrap 4 base theme.",
+        "homepage": "https://www.drupal.org/project/bootstrap_barrio",
+        "support": {
+            "source": "https://git.drupalcode.org/project/bootstrap_barrio"
         }
     },
     {
@@ -3286,6 +3389,59 @@
         "support": {
             "source": "https://cgit.drupalcode.org/colorbox",
             "issues": "https://www.drupal.org/project/colorbox"
+        }
+    },
+    {
+        "name": "drupal/components",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/components.git",
+            "reference": "8.x-1.1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/components-8.x-1.1.zip",
+            "reference": "8.x-1.1",
+            "shasum": "72af8ff1ca842556ee4b95335595c24703acdb75"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.1",
+                "datestamp": "1556870881",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "JohnAlbin",
+                "homepage": "https://www.drupal.org/user/32095"
+            },
+            {
+                "name": "RobLoach",
+                "homepage": "https://www.drupal.org/user/61114"
+            }
+        ],
+        "description": "Registers “component libraries” defined in modules and themes with the Twig system",
+        "homepage": "https://www.drupal.org/project/components",
+        "support": {
+            "source": "https://git.drupalcode.org/project/components"
         }
     },
     {
@@ -5353,6 +5509,68 @@
         }
     },
     {
+        "name": "drupal/layout_builder_restrictions",
+        "version": "2.4.0",
+        "version_normalized": "2.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/layout_builder_restrictions.git",
+            "reference": "8.x-2.4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/layout_builder_restrictions-8.x-2.4.zip",
+            "reference": "8.x-2.4",
+            "shasum": "2ff4114b5aa1b68df148cb5c9525890a04412fbc"
+        },
+        "require": {
+            "drupal/core": "^8.5.0-rc1"
+        },
+        "require-dev": {
+            "drupal/dashboards": "*",
+            "drupal/layout_library": "*",
+            "drupal/mini_layouts": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-2.x": "2.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-2.4",
+                "datestamp": "1576099685",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "eiriksm",
+                "homepage": "https://www.drupal.org/user/1014468"
+            },
+            {
+                "name": "mark_fullmer",
+                "homepage": "https://www.drupal.org/user/2612816"
+            },
+            {
+                "name": "twfahey",
+                "homepage": "https://www.drupal.org/user/3403722"
+            }
+        ],
+        "description": "Manage which fields & layouts are available in Layout Builder",
+        "homepage": "https://www.drupal.org/project/layout_builder_restrictions",
+        "support": {
+            "source": "https://git.drupalcode.org/project/layout_builder_restrictions"
+        }
+    },
+    {
         "name": "drupal/libraries",
         "version": "3.0.0-alpha1",
         "version_normalized": "3.0.0.0-alpha1",
@@ -6181,6 +6399,126 @@
         "homepage": "https://www.drupal.org/project/pathauto",
         "support": {
             "source": "https://git.drupalcode.org/project/pathauto"
+        }
+    },
+    {
+        "name": "drupal/radix",
+        "version": "4.6.0",
+        "version_normalized": "4.6.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/radix.git",
+            "reference": "8.x-4.6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/radix-8.x-4.6.zip",
+            "reference": "8.x-4.6",
+            "shasum": "ba5b978bfc226ea4a86e330dc9c1b50f00c81b95"
+        },
+        "require": {
+            "drupal/components": "^1.0",
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-theme",
+        "extra": {
+            "branch-alias": {
+                "dev-4.x": "4.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-4.6",
+                "datestamp": "1570446484",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            },
+            "drush": {
+                "services": {
+                    "drush.services.yml": "^9"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Drush\\Commands\\radix\\": "Commands/radix/"
+            }
+        },
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "Arshad Chummun",
+                "homepage": "https://arshad.io",
+                "email": "arshad@chummun.com",
+                "role": "Maintainer"
+            },
+            {
+                "name": "dsnopek",
+                "homepage": "https://www.drupal.org/user/266527"
+            }
+        ],
+        "description": "Radix is a base theme for Drupal. It has Bootstrap, Sass, BrowserSync and Font Awesome built-in.",
+        "homepage": "https://www.drupal.org/project/radix",
+        "support": {
+            "source": "https://git.drupalcode.org/project/radix",
+            "issues": "https://www.drupal.org/project/issues/radix"
+        }
+    },
+    {
+        "name": "drupal/radix_layouts",
+        "version": "4.1.0",
+        "version_normalized": "4.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/radix_layouts.git",
+            "reference": "8.x-4.1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/radix_layouts-8.x-4.1.zip",
+            "reference": "8.x-4.1",
+            "shasum": "c5aa0e5a72e13c2f163cc4a18d0816cb11018357"
+        },
+        "require": {
+            "drupal/core": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-4.x": "4.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-4.1",
+                "datestamp": "1551641284",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "arshadcn",
+                "homepage": "https://www.drupal.org/user/571032"
+            },
+            {
+                "name": "dsnopek",
+                "homepage": "https://www.drupal.org/user/266527"
+            }
+        ],
+        "description": "Responsive layouts built on the Bootstrap 3 grid system.",
+        "homepage": "https://www.drupal.org/project/radix_layouts",
+        "support": {
+            "source": "https://git.drupalcode.org/project/radix_layouts"
         }
     },
     {

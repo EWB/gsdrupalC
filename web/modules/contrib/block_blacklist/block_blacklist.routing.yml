@@ -1,0 +1,27 @@
+block_blacklist.settings:
+  path: '/admin/config/block_blacklist/settings'
+  defaults:
+    _form: '\Drupal\block_blacklist\Form\SettingsForm'
+    _title: 'Block Blacklist'
+  requirements:
+    _permission: 'access block blacklist'
+  options:
+    _admin_route: TRUE
+block_blacklist.default_controller_list:
+  path: '/admin/config/block_blacklist/system-list'
+  defaults:
+    _controller: '\Drupal\block_blacklist\Controller\DefaultController::list'
+    _title: 'System Block List'
+  requirements:
+    _permission: 'access block blacklist'
+  options:
+    _admin_route: TRUE
+block_blacklist.layout_controller_list:
+  path: '/admin/config/block_blacklist/layout-list'
+  defaults:
+    _controller: '\Drupal\block_blacklist\Controller\LayoutController::list'
+    _title: 'Layout Builder Block List'
+  requirements:
+    _permission: 'access block blacklist'
+  options:
+    _admin_route: TRUE

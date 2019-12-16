@@ -1,0 +1,15 @@
+block_blacklist.settings:
+  route_name: 'block_blacklist.settings'
+  base_route: 'block_blacklist.settings'
+  title: 'Settings'
+  weight: 0
+block_blacklist.system_list:
+  route_name: 'block_blacklist.default_controller_list'
+  base_route: 'block_blacklist.settings'
+  title: 'System Block List'
+  weight: 5
+block_blacklist.layout_list:
+  route_name: 'block_blacklist.layout_controller_list'
+  base_route: 'block_blacklist.settings'
+  title: 'Layout Builder Block List'
+  weight: 6

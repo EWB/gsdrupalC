@@ -1,0 +1,5 @@
+# Schema for the configuration files of the gs8_theme theme.
+
+gs8_theme.settings:
+  type: theme_settings
+  label: 'gs8_theme settings'

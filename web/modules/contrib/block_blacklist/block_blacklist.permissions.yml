@@ -1,0 +1,4 @@
+access block blacklist:
+  description: 'Access the Block Blacklist configuration pages.'
+  title: 'Access Block Blacklist'
+  restrict access: TRUE

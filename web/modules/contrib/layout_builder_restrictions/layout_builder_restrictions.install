@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Layout Builder Restrictions.
+ */
+
+/**
+ * Move third-party settings.
+ */
+function layout_builder_restrictions_update_8201(&$sandbox) {
+  // When upgrading from 8.x-1.x to 8.x-2.x, it is necessary to move existing
+  // entity_view_mode_restriction configuration to its own namespace.
+  $config_factory = \Drupal::configFactory();
+
+  if (!isset($sandbox['count'])) {
+    $sandbox['ids'] = $config_factory->listAll('core.entity_view_display.');
+    $sandbox['count'] = count($sandbox['ids']);
+  }
+
+  $ids = array_splice($sandbox['ids'], 0, 50);
+  foreach ($ids as $id) {
+    $display = $config_factory->getEditable($id);
+    if ($display->get('third_party_settings.layout_builder_restrictions')) {
+      $settings = $display->get('third_party_settings.layout_builder_restrictions');
+      $display
+        ->clear('third_party_settings.layout_builder_restrictions')
+        ->set('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction', $settings)
+        ->save();
+    }
+  }
+
+  $sandbox['#finished'] = empty($sandbox['ids']) ? 1 : ($sandbox['count'] - count($sandbox['ids'])) / $sandbox['count'];
+}
+
+/**
+ * Relocate all block_content configuration settings under "Custom blocks".
+ */
+function layout_builder_restrictions_update_8202(&$sandbox) {
+  // Per #3091631, Layout Builder Restrictions will use the block_content
+  // provider match, rather than the mutable "Custom" category definition.
+  // Accordingly, any block_content restrictions that were previously stored
+  // in other categories (e.g., an arbitrarily named "Reusable content")
+  // should move to the "Custom blocks" configuration
+  // category.
+  $config_factory = \Drupal::configFactory();
+
+  if (!isset($sandbox['count'])) {
+    $sandbox['ids'] = $config_factory->listAll('core.entity_view_display.');
+    $sandbox['count'] = count($sandbox['ids']);
+  }
+
+  $ids = array_splice($sandbox['ids'], 0, 50);
+  foreach ($ids as $id) {
+    $display = $config_factory->getEditable($id);
+    if ($display->get('third_party_settings.layout_builder_restrictions')) {
+      $allowed_blocks_by_category = $display->get('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.allowed_blocks');
+      foreach ($allowed_blocks_by_category as $category => $block_ids) {
+        if ($category == 'Custom blocks') {
+          continue;
+        }
+        foreach ($block_ids as $id) {
+          if (strpos($id, 'block_content:') === 0) {
+            $allowed_blocks_by_category['Custom blocks'][] = $id;
+            // Remove this block_content from its previous category so
+            // that it is defined only in one place.
+            unset($allowed_blocks_by_category[$category][$id]);
+          }
+        }
+
+      }
+      $display
+        ->set('third_party_settings.layout_builder_restrictions.entity_view_mode_restriction.allowed_blocks', $allowed_blocks_by_category)
+        ->save();
+    }
+  }
+
+  $sandbox['#finished'] = empty($sandbox['ids']) ? 1 : ($sandbox['count'] - count($sandbox['ids'])) / $sandbox['count'];
+}

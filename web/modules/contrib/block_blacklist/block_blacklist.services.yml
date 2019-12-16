@@ -1,0 +1,4 @@
+services:
+  block_blacklist.blacklist:
+    class: Drupal\block_blacklist\Blacklist
+    arguments: ['@entity_type.manager']

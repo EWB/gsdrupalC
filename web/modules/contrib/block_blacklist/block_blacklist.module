@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Contains block_blacklist.module.
+ */
+
+/**
+ * Implements hook_block_alter().
+ */
+function block_blacklist_block_alter(&$definitions) {
+
+  $blacklistService = \Drupal::service('block_blacklist.blacklist');
+  $settings = \Drupal::config('block_blacklist.settings');
+  $options = [
+    'match' => !empty($settings) ? trim($settings->get('system_match')) : '',
+    'prefix' => !empty($settings) ? trim($settings->get('system_prefix')) : '',
+    'regex' => !empty($settings) ? trim($settings->get('system_regex')) : '',
+  ];
+  $blacklistService->setUp($options);
+  if (!$blacklistService->hasSettings()) {
+    return;
+  }
+  $callback = [$blacklistService, 'blockIsAllowed'];
+  $definitions = array_filter($definitions, $callback, ARRAY_FILTER_USE_KEY);
+
+}
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function block_blacklist_plugin_filter_block__layout_builder_alter(&$definitions) {
+
+  $blacklistService = \Drupal::service('block_blacklist.blacklist');
+  $settings = \Drupal::config('block_blacklist.settings');
+  $options = [
+    'match' => !empty($settings) ? trim($settings->get('layout_match')) : '',
+    'prefix' => !empty($settings) ? trim($settings->get('layout_prefix')) : '',
+    'regex' => !empty($settings) ? trim($settings->get('layout_regex')) : '',
+  ];
+  $blacklistService->setUp($options);
+  if (!$blacklistService->hasSettings()) {
+    return;
+  }
+  $callback = [$blacklistService, 'blockIsAllowed'];
+  $definitions = array_filter($definitions, $callback, ARRAY_FILTER_USE_KEY);
+
+}
