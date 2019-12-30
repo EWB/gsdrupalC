@@ -5571,6 +5571,67 @@
         }
     },
     {
+        "name": "drupal/layout_builder_styles",
+        "version": "1.0.0-beta1",
+        "version_normalized": "1.0.0.0-beta1",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/layout_builder_styles.git",
+            "reference": "8.x-1.0-beta1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/layout_builder_styles-8.x-1.0-beta1.zip",
+            "reference": "8.x-1.0-beta1",
+            "shasum": "69c291b9bf62d638fa01919aea2f0c94d62c14dd"
+        },
+        "require": {
+            "drupal/core": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-beta1",
+                "datestamp": "1563566880",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Beta releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "bkosborne",
+                "homepage": "https://www.drupal.org/user/788032"
+            },
+            {
+                "name": "mark_fullmer",
+                "homepage": "https://www.drupal.org/user/2612816"
+            },
+            {
+                "name": "phenaproxima",
+                "homepage": "https://www.drupal.org/user/205645"
+            },
+            {
+                "name": "twfahey",
+                "homepage": "https://www.drupal.org/user/3403722"
+            }
+        ],
+        "description": "Apply styles to blocks in Layout Builder.",
+        "homepage": "https://www.drupal.org/project/layout_builder_styles",
+        "support": {
+            "source": "https://git.drupalcode.org/project/layout_builder_styles"
+        }
+    },
+    {
         "name": "drupal/libraries",
         "version": "3.0.0-alpha1",
         "version_normalized": "3.0.0.0-alpha1",
@@ -7166,6 +7227,55 @@
             "source": "https://git.drupalcode.org/project/views_bulk_operations",
             "issues": "https://www.drupal.org/project/issues/views_bulk_operations?version=8.x",
             "docs": "https://www.drupal.org/docs/8/modules/views-bulk-operations-vbo"
+        }
+    },
+    {
+        "name": "drupal/views_layout",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/views_layout.git",
+            "reference": "8.x-1.1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/views_layout-8.x-1.1.zip",
+            "reference": "8.x-1.1",
+            "shasum": "ac7259a47bcd149e5685de1f3093f62ae489c03e"
+        },
+        "require": {
+            "drupal/core": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.1",
+                "datestamp": "1576783393",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "KarenS",
+                "homepage": "https://www.drupal.org/user/45874"
+            }
+        ],
+        "description": "Arrange Views results in a grid defined by a layout.",
+        "homepage": "https://www.drupal.org/project/views_layout",
+        "support": {
+            "source": "https://git.drupalcode.org/project/views_layout"
         }
     },
     {
