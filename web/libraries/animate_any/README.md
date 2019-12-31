@@ -1,5 +1,8 @@
 # Animate.css [![GitHub release](https://img.shields.io/github/release/daneden/animate.css.svg)](https://github.com/daneden/animate.css/releases) [![CDNJS](https://img.shields.io/cdnjs/v/animate.css.svg)](https://cdnjs.com/libraries/animate.css) [![Build Status](https://travis-ci.com/daneden/animate.css.svg?branch=master)](https://travis-ci.com/daneden/animate.css) [![devDependencies Status](https://david-dm.org/daneden/animate.css/dev-status.svg)](https://david-dm.org/daneden/animate.css?type=dev) [![chat](https://img.shields.io/badge/chat-gitter-green.svg)](https://gitter.im/animate-css/Lobby) [![npm version](https://badge.fury.io/js/animate.css.svg)](https://www.npmjs.com/package/animate.css)
 
+> **We need your help!** animate.css v4 is in the work with lots of improvements and some breaking changes, including CSS custom properties support (aka CSS variables) and classes prefix for a safer use. We need **your feedback**! You can follow the development on the [`dev`](https://github.com/daneden/animate.css/tree/dev) branch and give your feedback on the [issue tracker](https://github.com/daneden/animate.css/issues).
+**Every feedback is welcome!**
+
 _Just-add-water CSS animation_
 
 `animate.css` is a bunch of cool, fun, and cross-browser animations for you to use in your projects. Great for emphasis, home pages, sliders, and general just-add-water-awesomeness.
@@ -34,7 +37,7 @@ or use a CDN hosted version by [CDNJS](https://cdnjs.com/libraries/animate.css)
 
 ```html
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 </head>
 ```
 
@@ -145,6 +148,7 @@ It's possible to add delays directly on the element's class attribute, just like
 
 | Class Name | Delay Time |
 | ---------- | ---------- |
+| `delay-1s` | `1s`       |
 | `delay-2s` | `2s`       |
 | `delay-3s` | `3s`       |
 | `delay-4s` | `4s`       |
@@ -171,14 +175,14 @@ It's possible to control the speed of the animation by adding these classes, as 
 
 ## Custom Builds
 
-Animate.css is powered by [gulp.js](http://gulpjs.com/), which means you can create custom builds pretty easily. First of all, you’ll need Gulp and all other dependencies:
+Animate.css is powered by [gulp.js](https://gulpjs.com/), which means you can create custom builds pretty easily. First of all, you’ll need Gulp and all other dependencies:
 
 ```sh
 $ cd path/to/animate.css/
-$ sudo npm install
+$ npm install
 ```
 
-Next, run `gulp` to compile your custom builds. For example, if you want only some of the “attention seekers”, simply edit the `animate-config.json` file to select only the animations you want to use.
+Next, run `npx gulp` to compile your custom builds. For example, if you want only some of the “attention seekers”, simply edit the `animate-config.json` file to select only the animations you want to use.
 
 ```javascript
 "attention_seekers": {
@@ -196,11 +200,11 @@ Next, run `gulp` to compile your custom builds. For example, if you want only so
 
 ## Accessibility
 
-Animate.css supports the [`prefers-reduced-motion` media query](https://webkit.org/blog/7551/responsive-design-for-motion/) so that users with motion sensitivity can opt out of animations. On supported platforms (currently Firefox, OSX Safari and iOS Safari), users can select "reduce motion" on their operating system preferences and it will turn off CSS transitions for them without any further work required.
+Animate.css supports the [`prefers-reduced-motion` media query](https://webkit.org/blog/7551/responsive-design-for-motion/) so that users with motion sensitivity can opt out of animations. On supported platforms (currently all the majors browsers and OS), users can select "reduce motion" on their operating system preferences and it will turn off CSS transitions for them without any further work required.
 
 ## License
 
-Animate.css is licensed under the MIT license. (http://opensource.org/licenses/MIT)
+Animate.css is licensed under the MIT license. (https://opensource.org/licenses/MIT)
 
 ## Code of Conduct
 
@@ -208,4 +212,4 @@ This project and everyone participating in it is governed by the [Contributor Co
 
 ## Contributing
 
-Pull requests are the way to go here. We only have two rules for submitting a pull request: match the naming convention (camelCase, categorised [fades, bounces, etc]) and let us see a demo of submitted animations in a [pen](http://codepen.io). That **last one is important**.
+Pull requests are the way to go here. We only have two rules for submitting a pull request: match the naming convention (camelCase, categorised [fades, bounces, etc]) and let us see a demo of submitted animations in a [pen](https://codepen.io). That **last one is important**.
