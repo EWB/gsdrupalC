@@ -12,9 +12,11 @@ regions:
   navbar_branding: Navbar branding
   navbar_left:  Navbar left
   navbar_right: Navbar right
+  featured: Featured
   header: Header
   content: Content
   page_bottom: Page bottom
+  my_custom_region: My Custom Region
   footer: Footer
 
 libraries:
