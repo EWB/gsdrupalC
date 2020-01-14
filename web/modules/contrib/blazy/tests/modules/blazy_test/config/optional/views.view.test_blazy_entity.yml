@@ -1,4 +1,3 @@
-﻿uuid: d9d84aa6-9115-45fc-9bfb-9830296f675b
 langcode: en
 status: true
 dependencies:
@@ -65,8 +64,8 @@ display:
             offset: false
             offset_label: Offset
           tags:
-            previous: ‹‹
-            next: ››
+            previous: '‹‹'
+            next: '››'
       style:
         type: blazy_test
         options:
@@ -80,6 +79,8 @@ display:
           grid_medium: null
           grid_small: null
           image: ''
+          thumbnail: ''
+          overlay: ''
           title: title
           link: view_node
           class: ''
@@ -192,6 +193,8 @@ display:
           text: view
           entity_type: node
           plugin_id: entity_link
+          output_url_as_text: false
+          absolute: false
       filters: {  }
       sorts:
         created:

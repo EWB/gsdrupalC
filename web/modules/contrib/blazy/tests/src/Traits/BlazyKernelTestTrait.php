@@ -14,7 +14,14 @@ trait BlazyKernelTestTrait {
    * Setup common Kernel classes.
    */
   protected function setUpKernelInstall() {
-    $this->installConfig(static::$modules);
+    $this->installConfig([
+      'field',
+      'image',
+      'responsive_image',
+      'node',
+      'views',
+      'blazy',
+    ]);
 
     $this->installSchema('user', ['users_data']);
     $this->installSchema('node', ['node_access']);
@@ -23,18 +30,21 @@ trait BlazyKernelTestTrait {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('file');
-    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('media');
+    // @todo $this->installEntitySchema('entity_test');
   }
 
   /**
    * Setup common Kernel manager classes.
    */
   protected function setUpKernelManager() {
-    $this->entityManager          = $this->container->get('entity.manager');
+    $this->fileSystem             = $this->container->get('file_system');
     $this->entityFieldManager     = $this->container->get('entity_field.manager');
     $this->fieldTypePluginManager = $this->container->get('plugin.manager.field.field_type');
     $this->formatterPluginManager = $this->container->get('plugin.manager.field.formatter');
     $this->blazyManager           = $this->container->get('blazy.manager');
+    $this->blazyOembed            = $this->container->get('blazy.oembed');
+    $this->blazyEntity            = $this->container->get('blazy.entity');
     $this->blazyFormatterManager  = $this->container->get('blazy.formatter.manager');
     $this->blazyAdminFormatter    = $this->container->get('blazy.admin.formatter');
     $this->blazyAdmin             = $this->container->get('blazy.admin');

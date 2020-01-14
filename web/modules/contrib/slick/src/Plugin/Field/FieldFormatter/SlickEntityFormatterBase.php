@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base class for slick entity reference formatters without field details.
  *
  * @see \Drupal\slick_paragraphs\Plugin\Field\FieldFormatter
+ * @see \Drupal\slick_entityreference\Plugin\Field\FieldFormatter
  */
 abstract class SlickEntityFormatterBase extends BlazyEntityBase implements ContainerFactoryPluginInterface {
 
@@ -85,21 +86,34 @@ abstract class SlickEntityFormatterBase extends BlazyEntityBase implements Conta
     }
 
     // Collects specific settings to this formatter.
-    $settings = $this->getSettings();
+    $settings = $this->buildSettings();
 
     // Asks for Blazy to deal with iFrames, and mobile-optimized lazy loading.
-    $settings['blazy']     = TRUE;
-    $settings['plugin_id'] = $this->getPluginId();
-    $settings['vanilla']   = TRUE;
-
     $build = ['settings' => $settings];
 
-    $this->formatter->buildSettings($build, $items);
+    // Modifies settings before building elements.
+    $entities = array_values($entities);
+    $this->formatter->preBuildElements($build, $items, $entities);
 
     // Build the elements.
     $this->buildElements($build, $entities, $langcode);
 
+    // Modifies settings post building elements.
+    $this->formatter->postBuildElements($build, $items, $entities);
+
     return $this->manager()->build($build);
+  }
+
+  /**
+   * Builds the settings.
+   */
+  public function buildSettings() {
+    $settings              = $this->getSettings();
+    $settings['plugin_id'] = $this->getPluginId();
+    $settings['blazy']     = TRUE;
+    $settings['vanilla']   = TRUE;
+
+    return $settings;
   }
 
   /**

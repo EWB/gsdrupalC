@@ -34,7 +34,7 @@ class BlazyAdminFormatter extends BlazyAdminFormatterBase {
       }
     }
 
-    if (!empty($definition['breakpoints'])) {
+    if (!empty($definition['breakpoints']) && !$this->blazyManager()->configLoad('unbreakpoints', 'blazy.settings')) {
       $this->breakpointsForm($form, $definition);
     }
 

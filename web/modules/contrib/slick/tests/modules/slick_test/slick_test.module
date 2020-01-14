@@ -28,15 +28,3 @@ function template_preprocess_slick_test(&$variables) {
 function slick_test_slick_skins_info() {
   return '\Drupal\slick_test\SlickSkinTest';
 }
-
-if (!function_exists('video_embed_media_media_bundle_insert')) {
-
-  /**
-   * Dummy function.
-   */
-  function video_embed_media_media_bundle_insert() {
-    // Empty block to satisfy coder.
-  }
-
-}
-

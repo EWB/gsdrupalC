@@ -25,19 +25,12 @@
     'over' in settings.thumbnail_position ? 'slick-wrapper--tn-' ~ settings.thumbnail_position|replace({ 'over-' : '' })
   ]
 %}
-
-{% set content %}
-  {% for item in items %}
-    {{ item }}
-  {% endfor %}
-{% endset %}
-
 {% spaceless %}
   {% if settings.nav %}
     <div{{ attributes.addClass(classes)|without('id') }}>
-      {{ content }}
+      {{ items }}
     </div>
   {% else %}
-    {{ content }}
+    {{ items }}
   {% endif %}
 {% endspaceless %}

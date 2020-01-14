@@ -18,7 +18,7 @@ slick.settings:
 # Slick JS settings managed by UI.
 slick_optionset:
   type: mapping
-  label: 'Settings'
+  label: Settings
   mapping:
     mobileFirst:
       type: boolean
@@ -41,6 +41,9 @@ slick_optionset:
     pauseOnDotsHover:
       type: boolean
       label: 'Pause on dots hover'
+    pauseOnFocus:
+      type: boolean
+      label: 'Pause on focus'
     autoplaySpeed:
       type: integer
       label: 'Autoplay speed'
@@ -177,56 +180,56 @@ slick.optionset.*:
   mapping:
     id:
       type: string
-      label: 'ID'
+      label: ID
     name:
       type: string
-      label: 'Name'
+      label: Name
     weight:
       type: integer
-      label: 'Weight'
+      label: Weight
     label:
       type: label
-      label: 'Label'
+      label: Label
     uuid:
       type: string
-      label: 'UUID'
+      label: UUID
     group:
       type: string
-      label: 'Group'
+      label: Group
     skin:
       type: string
-      label: 'Skin'
+      label: Skin
     breakpoints:
       type: integer
-      label: 'Breakpoints'
+      label: Breakpoints
     optimized:
       type: boolean
-      label: 'Optimized'
+      label: Optimized
     options:
       type: mapping
-      label: 'Options'
+      label: Options
       mapping:
         options__active_tab:
           type: string
         settings:
           type: slick_optionset
-          label: 'Settings'
+          label: Settings
         responsives:
           type: mapping
           label: 'Responsive display'
           mapping:
             responsive:
               type: sequence
-              label: 'Responsive'
+              label: Responsive
               sequence:
                 - type: mapping
                   mapping:
                     breakpoint:
                       type: integer
-                      label: 'Responsive'
+                      label: Responsive
                     unslick:
                       type: boolean
-                      label: 'Unslick'
+                      label: Unslick
                     settings:
                       type: slick_optionset
                       label: 'Responsive settings'
@@ -241,7 +244,7 @@ slick_base:
       label: 'Overridable options'
       sequence:
         - type: string
-          label: 'Overridable'
+          label: Overridable
 
 # Slick image base settings.
 slick_image:
@@ -264,6 +267,15 @@ field.formatter.settings.slick_image:
   label: 'Slick image display format settings'
 
 # The Slick file formatter settings.
+# @deprecated TBD; to be removed.
 field.formatter.settings.slick_file:
   type: slick_image
   label: 'Slick image with ME display format settings'
+
+slick_media:
+  type: slick_extended
+  label: 'Slick media base display format settings'
+
+field.formatter.settings.slick_media:
+  type: slick_media
+  label: 'Slick media display format settings'

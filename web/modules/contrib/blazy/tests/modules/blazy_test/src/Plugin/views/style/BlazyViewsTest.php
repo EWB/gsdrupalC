@@ -3,9 +3,8 @@
 namespace Drupal\blazy_test\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\blazy\Dejavu\BlazyDefault;
+use Drupal\blazy\BlazyDefault;
 use Drupal\blazy\Dejavu\BlazyStylePluginBase;
-use Drupal\blazy\BlazyGrid;
 
 /**
  * Blazy Views Test style plugin.
@@ -77,24 +76,22 @@ class BlazyViewsTest extends BlazyStylePluginBase {
    * Overrides StylePluginBase::render().
    */
   public function render() {
-    $view     = $this->view;
-    $settings = $this->options + BlazyDefault::entitySettings();
+    $settings = $this->buildSettings() + BlazyDefault::entitySettings();
 
     $settings['item_id']   = 'box';
     $settings['caption']   = array_filter($settings['caption']);
     $settings['namespace'] = 'blazy';
     $settings['ratio']     = '';
-    $settings['_views']    = TRUE;
 
     $elements = [];
-    foreach ($this->renderGrouping($view->result, $settings['grouping']) as $rows) {
+    foreach ($this->renderGrouping($this->view->result, $settings['grouping']) as $rows) {
       $items = $this->buildElements($settings, $rows);
 
-      // Supports Blazy formatter multi-breakpoint images if available.
-      $item = isset($items[0]) ? $items[0] : NULL;
-      $this->blazyManager()->isBlazy($settings, $item);
+      // Supports Blazy multi-breakpoint images if using Blazy formatter.
+      $settings['first_image'] = isset($rows[0]) ? $this->getFirstImage($rows[0]) : [];
 
-      $elements = BlazyGrid::build($items, $settings);
+      $build = ['items' => $items, 'settings' => $settings];
+      $elements = $this->blazyManager->build($build);
     }
 
     return $elements;

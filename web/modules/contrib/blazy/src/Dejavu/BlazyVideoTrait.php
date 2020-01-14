@@ -2,95 +2,56 @@
 
 namespace Drupal\blazy\Dejavu;
 
-use Drupal\Core\Url;
 use Drupal\file\Entity\File;
-use Drupal\blazy\BlazyMedia;
 
 /**
- * A Trait common for optional Media Entity and Video Embed Media integration.
- *
- * The basic idea is to display videos along with images even within core Image,
- * and to re-associate VEF/ME video thumbnails beyond their own entity display.
- * For editors, use Slick Browser, or Blazy Views field.
- * For client-side, Blazy Views field, BlazyFileFormatter, SlickFileFormatter.
- * Why bother? This addresses a mix of images/videos beyond field formatters
- * or when ME and VEM integration is optional.
- *
- * For more robust VEM/ME integration, use Slick Media instead.
+ * A Trait common for Media integration.
  *
  * @see Drupal\blazy\Plugin\views\field\BlazyViewsFieldPluginBase
  * @see Drupal\slick_browser\SlickBrowser::widgetEntityBrowserFileFormAlter()
  * @see Drupal\slick_browser\Plugin\EntityBrowser\FieldWidgetDisplay\...
+ * @todo move it into BlazyMedia.
  */
 trait BlazyVideoTrait {
 
   /**
+   * The blazy oembed service.
+   *
+   * @var \Drupal\blazy\BlazyOEmbed
+   * @todo remove default null post Blazy 8.2.x full release.
+   */
+  protected $blazyOembed = NULL;
+
+  /**
+   * Core Media oEmbed url resolver.
+   *
+   * @var \Drupal\Core\Image\ImageFactory
+   * @todo remove default null post Blazy 8.2.x full release.
+   */
+  protected $imageFactory = NULL;
+
+  /**
+   * Returns the blazy oEmbed service.
+   *
+   * @todo remove null check post Blazy 8.2.x full release.
+   */
+  public function blazyOembed() {
+    if (is_null($this->blazyOembed)) {
+      $this->blazyOembed = \Drupal::service('blazy.oembed');
+    }
+    return $this->blazyOembed;
+  }
+
+  /**
    * Returns the image factory.
+   *
+   * @todo remove null check post Blazy 8.2.x full release.
    */
   public function imageFactory() {
-    return \Drupal::service('image.factory');
-  }
-
-  /**
-   * Returns the optional VEF service to avoid dependency for optional plugins.
-   */
-  public static function videoEmbedMediaManager() {
-    if (function_exists('video_embed_field_theme')) {
-      return \Drupal::service('video_embed_field.provider_manager');
+    if (is_null($this->imageFactory)) {
+      $this->imageFactory = \Drupal::service('image.factory');
     }
-    return FALSE;
-  }
-
-  /**
-   * Builds relevant video embed field settings based on the given media url.
-   *
-   * @param array $settings
-   *   An array of settings to be passed into theme_blazy().
-   * @param string $external_url
-   *   A video URL.
-   */
-  public function buildVideo(array &$settings = [], $external_url = '') {
-    /** @var \Drupal\video_embed_field\ProviderManagerInterface $video */
-    if (!($video = self::videoEmbedMediaManager())) {
-      return;
-    }
-
-    if (!($provider = $video->loadProviderFromInput($external_url))) {
-      return;
-    }
-
-    // Ensures thumbnail is available.
-    $provider->downloadThumbnail();
-
-    // @todo extract URL from the SRC of final rendered TWIG instead.
-    $render    = $provider->renderEmbedCode(640, 360, '0');
-    $old_url   = isset($render['#attributes']) && isset($render['#attributes']['src']) ? $render['#attributes']['src'] : '';
-    $embed_url = isset($render['#url']) ? $render['#url'] : $old_url;
-    $query     = isset($render['#query']) ? $render['#query'] : [];
-
-    // Prevents complication with multiple videos by now.
-    unset($query['autoplay'], $query['auto_play']);
-
-    $settings['video_id']  = $provider::getIdFromInput($external_url);
-    $settings['embed_url'] = Url::fromUri($embed_url, ['query' => $query])->toString();
-    $settings['scheme']    = $video->loadDefinitionFromInput($external_url)['id'];
-    $settings['uri']       = $provider->getLocalThumbnailUri();
-    $settings['type']      = 'video';
-
-    // Adds autoplay for media URL on lightboxes, saving another click.
-    $url = $settings['embed_url'];
-    if (strpos($url, 'autoplay') === FALSE || strpos($url, 'autoplay=0') !== FALSE) {
-      $settings['autoplay_url'] = strpos($url, '?') === FALSE ? $url . '?autoplay=1' : $url . '&autoplay=1';
-    }
-
-    // Only applies when Image style is empty, no file API, no $item,
-    // with unmanaged VEF image without image_style.
-    // Prevents 404 warning when video thumbnail missing for a reason.
-    if (empty($settings['image_style'])) {
-      if ($data = @getimagesize($settings['uri'])) {
-        list($settings['width'], $settings['height']) = $data;
-      }
-    }
+    return $this->imageFactory;
   }
 
   /**
@@ -130,9 +91,9 @@ trait BlazyVideoTrait {
       $settings        = (array) $item;
       $item->entity    = $entity;
 
-      $settings['type'] = 'image';
-
       // Build item and settings.
+      $settings['type'] = 'image';
+      $settings['uri']  = $uri;
       $data['item']     = $item;
       $data['settings'] = $settings;
       unset($item);
@@ -146,80 +107,39 @@ trait BlazyVideoTrait {
    *
    * @param array $data
    *   An array of data containing settings, and potential video thumbnail item.
-   * @param object $entity
-   *   The media entity, else file entity to be associated to media, if any.
+   * @param object $media
+   *   The core Media entity.
+   *
+   * @todo remove post Blazy 8.2.x when blazy-plugins use core Media.
+   *
+   * @deprecated self::getMediaItem is in blazy:8.x-2.0 and will be removed from
+   *   blazy:9.x-1.x. Use BlazyOEmbed::getMediaItem() instead.
+   * @see https://www.drupal.org/node/3103018
    */
-  public function getMediaItem(array &$data = [], $entity = NULL) {
-    $settings = $data['settings'];
+  public function getMediaItem(array &$data = [], $media = NULL) {
+    $this->blazyOembed()->getMediaItem($data, $media);
+  }
 
-    $media = $entity;
-    // Core File stores Media thumbnails, re-associate it to Media entity.
-    // @todo: If any proper method to get video URL from image URI, or FID.
-    if ($entity->getEntityTypeId() == 'file' && !empty($settings['uri']) && strpos($settings['uri'], 'video_thumbnails') !== FALSE) {
-      if ($media_id = \Drupal::entityQuery('media')->condition('thumbnail.target_id', $entity->id())->execute()) {
-        $media_id = reset($media_id);
-
-        /** @var \Drupal\media_entity\Entity\Media $entity */
-        $media = $this->blazyManager()->getEntityTypeManager()->getStorage('media')->load($media_id);
-      }
-    }
-
-    // Only proceed if we do have ME.
-    if ($media->getEntityTypeId() != 'media') {
-      return;
-    }
-
-    $bundle = $media->bundle();
-    $fields = $media->getFields();
-    $config = method_exists($media, 'getSource') ? $media->getSource()->getConfiguration() : $media->getType()->getConfiguration();
-    $source = isset($config['source_url_field']) ? $config['source_url_field'] : '';
-
-    $source_field[$bundle]    = isset($config['source_field']) ? $config['source_field'] : $source;
-    $settings['bundle']       = $bundle;
-    $settings['source_field'] = $source_field[$bundle];
-    $settings['media_url']    = $media->url();
-    $settings['media_id']     = $media->id();
-    $settings['view_mode']    = empty($settings['view_mode']) ? 'default' : $settings['view_mode'];
-
-    // If Media entity has a defined thumbnail, add it to data item.
-    if (isset($fields['thumbnail'])) {
-      $data['item'] = $fields['thumbnail']->get(0);
-      $settings['file_tags'] = ['file:' . $data['item']->target_id];
-
-      // Provides thumbnail URI for EB selection with various Media entities.
-      if (empty($settings['uri'])) {
-        $settings['uri'] = File::load($data['item']->target_id)->getFileUri();
-      }
-    }
-
-    $source = empty($settings['source_field']) ? '' : $settings['source_field'];
-    if ($source && isset($media->{$source})) {
-      $value     = $media->{$source}->getValue();
-      $input_url = isset($value[0]['uri']) ? $value[0]['uri'] : (isset($value[0]['value']) ? $value[0]['value'] : '');
-      $input_url = strip_tags($input_url);
-
-      if ($input_url) {
-        $settings['input_url'] = $input_url;
-
-        // Soundcloud has different source_field name: source_url_field.
-        if (strpos($input_url, 'soundcloud') === FALSE) {
-          $this->buildVideo($settings, $input_url);
-        }
-      }
-      elseif (isset($value[0]['alt']) || is_null($value[0]['alt'])) {
-        $settings['type'] = 'image';
-      }
-
-      // Do not proceed if it has type, already managed by theme_blazy().
-      // Supports other Media entities: Facebook, Instagram, Twitter, etc.
-      if (empty($settings['type'])) {
-        if ($build = BlazyMedia::build($media, $settings)) {
-          $data['content'][] = $build;
-        }
-      }
-    }
-
-    $data['settings'] = $settings;
+  /**
+   * Builds relevant Media settings based on the given media url.
+   *
+   * @param array $settings
+   *   An array of settings to be passed into theme_blazy().
+   * @param string $external_url
+   *   A video URL.
+   *
+   * @todo remove post Blazy 8.2.x full release. This is still kept to
+   * allow changing from video_embed_field into media field without breaking it,
+   * and to allow transition from blazy-related modules to depend on media.
+   * Currently this is only required by deprecated SlickVideoFormatter.
+   *
+   * @deprecated self::buildVideo() is deprecated in blazy:8.x-2.0 and will be
+   *   removed from blazy:9.x-1.x. Use BlazyOEmbed::build() instead.
+   * @see https://www.drupal.org/node/3103018
+   */
+  public function buildVideo(array &$settings = [], $external_url = '') {
+    $settings['input_url'] = empty($settings['input_url']) ? $external_url : $settings['input_url'];
+    return $this->blazyOembed()->build($settings);
   }
 
 }

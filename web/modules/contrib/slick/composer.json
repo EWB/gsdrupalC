@@ -10,6 +10,6 @@
     "source": "http://cgit.drupalcode.org/slick"
   },
   "require": {
-    "drupal/blazy": "~1.0"
+    "drupal/blazy": "~2.0"
   }
 }

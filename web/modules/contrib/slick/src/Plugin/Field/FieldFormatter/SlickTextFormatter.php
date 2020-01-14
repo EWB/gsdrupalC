@@ -60,7 +60,7 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return SlickDefault::baseSettings();
+    return SlickDefault::baseSettings() + SlickDefault::gridSettings();
   }
 
   /**
@@ -72,12 +72,13 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
       return [];
     }
 
-    $settings = $this->getSettings();
-    $settings['vanilla'] = TRUE;
+    $settings = $this->buildSettings();
 
     // Build the settings.
     $build = ['settings' => $settings];
-    $this->formatter->buildSettings($build, $items);
+
+    // Modifies settings before building elements.
+    $this->formatter->preBuildElements($build, $items);
 
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
@@ -91,6 +92,9 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
       $build['items'][$key] = $element;
       unset($element);
     }
+
+    // Modifies settings post building elements.
+    $this->formatter->postBuildElements($build, $items);
 
     return $this->manager()->build($build);
   }
@@ -107,12 +111,25 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
   }
 
   /**
+   * Builds the settings.
+   */
+  public function buildSettings() {
+    $settings              = $this->getSettings();
+    $settings['plugin_id'] = $this->getPluginId();
+    $settings['vanilla']   = TRUE;
+    return $settings;
+  }
+
+  /**
    * Defines the scope for the form elements.
    */
   public function getScopedFormElements() {
     return [
       'current_view_mode' => $this->viewMode,
+      'no_image_style'    => TRUE,
       'no_layouts'        => TRUE,
+      'responsive_image'  => FALSE,
+      'style'             => TRUE,
       'plugin_id'         => $this->getPluginId(),
       'settings'          => $this->getSettings(),
     ];

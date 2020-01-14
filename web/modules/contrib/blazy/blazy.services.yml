@@ -2,7 +2,7 @@ services:
   blazy.manager.base:
     abstract: true
     class: Drupal\blazy\BlazyManagerBase
-    arguments: ['@entity_type.manager', '@module_handler', '@renderer', '@config.factory', '@cache.default']
+    arguments: ['@entity.repository', '@entity_type.manager', '@module_handler', '@renderer', '@config.factory', '@cache.default']
 
   blazy.manager:
     abstract: false
@@ -13,13 +13,21 @@ services:
     class: Drupal\blazy\BlazyFormatterManager
     parent: blazy.manager
 
+  blazy.oembed:
+    class: Drupal\blazy\BlazyOEmbed
+    arguments: ['@request_stack', '@media.oembed.resource_fetcher', '@media.oembed.url_resolver', '@media.oembed.iframe_url_helper', '@blazy.manager']
+
+  blazy.entity:
+    class: Drupal\blazy\BlazyEntity
+    arguments: ['@blazy.oembed']
+
   blazy:
     class: Drupal\blazy\Blazy
 
   blazy.admin.base:
     abstract: true
     class: Drupal\blazy\Form\BlazyAdminBase
-    arguments: ['@entity_display.repository', '@config.typed', '@blazy.manager']
+    arguments: ['@entity_display.repository', '@config.typed', '@date.formatter', '@blazy.manager']
 
   blazy.admin.formatter:
     class: Drupal\blazy\Form\BlazyAdminFormatter

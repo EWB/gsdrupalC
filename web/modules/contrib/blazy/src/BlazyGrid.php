@@ -10,7 +10,7 @@ use Drupal\Component\Serialization\Json;
 class BlazyGrid {
 
   /**
-   * Returns items as a grid display wrapped by theme_item_list().
+   * Returns items wrapped by theme_item_list(), can be a grid, or plain list.
    *
    * @param array $items
    *   The grid items being modified.
@@ -21,87 +21,88 @@ class BlazyGrid {
    *   The modified array of grid items.
    */
   public static function build(array $items = [], array $settings = []) {
-    $blazy = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
-    $settings['style'] = empty($settings['style']) ? 'grid' : $settings['style'];
+    $style      = empty($settings['style']) ? '' : $settings['style'];
+    $is_gallery = !empty($settings['lightbox']) && !empty($settings['gallery_id']);
+    $is_grid    = isset($settings['_grid']) ? $settings['_grid'] : (!empty($settings['style']) && !empty($settings['grid']));
+    $class_item = $is_grid ? 'grid' : 'blazy__item';
 
-    $grids = [];
-    foreach ($items as $delta => $item) {
-      // @todo: Support non-Blazy which normally uses item_id.
-      $item_settings = isset($item['#build']['settings']) ? $item['#build']['settings'] : $settings;
-      $item_settings['delta'] = $delta;
+    $contents = [];
+    foreach ($items as $item) {
+      // Support non-Blazy which normally uses item_id.
+      $attributes    = isset($item['attributes']) ? $item['attributes'] : [];
+      $item_settings = isset($item['settings']) ? $item['settings'] : $settings;
+      $item_settings = isset($item['#build']) && isset($item['#build']['settings']) ? $item['#build']['settings'] : $item_settings;
+      unset($item['settings'], $item['attributes'], $item['item']);
+
+      // Good for Bootstrap .well/ .card class, must cast or BS will reset.
+      $content_classes = empty($item_settings['grid_content_class']) ? [] : (array) $item_settings['grid_content_class'];
 
       // Supports both single formatter field and complex fields such as Views.
-      $grid = [];
-      $grid['content'] = [
+      $content['content'] = $is_grid ? [
         '#theme'      => 'container',
         '#children'   => $item,
-        '#attributes' => ['class' => ['grid__content']],
-      ];
+        '#attributes' => ['class' => array_merge(['grid__content'], $content_classes)],
+      ] : $item;
 
-      self::buildGridItemAttributes($grid, $item_settings);
+      if (!empty($item_settings['grid_item_class'])) {
+        $attributes['class'][] = $item_settings['grid_item_class'];
+      }
 
-      $grids[] = $grid;
-      unset($grid);
+      $classes = isset($attributes['class']) ? $attributes['class'] : [];
+      $attributes['class'] = array_merge([$class_item], $classes);
+      $content['#wrapper_attributes'] = $attributes;
+
+      $contents[] = $content;
     }
 
-    $count = empty($settings['count']) ? count($grids) : $settings['count'];
+    // Provides hint about AJAX.
+    if (!empty($settings['use_ajax'])) {
+      $settings['blazy_data']['useAjax'] = TRUE;
+    }
+
+    $blazy   = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
+    $count   = empty($settings['count']) ? count($contents) : $settings['count'];
+    $wrapper = $style ? ['item-list--blazy', 'item-list--blazy-' . $style] : ['item-list--blazy'];
     $element = [
-      '#theme' => 'item_list',
-      '#items' => $grids,
-      '#context' => ['settings' => $settings],
-      '#attributes' => [
-        'class' => [
-          'blazy',
-          'blazy--grid',
-          'block-' . $settings['style'],
-          'block-count-' . $count,
-        ],
-        'data-blazy' => $blazy,
-      ],
-      '#wrapper_attributes' => [
-        'class' => ['item-list--blazy', 'item-list--blazy-' . $settings['style']],
-      ],
+      '#theme'              => 'item_list',
+      '#items'              => $contents,
+      '#context'            => ['settings' => $settings],
+      '#attributes'         => ['class' => ['blazy'], 'data-blazy' => $blazy],
+      '#wrapper_attributes' => ['class' => array_merge(['item-list'], $wrapper)],
     ];
 
+    // Provides data-attributes to avoid conflict with original implementations.
     if (!empty($settings['media_switch'])) {
       $switch = str_replace('_', '-', $settings['media_switch']);
       $element['#attributes']['data-' . $switch . '-gallery'] = TRUE;
     }
 
-    $settings['grid_large'] = $settings['grid'];
-    foreach (['small', 'medium', 'large'] as $grid) {
-      if (!empty($settings['grid_' . $grid])) {
-        $element['#attributes']['class'][] = $grid . '-block-' . $settings['style'] . '-' . $settings['grid_' . $grid];
+    if (!empty($settings['field_name'])) {
+      $element['#attributes']['class'][] = 'blazy--field blazy--' . str_replace('_', '-', $settings['field_name']);
+    }
+
+    // Provides gallery ID, although Colorbox works without it, others may not.
+    // Uniqueness is not crucial as a gallery needs to work across entities.
+    if (!empty($settings['id'])) {
+      $element['#attributes']['id'] = $is_gallery ? $settings['gallery_id'] : $settings['id'];
+    }
+
+    // Limit to grid only, so to be usable for plain list.
+    if ($is_grid) {
+      $element['#attributes']['class'][] = 'blazy--grid block-' . $style . ' block-count-' . $count;
+
+      // Adds common grid attributes for CSS3 column, Foundation, etc.
+      if ($settings['grid_large'] = $settings['grid']) {
+        foreach (['small', 'medium', 'large'] as $grid) {
+          // Only makes sense if grid is larger than 1.
+          if (!empty($settings['grid_' . $grid]) && $settings['grid_' . $grid] > 1) {
+            $element['#attributes']['class'][] = $grid . '-block-' . $style . '-' . $settings['grid_' . $grid];
+          }
+        }
       }
     }
 
     return $element;
-  }
-
-  /**
-   * Modifies the grid item wrapper attributes.
-   *
-   * @param array $grid
-   *   The grid item being modified.
-   * @param array $settings
-   *   The given settings.
-   */
-  public static function buildGridItemAttributes(array &$grid = [], array $settings = []) {
-    if (!empty($settings['grid_item_class'])) {
-      $grid['#wrapper_attributes']['class'][] = $settings['grid_item_class'];
-    }
-
-    $grid['#wrapper_attributes']['class'][] = 'grid';
-
-    if (!empty($settings['type'])) {
-      $grid['#wrapper_attributes']['class'][] = 'grid--' . $settings['type'];
-    }
-
-    if (!empty($settings['media_switch'])) {
-      $grid['#wrapper_attributes']['class'][] = 'grid--' . str_replace('_', '-', $settings['media_switch']);
-    }
-
-    $grid['#wrapper_attributes']['class'][] = 'grid--' . $settings['delta'];
   }
 
 }

@@ -4,7 +4,7 @@ namespace Drupal\Tests\blazy\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\blazy\Blazy;
-use Drupal\blazy\Dejavu\BlazyDefault;
+use Drupal\blazy\BlazyDefault;
 use Drupal\Tests\blazy\Traits\BlazyUnitTestTrait;
 use Drupal\Tests\blazy\Traits\BlazyManagerUnitTestTrait;
 
@@ -73,14 +73,11 @@ class BlazyUnitTest extends UnitTestCase {
    * @dataProvider providerTestBuildIframeAttributes
    */
   public function testBuildIframeAttributes(array $data, $expected) {
-    $variables = ['attributes' => [], 'image' => []];
-    $settings  = BlazyDefault::entitySettings();
-
+    $variables             = ['attributes' => [], 'image' => []];
+    $settings              = BlazyDefault::entitySettings();
     $settings['embed_url'] = '//www.youtube.com/watch?v=E03HFA923kw';
     $settings['scheme']    = 'youtube';
     $settings['type']      = 'video';
-
-    $this->assertArrayHasKey('iframe_lazy', $settings);
 
     $variables['settings'] = array_merge($settings, $data);
     Blazy::buildIframeAttributes($variables);
@@ -126,15 +123,15 @@ class BlazyUnitTest extends UnitTestCase {
    *
    * @covers \Drupal\blazy\Blazy::buildAttributes
    * @covers \Drupal\blazy\Blazy::buildBreakpointAttributes
-   * @covers \Drupal\blazy\Blazy::buildUrl
+   * @covers \Drupal\blazy\Blazy::buildUrlAndDimensions
    * @covers \Drupal\blazy\Dejavu\BlazyDefault::entitySettings
    * @dataProvider providerBuildAttributes
    */
   public function testBuildAttributes(array $settings, $item, $expected_image, $expected_iframe) {
-    $content   = [];
     $variables = ['attributes' => []];
     $build     = $this->data;
     $settings  = array_merge($build['settings'], $settings);
+    $settings += BlazyDefault::itemSettings();
 
     $settings['breakpoints']     = [];
     $settings['blazy']           = TRUE;
@@ -164,7 +161,6 @@ class BlazyUnitTest extends UnitTestCase {
    * Provider for ::testBuildAttributes.
    */
   public function providerBuildAttributes() {
-    $breakpoints = $this->getDataBreakpoints();
     $uri = 'public://example.jpg';
 
     $data[] = [
@@ -174,16 +170,6 @@ class BlazyUnitTest extends UnitTestCase {
       ],
       TRUE,
       FALSE,
-      FALSE,
-    ];
-    $data[] = [
-      [
-        'background' => FALSE,
-        'responsive_image_style_id' => 'blazy_responsive_test',
-        'uri' => $uri,
-      ],
-      TRUE,
-      TRUE,
       FALSE,
     ];
     $data[] = [
@@ -218,6 +204,7 @@ class BlazyUnitTest extends UnitTestCase {
         'scheme' => 'youtube',
         'type' => 'video',
         'uri' => $uri,
+        'use_media' => TRUE,
       ],
       TRUE,
       TRUE,
@@ -242,11 +229,13 @@ class BlazyUnitTest extends UnitTestCase {
    */
   public function testPreRenderImageLightbox(array $settings = []) {
     $build                       = $this->data;
+    $settings                   += BlazyDefault::itemSettings();
     $settings['count']           = $this->maxItems;
     $settings['uri']             = $this->uri;
     $settings['box_style']       = '';
     $settings['box_media_style'] = '';
     $build['settings']           = array_merge($build['settings'], $settings);
+    $switch_css                  = str_replace('_', '-', $settings['media_switch']);
 
     foreach (['caption', 'media', 'wrapper'] as $key) {
       $build['settings'][$key . '_attributes']['class'][] = $key . '-test';
@@ -259,7 +248,7 @@ class BlazyUnitTest extends UnitTestCase {
       $this->assertArrayHasKey('#url', $element);
     }
     else {
-      $this->assertArrayHasKey('data-' . $settings['media_switch'] . '-trigger', $element['#url_attributes']);
+      $this->assertArrayHasKey('data-' . $switch_css . '-trigger', $element['#url_attributes']);
       $this->assertArrayHasKey('#url', $element);
     }
   }
@@ -343,19 +332,6 @@ class BlazyUnitTest extends UnitTestCase {
     ];
 
     return $data;
-  }
-
-}
-
-namespace Drupal\blazy;
-
-if (!function_exists('file_create_url')) {
-
-  /**
-   * Dummy function.
-   */
-  function file_create_url() {
-    // Empty block to satisfy coder.
   }
 
 }

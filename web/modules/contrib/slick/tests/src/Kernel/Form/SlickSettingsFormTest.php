@@ -32,6 +32,7 @@ class SlickSettingsFormTest extends KernelTestBase {
     'system',
     'file',
     'image',
+    'media',
     'blazy',
     'slick',
     'slick_ui',
@@ -50,7 +51,8 @@ class SlickSettingsFormTest extends KernelTestBase {
     $this->blazyManager = $this->container->get('blazy.manager');
 
     $this->slickSettingsForm = new SlickSettingsForm(
-      $this->blazyManager->getConfigFactory()
+      $this->blazyManager->getConfigFactory(),
+      $this->container->get('library.discovery')
     );
   }
 

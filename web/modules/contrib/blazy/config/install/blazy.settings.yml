@@ -1,8 +1,17 @@
 admin_css: true
 responsive_image: false
+unbreakpoints: false
 one_pixel: true
+placeholder: ''
+extras: {}
 blazy:
   loadInvisible: false
   offset: 100
   saveViewportOffsetDelay: 50
   validateDelay: 25
+io:
+  enabled: false
+  unblazy: false
+  rootMargin: 0px
+  threshold: '0'
+  disconnect: false

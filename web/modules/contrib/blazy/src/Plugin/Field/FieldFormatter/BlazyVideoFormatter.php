@@ -7,23 +7,33 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\blazy\Dejavu\BlazyVideoBase;
 use Drupal\blazy\Dejavu\BlazyVideoTrait;
+use Drupal\blazy\BlazyOEmbed;
 use Drupal\blazy\BlazyFormatterManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'Blazy Video' to get VEF videos.
+ *
+ * @todo remove prior to full release. This means Slick Video which depends
+ * on VEF is deprecated for main Slick at Blazy 8.2.x with core Media only.
+ *
+ * @deprecated BlazyVideoFormatter is deprecated in blazy:8.x-2.0 and will be
+ *   removed from blazy:9.x-1.x. Use
+ *   \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatter instead.
+ * @see https://www.drupal.org/node/3103018
  */
 class BlazyVideoFormatter extends BlazyVideoBase implements ContainerFactoryPluginInterface {
 
-  use BlazyFormatterBaseTrait;
+  use BlazyFormatterTrait;
   use BlazyVideoTrait;
 
   /**
    * Constructs a BlazyFormatter object.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, BlazyFormatterManager $blazy_manager) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, BlazyFormatterManager $formatter, BlazyOEmbed $blazy_oembed) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->blazyManager = $blazy_manager;
+    $this->formatter = $this->blazyManager = $formatter;
+    $this->blazyOembed = $blazy_oembed;
   }
 
   /**
@@ -38,7 +48,8 @@ class BlazyVideoFormatter extends BlazyVideoBase implements ContainerFactoryPlug
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('blazy.formatter.manager')
+      $container->get('blazy.formatter.manager'),
+      $container->get('blazy.oembed')
     );
   }
 
@@ -61,27 +72,17 @@ class BlazyVideoFormatter extends BlazyVideoBase implements ContainerFactoryPlug
     // Build the settings.
     $build = ['settings' => $settings];
 
-    // Modifies settings.
-    $this->blazyManager->buildSettings($build, $items);
-
-    // Fecthes URI from the first item to build dimensions once.
-    $this->buildVideo($build['settings'], $items[0]->value);
+    // Modifies settings before building elements.
+    $this->formatter->preBuildElements($build, $items);
 
     // Build the elements.
     $this->buildElements($build, $items);
 
-    // Updates settings.
-    $settings = $build['settings'];
-    unset($build['settings']);
+    // Modifies settings post building elements.
+    $this->formatter->postBuildElements($build, $items);
 
-    // Supports Blazy multi-breakpoint images if provided.
-    if (!empty($settings['uri'])) {
-      $this->blazyManager->isBlazy($settings, $build[0]['#build']);
-    }
-
-    $build['#blazy'] = $settings;
-    $build['#attached'] = $this->blazyManager->attach($settings);
-    return $build;
+    // Pass to manager for easy updates to all Blazy formatters.
+    return $this->formatter->build($build);
   }
 
   /**
@@ -91,19 +92,18 @@ class BlazyVideoFormatter extends BlazyVideoBase implements ContainerFactoryPlug
     $settings = $build['settings'];
 
     foreach ($items as $delta => $item) {
-      $media_url = strip_tags($item->value);
-
+      $settings['input_url'] = strip_tags($item->value);
       $settings['delta'] = $delta;
-      if (empty($media_url)) {
+      if (empty($settings['input_url'])) {
         continue;
       }
 
-      $this->buildVideo($settings, $media_url);
+      $this->blazyOembed->build($settings);
 
       $box = ['item' => $item, 'settings' => $settings];
 
       // Image with responsive image, lazyLoad, and lightbox supports.
-      $build[$delta] = $this->blazyManager->getImage($box);
+      $build[$delta] = $this->formatter->getBlazy($box);
       unset($box);
     }
   }

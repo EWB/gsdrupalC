@@ -5,7 +5,6 @@ dependencies:
   enforced:
     module:
       - blazy_test
-third_party_settings: {  }
 name: 'bundle test'
 type: bundle_test
 description: ''

@@ -62,7 +62,7 @@
         p.oMatchesSelector ||
         p.webkitMatchesSelector ||
         function (s) {
-          var matches = (this.document || this.ownerDocument).querySelectorAll(s);
+          var matches = (window.document || window.ownerDocument).querySelectorAll(s);
           var i = matches.length;
           while (--i >= 0 && matches.item(i) !== this) {
             // Empty block to satisfy coder and eslint.
@@ -271,6 +271,35 @@
   };
 
   /**
+   * A simple wrapper to delay callback function, tasken out of blazy library.
+   *
+   * Alternative to core Drupal.debounce for D7 compatibility, and easy port.
+   *
+   * @name dBlazy.throttle
+   *
+   * @param {Function} fn
+   *   The callback function.
+   * @param {Int} minDelay
+   *   The execution delay in milliseconds.
+   * @param {Object} scope
+   *   The the scope of the function to apply to, normally this.
+   *
+   * @return {Function}
+   *   The function executed at the specified minDelay.
+   */
+  dBlazy.throttle = function (fn, minDelay, scope) {
+    var lastCall = 0;
+    return function () {
+      var now = +new Date();
+      if (now - lastCall < minDelay) {
+        return;
+      }
+      lastCall = now;
+      fn.apply(scope, arguments);
+    };
+  };
+
+  /**
    * A simple wrapper to delay callback function on window resize.
    *
    * @name dBlazy.resize
@@ -304,35 +333,27 @@
    *   The event name to trigger.
    * @param {Object} custom
    *   The optional object passed into a custom event.
-   * @param {String} type
-   *   Default to MouseEvents, can be either:
-   *     MouseEvents: click, mousedown, mouseup.
-   *     HTMLEvents: focus, change, blur, select.
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events
    * @todo: See if any consistent way for both custom and native events.
    */
-  dBlazy.trigger = function (elm, eventName, custom, type) {
+  dBlazy.trigger = function (elm, eventName, custom) {
     var event;
-    custom = custom || {};
-    type = type || 'MouseEvents';
-
-    var addEvent = function (eventName, data) {
-      data = data || {};
-      // @todo: Use Event constructor, pending as not supported by all IEs.
-      event = document.createEvent(data && typeof data === 'object' ? 'Event' : type);
-      event.initEvent(eventName, true, true, data);
-
-      return event;
+    var data = {
+      detail: custom || {},
+      bubbles: true,
+      cancelable: true
     };
 
+    // Native.
     // IE >= 9 compat, else SCRIPT445: Object doesn't support this action.
     // https://msdn.microsoft.com/library/ff975299(v=vs.85).aspx
-    try {
-      event = custom ? new CustomEvent(eventName, {detail: custom}) : addEvent(eventName);
+    if (typeof window.CustomEvent === 'function') {
+      event = new CustomEvent(eventName, data);
     }
-    catch (e) {
-      event = addEvent(eventName, custom);
+    else {
+      event = document.createEvent('CustomEvent');
+      event.initCustomEvent(eventName, true, true, data);
     }
 
     elm.dispatchEvent(event);

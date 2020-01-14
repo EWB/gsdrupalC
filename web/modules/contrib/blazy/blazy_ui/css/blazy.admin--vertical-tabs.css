@@ -42,7 +42,7 @@
   border: 0;
 }
 
-.form--slick .vertical-tabs .vertical-tabs__panes details.vertical-tabs__pane {
+.form--slick .vertical-tabs .vertical-tabs__panes .vertical-tabs__pane {
   padding: 0;
 }
 
@@ -59,7 +59,10 @@
 .form--slick .vertical-tabs__panes > details:first-child {
   border: 0;
   margin: 0;
-  padding-top: 0 !important;
+}
+
+.form--slick .vertical-tabs .vertical-tabs__panes > details:first-child {
+  padding-top: 0;
 }
 
 @media screen and (min-width: 1280px) {

@@ -1,14 +1,21 @@
 name: Blazy
 type: module
 description: "Provides basic Blazy integration for lazy loading and multi-serving images."
-# version: VERSION
-# core: 8.x
+core: 8.x
+core_version_requirement: ^8 || ^9
 package: Blazy
 dependencies:
-  - drupal:image
+  - drupal:filter
+  - drupal:media (>= 8.6)
+test_dependencies:
+  - drupal:responsive_image
+  - drupal:views
+  - drupal:media (>= 8.8)
 
-# Information added by Drupal.org packaging script on 2018-12-19
-version: '8.x-1.0-rc4'
-core: '8.x'
+# Add a fake version so local drush and Git checkouts do not fail dependencies.
+# version: 8.x-2.x
+
+# Information added by Drupal.org packaging script on 2019-12-25
+version: '8.x-2.0-rc6'
 project: 'blazy'
-datestamp: 1545235988
+datestamp: 1577248389

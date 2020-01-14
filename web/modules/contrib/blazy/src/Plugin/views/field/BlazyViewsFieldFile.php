@@ -24,7 +24,8 @@ class BlazyViewsFieldFile extends BlazyViewsFieldPluginBase {
     $data = $this->getImageItem($entity);
     $data['settings'] = isset($data['settings']) ? array_merge($settings, $data['settings']) : $settings;
 
-    return $this->buildPreview($data, $entity, $entity->getFilename());
+    // Pass results to \Drupal\blazy\BlazyEntity.
+    return $this->blazyEntity->build($data, $entity, $entity->getFilename());
   }
 
   /**

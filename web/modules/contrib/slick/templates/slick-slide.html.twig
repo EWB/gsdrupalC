@@ -31,6 +31,11 @@
     not settings.detroy ? 'slide__content'
   ]
 %}
+{%
+  set caption_classes = [
+    'slide__caption',
+  ]
+%}
 {% set slide %}
   {% block slick_slide %}
     {% if settings.split and not settings.unslick %}
@@ -54,7 +59,7 @@
     {% block slick_caption %}
       {% if settings.fullwidth %}<div class="slide__constrained">{% endif %}
 
-        <div class="slide__caption">
+        <div{{ caption_attributes.addClass(caption_classes) }}>
           {% if item.caption.overlay %}
             <div class="slide__overlay">{{ item.caption.overlay }}</div>
             {% if settings.data %}<div class="slide__data">{% endif %}
@@ -68,7 +73,9 @@
             <p class="slide__description">{{ item.caption.alt }}</p>
           {% endif %}
 
-          {{ item.caption.data }}
+          {% if item.caption.data %}
+            <div class="slide__description">{{ item.caption.data }}</div>
+          {% endif %}
 
           {% if item.caption.link %}
             <div class="slide__link">{{ item.caption.link }}</div>

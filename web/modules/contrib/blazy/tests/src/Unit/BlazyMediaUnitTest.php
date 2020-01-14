@@ -38,7 +38,7 @@ class BlazyMediaUnitTest extends UnitTestCase {
       'image_style'  => 'blazy_crop',
       'ratio'        => 'fluid',
       'view_mode'    => 'default',
-      'bundle'       => 'entity_test',
+      // @todo 'bundle' => 'entity_test',
     ];
 
     $markup['#settings'] = $settings;
@@ -46,10 +46,10 @@ class BlazyMediaUnitTest extends UnitTestCase {
     $markup['#cache']    = [];
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    $entity = $this->getMock('Drupal\Core\Entity\ContentEntityInterface');
-    $field_definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $entity = $this->createMock('Drupal\Core\Entity\ContentEntityInterface');
+    $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
 
-    $items = $this->getMock('Drupal\Core\Field\FieldItemListInterface');
+    $items = $this->createMock('Drupal\Core\Field\FieldItemListInterface');
     $items->expects($this->any())
       ->method('getFieldDefinition')
       ->willReturn($field_definition);

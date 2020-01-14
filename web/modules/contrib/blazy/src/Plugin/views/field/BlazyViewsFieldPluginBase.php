@@ -3,11 +3,12 @@
 namespace Drupal\blazy\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Image\ImageFactory;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
-use Drupal\blazy\Dejavu\BlazyDefault;
+use Drupal\blazy\BlazyDefault;
 use Drupal\blazy\BlazyManagerInterface;
-use Drupal\blazy\Dejavu\BlazyEntityTrait;
+use Drupal\blazy\BlazyEntity;
 use Drupal\blazy\Dejavu\BlazyVideoTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,7 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
 
-  use BlazyEntityTrait;
   use BlazyVideoTrait;
 
   /**
@@ -29,16 +29,19 @@ abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
   /**
    * Constructs a BlazyViewsFieldPluginBase object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlazyManagerInterface $blazy_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ImageFactory $image_factory, BlazyManagerInterface $blazy_manager, BlazyEntity $blazy_entity) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->imageFactory = $image_factory;
     $this->blazyManager = $blazy_manager;
+    $this->blazyEntity = $blazy_entity;
+    $this->blazyOembed = $blazy_entity->oembed();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('blazy.manager'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('image.factory'), $container->get('blazy.manager'), $container->get('blazy.entity'));
   }
 
   /**

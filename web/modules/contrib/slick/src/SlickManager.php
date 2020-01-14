@@ -2,17 +2,16 @@
 
 namespace Drupal\slick;
 
-use Drupal\Component\Utility\Html;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\Cache;
 use Drupal\slick\Entity\Slick;
+use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyManagerBase;
-use Drupal\blazy\BlazyManagerInterface;
 
 /**
  * Implements BlazyManagerInterface, SlickManagerInterface.
  */
-class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, SlickManagerInterface {
+class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
   /**
    * The supported skins.
@@ -21,6 +20,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    */
   private static $skins = [
     'browser',
+    'lightbox',
     'overlay',
     'main',
     'thumbnail',
@@ -35,6 +35,27 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    * @var array
    */
   protected $skinDefinition;
+
+  /**
+   * Static cache for the skins by group.
+   *
+   * @var array
+   */
+  protected $skinsByGroup;
+
+  /**
+   * The easing libray.
+   *
+   * @var string|bool
+   */
+  protected $easingPath;
+
+  /**
+   * The library info definition.
+   *
+   * @var array
+   */
+  protected $libraryInfoBuild;
 
   /**
    * Returns the supported skins.
@@ -61,65 +82,92 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    * Returns available slick skins by group.
    */
   public function getSkinsByGroup($group = '', $option = FALSE) {
-    $skins         = $groups = $ungroups = [];
-    $nav_skins     = in_array($group, ['arrows', 'dots']);
-    $defined_skins = $nav_skins ? $this->getSkins()[$group] : $this->getSkins()['skins'];
+    if (!isset($this->skinsByGroup[$group])) {
+      $skins         = $groups = $ungroups = [];
+      $nav_skins     = in_array($group, ['arrows', 'dots']);
+      $defined_skins = $nav_skins ? $this->getSkins()[$group] : $this->getSkins()['skins'];
 
-    foreach ($defined_skins as $skin => $properties) {
-      $item = $option ? Html::escape($properties['name']) : $properties;
-      if (!empty($group)) {
-        if (isset($properties['group'])) {
-          if ($properties['group'] != $group) {
-            continue;
+      foreach ($defined_skins as $skin => $properties) {
+        $item = $option ? strip_tags($properties['name']) : $properties;
+        if (!empty($group)) {
+          if (isset($properties['group'])) {
+            if ($properties['group'] != $group) {
+              continue;
+            }
+            $groups[$skin] = $item;
           }
-          $groups[$skin] = $item;
+          elseif (!$nav_skins) {
+            $ungroups[$skin] = $item;
+          }
         }
-        elseif (!$nav_skins) {
-          $ungroups[$skin] = $item;
-        }
+        $skins[$skin] = $item;
       }
-      $skins[$skin] = $item;
-    }
 
-    return $group ? array_merge($ungroups, $groups) : $skins;
+      $this->skinsByGroup[$group] = $group ? array_merge($ungroups, $groups) : $skins;
+    }
+    return $this->skinsByGroup[$group];
   }
 
   /**
    * Implements hook_library_info_build().
    */
   public function libraryInfoBuild() {
-    $libraries['slick.css'] = [
-      'dependencies' => ['slick/slick'],
-      'css' => [
-        'theme' => ['/libraries/slick/slick/slick-theme.css' => []],
-      ],
-    ];
+    if (!isset($this->libraryInfoBuild)) {
+      $libraries['slick.css'] = [
+        'dependencies' => ['slick/slick'],
+        'css' => [
+          'theme' => ['/libraries/slick/slick/slick-theme.css' => ['weight' => -2]],
+        ],
+      ];
 
-    foreach (self::getConstantSkins() as $group) {
-      if ($skins = $this->getSkinsByGroup($group)) {
-        foreach ($skins as $key => $skin) {
-          $provider = isset($skin['provider']) ? $skin['provider'] : 'slick';
-          $id = $provider . '.' . $group . '.' . $key;
+      foreach (self::getConstantSkins() as $group) {
+        if ($skins = $this->getSkinsByGroup($group)) {
+          foreach ($skins as $key => $skin) {
+            $provider = isset($skin['provider']) ? $skin['provider'] : 'slick';
+            $id = $provider . '.' . $group . '.' . $key;
 
-          foreach (['css', 'js', 'dependencies'] as $property) {
-            if (isset($skin[$property]) && is_array($skin[$property])) {
-              $libraries[$id][$property] = $skin[$property];
+            foreach (['css', 'js', 'dependencies'] as $property) {
+              if (isset($skin[$property]) && is_array($skin[$property])) {
+                $libraries[$id][$property] = $skin[$property];
+              }
             }
           }
         }
       }
+
+      $this->libraryInfoBuild = $libraries;
     }
 
-    return $libraries;
+    return $this->libraryInfoBuild;
+  }
+
+  /**
+   * Returns easing library path if available, else FALSE.
+   */
+  public function getEasingPath() {
+    if (!isset($this->easingPath)) {
+      if (function_exists('libraries_get_path')) {
+        $library_easing = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
+        if ($library_easing) {
+          $easing_path = $library_easing . '/jquery.easing.min.js';
+          // Composer via bower-asset puts the library within `js` directory.
+          if (!is_file($easing_path)) {
+            $easing_path = $library_easing . '/js/jquery.easing.min.js';
+          }
+        }
+      }
+      else {
+        $easing_path = DRUPAL_ROOT . '/libraries/easing/jquery.easing.min.js';
+      }
+      $this->easingPath = isset($easing_path) && is_file($easing_path) ? $easing_path : FALSE;
+    }
+    return $this->easingPath;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function attach($attach = []) {
-    $attach['slick_css']  = isset($attach['slick_css']) ? $attach['slick_css'] : $this->configLoad('slick_css', 'slick.settings');
-    $attach['module_css'] = isset($attach['module_css']) ? $attach['module_css'] : $this->configLoad('module_css', 'slick.settings');
-
+  public function attach(array $attach = []) {
     $load = parent::attach($attach);
 
     if (!empty($attach['lazy'])) {
@@ -127,27 +175,13 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     }
 
     // Load optional easing library.
-    $easing = 'libraries/easing/jquery.easing.min.js';
-    if (function_exists('libraries_get_path')) {
-      $library_path = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
-
-      if ($library_path) {
-        $easing = $library_path . '/jquery.easing.min.js';
-        // Composer via bower-asset puts the library within `js` directory.
-        if (!is_file($easing)) {
-          $easing = $library_path . '/js/jquery.easing.min.js';
-        }
-      }
-    }
-
-    if (is_file($easing)) {
+    if ($this->getEasingPath()) {
       $load['library'][] = 'slick/slick.easing';
     }
 
     $load['library'][] = 'slick/slick.load';
 
-    $components = ['colorbox', 'mousewheel'];
-    foreach ($components as $component) {
+    foreach (['colorbox', 'mousewheel'] as $component) {
       if (!empty($attach[$component])) {
         $load['library'][] = 'slick/slick.' . $component;
       }
@@ -163,7 +197,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $excludes = array_combine($excludes, $excludes);
     $load['drupalSettings']['slick'] = array_diff_key(Slick::defaultSettings(), $excludes);
 
-    $this->moduleHandler->alter('slick_attach_load_info', $load, $attach);
+    $this->moduleHandler->alter('slick_attach', $load, $attach);
     return $load;
   }
 
@@ -171,11 +205,11 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
    * Provides skins only if required.
    */
   public function attachSkin(array &$load, $attach = []) {
-    if ($attach['slick_css']) {
+    if ($this->configLoad('slick_css', 'slick.settings')) {
       $load['library'][] = 'slick/slick.css';
     }
 
-    if ($attach['module_css']) {
+    if ($this->configLoad('module_css', 'slick.settings')) {
       $load['library'][] = 'slick/slick.theme';
     }
 
@@ -200,67 +234,76 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
   /**
    * {@inheritdoc}
    */
-  public static function slick(array $build = []) {
-    if (empty($build['items'])) {
-      return [];
-    }
-
-    foreach (['items', 'options', 'optionset', 'settings'] as $key) {
+  public function slick(array $build = []) {
+    foreach (SlickDefault::themeProperties() as $key) {
       $build[$key] = isset($build[$key]) ? $build[$key] : [];
     }
 
-    $slick = [
+    return empty($build['items']) ? [] : [
       '#theme'      => 'slick',
       '#items'      => [],
       '#build'      => $build,
-      '#pre_render' => [static::class . '::preRenderSlick'],
+      '#pre_render' => [[$this, 'preRenderSlick']],
     ];
+  }
 
+  /**
+   * Prepare attributes for the known module features, not necessarily users'.
+   */
+  public function prepareAttributes(array $build = []) {
     $settings = $build['settings'];
-    if (isset($settings['cache'])) {
-      $suffixes[]        = count($build['items']);
-      $suffixes[]        = count(array_filter($settings));
-      $suffixes[]        = $settings['cache'];
-      $cache['contexts'] = ['languages'];
-      $cache['max-age']  = $settings['cache'];
-      $cache['keys']     = isset($settings['cache_metadata']['keys']) ? $settings['cache_metadata']['keys'] : [$settings['id']];
-      $cache['keys'][]   = $settings['display'];
-      $cache['tags']     = Cache::buildTags('slick:' . $settings['id'], $suffixes, '.');
+    $attributes = isset($build['attributes']) ? $build['attributes'] : [];
+    $classes = [];
 
-      if (!empty($settings['cache_tags'])) {
-        $cache['tags'] = Cache::mergeTags($cache['tags'], $settings['cache_tags']);
+    if ($settings['display'] == 'main') {
+      // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
+      if ($settings['view_name'] && $settings['current_view_mode']) {
+        $classes[] = 'view--' . str_replace('_', '-', $settings['view_name']);
+        $classes[] = 'view--' . str_replace('_', '-', $settings['view_name'] . '--' . $settings['current_view_mode']);
       }
 
-      $slick['#cache'] = $cache;
+      // Blazy can still lazyload an unslick.
+      if ($settings['lazy'] == 'blazy' || !empty($settings['blazy'])) {
+        $attributes['data-blazy'] = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
+      }
+
+      // Provide a context for lightbox, or multimedia galleries, save for grid.
+      if (!empty($settings['media_switch']) && empty($settings['grid'])) {
+        $switch = str_replace('_', '-', $settings['media_switch']);
+        $attributes['data-' . $switch . '-gallery'] = TRUE;
+      }
     }
 
-    return $slick;
+    if ($classes) {
+      foreach ($classes as $class) {
+        $attributes['class'][] = 'slick--' . $class;
+      }
+    }
+
+    return $attributes;
   }
 
   /**
    * Builds the Slick instance as a structured array ready for ::renderer().
    */
-  public static function preRenderSlick(array $element) {
+  public function preRenderSlick(array $element) {
     $build = $element['#build'];
     unset($element['#build']);
 
     $settings = &$build['settings'];
-    if (empty($build['items'])) {
-      return [];
-    }
+    $settings += SlickDefault::htmlSettings();
 
     // Adds helper class if thumbnail on dots hover provided.
-    $dots_class = [];
-    if (!empty($settings['thumbnail_style']) && !empty($settings['thumbnail_effect'])) {
+    if (!empty($settings['thumbnail_effect']) && (!empty($settings['thumbnail_style']) || !empty($settings['thumbnail']))) {
       $dots_class[] = 'slick-dots--thumbnail-' . $settings['thumbnail_effect'];
     }
 
     // Adds dots skin modifier class if provided.
     if (!empty($settings['skin_dots'])) {
-      $dots_class[] = Html::cleanCssIdentifier('slick-dots--' . $settings['skin_dots']);
+      $dots_class[] = 'slick-dots--' . str_replace('_', '-', $settings['skin_dots']);
     }
 
-    if ($dots_class && !empty($build['optionset'])) {
+    if (isset($dots_class) && !empty($build['optionset'])) {
       $dots_class[] = $build['optionset']->getSetting('dotsClass') ?: 'slick-dots';
       $js['dotsClass'] = implode(" ", $dots_class);
     }
@@ -275,23 +318,27 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
       // Build the Slick grid if provided.
       if (!empty($settings['grid']) && !empty($settings['visible_items'])) {
-        $build['items'] = self::buildGrid($build['items'], $settings);
+        $build['items'] = $this->buildGrid($build['items'], $settings);
       }
     }
 
+    $build['attributes'] = $this->prepareAttributes($build);
     $build['options'] = isset($js) ? array_merge($build['options'], $js) : $build['options'];
-    \Drupal::moduleHandler()->alter('slick_optionset', $build['optionset'], $build['settings']);
-    foreach (['items', 'options', 'optionset', 'settings'] as $key) {
+
+    $this->moduleHandler->alter('slick_optionset', $build['optionset'], $settings);
+
+    foreach (SlickDefault::themeProperties() as $key) {
       $element["#$key"] = $build[$key];
     }
 
+    unset($build);
     return $element;
   }
 
   /**
    * Returns items as a grid display.
    */
-  public static function buildGrid(array $items = [], array &$settings = []) {
+  public function buildGrid(array $items = [], array &$settings = []) {
     $grids = [];
 
     // Enforces unslick with less items.
@@ -306,14 +353,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $settings['current_item'] = 'grid';
       $settings['count']        = 2;
 
-      $slide['slide'] = [
-        '#theme'    => 'slick_grid',
-        '#items'    => $items,
-        '#delta'    => 0,
-        '#settings' => $settings,
-      ];
-      $slide['settings'] = $settings;
-      $grids[0] = $slide;
+      $grids[0] = $this->buildGridItem($items, 0, $settings);
     }
     else {
       // Otherwise do chunks to have a grid carousel, and also update count.
@@ -322,39 +362,48 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $settings['count'] = count($grid_items);
 
       foreach ($grid_items as $delta => $grid_item) {
-        $slide = [];
-        $slide['slide'] = [
-          '#theme'    => 'slick_grid',
-          '#items'    => $grid_item,
-          '#delta'    => $delta,
-          '#settings' => $settings,
-        ];
-        $slide['settings'] = $settings;
-        $grids[] = $slide;
-        unset($slide);
+        $grids[] = $this->buildGridItem($grid_item, $delta, $settings);
       }
     }
     return $grids;
   }
 
   /**
+   * Returns items as a grid item display.
+   */
+  public function buildGridItem(array $items, $delta, array $settings = []) {
+    $slide = [
+      '#theme'    => 'slick_grid',
+      '#items'    => $items,
+      '#delta'    => $delta,
+      '#settings' => $settings,
+    ];
+    return ['slide' => $slide, 'settings' => $settings];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function build(array $build = []) {
-    foreach (['items', 'options', 'optionset', 'settings'] as $key) {
+    foreach (SlickDefault::themeProperties() as $key) {
       $build[$key] = isset($build[$key]) ? $build[$key] : [];
     }
 
-    return empty($build['items']) ? [] : [
+    $settings       = &$build['settings'];
+    $id             = isset($settings['id']) ? $settings['id'] : '';
+    $settings['id'] = Blazy::getHtmlId('slick', $id);
+
+    $slick = [
       '#theme'      => 'slick_wrapper',
       '#items'      => [],
       '#build'      => $build,
       '#pre_render' => [[$this, 'preRenderSlickWrapper']],
-      // Satisfy CTools blocks as per 2017/04/06: 2804165 which expects children
-      // only, but not #theme, #type, #markup properties.
-      // @todo: Remove when CTools is more accommodative.
+      // Satisfy CTools blocks as per 2017/04/06: 2804165.
       'items'       => [],
     ];
+
+    $this->moduleHandler->alter('slick_build', $slick, $settings);
+    return empty($build['items']) ? [] : $slick;
   }
 
   /**
@@ -364,54 +413,58 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $build = $element['#build'];
     unset($element['#build']);
 
-    if (empty($build['items'])) {
-      return [];
-    }
-
     // One slick_theme() to serve multiple displays: main, overlay, thumbnail.
-    $defaults = Slick::htmlSettings();
-    $settings = $build['settings'] ? array_merge($defaults, $build['settings']) : $defaults;
-    $id       = isset($settings['id']) ? $settings['id'] : '';
-    $id       = Slick::getHtmlId('slick', $id);
+    $settings = array_merge(SlickDefault::htmlSettings(), $build['settings']);
+    $id       = $settings['id'];
     $thumb_id = $id . '-thumbnail';
     $options  = $build['options'];
-    $switch   = isset($settings['media_switch']) ? $settings['media_switch'] : '';
+    $switch   = $settings['media_switch'];
+    $thumbs   = isset($build['thumb']) ? $build['thumb'] : [];
+
+    // Prevents unused thumb going through the main display.
+    unset($build['thumb']);
 
     // Supports programmatic options defined within skin definitions to allow
     // addition of options with other libraries integrated with Slick without
     // modifying optionset such as for Zoom, Reflection, Slicebox, Transit, etc.
-    if (!empty($settings['skin'])) {
-      $skins = $this->getSkinsByGroup('main');
+    if (!empty($settings['skin']) && $skins = $this->getSkinsByGroup('main')) {
       if (isset($skins[$settings['skin']]['options'])) {
         $options = array_merge($options, $skins[$settings['skin']]['options']);
       }
     }
 
     // Additional settings.
-    $build['optionset'] = $build['optionset'] ?: Slick::load($settings['optionset']);
-
-    // Ensures deleted optionset while being used doesn't screw up.
-    if (empty($build['optionset'])) {
-      $build['optionset'] = Slick::load('default');
-    }
-
+    $build['optionset']   = $build['optionset'] ?: Slick::loadWithFallback($settings['optionset']);
     $settings['count']    = empty($settings['count']) ? count($build['items']) : $settings['count'];
     $settings['id']       = $id;
-    $settings['nav']      = isset($settings['nav']) ? $settings['nav'] : (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
-    $settings['navpos']   = !empty($settings['nav']) && !empty($settings['thumbnail_position']);
+    $settings['nav']      = $settings['nav'] ?: (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
+    $settings['navpos']   = $settings['nav'] && !empty($settings['thumbnail_position']);
     $settings['vertical'] = $build['optionset']->getSetting('vertical');
     $mousewheel           = $build['optionset']->getSetting('mouseWheel');
 
     if ($settings['nav']) {
       $options['asNavFor']     = "#{$thumb_id}-slider";
-      $optionset_thumbnail     = Slick::load($settings['optionset_thumbnail']);
+      $optionset_thumbnail     = Slick::loadWithFallback($settings['optionset_thumbnail']);
       $mousewheel              = $optionset_thumbnail->getSetting('mouseWheel');
       $settings['vertical_tn'] = $optionset_thumbnail->getSetting('vertical');
+    }
+    else {
+      // Pass extra attributes such as those from Commerce product variations to
+      // theme_slick() since we have no asNavFor wrapper here.
+      if (isset($element['#attributes'])) {
+        $build['attributes'] = empty($build['attributes']) ? $element['#attributes'] : NestedArray::mergeDeep($build['attributes'], $element['#attributes']);
+      }
     }
 
     // Attach libraries.
     if ($switch && $switch != 'content') {
-      $settings[$switch] = $switch;
+      $settings[$switch] = empty($settings[$switch]) ? $switch : $settings[$switch];
+    }
+
+    // Supports Blazy multi-breakpoint or lightbox images if provided.
+    // Cases: Blazy within Views gallery, or references without direct image.
+    if (!empty($settings['check_blazy']) && !empty($settings['first_image'])) {
+      $this->isBlazy($settings, $settings['first_image']);
     }
 
     $settings['mousewheel'] = $mousewheel;
@@ -427,12 +480,12 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
     $element['#attached'] = empty($build['attached']) ? $attachments : NestedArray::mergeDeep($build['attached'], $attachments);
 
     // Build the main Slick.
-    $slick[0] = self::slick($build);
+    $slick[0] = $this->slick($build);
 
     // Build the thumbnail Slick.
-    if ($settings['nav'] && isset($build['thumb'])) {
+    if ($settings['nav'] && $thumbs) {
       foreach (['items', 'options', 'settings'] as $key) {
-        $build[$key] = isset($build['thumb'][$key]) ? $build['thumb'][$key] : [];
+        $build[$key] = isset($thumbs[$key]) ? $thumbs[$key] : [];
       }
 
       $settings                     = array_merge($settings, $build['settings']);
@@ -443,8 +496,7 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
       $build['settings']            = $settings;
       $build['options']['asNavFor'] = "#{$id}-slider";
 
-      unset($build['thumb']);
-      $slick[1] = self::slick($build);
+      $slick[1] = $this->slick($build);
     }
 
     // Reverse slicks if thumbnail position is provided to get CSS float work.
@@ -454,6 +506,9 @@ class SlickManager extends BlazyManagerBase implements BlazyManagerInterface, Sl
 
     // Collect the slick instances.
     $element['#items'] = $slick;
+    $element['#cache'] = $this->getCacheMetadata($build);
+
+    unset($build);
     return $element;
   }
 

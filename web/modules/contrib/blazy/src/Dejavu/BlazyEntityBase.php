@@ -7,6 +7,8 @@ use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 
 /**
  * Base class for entity reference formatters without field details.
+ *
+ * @see \Drupal\blazy\Dejavu\BlazyEntityMediaBase
  */
 abstract class BlazyEntityBase extends EntityReferenceFormatterBase {
 
@@ -24,11 +26,12 @@ abstract class BlazyEntityBase extends EntityReferenceFormatterBase {
       }
 
       $build['settings']['delta'] = $delta;
+      $build['settings']['langcode'] = $langcode;
       if ($entity->id()) {
         $this->buildElement($build, $entity, $langcode);
 
         // Add the entity to cache dependencies so to clear when it is updated.
-        $this->manager()->getRenderer()->addCacheableDependency($build['items'][$delta], $entity);
+        $this->formatter()->getRenderer()->addCacheableDependency($build['items'][$delta], $entity);
       }
       else {
         $this->referencedEntities = NULL;
@@ -37,11 +40,6 @@ abstract class BlazyEntityBase extends EntityReferenceFormatterBase {
       }
 
       $depth = 0;
-    }
-
-    // Supports Blazy formatter multi-breakpoint images if available.
-    if (empty($build['settings']['vanilla'])) {
-      $this->formatter->isBlazy($build['settings'], $build['items'][0]);
     }
   }
 
@@ -52,7 +50,7 @@ abstract class BlazyEntityBase extends EntityReferenceFormatterBase {
     $view_mode = empty($build['settings']['view_mode']) ? 'full' : $build['settings']['view_mode'];
     $delta = $build['settings']['delta'];
 
-    $build['items'][$delta] = $this->manager()->getEntityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode);
+    $build['items'][$delta] = $this->formatter()->getEntityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode, $langcode);
   }
 
   /**

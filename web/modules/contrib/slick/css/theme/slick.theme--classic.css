@@ -33,7 +33,6 @@
 
 .slick--skin--classic .slide--caption--center .slide__caption {
   color: #fff;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
   visibility: hidden;
   -webkit-transition: all 0.4s ease-in-out 0s;
@@ -42,7 +41,6 @@
 }
 
 .slick--skin--classic .slide--caption--center:hover .slide__caption {
-  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
   visibility: visible;
 }

@@ -8,10 +8,18 @@ use Drupal\blazy\BlazyMedia;
 /**
  * Tests the Blazy image formatter.
  *
- * @coversDefaultClass \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyFormatter
+ * @coversDefaultClass \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyImageFormatter
+ *
  * @group blazy
  */
 class BlazyFormatterTest extends BlazyKernelTestBase {
+
+  /**
+   * The formatter instance.
+   *
+   * @var \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyImageFormatter
+   */
+  protected $formatterInstance;
 
   /**
    * {@inheritdoc}
@@ -63,8 +71,6 @@ class BlazyFormatterTest extends BlazyKernelTestBase {
 
     // Tests ::settingsForm.
     $form = [];
-    $definition = $this->getFormatterDefinition();
-    $definition['_views'] = TRUE;
 
     // Check for setttings form.
     $form_state = new FormState();
@@ -146,34 +152,6 @@ class BlazyFormatterTest extends BlazyKernelTestBase {
 
     // Verify theme_field() is taken over by BlazyGrid::build().
     $this->assertArrayNotHasKey('#blazy', $build[$this->testFieldName]);
-  }
-
-  /**
-   * Tests the Blazy formatter file.
-   */
-  public function testBlazyFile() {
-    $settings = [
-      'iframe_lazy'  => TRUE,
-      'media_switch' => 'media',
-      'ratio'        => 'fluid',
-      'view_mode'    => 'default',
-    ];
-
-    $data = [
-      'field_name' => 'field_image',
-      'plugin_id'  => 'blazy_file',
-      'settings'   => $settings + $this->getFormatterSettings(),
-    ];
-    $display = $this->setUpFormatterDisplay($this->bundle, $data);
-
-    $formatter = $this->getFormatterInstance('blazy_file');
-    $build = $this->display->build($this->entity);
-
-    $scopes = $formatter->getScopedFormElements();
-    $this->assertArrayHasKey('multimedia', $scopes);
-
-    $render = $this->blazyManager->getRenderer()->renderRoot($build);
-    $this->assertTrue(strpos($render, 'data-blazy') !== FALSE);
   }
 
   /**

@@ -5,6 +5,8 @@
  * Hooks and API provided by the Slick module.
  */
 
+use Drupal\slick\Entity\Slick;
+
 /**
  * @defgroup slick_api Slick API
  * @{
@@ -43,7 +45,7 @@
  *   // Caption contains: alt, data, link, overlay, title.
  *   // Each item has keys: slide, caption, settings.
  *   $items[] = [
- *     // Use $formatter->getImage($element) to have lazyLoad where $element
+ *     // Use $formatter->getBlazy($element) to have lazyLoad where $element
  *     // contains:
  *     // item: Drupal\image\Plugin\Field\FieldType\ImageItem.
  *     'slide'   => '<img src="https://drupal.org/files/One.gif" />',
@@ -256,7 +258,7 @@
  *     // Each item has keys: slide, caption, settings.
  *     $build['items'][] = [
  *
- *       // Use $formatter->getImage($element) to have lazyLoad where $element
+ *       // Use $formatter->getBlazy($element) to have lazyLoad where $element
  *       // contains:
  *       // item: Drupal\image\Plugin\Field\FieldType\ImageItem.
  *       'slide'   => '<img src="/path/to/image-0' . $key . '.jpg">',
@@ -510,8 +512,8 @@ function hook_slick_overridable_options_info_alter(&$options) {
 /**
  * Modifies Slick optionset before being passed to preprocess, or templates.
  *
- * @param object $slick
- *   The \Drupal\slick\Entity\Slick Slick object being modified.
+ * @param \Drupal\slick\Entity\Slick $slick
+ *   The Slick object being modified.
  * @param array $settings
  *   The contextual settings related to UI and HTML layout settings.
  *
@@ -519,7 +521,7 @@ function hook_slick_overridable_options_info_alter(&$options) {
  *
  * @ingroup slick_api
  */
-function hook_slick_optionset_alter(\Drupal\slick\Entity\Slick &$slick, array $settings) {
+function hook_slick_optionset_alter(Slick &$slick, array $settings) {
   if ($slick->id() == 'x_slick_nav') {
     // Overrides the main settings of navigation with optionset ID x_slick_nav.
     // To see available options, see config/install/slick.optionset.default.yml.
@@ -569,10 +571,18 @@ function hook_slick_optionset_alter(\Drupal\slick\Entity\Slick &$slick, array $s
 function hook_slick_settings_alter(array &$build, $items) {
   $settings = &$build['settings'];
 
-  // Change skin if meeting a particular criteria.
   // See blazy_blazy_settings_alter() at blazy.module for existing samples.
-  if ($settings['optionset'] == 'x_slick_for') {
-    $settings['skin'] = $settings['entity_id'] == 54 ? 'fullwidth' : $settings['skin'];
+  // First check the $settings array. Slick Views may have different array.
+  if (isset($settings['entity_id'])) {
+    // Change skin if meeting a particular criteria.
+    if ($settings['optionset'] == 'x_slick_for') {
+      $settings['skin'] = $settings['entity_id'] == 54 ? 'fullwidth' : $settings['skin'];
+    }
+
+    // Swap optionset at particular pages.
+    if (in_array($settings['entity_id'], [54, 64, 74])) {
+      $settings['optionset'] == 'my_slick_pages';
+    }
   }
 }
 

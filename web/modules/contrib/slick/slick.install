@@ -34,3 +34,12 @@ function slick_requirements($phase) {
     ],
   ];
 }
+
+/**
+ * Added pauseOnFocus option.
+ */
+function slick_update_8201() {
+  $config = \Drupal::configFactory()->getEditable('slick.optionset.default');
+  $config->set('options.settings.pauseOnFocus', TRUE);
+  $config->save(TRUE);
+}

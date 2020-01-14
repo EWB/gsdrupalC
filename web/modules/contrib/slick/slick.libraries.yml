@@ -82,10 +82,13 @@ slick.arrow.down:
   dependencies:
     - slick/slick.theme
 
+# This file is safe to not depend on colorbox, as it doesn't initialize it, it
+# reacts on its events. It can even run before the colorbox library is loaded.
+# In order to fix for indices with Slick clones, it must run before slick.load.
 slick.colorbox:
   version: VERSION
   js:
-    js/slick.colorbox.min.js: { minified: true }
+    js/slick.colorbox.min.js: { weight: -0.04, minified: true }
   dependencies:
     - blazy/colorbox
-    - slick/slick.load
+    - slick/slick

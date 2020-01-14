@@ -3,142 +3,11 @@
 namespace Drupal\blazy\Dejavu;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
 
 /**
  * A Trait common for optional views style plugins.
  */
 trait BlazyStylePluginTrait {
-
-  /**
-   * The blazy manager service.
-   *
-   * @var \Drupal\blazy\BlazyManagerInterface
-   */
-  protected $blazyManager;
-
-  /**
-   * Returns the blazy manager.
-   */
-  public function blazyManager() {
-    return $this->blazyManager;
-  }
-
-  /**
-   * Returns available fields for select options.
-   */
-  public function getDefinedFieldOptions($definitions = []) {
-    $field_names = $this->displayHandler->getFieldLabels();
-    $definition = [];
-    $stages = [
-      'block_field',
-      'colorbox',
-      'entity_reference_entity_view',
-      'gridstack_file',
-      'gridstack_media',
-      'photobox',
-      'video_embed_field_video',
-      'youtube_video',
-    ];
-
-    // Formatter based fields.
-    $options = [];
-    foreach ($this->displayHandler->getOption('fields') as $field => $handler) {
-      // This is formatter based type, not actual field type.
-      if (isset($handler['type'])) {
-        switch ($handler['type']) {
-          // @todo recheck other reasonable image-related formatters.
-          case 'blazy':
-          case 'image':
-          case 'media':
-          case 'media_thumbnail':
-          case 'intense':
-          case 'responsive_image':
-          case 'video_embed_field_thumbnail':
-          case 'video_embed_field_colorbox':
-          case 'youtube_thumbnail':
-            $options['images'][$field] = $field_names[$field];
-            $options['overlays'][$field] = $field_names[$field];
-            $options['thumbnails'][$field] = $field_names[$field];
-            break;
-
-          case 'list_key':
-            $options['layouts'][$field] = $field_names[$field];
-            break;
-
-          case 'entity_reference_label':
-          case 'text':
-          case 'string':
-          case 'link':
-            $options['links'][$field] = $field_names[$field];
-            $options['titles'][$field] = $field_names[$field];
-            if ($handler['type'] != 'link') {
-              $options['thumb_captions'][$field] = $field_names[$field];
-            }
-            break;
-        }
-
-        $classes = ['list_key', 'entity_reference_label', 'text', 'string'];
-        if (in_array($handler['type'], $classes)) {
-          $options['classes'][$field] = $field_names[$field];
-        }
-
-        $slicks = strpos($handler['type'], 'slick') !== FALSE;
-        if ($slicks || in_array($handler['type'], $stages)) {
-          $options['overlays'][$field] = $field_names[$field];
-        }
-
-        // Allows advanced formatters/video as the main image replacement.
-        // They are not reasonable for thumbnails, but main images.
-        // Note: Certain Responsive image has no ID at Views, possibly a bug.
-        if (in_array($handler['type'], $stages)) {
-          $options['images'][$field] = $field_names[$field];
-        }
-      }
-
-      // Content: title is not really a field, unless title.module installed.
-      if (isset($handler['field'])) {
-        if ($handler['field'] == 'title') {
-          $options['classes'][$field] = $field_names[$field];
-          $options['titles'][$field] = $field_names[$field];
-          $options['thumb_captions'][$field] = $field_names[$field];
-        }
-
-        if (in_array($handler['field'], ['nid', 'nothing', 'view_node'])) {
-          $options['links'][$field] = $field_names[$field];
-          $options['titles'][$field] = $field_names[$field];
-        }
-
-        $blazies = strpos($handler['field'], 'blazy_') !== FALSE;
-        if ($blazies) {
-          $options['images'][$field] = $field_names[$field];
-          $options['overlays'][$field] = $field_names[$field];
-          $options['thumbnails'][$field] = $field_names[$field];
-        }
-      }
-
-      // Captions can be anything to get custom works going.
-      $options['captions'][$field] = $field_names[$field];
-    }
-
-    $definition['plugin_id'] = $this->getPluginId();
-    $definition['settings'] = $this->options;
-    $definition['current_view_mode'] = $this->view->current_display;
-
-    // Provides the requested fields.
-    foreach ($definitions as $key) {
-      $definition[$key] = isset($options[$key]) ? $options[$key] : [];
-    }
-
-    $contexts = [
-      'handler' => $this->displayHandler,
-      'view' => $this->view,
-    ];
-    $this->blazyManager->getModuleHandler()->alter('blazy_views_field_options', $definition, $contexts);
-
-    return $definition;
-  }
 
   /**
    * Returns the modified renderable image_formatter to support lazyload.
@@ -166,6 +35,7 @@ trait BlazyStylePluginTrait {
       // background option, and other options, and still lazyload it.
       $theme = isset($image['rendered']['#theme']) ? $image['rendered']['#theme'] : '';
       if (in_array($theme, ['blazy', 'image_formatter'])) {
+        $settings['uri'] = ($entity = $item->entity) && empty($item->uri) ? $entity->getFileUri() : $item->uri;
         $settings['cache_tags'] = isset($image['rendered']['#cache']['tags']) ? $image['rendered']['#cache']['tags'] : [];
 
         if ($theme == 'blazy') {
@@ -174,12 +44,13 @@ trait BlazyStylePluginTrait {
           // Yet, ensures the Views style plugin wins over Blazy formatter,
           // such as with GridStack which may have its own breakpoints.
           $item_settings = array_filter($image['rendered']['#build']['settings']);
-          $settings = array_filter($settings);
-          $settings = array_merge($item_settings, $settings);
+          $settings = array_merge($item_settings, array_filter($settings));
         }
         elseif ($theme == 'image_formatter') {
           // Deals with "link to content/image" by formatters.
           $settings['content_url'] = isset($image['rendered']['#url']) ? $image['rendered']['#url'] : '';
+          // Prevent images from having absurd height when being lazyloaded.
+          $settings['ratio'] = 'fluid';
           if (empty($settings['media_switch']) && !empty($settings['content_url'])) {
             $settings['media_switch'] = 'content';
           }
@@ -188,7 +59,7 @@ trait BlazyStylePluginTrait {
         // Rebuilds the image for the brand new richer Blazy.
         // With the working Views cache, nothing to worry much.
         $build = ['item' => $item, 'settings' => $settings];
-        $image['rendered'] = $this->blazyManager->getImage($build);
+        $image['rendered'] = $this->blazyManager->getBlazy($build);
       }
     }
 
@@ -200,7 +71,7 @@ trait BlazyStylePluginTrait {
    */
   public function isImageRenderable($row, $index, $field_image = '') {
     if (!empty($field_image) && $image = $this->getFieldRenderable($row, $index, $field_image)) {
-      if ($item = $this->getImageItem($image)) {
+      if ($this->getImageItem($image)) {
         return $image;
       }
 
@@ -242,28 +113,23 @@ trait BlazyStylePluginTrait {
    */
   public function getCaption($index, $settings = []) {
     $items = [];
-    $keys  = array_keys($this->view->field);
+    $keys = array_keys($this->view->field);
+
     if (!empty($settings['caption'])) {
-      $caption_items = [];
-      foreach ($settings['caption'] as $key => $caption) {
-        $caption_rendered = $this->getField($index, $caption);
-        if (empty($caption_rendered)) {
-          continue;
-        }
-
-        if (in_array($caption, array_values($keys))) {
-          $caption_items[$key]['#markup'] = $caption_rendered;
-        }
+      // Exclude non-caption fields so that theme_views_view_fields() kicks in
+      // and only render expected caption fields. As long as not-hidden, each
+      // caption field should be wrapped with Views markups.
+      $excludes = array_diff_assoc(array_combine($keys, $keys), $settings['caption']);
+      foreach ($excludes as $field) {
+        $this->view->field[$field]->options['exclude'] = TRUE;
       }
-      $items['data'] = $caption_items;
+
+      $items['data'] = $this->view->rowPlugin->render($this->view->result[$index]);
     }
 
-    $items['link']  = empty($settings['link']) ? [] : $this->getFieldRendered($index, $settings['link']);
-    $items['title'] = empty($settings['title']) ? [] : $this->getFieldRendered($index, $settings['title'], TRUE);
-
-    if (!empty($settings['overlay'])) {
-      $items['overlay'] = $this->getFieldRendered($index, $settings['overlay']);
-    }
+    $items['link']    = empty($settings['link']) ? [] : $this->getFieldRendered($index, $settings['link']);
+    $items['title']   = empty($settings['title']) ? [] : $this->getFieldRendered($index, $settings['title'], TRUE);
+    $items['overlay'] = empty($settings['overlay']) ? [] : $this->getFieldRendered($index, $settings['overlay']);
 
     return $items;
   }
@@ -285,68 +151,6 @@ trait BlazyStylePluginTrait {
       return is_array($output) ? $output : ['#markup' => ($restricted ? Xss::filterAdmin($output) : $output)];
     }
     return [];
-  }
-
-  /**
-   * Returns the renderable array of field containing rendered and raw data.
-   */
-  public function getFieldRenderable($row, $index, $field_name = '', $multiple = FALSE) {
-    if (empty($field_name)) {
-      return FALSE;
-    }
-
-    // Be sure to not check "Use field template" under "Style settings" to have
-    // renderable array to work with, otherwise flattened string!
-    $result = isset($this->view->field[$field_name]) ? $this->view->field[$field_name]->getItems($row) : [];
-    return empty($result) ? [] : ($multiple ? $result : $result[0]);
-  }
-
-  /**
-   * Returns the string values for the expected Title, ET label, List, Term.
-   *
-   * @todo re-check this, or if any consistent way to retrieve string values.
-   */
-  public function getFieldString($row, $field_name, $index) {
-    $values   = [];
-    $renderer = $this->blazyManager->getRenderer();
-
-    // Content title/List/Text, either as link or plain text.
-    if ($value = $this->getFieldValue($index, $field_name)) {
-      $value = is_array($value) ? array_filter($value) : $value;
-
-      // Entity reference label where the above $value can be term ID.
-      if ($markup = $this->getField($index, $field_name)) {
-        $value = is_object($markup) ? trim(strip_tags($markup->__toString())) : $value;
-      }
-
-      // Tags has comma separated value, although can be changed, just too much.
-      if (is_string($value) && strpos($value, ',') !== FALSE) {
-        $tags = explode(',', $value);
-        $rendered_tags = [];
-        foreach ($tags as $tag) {
-          $rendered_tags[] = Html::cleanCssIdentifier(Unicode::strtolower(trim($tag)));
-        }
-        $values[$index] = implode(' ', $rendered_tags);
-      }
-      else {
-        $value = is_string($value) ? $value : (isset($value[0]['value']) && !empty($value[0]['value']) ? $value[0]['value'] : '');
-        $values[$index] = empty($value) ? '' : Html::cleanCssIdentifier(Unicode::strtolower($value));
-      }
-    }
-
-    // Term reference/ET, either as link or plain text.
-    if (empty($values)) {
-      if ($renderable = $this->getFieldRenderable($row, $index, $field_name, TRUE)) {
-        $value = [];
-        foreach ($renderable as $key => $render) {
-          $class = isset($render['rendered']['#title']) ? $render['rendered']['#title'] : $renderer->render($render['rendered']);
-          $class = trim(strip_tags($class));
-          $value[$key] = Html::cleanCssIdentifier(Unicode::strtolower($class));
-        }
-        $values[$index] = empty($value) ? '' : implode(' ', $value);
-      }
-    }
-    return $values;
   }
 
 }

@@ -21,7 +21,9 @@
 %}
 {% block slick_thumbnail %}
   <div{{ attributes.addClass(classes) }}>
-    {{ item.slide }}
+    {% if item.slide is not empty %}
+      <div class="slide__thumbnail">{{ item.slide }}</div>
+    {% endif %}
     {% if item.caption is not empty %}
       <div class="slide__caption">{{ item.caption }}</div>
     {% endif %}

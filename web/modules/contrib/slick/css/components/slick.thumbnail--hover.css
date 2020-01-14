@@ -30,6 +30,7 @@
   background: #fff;
   border: 2px solid transparent;
   display: block;
+  margin: auto;
   opacity: .6;
   -webkit-transition: 0.3s;
   transition: 0.3s;
@@ -40,7 +41,7 @@
 .slick .slick-dots--thumbnail-hover li .slick-dots__thumbnail {
   bottom: 140%;
   left: 50%;
-  margin: -60px 0 0 -60px;
+  margin: 0;
   min-width: 120px;
   opacity: 0;
   overflow: visible;
@@ -50,6 +51,8 @@
   z-index: -1;
   -webkit-transition: 0.3s;
   transition: 0.3s;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
 }
 
 .slick .slick-dots--thumbnail-hover li .slick-dots__thumbnail img {
@@ -85,7 +88,7 @@
 }
 
 .slick .slick-dots--thumbnail-hover li:hover img,
-.slick .slick-dots--thumbnail-hover li.slick-active img {
+.slick .slick-dots--thumbnail-hover .slick-active img {
   border: 2px solid #ff6d2c;
   opacity: 1;
   -webkit-transition-delay: 0s;

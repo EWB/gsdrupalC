@@ -28,7 +28,7 @@
 }
 
 .slick .slick-dots--thumbnail-grid li:hover img,
-.slick .slick-dots--thumbnail-grid li.slick-active img {
+.slick .slick-dots--thumbnail-grid .slick-active img {
   border-color: #ff6d2c;
   -webkit-transition-delay: 0s;
   transition-delay: 0s;

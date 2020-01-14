@@ -2,13 +2,41 @@
 
 namespace Drupal\slick_ui\Form;
 
+use Drupal\Core\Asset\LibraryDiscoveryInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the Slick admin settings form.
  */
 class SlickSettingsForm extends ConfigFormBase {
+
+  /**
+   * Drupal\Core\Asset\LibraryDiscoveryInterface definition.
+   *
+   * @var Drupal\Core\Asset\LibraryDiscoveryInterface
+   */
+  protected $libraryDiscovery;
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, LibraryDiscoveryInterface $library_discovery) {
+    parent::__construct($config_factory);
+    $this->libraryDiscovery = $library_discovery;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('library.discovery')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -59,7 +87,8 @@ class SlickSettingsForm extends ConfigFormBase {
       ->save();
 
     // Invalidate the library discovery cache to update new assets.
-    \Drupal::service('library.discovery')->clearCachedDefinitions();
+    $this->libraryDiscovery->clearCachedDefinitions();
+    $this->configFactory->clearStaticCache();
 
     parent::submitForm($form, $form_state);
   }

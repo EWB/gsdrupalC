@@ -3,14 +3,14 @@
 namespace Drupal\Tests\blazy\Kernel;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\entity_test\Entity\EntityTest;
 use Drupal\blazy\Blazy;
-use Drupal\blazy\Dejavu\BlazyDefault;
+use Drupal\blazy\BlazyDefault;
 
 /**
  * Tests the Blazy manager methods.
  *
  * @coversDefaultClass \Drupal\blazy\BlazyManager
+ * @requires module media
  *
  * @group blazy
  */
@@ -36,20 +36,20 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    *
    * @param array $settings
    *   The settings being tested.
-   * @param string $expected_responsive_image_style_id
-   *   The responsive image style ID.
+   * @param bool $expected_has_responsive_image
+   *   Has the responsive image style ID.
    *
    * @covers ::preRenderImage
-   * @covers ::getResponsiveImageCacheTags
    * @covers \Drupal\blazy\BlazyLightbox::build
    * @covers \Drupal\blazy\BlazyLightbox::buildCaptions
    * @dataProvider providerTestPreRenderImage
    */
-  public function testPreRenderImage(array $settings = [], $expected_responsive_image_style_id = '') {
+  public function testPreRenderImage(array $settings = [], $expected_has_responsive_image = FALSE) {
     $build             = $this->data;
     $settings['count'] = $this->maxItems;
     $settings['uri']   = $this->uri;
     $build['settings'] = array_merge($build['settings'], $settings);
+    $switch_css        = str_replace('_', '-', $settings['media_switch']);
 
     $element = $this->doPreRenderImage($build);
 
@@ -58,11 +58,11 @@ class BlazyManagerTest extends BlazyKernelTestBase {
       $this->assertArrayHasKey('#url', $element);
     }
     else {
-      $this->assertArrayHasKey('data-' . $settings['media_switch'] . '-trigger', $element['#url_attributes']);
+      $this->assertArrayHasKey('data-' . $switch_css . '-trigger', $element['#url_attributes']);
       $this->assertArrayHasKey('#url', $element);
     }
 
-    $this->assertEquals($expected_responsive_image_style_id, $element['#settings']['responsive_image_style_id']);
+    $this->assertEquals($expected_has_responsive_image, !empty($element['#image']['#responsive_image_style_id']));
   }
 
   /**
@@ -77,7 +77,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
         'content_url'  => 'node/1',
         'media_switch' => 'content',
       ],
-      '',
+      FALSE,
     ];
     $data[] = [
       [
@@ -86,7 +86,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
         'resimage'               => TRUE,
         'responsive_image_style' => 'blazy_responsive_test',
       ],
-      'blazy_responsive_test',
+      TRUE,
     ];
     $data[] = [
       [
@@ -100,84 +100,10 @@ class BlazyManagerTest extends BlazyKernelTestBase {
         'scheme'             => 'youtube',
         'type'               => 'video',
       ],
-      '',
+      FALSE,
     ];
 
     return $data;
-  }
-
-  /**
-   * Tests the entity view builder.
-   *
-   * @param string $entity
-   *   The tested entity.
-   * @param string $fallback
-   *   The fallback text.
-   * @param string $message
-   *   The message text.
-   * @param bool $expected
-   *   The expected output.
-   *
-   * @covers ::getEntityView
-   * @dataProvider providerTestGetEntityView
-   */
-  public function testGetEntityView($entity, $fallback, $message, $expected) {
-    if ($entity == 'entity') {
-      $entity_test = EntityTest::create([
-        'name' => $this->randomMachineName(),
-      ]);
-
-      $entity_test->save();
-
-      $entity = $entity_test;
-    }
-    elseif ($entity == 'node') {
-      $entity = empty($this->entity) ? $this->setUpContentWithItems($this->bundle) : $this->entity;
-    }
-    elseif ($entity == 'responsive_image') {
-      $entity = $this->blazyManager->entityLoad('blazy_responsive_test', 'responsive_image_style');
-    }
-    elseif ($entity == 'image') {
-      $entity = $this->testItem;
-    }
-
-    $result = $this->blazyManager->getEntityView($entity, [], $fallback);
-    $this->assertSame($expected, !empty($result), $message);
-  }
-
-  /**
-   * Provide test cases for ::testGetEntityView().
-   *
-   * @return array
-   *   An array of tested data.
-   */
-  public function providerTestGetEntityView() {
-    return [
-      'Entity test' => [
-        'entity',
-        '',
-        'Entity test has no entity_test_view(), yet it has view builder.',
-        TRUE,
-      ],
-      'Node' => [
-        'node',
-        '',
-        'Node has node_view() taking precedence over view builder.',
-        TRUE,
-      ],
-      'Responsive image' => [
-        'responsive_image',
-        'This is some fallback text.',
-        'Responsive image has no view builder. Fallback to text.',
-        TRUE,
-      ],
-      'Image' => [
-        'image',
-        '',
-        'Image is not an instance of EntityInterface, returns false.',
-        FALSE,
-      ],
-    ];
   }
 
   /**
@@ -185,7 +111,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    *
    * @param array $settings
    *   The settings being tested.
-   * @param bool $uri
+   * @param bool $use_uri
    *   Whether to provide image URI, or not.
    * @param object $item
    *   Whether to provide image item, or not.
@@ -196,20 +122,20 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    *
    * @covers \Drupal\blazy\Blazy::buildAttributes
    * @covers \Drupal\blazy\Blazy::buildBreakpointAttributes
-   * @covers \Drupal\blazy\Blazy::buildUrl
+   * @covers \Drupal\blazy\Blazy::buildUrlAndDimensions
    * @covers \Drupal\blazy\Dejavu\BlazyDefault::entitySettings
    * @dataProvider providerBuildAttributes
    */
-  public function testBuildAttributes(array $settings, $uri, $item, $iframe, $expected) {
-    $content   = [];
+  public function testBuildAttributes(array $settings, $use_uri, $item, $iframe, $expected) {
     $variables = ['attributes' => []];
-    $settings  = array_merge($this->getFormatterSettings(), $settings);
+    $settings = array_merge($this->getFormatterSettings(), $settings);
+    $settings += BlazyDefault::itemSettings();
 
     $settings['blazy']           = TRUE;
     $settings['lazy']            = 'blazy';
     $settings['image_style']     = 'blazy_crop';
     $settings['thumbnail_style'] = 'thumbnail';
-    $settings['uri']             = $uri ? $this->uri : '';
+    $settings['uri']             = $use_uri ? $this->uri : '';
 
     if (!empty($settings['embed_url'])) {
       $settings = array_merge(BlazyDefault::entitySettings(), $settings);
@@ -220,7 +146,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
 
     Blazy::buildAttributes($variables);
 
-    $image  = $expected == TRUE ? !empty($variables['image']) : empty($variables['image']);
+    $image = $expected == TRUE ? !empty($variables['image']) : empty($variables['image']);
     $iframe = $iframe == TRUE ? !empty($variables['iframe_attributes']) : empty($variables['iframe_attributes']);
 
     $this->assertTrue($image);
@@ -232,7 +158,6 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    */
   public function providerBuildAttributes() {
     $breakpoints = $this->getDataBreakpoints();
-    $breakpoints_cleaned = $this->getDataBreakpoints(TRUE);
 
     $data[] = [
       [
@@ -277,14 +202,12 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    *
    * @param string $responsive_image_style_id
    *   The responsive_image_style_id.
-   * @param bool $old
-   *   Whether to use Drupal core 8.x-2, or later 8.x-3.
    * @param bool $expected
    *   The expected output_image_tag.
    *
    * @dataProvider providerResponsiveImage
    */
-  public function testPreprocessResponsiveImage($responsive_image_style_id, $old, $expected) {
+  public function testPreprocessResponsiveImage($responsive_image_style_id, $expected) {
     $variables = [
       'item' => $this->testItem,
       'uri' => $this->uri,
@@ -293,12 +216,7 @@ class BlazyManagerTest extends BlazyKernelTestBase {
 
     template_preprocess_responsive_image($variables);
 
-    if ($old) {
-      $variables['img_element']['#srcset'][0]['uri'] = $this->uri;
-    }
-    else {
-      $variables['img_element']['#uri'] = $this->uri;
-    }
+    $variables['img_element']['#uri'] = $this->uri;
 
     Blazy::preprocessResponsiveImage($variables);
 
@@ -310,19 +228,12 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    */
   public function providerResponsiveImage() {
     return [
-      'Responsive image with picture 8.x-2' => [
-        'blazy_picture_test',
-        TRUE,
-        FALSE,
-      ],
       'Responsive image with picture 8.x-3' => [
         'blazy_picture_test',
-        FALSE,
         FALSE,
       ],
       'Responsive image without picture 8.x-3' => [
         'blazy_responsive_test',
-        FALSE,
         TRUE,
       ],
     ];
@@ -335,10 +246,9 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    * @dataProvider providerIsCrop
    */
   public function testIsCrop($image_style_id, $expected) {
-    $image_style = $this->blazyManager->entityLoad($image_style_id, 'image_style');
-    $is_cropped = $this->blazyManager->isCrop($image_style);
+    $is_cropped = $this->blazyManager->isCrop($image_style_id);
 
-    $this->assertEquals($expected, $is_cropped);
+    $this->assertEquals($expected, !empty($is_cropped));
   }
 
   /**
@@ -366,8 +276,6 @@ class BlazyManagerTest extends BlazyKernelTestBase {
    * @covers ::setLightboxes
    * @covers ::buildSkins
    * @covers ::getCache
-   *
-   * @todo: Move some to unit tests.
    */
   public function testBlazyManagerMethods() {
     // Tests Blazy attachments.
@@ -377,12 +285,13 @@ class BlazyManagerTest extends BlazyKernelTestBase {
     $this->assertArrayHasKey('blazy', $attachments['drupalSettings']);
 
     // Tests Blazy [data-blazy] attributes.
-    $build    = $this->data;
-    $settings = &$build['settings'];
-    $item     = $build['item'];
+    $build     = $this->data;
+    $settings  = &$build['settings'];
+    $settings += BlazyDefault::itemSettings();
+    $item      = $build['item'];
 
-    $settings['item']        = $item;
-    $settings['uri']         = $this->uri;
+    $settings['first_item']  = $item;
+    $settings['first_uri']   = $this->uri;
     $settings['blazy_data']  = [];
     $settings['background']  = TRUE;
     $settings['breakpoints'] = $this->getDataBreakpoints();

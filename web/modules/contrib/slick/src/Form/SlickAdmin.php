@@ -107,7 +107,7 @@ class SlickAdmin implements SlickAdminInterface {
       $this->fieldableForm($form, $definition);
     }
 
-    if (!empty($definition['breakpoints'])) {
+    if (!empty($definition['breakpoints']) && !$this->manager()->configLoad('unbreakpoints', 'blazy.settings')) {
       $this->blazyAdmin->breakpointsForm($form, $definition);
     }
 
@@ -121,10 +121,13 @@ class SlickAdmin implements SlickAdminInterface {
   /**
    * Returns the opening form elements.
    */
-  public function openingForm(array &$form, $definition = []) {
+  public function openingForm(array &$form, &$definition = []) {
     $path         = drupal_get_path('module', 'slick');
-    $readme       = Url::fromUri('base:' . $path . '/README.txt')->toString();
-    $readme_field = Url::fromUri('base:' . $path . '/src/Plugin/Field/README.txt')->toString();
+    $is_slick_ui  = $this->manager()->getModuleHandler()->moduleExists('slick_ui');
+    $is_help      = $this->manager()->getModuleHandler()->moduleExists('help');
+    $route_name   = ['name' => 'slick_ui'];
+    $readme       = $is_slick_ui && $is_help ? Url::fromRoute('help.page', $route_name)->toString() : Url::fromUri('base:' . $path . '/docs/README.md')->toString();
+    $readme_field = $is_slick_ui && $is_help ? Url::fromRoute('help.page', $route_name)->toString() : Url::fromUri('base:' . $path . '/docs/FORMATTER.md')->toString();
     $arrows       = $this->getSkinsByGroupOptions('arrows');
     $dots         = $this->getSkinsByGroupOptions('dots');
 
@@ -133,7 +136,7 @@ class SlickAdmin implements SlickAdminInterface {
 
       $form['optionset']['#title'] = $this->t('Optionset main');
 
-      if ($this->manager()->getModuleHandler()->moduleExists('slick_ui')) {
+      if ($is_slick_ui) {
         $route_name = 'entity.slick.collection';
         $form['optionset']['#description'] = $this->t('Manage optionsets at <a href=":url" target="_blank">the optionset admin page</a>.', [':url' => Url::fromRoute($route_name)->toString()]);
       }
@@ -161,7 +164,7 @@ class SlickAdmin implements SlickAdminInterface {
       $form['skin_arrows'] = [
         '#type'        => 'select',
         '#title'       => $this->t('Skin arrows'),
-        '#options'     => $arrows ?: [],
+        '#options'     => $arrows,
         '#enforced'    => TRUE,
         '#description' => $this->t('Implement \Drupal\slick\SlickSkinInterface::arrows() to add your own arrows skins, in the same format as SlickSkinInterface::skins().'),
         '#weight'      => -105,
@@ -172,7 +175,7 @@ class SlickAdmin implements SlickAdminInterface {
       $form['skin_dots'] = [
         '#type'        => 'select',
         '#title'       => $this->t('Skin dots'),
-        '#options'     => $dots ?: [],
+        '#options'     => $dots,
         '#enforced'    => TRUE,
         '#description' => $this->t('Implement \Drupal\slick\SlickSkinInterface::dots() to add your own dots skins, in the same format as SlickSkinInterface::skins().'),
         '#weight'      => -105,
@@ -218,7 +221,7 @@ class SlickAdmin implements SlickAdminInterface {
 
     if (isset($form['skin'])) {
       $form['skin']['#title'] = $this->t('Skin main');
-      $form['skin']['#description'] = $this->t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. E.g.: Skin Split requires any split layout option. Failing to choose the expected layout makes it useless. See <a href=":url" target="_blank">SKINS section at README.txt</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones.', [':url' => $readme]);
+      $form['skin']['#description'] = $this->t('Skins allow various layouts with just CSS. Some options below depend on a skin. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. E.g.: Skin Split requires any split layout option. Failing to choose the expected layout makes it useless. See <a href=":url" target="_blank">SKINS section at README</a> for details on Skins. Leave empty to DIY. Or use hook_slick_skins_info() and implement \Drupal\slick\SlickSkinInterface to register ones. Skins are permanently cached. Clear cache if new skins do not appear.', [':url' => $readme]);
     }
 
     if (isset($form['layout'])) {
@@ -421,24 +424,8 @@ class SlickAdmin implements SlickAdminInterface {
 
   /**
    * Return the field formatter settings summary.
-   *
-   * @deprecated: Removed for self::getSettingsSummary().
    */
-  public function settingsSummary($plugin, $definition = []) {
-    return $this->blazyAdmin->settingsSummary($plugin, $definition);
-  }
-
-  /**
-   * Return the field formatter settings summary.
-   *
-   * @todo: Remove second param $plugin for post-release for Blazy RC2+.
-   */
-  public function getSettingsSummary($definition = [], $plugin = NULL) {
-    // @todo: Remove condition for Blazy RC2+.
-    if (!method_exists($this->blazyAdmin, 'getSettingsSummary')) {
-      return $this->blazyAdmin->settingsSummary($plugin, $definition);
-    }
-
+  public function getSettingsSummary($definition = []) {
     return $this->blazyAdmin->getSettingsSummary($definition);
   }
 

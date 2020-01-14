@@ -768,7 +768,7 @@
         "version_normalized": "4.1.4.0",
         "source": {
             "type": "git",
-            "url": "git@github.com:desandro/imagesloaded.git",
+            "url": "https://github.com/desandro/imagesloaded.git",
             "reference": "67c4e57453120935180c45c6820e7d3fbd2ea1f9"
         },
         "dist": {
@@ -2729,30 +2729,30 @@
     },
     {
         "name": "drupal/blazy",
-        "version": "1.0.0-rc4",
-        "version_normalized": "1.0.0.0-RC4",
+        "version": "2.0.0-rc6",
+        "version_normalized": "2.0.0.0-RC6",
         "source": {
             "type": "git",
             "url": "https://git.drupalcode.org/project/blazy.git",
-            "reference": "8.x-1.0-rc4"
+            "reference": "8.x-2.0-rc6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/blazy-8.x-1.0-rc4.zip",
-            "reference": "8.x-1.0-rc4",
-            "shasum": "cea1185469fc6d19a5162f550e12f26cff193062"
+            "url": "https://ftp.drupal.org/files/projects/blazy-8.x-2.0-rc6.zip",
+            "reference": "8.x-2.0-rc6",
+            "shasum": "01d274df833f85e57cb33b7cf7c6593a1876fb03"
         },
         "require": {
-            "drupal/core": "*"
+            "drupal/core": "^8 || ^9"
         },
         "type": "drupal-module",
         "extra": {
             "branch-alias": {
-                "dev-1.x": "1.x-dev"
+                "dev-2.x": "2.x-dev"
             },
             "drupal": {
-                "version": "8.x-1.0-rc4",
-                "datestamp": "1545235980",
+                "version": "8.x-2.0-rc6",
+                "datestamp": "1577248387",
                 "security-coverage": {
                     "status": "not-covered",
                     "message": "RC releases are not covered by Drupal security advisories."
@@ -6732,31 +6732,31 @@
     },
     {
         "name": "drupal/slick",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
+        "version": "2.0.0",
+        "version_normalized": "2.0.0.0",
         "source": {
             "type": "git",
             "url": "https://git.drupalcode.org/project/slick.git",
-            "reference": "8.x-1.1"
+            "reference": "8.x-2.0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/slick-8.x-1.1.zip",
-            "reference": "8.x-1.1",
-            "shasum": "8565c1e74cfb5e6316c1cdb357868107303f2be4"
+            "url": "https://ftp.drupal.org/files/projects/slick-8.x-2.0.zip",
+            "reference": "8.x-2.0",
+            "shasum": "62c5fb90670b66c0c1054e077352e8b5620d045c"
         },
         "require": {
-            "drupal/blazy": "~1.0",
-            "drupal/core": "~8.0"
+            "drupal/blazy": "~2.0",
+            "drupal/core": "^8 || ^9"
         },
         "type": "drupal-module",
         "extra": {
             "branch-alias": {
-                "dev-1.x": "1.x-dev"
+                "dev-2.x": "2.x-dev"
             },
             "drupal": {
-                "version": "8.x-1.1",
-                "datestamp": "1545236281",
+                "version": "8.x-2.0",
+                "datestamp": "1577874483",
                 "security-coverage": {
                     "status": "covered",
                     "message": "Covered by Drupal's security advisory policy"
@@ -6843,6 +6843,63 @@
         "homepage": "https://www.drupal.org/project/slick_paragraphs",
         "support": {
             "source": "https://git.drupalcode.org/project/slick_paragraphs"
+        }
+    },
+    {
+        "name": "drupal/slick_views",
+        "version": "2.1.0",
+        "version_normalized": "2.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/slick_views.git",
+            "reference": "8.x-2.1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/slick_views-8.x-2.1.zip",
+            "reference": "8.x-2.1",
+            "shasum": "7f5a7579e691625c8e85039c87ce13d5a63b16f5"
+        },
+        "require": {
+            "drupal/core": "*",
+            "drupal/slick": "~2.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-2.x": "2.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-2.1",
+                "datestamp": "1578007683",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "gausarts",
+                "homepage": "https://www.drupal.org/user/159062"
+            }
+        ],
+        "description": "Provides Slick carousel integration with Views. Slick carousel, the last carousel you'll ever need.",
+        "homepage": "https://drupal.org/project/slick_views",
+        "keywords": [
+            "Drupal",
+            "carousel",
+            "slideshow",
+            "views"
+        ],
+        "support": {
+            "source": "http://cgit.drupalcode.org/slick_views",
+            "issues": "https://drupal.org/project/issues/slick_views"
         }
     },
     {
@@ -12972,7 +13029,8 @@
             "http",
             "psr",
             "psr-7"
-        ]
+        ],
+        "abandoned": "laminas/laminas-diactoros"
     },
     {
         "name": "zendframework/zend-escaper",
@@ -13019,7 +13077,8 @@
             "ZendFramework",
             "escaper",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-escaper"
     },
     {
         "name": "zendframework/zend-feed",
@@ -13084,7 +13143,8 @@
             "ZendFramework",
             "feed",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-feed"
     },
     {
         "name": "zendframework/zend-stdlib",
@@ -13132,6 +13192,7 @@
             "ZendFramework",
             "stdlib",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-stdlib"
     }
 ]

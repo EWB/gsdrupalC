@@ -9,12 +9,28 @@ use Drupal\blazy\Blazy;
 use Drupal\slick\SlickDefault;
 
 /**
+ * Provides a convenient shortcut for procedural hooks.
+ *
+ * @return class
+ *   The Slick manager class instance.
+ */
+function slick() {
+  static $manager;
+
+  if (!isset($manager)) {
+    $manager = \Drupal::service('slick.manager');
+  }
+
+  return $manager;
+}
+
+/**
  * Implements hook_theme().
  */
 function slick_theme() {
   $themes = [];
-  $all = ['slick', 'slide', 'grid', 'image', 'thumbnail', 'vanilla', 'wrapper'];
-  foreach ($all as $item) {
+  $items = ['slick', 'slide', 'grid', 'thumbnail', 'vanilla', 'wrapper'];
+  foreach ($items as $item) {
     $key = $item == 'slick' ? $item : 'slick_' . $item;
     $themes[$key] = [
       'render element' => 'element',
@@ -28,7 +44,7 @@ function slick_theme() {
  * Implements hook_library_info_build().
  */
 function slick_library_info_build() {
-  return \Drupal::service('slick.manager')->libraryInfoBuild();
+  return slick()->libraryInfoBuild();
 }
 
 /**
@@ -40,13 +56,15 @@ function slick_config_schema_info_alter(array &$definitions) {
 
 /**
  * Implements hook_field_formatter_info_alter().
+ *
+ * @todo TBD; remove post or prior to release for core Media.
  */
 function slick_field_formatter_info_alter(array &$info) {
   // Supports Media Entity via VEM within VEF if available.
-  if (\Drupal::moduleHandler()->moduleExists('video_embed_media')) {
+  if (slick()->getModuleHandler()->moduleExists('video_embed_media')) {
     $info['slick_file'] = [
       'id'          => 'slick_file',
-      'label'       => t('Slick Image with Media'),
+      'label'       => t('Slick Image with VEF (deprecated)'),
       'description' => t('Display the images associated to VEM/ME as a simple mix of Slick image/video carousel.'),
       'class'       => 'Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatter',
       'field_types' => ['entity_reference', 'image'],
@@ -73,16 +91,10 @@ function slick_library_info_alter(&$libraries, $extension) {
     if ($library_path) {
       $libraries['slick']['js'] = ['/' . $library_path . '/slick/slick.min.js' => ['weight' => -3]];
       $libraries['slick']['css']['base'] = ['/' . $library_path . '/slick/slick.css' => []];
-      $libraries['slick.css']['css']['theme'] = ['/' . $library_path . '/slick/slick-theme.css' => []];
+      $libraries['slick.css']['css']['theme'] = ['/' . $library_path . '/slick/slick-theme.css' => ['weight' => -2]];
     }
 
-    $library_easing = libraries_get_path('easing') ?: libraries_get_path('jquery.easing');
-    if ($library_easing) {
-      $easing_path = $library_easing . '/jquery.easing.min.js';
-      // Composer via bower-asset puts the library within `js` directory.
-      if (!is_file($easing_path)) {
-        $easing_path = $library_path . '/js/jquery.easing.min.js';
-      }
+    if ($easing_path = slick()->getEasingPath()) {
       $libraries['slick.easing']['js'] = ['/' . $easing_path => ['weight' => -4]];
     }
 

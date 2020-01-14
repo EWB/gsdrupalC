@@ -18,13 +18,19 @@
   function doSlick(i, elm) {
     var t = $('> .slick__slider', elm).length ? $('> .slick__slider', elm) : $(elm);
     var a = $('> .slick__arrow', elm);
-    var o = t.data('slick') ? $.extend({}, drupalSettings.slick, t.data('slick')) : drupalSettings.slick;
+    var o = t.data('slick') ? $.extend({}, drupalSettings.slick, t.data('slick')) : $.extend({}, drupalSettings.slick);
     var r = $.type(o.responsive) === 'array' && o.responsive.length ? o.responsive : false;
     var d = o.appendDots;
     var b;
+    var isBlazy = o.lazyLoad === 'blazy' && Drupal.blazy;
+    var isVideo = t.find('.media--player').length;
+    var unSlick = t.hasClass('unslick');
 
     // Populate defaults + globals into each breakpoint.
-    o.appendDots = d === '.slick__arrow' ? a : (d || $(t));
+    if (!unSlick) {
+      o.appendDots = d === '.slick__arrow' ? a : (d || $(t));
+    }
+
     if (r) {
       for (b in r) {
         if (r.hasOwnProperty(b) && r[b].settings !== 'unslick') {
@@ -41,57 +47,80 @@
      * The event must be bound prior to slick being called.
      */
     function beforeSlick() {
-      var isBlazy = o.lazyLoad === 'blazy' && Drupal.blazy;
-
       if (o.randomize && !t.hasClass('slick-initiliazed')) {
         randomize();
       }
 
-      $('.media--loading', t).closest('.slide__content').addClass('is-loading');
-
-      // Puts dots in between arrows for easy theming like this: < ooooo >.
-      if (d === '.slick__arrow') {
+      if (!unSlick) {
         t.on('init.sl', function (e, slick) {
-          $(slick.$dots).insertAfter(slick.$prevArrow);
-        });
-      }
+          // Puts dots in between arrows for easy theming like this: < ooooo >.
+          if (d === '.slick__arrow') {
+            $(slick.$dots).insertAfter(slick.$prevArrow);
+          }
 
-      // Blazy integration.
-      // .b-lazy can be attached to IMG, or DIV as CSS background.
-      var $src = $('.b-lazy:not(.b-loaded)', t);
-      if (isBlazy) {
-        t.on('beforeChange.sl', function () {
-          if ($src.length) {
-            // Enforces lazyload ahead to smoothen the UX.
+          // Fixes for slidesToShow > 1, centerMode, clones with Blazy IO.
+          var $src = t.find('.slick-cloned.slick-active .b-lazy:not(.b-loaded)');
+          if (isBlazy && $src.length) {
             Drupal.blazy.init.load($src);
           }
         });
       }
 
+      // Lazyload ahead with Blazy integration.
+      if (isBlazy) {
+        t.on('beforeChange.sl', function () {
+          preloadBlazy(true);
+        });
+      }
+      else {
+        // Useful to hide caption during loading, but watch out setBackground().
+        $('.media--loading', t).closest('.slide__content').addClass('is-loading');
+      }
+
       t.on('setPosition.sl', function (e, slick) {
         setPosition(slick);
-
-        // Revalidate Blazy.
-        if (isBlazy && $src.length) {
-          Drupal.blazy.init.revalidate();
-        }
       });
+    }
+
+    /**
+     * Blazy is not loaded on slidesToShow > 1, reload.
+     *
+     * @param {bool} ahead
+     *   Whether to lazyload ahead, or not.
+     */
+    function preloadBlazy(ahead) {
+      if (t.find('.b-lazy:not(.b-loaded)').length) {
+        var $src = t.find(ahead ? '.slide:not(.slick-cloned) .b-lazy:not(.b-loaded)' : '.slick-active .b-lazy:not(.b-loaded)');
+        if ($src.length) {
+          Drupal.blazy.init.load($src);
+        }
+      }
+    }
+
+    /**
+     * Reacts on Slick afterChange event.
+     */
+    function afterChange() {
+      if (isVideo) {
+        closeOut();
+      }
+
+      if (isBlazy) {
+        preloadBlazy(false);
+      }
     }
 
     /**
      * The event must be bound after slick being called.
      */
     function afterSlick() {
-      var slick = t.slick('getSlick');
-      var media = t.find('.media--player').length;
-
       // Arrow down jumper.
       t.parent().on('click.sl', '.slick-down', function (e) {
         e.preventDefault();
         var b = $(this);
         $('html, body').stop().animate({
           scrollTop: $(b.data('target')).offset().top - (b.data('offset') || 0)
-        }, 800, o.easing || 'swing');
+        }, 800, 'easeOutQuad' in $.easing && o.easing ? o.easing : 'swing');
       });
 
       if (o.mouseWheel) {
@@ -101,13 +130,16 @@
         });
       }
 
-      t.on('lazyLoaded lazyLoadError', function (e, slick, img) {
-        setBackground(img);
-      });
+      if (!isBlazy) {
+        t.on('lazyLoaded lazyLoadError', function (e, slick, img) {
+          setBackground(img);
+        });
+      }
+
+      t.on('afterChange.sl', afterChange);
 
       // Turns off any video if any change to the slider.
-      if (media) {
-        t.on('afterChange.sl', closeOut);
+      if (isVideo) {
         t.on('click.sl', '.media__icon--close', closeOut);
         t.on('click.sl', '.media__icon--play', pause);
       }
@@ -121,14 +153,16 @@
      */
     function setBackground(img) {
       var $img = $(img);
-      var $bg = $img.closest('.media--background');
       var p = $img.closest('.slide') || $img.closest('.unslick');
 
+      // Cleans up (is-|media--)loading classes.
       $img.parentsUntil(p).removeClass(function (index, css) {
         return (css.match(/(\S+)loading/g) || []).join(' ');
       });
 
-      if ($bg.length) {
+      // @deprecated to be removed for Blazy background.
+      var $bg = $img.closest('.media--background');
+      if ($bg.length && $bg.find('> img').length) {
         $bg.css('background-image', 'url(' + $img.attr('src') + ')');
         $bg.find('> img').remove();
         $bg.removeAttr('data-lazy');
@@ -142,9 +176,9 @@
       t.children().sort(function () {
         return 0.5 - Math.random();
       })
-      .each(function () {
-        t.append(this);
-      });
+        .each(function () {
+          t.append(this);
+        });
     }
 
     /**
@@ -152,9 +186,6 @@
      *
      * @param {Object} slick
      *   The slick instance object.
-     *
-     * @return {String}
-     *   The visibility of slick arrows controlled by CSS class visually-hidden.
      */
     function setPosition(slick) {
       // Use the options that applies for the current breakpoint and not the
@@ -178,8 +209,14 @@
           slick.$slideTrack.css({left: '', transform: ''});
         }
 
+        // Cleans up preloader if any named b-loader due to clones.
+        var $preloader = t.find('.b-loaded ~ .b-loader');
+        if ($preloader.length) {
+          $preloader.remove();
+        }
+
         // Do not remove arrows, to allow responsive have different options.
-        return a[hide ? 'addClass' : 'removeClass']('visually-hidden');
+        a[hide ? 'addClass' : 'removeClass']('visually-hidden');
       }
     }
 
@@ -212,7 +249,7 @@
      *   The global options common for both main and responsive displays.
      */
     function globals(o) {
-      return {
+      return unSlick ? {} : {
         slide: o.slide,
         lazyLoad: o.lazyLoad,
         dotsClass: o.dotsClass,
@@ -221,11 +258,12 @@
         nextArrow: $('.slick-next', a),
         appendArrows: a,
         customPaging: function (slick, i) {
-          var tn = slick.$slides.eq(i).find('[data-thumb]') || null;
-          var img = '<img alt="' + Drupal.t(tn.attr('alt')) + '" src="' + tn.data('thumb') + '">';
-          var dotsThumb = tn.length && o.dotsClass.indexOf('thumbnail') > 0 ?
+          var container = slick.$slides.eq(i).find('[data-thumb]') || null;
+          var img = '<img alt="' + Drupal.t(container.find('img').attr('alt')) + '" src="' + container.data('thumb') + '">';
+          var dotsThumb = container.length && o.dotsClass.indexOf('thumbnail') > 0 ?
             '<div class="slick-dots__thumbnail">' + img + '</div>' : '';
-          return slick.defaults.customPaging(slick, i).add(dotsThumb);
+          var paging = slick.defaults.customPaging(slick, i);
+          return dotsThumb ? paging.add(dotsThumb) : paging;
         }
       };
     }
@@ -238,7 +276,7 @@
     // Destroy Slick if it is an enforced unslick.
     // This allows Slick lazyload to run, but prevents further complication.
     // Should use lazyLoaded event, but images are not always there.
-    if (t.hasClass('unslick')) {
+    if (unSlick) {
       t.slick('unslick');
     }
 

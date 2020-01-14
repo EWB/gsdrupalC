@@ -19,7 +19,6 @@
 
 .media__icon,
 .media--ratio iframe {
-  -webkit-transition: visibility 0s linear 0.5s, opacity 0.5s linear;
   transition: visibility 0s linear 0.5s, opacity 0.5s linear;
 }
 
@@ -103,7 +102,6 @@
 }
 
 .is-playing:hover .media__icon {
-  -webkit-transition-delay: 0s;
   transition-delay: 0s;
 }
 
@@ -147,6 +145,7 @@
   visibility: visible;
 }
 
+/** @requires coder shutup, front-end complication with inline styles. */
 /** Prevents Twitter iframe from breaking grid, even if unholy. */
 .grid .twitter-tweet-rendered {
   margin: 0 !important;

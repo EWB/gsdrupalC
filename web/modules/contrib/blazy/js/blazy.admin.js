@@ -46,6 +46,12 @@
       }
     }).change();
 
+    $('select[name$="[grid]"]', t).on('change', function () {
+      var $select = $(this);
+
+      t[$select.val() === '' ? 'removeClass' : 'addClass']('form--grid-on');
+    }).change();
+
     $('select[name$="[responsive_image_style]"]', t).on('change', function () {
       var $select = $(this);
       t[$select.val() === '' ? 'removeClass' : 'addClass']('form--responsive-image-on');
@@ -104,6 +110,21 @@
   }
 
   /**
+   * Blazy admin checkbox function.
+   *
+   * @param {int} i
+   *   The index of the current element.
+   * @param {HTMLElement} elm
+   *   The Blazy form item checkbox HTML element.
+   */
+  function blazyCheckbox(i, elm) {
+    var $elm = $(elm);
+    if (!$elm.next('.field-suffix').length) {
+      $elm.after('<span class="field-suffix"></span>');
+    }
+  }
+
+  /**
    * Attaches Blazy form behavior to HTML element.
    *
    * @type {Drupal~behavior}
@@ -113,6 +134,7 @@
       var $form = $('.form--slick', context);
 
       $('.description', $form).once('blazy-tooltip').each(blazyTooltip);
+      $('.form-checkbox', $form).once('blazy-checkbox').each(blazyCheckbox);
 
       $form.once('blazy-admin').each(blazyForm);
     }

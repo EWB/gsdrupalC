@@ -6,11 +6,13 @@ use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\blazy\BlazyFormatterManager;
-use Drupal\blazy\Dejavu\BlazyDefault;
+use Drupal\blazy\BlazyDefault;
+use Drupal\blazy\Dejavu\BlazyDependenciesTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,14 +28,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class BlazyFileFormatterBase extends FileFormatterBase implements ContainerFactoryPluginInterface {
 
-  use BlazyFormatterBaseTrait;
+  use BlazyFormatterTrait;
+  use BlazyDependenciesTrait;
 
   /**
    * Constructs a BlazyFormatter object.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, BlazyFormatterManager $blazy_manager) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, ImageFactory $image_factory, BlazyFormatterManager $formatter) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->blazyManager = $blazy_manager;
+    $this->imageFactory = $image_factory;
+    $this->formatter = $this->blazyManager = $formatter;
   }
 
   /**
@@ -48,6 +52,7 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase implements Conta
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
+      $container->get('image.factory'),
       $container->get('blazy.formatter.manager')
     );
   }
@@ -57,6 +62,13 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase implements Conta
    */
   public static function defaultSettings() {
     return BlazyDefault::imageSettings() + BlazyDefault::gridSettings();
+  }
+
+  /**
+   * Build individual item if so configured such as for file ER goodness.
+   */
+  public function buildElement(array &$build, $entity) {
+    // Do nothing.
   }
 
   /**
@@ -139,7 +151,7 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase implements Conta
       if (empty($default_image['uuid']) && $this->fieldDefinition instanceof FieldConfigInterface) {
         $default_image = $this->fieldDefinition->getFieldStorageDefinition()->getSetting('default_image');
       }
-      if (!empty($default_image['uuid']) && $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid'])) {
+      if (!empty($default_image['uuid']) && $file = $this->formatter->getEntityRepository()->loadEntityByUuid('file', $default_image['uuid'])) {
         // Clone the FieldItemList into a runtime-only object for the formatter,
         // so that the fallback image can be rendered without affecting the
         // field values in the entity being rendered.

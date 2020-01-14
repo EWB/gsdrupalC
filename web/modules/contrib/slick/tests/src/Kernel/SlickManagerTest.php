@@ -4,6 +4,7 @@ namespace Drupal\Tests\slick\Kernel;
 
 use Drupal\Tests\blazy\Kernel\BlazyKernelTestBase;
 use Drupal\Tests\slick\Traits\SlickUnitTestTrait;
+use Drupal\slick\SlickDefault;
 use Drupal\slick\Entity\Slick;
 use Drupal\slick_ui\Form\SlickForm;
 
@@ -42,14 +43,28 @@ class SlickManagerTest extends BlazyKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installConfig([
+      'field',
+      'image',
+      'media',
+      'responsive_image',
+      'node',
+      'views',
+      'blazy',
+      'slick',
+      'slick_ui',
+    ]);
+
     $bundle = $this->bundle;
 
+    $this->messenger = $this->container->get('messenger');
     $this->slickAdmin = $this->container->get('slick.admin');
     $this->blazyAdminFormatter = $this->slickAdmin;
     $this->slickFormatter = $this->container->get('slick.formatter');
     $this->slickManager = $this->container->get('slick.manager');
 
     $this->slickForm = new SlickForm(
+      $this->messenger,
       $this->slickAdmin,
       $this->slickManager
     );
@@ -89,7 +104,7 @@ class SlickManagerTest extends BlazyKernelTestBase {
       'thumbnail_effect' => 'hover',
       'slick_css'        => TRUE,
       'module_css'       => TRUE,
-    ] + $this->getFormatterSettings();
+    ] + $this->getFormatterSettings() + SlickDefault::extendedSettings();
 
     $attachments = $manager->attach($settings);
     $this->assertArrayHasKey('slick', $attachments['drupalSettings']);
@@ -138,8 +153,8 @@ class SlickManagerTest extends BlazyKernelTestBase {
    * @dataProvider providerTestSlickBuild
    */
   public function testBuild($items, array $settings, array $options, $expected) {
-    $manager  = $this->slickManager;
-    $defaults = $this->getFormatterSettings() + Slick::htmlSettings();
+    $manager = $this->slickManager;
+    $defaults = $this->getFormatterSettings() + SlickDefault::htmlSettings();
     $settings = array_merge($defaults, $settings);
 
     $settings['optionset'] = 'test';
@@ -154,13 +169,14 @@ class SlickManagerTest extends BlazyKernelTestBase {
       'optionset' => Slick::load($settings['optionset']),
     ];
 
-    $slick = $manager::slick($build);
+    $slick = $manager->slick($build);
     $this->assertEquals($expected, !empty($slick));
 
     $slick['#build']['settings'] = $settings;
     $slick['#build']['items'] = $items;
+    $slick['#build']['options'] = [];
 
-    $element = $manager::preRenderSlick($slick);
+    $element = $manager->preRenderSlick($slick);
     $this->assertEquals($expected, !empty($element));
 
     if (!empty($settings['optionset_thumbnail'])) {
@@ -193,12 +209,6 @@ class SlickManagerTest extends BlazyKernelTestBase {
    *   An array of tested data.
    */
   public function providerTestSlickBuild() {
-    $data[] = [
-      FALSE,
-      [],
-      [],
-      FALSE,
-    ];
     $data[] = [
       TRUE,
       [

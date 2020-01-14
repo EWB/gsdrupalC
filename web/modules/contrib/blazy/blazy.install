@@ -14,10 +14,10 @@ function blazy_requirements($phase) {
   }
 
   if (function_exists('libraries_get_path')) {
-    $path = libraries_get_path('blazy') . '/blazy.min.js';
+    $path = libraries_get_path('blazy') . '/blazy.js';
   }
   else {
-    $path = DRUPAL_ROOT . '/libraries/blazy/blazy.min.js';
+    $path = DRUPAL_ROOT . '/libraries/blazy/blazy.js';
   }
 
   $exists = is_file($path);
@@ -25,9 +25,30 @@ function blazy_requirements($phase) {
   return [
     'blazy_library' => [
       'title'       => t('Blazy library'),
-      'description' => $exists ? '' : t('The <a href=":url">Blazy library</a> should be installed at <strong>/libraries/blazy/blazy.min.js</strong>, or any path supported by libraries.module if installed.', [':url' => 'https://github.com/dinbror/blazy']),
+      'description' => $exists ? '' : t('The <a href=":url">Blazy library</a> should be installed at <strong>/libraries/blazy/blazy.js</strong>, or any path supported by libraries.module if installed.', [':url' => 'https://github.com/dinbror/blazy']),
       'severity'    => $exists ? REQUIREMENT_OK : REQUIREMENT_ERROR,
       'value'       => $exists ? t('Installed') : t('Not installed'),
     ],
   ];
+}
+
+/**
+ * Added new services blazy.oembed and blazy.entity.
+ */
+function blazy_update_8201() {
+  // Do nothing to clear cache.
+}
+
+/**
+ * Added a new argument date.formatter to blazy.admin.base service.
+ */
+function blazy_update_8202() {
+  // Do nothing to clear cache.
+}
+
+/**
+ * Added a new argument @entity.repository to blazy.manager.base service.
+ */
+function blazy_update_8203() {
+  // Do nothing to clear cache.
 }

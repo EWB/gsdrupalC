@@ -29,7 +29,6 @@
 #}
 {%
   set classes = [
-    'slick',
     settings.unslick ? 'unslick',
     display == 'main' and settings.blazy ? 'blazy',
     settings.vertical ? 'slick--vertical',
@@ -53,16 +52,13 @@
     settings.skin_arrows ? 'slick__arrow--' ~ settings.skin_arrows|clean_class
   ]
 %}
-
 <div{{ attributes.addClass(classes) }}>
   {% if not settings.unslick %}
     <div{{ content_attributes.addClass('slick__slider') }}>
   {% endif %}
 
   {% block slick_content %}
-    {% for item in items %}
-      {{ item }}
-    {% endfor %}
+    {{ items }}
   {% endblock %}
 
   {% if not settings.unslick %}
@@ -73,6 +69,7 @@
         {% if arrow_down_attributes is defined %}
           <button{{ arrow_down_attributes.addClass('slick-down')
             .setAttribute('type', 'button')
+            .setAttribute('data-role', 'none')
             .setAttribute('data-target', settings.downArrowTarget)
             .setAttribute('data-offset', settings.downArrowOffset) }}></button>
         {% endif %}

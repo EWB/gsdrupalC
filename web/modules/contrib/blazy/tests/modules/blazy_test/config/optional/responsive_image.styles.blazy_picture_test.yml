@@ -9,6 +9,8 @@ dependencies:
   enforced:
     module:
       - blazy_test
+  module:
+    - blazy_test
 id: blazy_picture_test
 label: 'Blazy picture test'
 image_style_mappings:

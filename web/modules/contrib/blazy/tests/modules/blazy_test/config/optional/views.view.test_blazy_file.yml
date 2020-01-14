@@ -1,4 +1,3 @@
-﻿uuid: 71b93b1c-eaa7-4ac9-af88-903c15d10e15
 langcode: en
 status: true
 dependencies:
@@ -65,8 +64,8 @@ display:
             offset: false
             offset_label: Offset
           tags:
-            previous: ‹‹
-            next: ››
+            previous: '‹‹'
+            next: '››'
       style:
         type: blazy
         options:

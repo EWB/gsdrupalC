@@ -4,7 +4,7 @@ namespace Drupal\Tests\blazy\Unit\Form;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\blazy\Form\BlazyAdminFormatter;
-use Drupal\blazy\Dejavu\BlazyDefault;
+use Drupal\blazy\BlazyDefault;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\blazy\Traits\BlazyUnitTestTrait;
 use Drupal\Tests\blazy\Traits\BlazyManagerUnitTestTrait;
@@ -36,9 +36,9 @@ class BlazyAdminFormatterUnitTest extends UnitTestCase {
     $this->setUpUnitServices();
     $this->setUpUnitContainer();
 
-    $this->stringTranslation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
-    $this->entityDisplayRepository = $this->getMock('Drupal\Core\Entity\EntityDisplayRepositoryInterface');
-    $this->typedConfig = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');
+    $this->stringTranslation = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
+    $this->entityDisplayRepository = $this->createMock('Drupal\Core\Entity\EntityDisplayRepositoryInterface');
+    $this->typedConfig = $this->createMock('Drupal\Core\Config\TypedConfigManagerInterface');
     $this->dateFormatter = $this->getMockBuilder('Drupal\Core\Datetime\DateFormatter')
       ->disableOriginalConstructor()
       ->getMock();
@@ -54,6 +54,7 @@ class BlazyAdminFormatterUnitTest extends UnitTestCase {
     $this->blazyAdminFormatter = new BlazyAdminFormatter(
       $this->entityDisplayRepository,
       $this->typedConfig,
+      $this->dateFormatter,
       $this->blazyManager
     );
   }

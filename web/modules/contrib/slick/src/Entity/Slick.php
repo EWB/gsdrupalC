@@ -2,9 +2,7 @@
 
 namespace Drupal\slick\Entity;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\blazy\Blazy;
 
 /**
  * Defines the Slick configuration entity.
@@ -34,28 +32,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   }
  * )
  */
-class Slick extends ConfigEntityBase implements SlickInterface {
-
-  /**
-   * The legacy CTools ID for the configurable optionset.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
-   * The human-readable name for the optionset.
-   *
-   * @var string
-   */
-  protected $label;
-
-  /**
-   * The weight to re-arrange the order of slick optionsets.
-   *
-   * @var int
-   */
-  protected $weight = 0;
+class Slick extends SlickBase implements SlickInterface {
 
   /**
    * The optionset group for easy selections.
@@ -86,34 +63,6 @@ class Slick extends ConfigEntityBase implements SlickInterface {
   protected $optimized = FALSE;
 
   /**
-   * The plugin instance options.
-   *
-   * @var array
-   */
-  protected $options = [];
-
-  /**
-   * The slick HTML ID.
-   *
-   * @var int
-   */
-  private static $slickId;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(array $values, $entity_type = 'slick') {
-    parent::__construct($values, $entity_type);
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\Entity::id().
-   */
-  public function id() {
-    return $this->name;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getSkin() {
@@ -139,61 +88,6 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    */
   public function optimized() {
     return $this->optimized;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions($group = NULL, $property = NULL) {
-    if ($group) {
-      if (is_array($group)) {
-        return NestedArray::getValue($this->options, (array) $group);
-      }
-      elseif (isset($property) && isset($this->options[$group])) {
-        return isset($this->options[$group][$property]) ? $this->options[$group][$property] : NULL;
-      }
-      return $this->options[$group];
-    }
-
-    return $this->options;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSettings() {
-    // With the Optimized options, all defaults are cleaned out, merge em.
-    return isset($this->options['settings']) ? array_merge(self::defaultSettings(), $this->options['settings']) : self::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setSettings(array $settings = []) {
-    $this->options['settings'] = $settings;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSetting($name) {
-    return isset($this->getSettings()[$name]) ? $this->getSettings()[$name] : NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setSetting($name, $value) {
-    $this->options['settings'][$name] = $value;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function defaultSettings($group = 'settings') {
-    return self::load('default')->options[$group];
   }
 
   /**
@@ -245,7 +139,10 @@ class Slick extends ConfigEntityBase implements SlickInterface {
     $defaults = self::defaultSettings();
 
     // Remove wasted dependent options if disabled, empty or not.
-    $this->removeWastedDependentOptions($js);
+    if (!$this->optimized) {
+      $this->removeWastedDependentOptions($js);
+    }
+
     $config = array_diff_assoc($js, $defaults);
 
     // Remove empty lazyLoad, or left to default ondemand, to avoid JS error.
@@ -278,7 +175,9 @@ class Slick extends ConfigEntityBase implements SlickInterface {
         }
         else {
           // Remove wasted dependent options if disabled, empty or not.
-          $this->removeWastedDependentOptions($responsives[$key]['settings']);
+          if (!$this->optimized) {
+            $this->removeWastedDependentOptions($responsives[$key]['settings']);
+          }
           $cleaned[$key]['settings'] = array_diff_assoc($responsives[$key]['settings'], $defaults);
         }
       }
@@ -316,7 +215,12 @@ class Slick extends ConfigEntityBase implements SlickInterface {
     return [
       'arrows'     => ['prevArrow', 'nextArrow', 'downArrow'] + $down_arrow,
       'downArrow'  => $down_arrow,
-      'autoplay'   => ['pauseOnHover', 'pauseOnDotsHover', 'autoplaySpeed'],
+      'autoplay'   => [
+        'pauseOnHover',
+        'pauseOnDotsHover',
+        'pauseOnFocus',
+        'autoplaySpeed',
+      ],
       'centerMode' => ['centerPadding'],
       'dots'       => ['dotsClass', 'appendDots'],
       'swipe'      => ['swipeToSlide'],
@@ -331,61 +235,10 @@ class Slick extends ConfigEntityBase implements SlickInterface {
    * @return string
    *   The html ID.
    *
-   * @todo: Consider Blazy::getHtmlId() instead.
+   * @deprecated to be removed for Blazy::getHtmlId().
    */
   public static function getHtmlId($string = 'slick', $id = '') {
-    if (!isset(static::$slickId)) {
-      static::$slickId = 0;
-    }
-
-    // Do not use dynamic Html::getUniqueId, otherwise broken asnavfors.
-    return empty($id) ? Html::getId($string . '-' . ++static::$slickId) : strip_tags($id);
-  }
-
-  /**
-   * Returns HTML or layout related settings to shut up notices.
-   *
-   * @return array
-   *   The default settings.
-   */
-  public static function htmlSettings() {
-    return [
-      'cache'             => 0,
-      'current_view_mode' => '',
-      'display'           => 'main',
-      'grid'              => 0,
-      'id'                => '',
-      'nav'               => FALSE,
-      'navpos'            => FALSE,
-      'media_switch'      => '',
-      'optionset'         => 'default',
-      'ratio'             => '',
-      'skin'              => '',
-      'unslick'           => FALSE,
-      'vanilla'           => FALSE,
-      'vertical'          => FALSE,
-      'vertical_tn'       => FALSE,
-      'view_name'         => '',
-    ];
-  }
-
-  /**
-   * Defines JS options required by theme_slick(), used with optimized option.
-   */
-  public static function jsSettings() {
-    return [
-      'asNavFor'        => '',
-      'downArrowTarget' => '',
-      'downArrowOffset' => '',
-      'lazyLoad'        => 'ondemand',
-      'prevArrow'       => '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0">Previous</button>',
-      'nextArrow'       => '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0">Next</button>',
-      'rows'            => 1,
-      'slidesPerRow'    => 1,
-      'slide'           => '',
-      'slidesToShow'    => 1,
-      'vertical'        => FALSE,
-    ];
+    return Blazy::getHtmlId($string, $id);
   }
 
 }

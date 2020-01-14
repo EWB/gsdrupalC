@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\blazy\Traits;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\node\Entity\NodeType;
@@ -24,20 +25,6 @@ trait BlazyCreationTestTrait {
    * @var \Drupal\node\Entity\NodeType
    */
   protected $nodeType;
-
-  /**
-   * The field storage definition.
-   *
-   * @var \Drupal\field\FieldStorageConfigInterface
-   */
-  protected $fieldStorageDefinition;
-
-  /**
-   * The field definition.
-   *
-   * @var \Drupal\Core\Field\FieldDefinitionInterface
-   */
-  protected $fieldDefinition;
 
   /**
    * Setup formatter displays, default to image, and update its settings.
@@ -94,13 +81,9 @@ trait BlazyCreationTestTrait {
    * @see BaseFieldDefinition::createFromFieldStorageDefinition()
    */
   protected function getBlazyFieldDefinition($field_name = '') {
-    if (!$this->fieldDefinition) {
-      $field_name = empty($field_name) ? $this->testFieldName : $field_name;
-      $field_storage_config = $this->getBlazyFieldStorageDefinition($field_name);
-
-      $this->fieldDefinition = BaseFieldDefinition::createFromFieldStorageDefinition($field_storage_config);
-    }
-    return $this->fieldDefinition;
+    $field_name = empty($field_name) ? $this->testFieldName : $field_name;
+    $field_storage_config = $this->getBlazyFieldStorageDefinition($field_name);
+    return $field_storage_config ? BaseFieldDefinition::createFromFieldStorageDefinition($field_storage_config) : FALSE;
   }
 
   /**
@@ -113,12 +96,9 @@ trait BlazyCreationTestTrait {
    *   The field storage definition.
    */
   protected function getBlazyFieldStorageDefinition($field_name = '') {
-    if (!$this->fieldStorageDefinition) {
-      $field_name = empty($field_name) ? $this->testFieldName : $field_name;
-      $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityType);
-      $this->fieldStorageDefinition = $field_storage_definitions[$field_name];
-    }
-    return $this->fieldStorageDefinition;
+    $field_name = empty($field_name) ? $this->testFieldName : $field_name;
+    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityType);
+    return isset($field_storage_definitions[$field_name]) ? $field_storage_definitions[$field_name] : FALSE;
   }
 
   /**
@@ -136,6 +116,10 @@ trait BlazyCreationTestTrait {
     $plugin_id  = empty($plugin_id) ? $this->testPluginId : $plugin_id;
     $field_name = empty($field_name) ? $this->testFieldName : $field_name;
     $settings   = $this->getFormatterSettings() + $this->formatterPluginManager->getDefaultSettings($plugin_id);
+
+    if (!$this->getBlazyFieldDefinition($field_name)) {
+      return NULL;
+    }
 
     $options = [
       'field_definition' => $this->getBlazyFieldDefinition($field_name),
@@ -159,6 +143,7 @@ trait BlazyCreationTestTrait {
    */
   protected function setUpContentTypeTest($bundle = '', array $settings = []) {
     $node_type = NodeType::load($bundle);
+    $full_html = $this->blazyManager->entityLoad('full_html', 'filter_format');
     $restricted_html = $this->blazyManager->entityLoad('restricted_html', 'filter_format');
 
     if (empty($node_type)) {
@@ -169,13 +154,27 @@ trait BlazyCreationTestTrait {
       $node_type->save();
     }
 
-    if (!$restricted_html) {
-      FilterFormat::create([
+    if (!$restricted_html && is_null($this->filterFormatRestricted)) {
+      $this->filterFormatRestricted = FilterFormat::create([
         'format'  => 'restricted_html',
         'name'    => 'Basic HML',
         'weight'  => 2,
         'filters' => [],
       ])->save();
+    }
+    else {
+      $this->filterFormatRestricted = $restricted_html;
+    }
+
+    if (!$full_html && is_null($this->filterFormatFull)) {
+      $this->filterFormatFull = FilterFormat::create([
+        'format'  => 'full_html',
+        'name'    => 'Full HML',
+        'weight'  => 3,
+      ])->save();
+    }
+    else {
+      $this->filterFormatFull = $full_html;
     }
 
     node_add_body_field($node_type);
@@ -188,10 +187,12 @@ trait BlazyCreationTestTrait {
     }
 
     $data = [];
-    foreach ($settings['fields'] as $field_name => $field_type) {
-      $data['field_name'] = $field_name;
-      $data['field_type'] = $field_type;
-      $this->setUpFieldConfig($bundle, $data);
+    if (!empty($settings['fields'])) {
+      foreach ($settings['fields'] as $field_name => $field_type) {
+        $data['field_name'] = $field_name;
+        $data['field_type'] = $field_type;
+        $this->setUpFieldConfig($bundle, $data);
+      }
     }
 
     $node_type->save();
@@ -211,9 +212,8 @@ trait BlazyCreationTestTrait {
    *   The node instance.
    */
   protected function setUpContentWithItems($bundle = '', array $settings = []) {
-    $title = empty($settings['title']) ? $this->testPluginId : $settings['title'];
-    $data  = empty($settings['values']) ? [] : $settings['values'];
-
+    $title  = empty($settings['title']) ? $this->testPluginId : $settings['title'];
+    $data   = empty($settings['values']) ? [] : $settings['values'];
     $values = $data + [
       'title'  => $title . ' : ' . $this->randomMachineName(),
       'type'   => $bundle,
@@ -227,8 +227,11 @@ trait BlazyCreationTestTrait {
     $node->save();
 
     if (isset($node->body)) {
-      $node->body->value  = $this->getRandomGenerator()->paragraphs($this->maxParagraphs);
-      $node->body->format = 'restricted_html';
+      $text = $this->getRandomGenerator()->paragraphs($this->maxParagraphs);
+      if (!empty($settings['extra_text'])) {
+        $text .= $settings['extra_text'];
+      }
+      $node->get('body')->setValue(['value' => $text, 'format' => 'full_html']);
     }
 
     if (!empty($this->testFieldName)) {
@@ -251,7 +254,10 @@ trait BlazyCreationTestTrait {
         }
 
         $max = $multiple ? $this->maxItems : 2;
-        $node->{$field_name}->generateSampleItems($max);
+        if (isset($node->{$field_name})) {
+          // @see \Drupal\Core\Field\FieldItemListInterface::generateSampleItems
+          $node->{$field_name}->generateSampleItems($max);
+        }
       }
     }
 
@@ -278,7 +284,7 @@ trait BlazyCreationTestTrait {
     $multiple   = strpos($field_name, 'mul') !== FALSE;
 
     if (in_array($field_type, ['file', 'image'])) {
-      $config['file_directory']  = $this->testPluginId;
+      $config['file_directory'] = $this->testPluginId;
       $config['file_extensions'] = 'png gif jpg jpeg';
 
       if ($field_type == 'file') {
@@ -355,7 +361,7 @@ trait BlazyCreationTestTrait {
    *   A render array.
    */
   protected function buildEntityReferenceRenderArray(array $referenced_entities, $type = '', array $settings = []) {
-    $type  = empty($type) ? $this->entityPluginId : $type;
+    $type = empty($type) ? $this->entityPluginId : $type;
     $items = $this->referencingEntity->get($this->entityFieldName);
 
     // Assign the referenced entities.
@@ -409,7 +415,7 @@ trait BlazyCreationTestTrait {
     $referenced_data['title'] = 'Referenced ' . $this->testPluginId;
 
     // Create dummy fields.
-    $referenced_data['fields'] = $fields + $this->getDefaultFields();
+    $referenced_data['fields'] = array_merge($this->getDefaultFields(), $fields);
 
     // Create referenced entity type.
     $this->setUpContentTypeTest($target_bundle, $referenced_data);
@@ -475,7 +481,15 @@ trait BlazyCreationTestTrait {
 
       if ($item instanceof ImageItem) {
         $this->uri = ($entity = $item->entity) && empty($item->uri) ? $entity->getFileUri() : $item->uri;
+        $this->url = file_url_transform_relative(file_create_url($this->uri));
       }
+    }
+
+    if (empty($this->url)) {
+      $source = DRUPAL_ROOT . '/core/misc/druplicon.png';
+      $uri = 'public://test.png';
+      $this->fileSystem->copy($source, $uri, FileSystemInterface::EXISTS_REPLACE);
+      $this->url = file_create_url($uri);
     }
 
     $this->testItem = $item;
@@ -492,34 +506,52 @@ trait BlazyCreationTestTrait {
    * Returns path to the stored image location.
    */
   protected function getImagePath($is_dir = FALSE) {
-    $path   = \Drupal::root() . '/sites/default/files/simpletest/' . $this->testPluginId;
-    $name   = $this->testPluginId . '.png';
-    $source = \Drupal::root() . '/core/misc/druplicon.png';
-    $uri    = $path . '/' . $name;
-
-    if (!is_file($uri)) {
-      file_prepare_directory($path, FILE_CREATE_DIRECTORY);
-      file_unmanaged_copy($source, $uri, FILE_EXISTS_REPLACE);
-    }
-
-    $item = File::create([
-      'uri' => $uri,
-      'uid' => \Drupal::currentUser()->id(),
-      'status' => FILE_STATUS_PERMANENT,
-    ]);
-
-    $item->save();
-    $uri = ($entity = $item->entity) && empty($item->uri) ? $entity->getFileUri() : $item->uri;
-
-    $this->dummyUri = $uri;
+    $path            = \Drupal::root() . '/sites/default/files/simpletest/' . $this->testPluginId;
+    $item            = $this->createDummyImage();
+    $this->dummyUrl  = file_url_transform_relative(file_create_url($this->dummyUri));
     $this->dummyItem = $item;
-
     $this->dummyData = [
       'settings' => $this->getFormatterSettings(),
       'item'     => $item,
     ];
 
-    return $is_dir ? $path : $uri;
+    return $is_dir ? $path : $this->dummyUri;
+  }
+
+  /**
+   * Returns the created image file.
+   */
+  protected function createDummyImage($name = '', $source = '') {
+    $path   = \Drupal::root() . '/sites/default/files/simpletest/' . $this->testPluginId;
+    $name   = empty($name) ? $this->testPluginId . '.png' : $name;
+    $source = empty($source) ? \Drupal::root() . '/core/misc/druplicon.png' : $source;
+    $uri    = $path . '/' . $name;
+
+    if (!is_file($uri)) {
+      $this->prepareTestDirectory();
+      $this->fileSystem->saveData($source, $uri, FileSystemInterface::EXISTS_REPLACE);
+    }
+
+    $uri = 'public://simpletest/' . $this->testPluginId . '/' . $name;
+    $this->dummyUri = $uri;
+    $item = File::create([
+      'uri' => $uri,
+      'uid' => 1,
+      'status' => FILE_STATUS_PERMANENT,
+      'filename' => $name,
+    ]);
+
+    $item->save();
+
+    return $item;
+  }
+
+  /**
+   * Prepares test directory to store screenshots, or images.
+   */
+  protected function prepareTestDirectory() {
+    $this->testDirPath = \Drupal::root() . '/sites/default/files/simpletest/' . $this->testPluginId;
+    $this->fileSystem->prepareDirectory($this->testDirPath, FileSystemInterface::CREATE_DIRECTORY);
   }
 
 }

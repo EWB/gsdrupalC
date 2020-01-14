@@ -2,6 +2,8 @@
 
 namespace Drupal\slick_ui\Form;
 
+use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\slick\Entity\Slick;
 
@@ -11,21 +13,107 @@ use Drupal\slick\Entity\Slick;
 class SlickForm extends SlickFormBase {
 
   /**
-   * The form elements.
-   *
-   * @var array
-   */
-  protected $formElements;
-
-  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form      = parent::form($form, $form_state);
+    $path      = drupal_get_path('module', 'slick');
     $slick     = $this->entity;
     $options   = $slick->getOptions() ?: [];
-    $admin_css = $this->manager->configLoad('admin_css', 'blazy.settings');
     $tooltip   = ['class' => ['is-tooltip']];
+    $route     = ['name' => 'slick_ui'];
+    $is_help   = $this->manager()->getModuleHandler()->moduleExists('help');
+    $readme    = $is_help ? Url::fromRoute('help.page', $route)->toString() : Url::fromUri('base:' . $path . '/docs/README.md')->toString();
+    $admin_css = $this->manager->configLoad('admin_css', 'blazy.settings');
+
+    $form['label'] = [
+      '#type'          => 'textfield',
+      '#title'         => $this->t('Label'),
+      '#default_value' => $slick->label(),
+      '#maxlength'     => 255,
+      '#required'      => TRUE,
+      '#description'   => $this->t("Label for the Slick optionset."),
+      '#attributes'    => $tooltip,
+      '#prefix'        => '<div class="form__header form__half form__half--first has-tooltip clearfix">',
+    ];
+
+    // Keep the legacy CTools ID, i.e.: name as ID.
+    $form['name'] = [
+      '#type'          => 'machine_name',
+      '#default_value' => $slick->id(),
+      '#maxlength'     => EntityTypeInterface::BUNDLE_MAX_LENGTH,
+      '#machine_name'  => [
+        'source' => ['label'],
+        'exists' => '\Drupal\slick\Entity\Slick::load',
+      ],
+      '#attributes'    => $tooltip,
+      '#disabled'      => !$slick->isNew(),
+      '#suffix'        => '</div>',
+    ];
+
+    $form['skin'] = [
+      '#type'          => 'select',
+      '#title'         => $this->t('Skin'),
+      '#options'       => $this->admin->getSkinsByGroupOptions(),
+      '#empty_option'  => $this->t('- None -'),
+      '#default_value' => $slick->getSkin(),
+      '#description'   => $this->t('Skins allow swappable layouts like next/prev links, split image and caption, etc. However a combination of skins and options may lead to unpredictable layouts, get yourself dirty. See main <a href="@url">README</a> for details on Skins. Only useful for custom work, and ignored/overridden by slick formatters or sub-modules.', ['@url' => $readme]),
+      '#attributes'    => $tooltip,
+      '#prefix'        => '<div class="form__header form__half form__half--last has-tooltip clearfix">',
+    ];
+
+    $form['group'] = [
+      '#type'          => 'select',
+      '#title'         => $this->t('Group'),
+      '#options'       => [
+        'main'      => $this->t('Main'),
+        'overlay'   => $this->t('Overlay'),
+        'thumbnail' => $this->t('Thumbnail'),
+      ],
+      '#empty_option'  => $this->t('- None -'),
+      '#default_value' => $slick->getGroup(),
+      '#description'   => $this->t('Group this optionset to avoid confusion for optionset selections. Leave empty to make it available for all.'),
+      '#attributes'    => $tooltip,
+    ];
+
+    $form['breakpoints'] = [
+      '#title'         => $this->t('Breakpoints'),
+      '#type'          => 'textfield',
+      '#default_value' => $form_state->hasValue('breakpoints') ? $form_state->getValue('breakpoints') : $slick->getBreakpoints(),
+      '#description'   => $this->t('The number of breakpoints added to Responsive display, max 9. This is not Breakpoint Width (480px, etc).'),
+      '#ajax' => [
+        'callback' => '::addBreakpoints',
+        'wrapper'  => 'edit-breakpoints-ajax-wrapper',
+        'event'    => 'change',
+        'progress' => ['type' => 'fullscreen'],
+        'effect'   => 'fade',
+        'speed'    => 'fast',
+      ],
+      '#attributes' => $tooltip,
+      '#maxlength'  => 1,
+    ];
+
+    $form['optimized'] = [
+      '#type'          => 'checkbox',
+      '#title'         => $this->t('Optimized'),
+      '#default_value' => $slick->optimized(),
+      '#description'   => $this->t('Check to optimize the stored options. Anything similar to defaults will not be stored, except those required by sub-modules and theme_slick(). Like you hand-code/ cherry-pick the needed options, and are smart enough to not repeat defaults, and free up memory. The rest are taken care of by JS. Uncheck only if theme_slick() can not satisfy the needs, and more hand-coded preprocess is needed which is less likely in most cases.'),
+      '#access'        => $slick->id() != 'default',
+      '#attributes'    => $tooltip,
+      '#wrapper_attributes' => ['class' => ['form-item--tooltip-wide']],
+    ];
+
+    if ($slick->id() == 'default') {
+      $form['breakpoints']['#suffix'] = '</div>';
+    }
+    else {
+      $form['optimized']['#suffix'] = '</div>';
+    }
+
+    if ($admin_css) {
+      $form['optimized']['#field_suffix'] = '&nbsp;';
+      $form['optimized']['#title_display'] = 'before';
+    }
 
     // Options.
     $form['options'] = [
@@ -230,6 +318,7 @@ class SlickForm extends SlickFormBase {
                   switch ($k) {
                     case 'pauseOnHover':
                     case 'pauseOnDotsHover':
+                    case 'pauseOnFocus':
                     case 'autoplaySpeed':
                       $states = ['visible' => [':input[name*="[' . $i . '][settings][autoplay]"]' => ['checked' => TRUE]]];
                       break;
@@ -282,10 +371,6 @@ class SlickForm extends SlickFormBase {
       }
     }
 
-    // Attach Slick admin library.
-    if ($admin_css) {
-      $form['#attached']['library'][] = 'slick_ui/slick.admin.vtabs';
-    }
     return $form;
   }
 
@@ -347,6 +432,12 @@ class SlickForm extends SlickFormBase {
         'type'        => 'checkbox',
         'title'       => $this->t('Pause on dots hover'),
         'description' => $this->t('Pause autoplay when a dot is hovered.'),
+      ];
+
+      $elements['pauseOnFocus'] = [
+        'type'        => 'checkbox',
+        'title'       => $this->t('Pause on focus'),
+        'description' => $this->t('Pause autoplay on focus.'),
       ];
 
       $elements['arrows'] = [
@@ -652,9 +743,6 @@ class SlickForm extends SlickFormBase {
       'appendArrows',
       'appendDots',
       'asNavFor',
-      'cssEase',
-      'cssEaseBezier',
-      'cssEaseOverride',
       'dotsClass',
       'downArrow',
       'downArrowTarget',
@@ -738,6 +826,63 @@ class SlickForm extends SlickFormBase {
   }
 
   /**
+   * Defines options required by theme_slick(), used with optimized option.
+   */
+  public function getOptionsRequiredByTemplate() {
+    $options = [
+      'lazyLoad'     => 'ondemand',
+      'slidesToShow' => 1,
+    ];
+
+    $this->manager->getModuleHandler()->alter('slick_options_required_by_template', $options);
+    return $options;
+  }
+
+  /**
+   * Returns the typecast values.
+   *
+   * @param array $settings
+   *   An array of Optionset settings.
+   */
+  public function typecastOptionset(array &$settings = []) {
+    if (empty($settings)) {
+      return;
+    }
+
+    $defaults = Slick::defaultSettings();
+
+    foreach ($defaults as $name => $value) {
+      if (isset($settings[$name])) {
+        // Seems double is ignored, and causes a missing schema, unlike float.
+        $type = gettype($defaults[$name]);
+        $type = $type == 'double' ? 'float' : $type;
+
+        // Change float to integer if value is no longer float.
+        if ($name == 'edgeFriction') {
+          $type = $settings[$name] == '1' ? 'integer' : 'float';
+        }
+
+        settype($settings[$name], $type);
+      }
+    }
+  }
+
+  /**
+   * Handles switching the breakpoints based on the input value.
+   */
+  public function addBreakpoints($form, FormStateInterface $form_state) {
+    if (!$form_state->isValueEmpty('breakpoints')) {
+      $form_state->setValue('breakpoints_count', $form_state->getValue('breakpoints'));
+      if ($form_state->getValue('breakpoints') >= 6) {
+        $message = $this->t('You are trying to load too many Breakpoints. Try reducing it to reasonable numbers say, between 1 to 5.');
+        $this->messenger->addMessage($message, 'warning');
+      }
+    }
+
+    return $form['responsives']['responsive'];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -754,12 +899,45 @@ class SlickForm extends SlickFormBase {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::save().
+   * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
-    parent::save($form, $form_state);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
 
-    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+    // Optimized if so configured.
+    $slick   = $this->entity;
+    $default = $slick->id() == 'default';
+    if (!$default && !$form_state->isValueEmpty('optimized')) {
+      $defaults = $slick::defaultSettings();
+      $required = $this->getOptionsRequiredByTemplate();
+      $main     = array_diff_assoc($defaults, $required);
+      $settings = $form_state->getValue(['options', 'settings']);
+
+      // Cast the values.
+      $this->typecastOptionset($settings);
+
+      // Remove wasted dependent options if disabled, empty or not.
+      $slick->removeWastedDependentOptions($settings);
+
+      $main_settings = array_diff_assoc($settings, $main);
+      $slick->setSettings($main_settings);
+
+      $responsive_options = ['options', 'responsives', 'responsive'];
+      if ($responsives = $form_state->getValue($responsive_options)) {
+        foreach ($responsives as $delta => &$responsive) {
+          if (!empty($responsive['unslick'])) {
+            $slick->setResponsiveSettings([], $delta);
+          }
+          else {
+            $this->typecastOptionset($responsive['settings']);
+            $slick->removeWastedDependentOptions($responsive['settings']);
+
+            $responsive_settings = array_diff_assoc($responsive['settings'], $defaults);
+            $slick->setResponsiveSettings($responsive_settings, $delta);
+          }
+        }
+      }
+    }
   }
 
 }

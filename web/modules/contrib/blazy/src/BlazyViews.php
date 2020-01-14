@@ -20,6 +20,7 @@ class BlazyViews {
       $load = $blazy->blazyManager()->attach($settings);
 
       // Enforce Blazy to work with hidden element such as with EB selection.
+      // @todo refine this to selectively loadInvisible by request.
       $load['drupalSettings']['blazy']['loadInvisible'] = TRUE;
       $view->element['#attached'] = isset($view->element['#attached']) ? NestedArray::mergeDeep($view->element['#attached'], $load) : $load;
 
@@ -50,6 +51,21 @@ class BlazyViews {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Implements hook_preprocess_views_view().
+   */
+  public static function preprocessViewsView(array &$variables, $lightboxes) {
+    preg_match('~blazy--(.*?)-gallery~', $variables['css_class'], $matches);
+    $lightbox = $matches[1] ? str_replace('-', '_', $matches[1]) : FALSE;
+
+    // Given blazy--photoswipe-gallery, adds the [data-photoswipe-gallery], etc.
+    if ($lightbox && in_array($lightbox, $lightboxes)) {
+      $variables['attributes']['class'] = array_merge(['blazy'], $variables['attributes']['class']);
+      $variables['attributes']['data-blazy'] = TRUE;
+      $variables['attributes']['data-' . $matches[1] . '-gallery'] = TRUE;
+    }
   }
 
 }

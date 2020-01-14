@@ -27,12 +27,13 @@
   set classes = [
     'media',
     settings.namespace ? 'media--' ~ settings.namespace,
-    settings.lazy ? 'media--loading',
+    settings.lazy and settings.use_loading ? 'media--loading',
     settings.media_switch ? 'media--switch media--switch--' ~ settings.media_switch|clean_class,
     settings.player ? 'media--player',
     settings.ratio ? 'media--ratio media--ratio--' ~ settings.ratio,
     settings.responsive_image_style_id ? 'media--responsive',
     settings.type ? 'media--' ~ settings.type,
+    settings.classes ? settings.classes|join(' ')|clean_class,
   ]
 %}
 {%
@@ -46,9 +47,9 @@
   {% if settings.player %}
     {% block blazy_player %}
       <iframe{{ iframe_attributes.addClass(iframe_classes) }} allowfullscreen></iframe>
-      {% if settings.media_switch %}
+      {% if settings.media_switch and settings.autoplay_url %}
         <span class="media__icon media__icon--close"></span>
-        <span class="media__icon media__icon--play" data-url="{{ settings.autoplay_url }}"></span>
+        <span class="media__icon media__icon--play" data-url="{{ settings.embed_url }}" data-autoplay="{{ settings.autoplay_url }}"></span>
       {% endif %}
     {% endblock %}
   {% endif %}

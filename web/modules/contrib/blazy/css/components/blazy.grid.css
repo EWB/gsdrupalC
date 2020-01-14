@@ -8,13 +8,13 @@
 
 [class*="block-grid-"],
 [class*="block-grid-"] * {
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
 [class*="block-grid-"],
 .block [class*="block-grid-"],
 .item-list > [class*="block-grid-"] {
+  clear: both;
   display: block;
   list-style: none;
   padding: 0;
@@ -51,6 +51,10 @@
   display: inline-block;
   float: none;
   vertical-align: top;
+}
+
+[class*="block-grid-"] .grid__content {
+  position: relative;
 }
 
 @media only screen {

@@ -5,6 +5,9 @@
  * Testing various Blazy hooks, etc.
  */
 
+use Drupal\blazy\Blazy;
+use Drupal\blazy\BlazyDefault;
+
 /**
  * Implements hook_theme().
  */
@@ -55,7 +58,7 @@ function blazy_test_blazy_alter(array &$image, array $settings = []) {
 }
 
 /**
- * #pre_render callback: Sets blazy_test related URL attributes.
+ * The #pre_render callback: Sets blazy_test related URL attributes.
  */
 function blazy_test_pre_render($image) {
   $settings = isset($image['#settings']) ? $image['#settings'] : [];
@@ -76,24 +79,25 @@ function blazy_test_hook_info() {
   return $hooks;
 }
 
-if (!function_exists('token_theme')) {
-
-  /**
-   * Dummy function.
-   */
-  function token_theme() {
-    // Empty block to satisfy coder.
+/**
+ * Implements hook_library_info_alter().
+ */
+function blazy_test_library_info_alter(array &$libraries, $extension) {
+  if ($extension !== 'blazy') {
+    return;
   }
 
+  $path = DRUPAL_ROOT . '/libraries/blazy/blazy.js';
+  if (!is_file($path)) {
+    $libraries['blazy']['js'] = ['https://cdn.jsdelivr.net/npm/blazy/blazy.js' => ['type' => 'external', 'weight' => -4]];
+    unset($libraries['blazy']['js']['/libraries/blazy/blazy.js']);
+  }
 }
 
-if (!function_exists('video_embed_media_media_bundle_insert')) {
-
-  /**
-   * Dummy function.
-   */
-  function video_embed_media_media_bundle_insert() {
-    // Empty block to satisfy coder.
-  }
-
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function blazy_test_config_schema_info_alter(array &$definitions) {
+  $extra = ['thumbnail' => ''] + BlazyDefault::gridSettings();
+  Blazy::configSchemaInfoAlter($definitions, 'blazy_base', BlazyDefault::extendedSettings() + $extra);
 }

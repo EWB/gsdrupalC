@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class BlazyStylePluginBase extends StylePluginBase {
 
+  use BlazyStyleBaseTrait;
+  use BlazyStyleOptionsTrait;
   use BlazyStylePluginTrait;
 
   /**
@@ -47,7 +49,7 @@ abstract class BlazyStylePluginBase extends StylePluginBase {
    */
   public function buildElement(array &$element, $row, $index) {
     $settings = &$element['settings'];
-    $item_id  = empty($settings['item_id']) ? 'box' : $settings['item_id'];
+    $item_id = empty($settings['item_id']) ? 'box' : $settings['item_id'];
 
     // Add main image fields if so configured.
     if (!empty($settings['image'])) {

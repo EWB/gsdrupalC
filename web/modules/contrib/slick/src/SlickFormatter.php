@@ -23,14 +23,18 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
 
     // Pass basic info to parent::buildSettings().
     parent::buildSettings($build, $items);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preBuildElements(array &$build, $items, array $entities = []) {
+    parent::preBuildElements($build, $items, $entities);
+
+    $settings = &$build['settings'];
 
     // Slick specific stuffs.
-    $build['optionset'] = Slick::load($settings['optionset']);
-
-    // Ensures deleted optionset while being used doesn't screw up.
-    if (empty($build['optionset'])) {
-      $build['optionset'] = Slick::load('default');
-    }
+    $build['optionset'] = Slick::loadWithFallback($settings['optionset']);
 
     if (!isset($settings['nav'])) {
       $settings['nav'] = !empty($settings['optionset_thumbnail']) && isset($items[1]);
@@ -55,18 +59,12 @@ class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInte
     if (empty($settings['override']) && isset($settings['overridables'])) {
       $settings['overridables'] = array_filter($settings['overridables']);
     }
+
+    $this->getModuleHandler()->alter('slick_settings', $build, $items);
   }
 
   /**
-   * Gets the thumbnail image using theme_image_style().
-   *
-   * @param array $settings
-   *   The array containing: thumbnail_style, etc.
-   * @param object $item
-   *   The \Drupal\image\Plugin\Field\FieldType\ImageItem object.
-   *
-   * @return array
-   *   The renderable array of thumbnail image.
+   * {@inheritdoc}
    */
   public function getThumbnail(array $settings = [], $item = NULL) {
     $thumbnail = [];

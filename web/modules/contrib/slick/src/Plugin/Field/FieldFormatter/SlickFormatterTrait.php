@@ -12,13 +12,6 @@ trait SlickFormatterTrait {
   /**
    * The slick field formatter manager.
    *
-   * @var \Drupal\slick\SlickFormatterInterface
-   */
-  protected $formatter;
-
-  /**
-   * The slick field formatter manager.
-   *
    * @var \Drupal\slick\SlickManagerInterface
    */
   protected $manager;
@@ -48,8 +41,7 @@ trait SlickFormatterTrait {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    // @todo: Remove second param post Blazy RC2+.
-    return $this->admin()->getSettingsSummary($this->getScopedFormElements(), $this);
+    return $this->admin()->getSettingsSummary($this->getScopedFormElements());
   }
 
   /**

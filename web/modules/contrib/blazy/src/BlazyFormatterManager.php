@@ -8,12 +8,26 @@ namespace Drupal\blazy;
 class BlazyFormatterManager extends BlazyManager {
 
   /**
-   * Returns the field formatter settings inherited by child elements.
+   * The first image item found.
+   *
+   * @var object
+   */
+  protected $firstItem = NULL;
+
+  /**
+   * Checks if image dimensions are set.
+   *
+   * @var array
+   */
+  private $isDimensionSet;
+
+  /**
+   * Modifies the field formatter settings inherited by child elements.
    *
    * @param array $build
    *   The array containing: settings, or potential optionset for extensions.
    * @param object $items
-   *   The items to prepare settings for.
+   *   The Drupal\Core\Field\FieldItemListInterface items.
    */
   public function buildSettings(array &$build, $items) {
     $settings       = &$build['settings'];
@@ -30,7 +44,8 @@ class BlazyFormatterManager extends BlazyManager {
     $view_mode      = empty($settings['current_view_mode']) ? '_custom' : $settings['current_view_mode'];
     $namespace      = $settings['namespace'] = empty($settings['namespace']) ? 'blazy' : $settings['namespace'];
     $id             = isset($settings['id']) ? $settings['id'] : '';
-    $id             = Blazy::getHtmlId("{$namespace}-{$entity_type_id}-{$entity_id}-{$field_clean}-{$view_mode}", $id);
+    $gallery_id     = "{$namespace}-{$entity_type_id}-{$bundle}-{$field_clean}-{$view_mode}";
+    $id             = Blazy::getHtmlId("{$gallery_id}-{$entity_id}", $id);
     $switch         = empty($settings['media_switch']) ? '' : $settings['media_switch'];
     $internal_path  = $absolute_path = NULL;
 
@@ -44,7 +59,6 @@ class BlazyFormatterManager extends BlazyManager {
       }
     }
 
-    $settings['breakpoints']    = isset($settings['breakpoints']) && empty($settings['responsive_image_style']) ? $settings['breakpoints'] : [];
     $settings['bundle']         = $bundle;
     $settings['cache_metadata'] = ['keys' => [$id, $count]];
     $settings['content_url']    = $settings['absolute_path'] = $absolute_path;
@@ -53,31 +67,34 @@ class BlazyFormatterManager extends BlazyManager {
     $settings['entity_type_id'] = $entity_type_id;
     $settings['field_type']     = $field_type;
     $settings['field_name']     = $field_name;
+    $settings['gallery_id']     = str_replace('_', '-', $gallery_id . '-' . $switch);
     $settings['id']             = $id;
     $settings['internal_path']  = $internal_path;
     $settings['lightbox']       = ($switch && in_array($switch, $this->getLightboxes())) ? $switch : FALSE;
-    $settings['resimage']       = function_exists('responsive_image_get_image_dimensions');
+    $settings['placeholder']    = $this->configLoad('placeholder', 'blazy.settings');
+    $settings['resimage']       = function_exists('responsive_image_get_image_dimensions') && $this->configLoad('responsive_image', 'blazy.settings') && !empty($settings['responsive_image_style']);
     $settings['target_type']    = $target_type;
 
     unset($entity, $field);
 
-    // @todo: Enable after proper checks.
-    // $settings = array_filter($settings);
     if (!empty($settings['vanilla'])) {
       $settings = array_filter($settings);
       return;
     }
 
-    if (!empty($settings['breakpoints'])) {
-      $this->cleanUpBreakpoints($settings);
+    // Don't bother if using Responsive image.
+    $settings['breakpoints'] = isset($settings['breakpoints']) && empty($settings['responsive_image_style']) ? $settings['breakpoints'] : [];
+    $settings['caption']     = empty($settings['caption']) ? [] : array_filter($settings['caption']);
+    $settings['background']  = empty($settings['responsive_image_style']) && !empty($settings['background']);
+    $settings['blazy']       = $settings['resimage'] || !empty($settings['blazy']);
+    $settings['one_pixel']   = $this->configLoad('one_pixel', 'blazy.settings');
+
+    // Let Blazy handle CSS background as Slick's background is deprecated.
+    if ($settings['background']) {
+      $settings['blazy'] = TRUE;
     }
 
-    $settings['caption']    = empty($settings['caption']) ? [] : array_filter($settings['caption']);
-    $settings['background'] = empty($settings['responsive_image_style']) && !empty($settings['background']);
-    $resimage_lazy          = $this->configLoad('responsive_image') && !empty($settings['responsive_image_style']);
-    $settings['blazy']      = $resimage_lazy || !empty($settings['blazy']);
-
-    if (!empty($settings['blazy'])) {
+    if ($settings['blazy']) {
       $settings['lazy'] = 'blazy';
     }
 
@@ -91,25 +108,111 @@ class BlazyFormatterManager extends BlazyManager {
       }
     }
 
+    // Add the entity to formatter cache tags.
+    $settings['cache_tags'][] = $settings['entity_type_id'] . ':' . $settings['entity_id'];
     $settings['ratio'] = $ratio ? $settings['ratio'] : FALSE;
+  }
+
+  /**
+   * Modifies the field formatter settings inherited by child elements.
+   *
+   * @param array $build
+   *   The array containing: settings, or potential optionset for extensions.
+   * @param object $items
+   *   The Drupal\Core\Field\FieldItemListInterface items.
+   * @param array $entities
+   *   The optional entities array, not available for non-entities: text, image.
+   */
+  public function preBuildElements(array &$build, $items, array $entities = []) {
+    $this->buildSettings($build, $items);
+    $settings = &$build['settings'];
+
+    // Pass first item to optimize sizes this time.
+    if (isset($items[0]) && $item = $items[0]) {
+      $entity = isset($entities[0]) ? $entities[0] : NULL;
+      $this->extractFirstItem($settings, $item, $entity);
+    }
 
     // Sets dimensions once, if cropped, to reduce costs with ton of images.
     // This is less expensive than re-defining dimensions per image.
-    if (!empty($settings['image_style']) && !$resimage_lazy) {
-      if ($field_type == 'image' && $items[0]) {
-        $settings['item'] = $items[0];
-        $settings['uri']  = ($file = $items[0]->entity) && empty($items[0]->uri) ? $file->getFileUri() : $items[0]->uri;
-      }
-
-      if (!empty($settings['uri'])) {
-        $this->setDimensionsOnce($settings);
-      }
+    $this->cleanUpBreakpoints($settings);
+    if (!empty($settings['first_uri']) && empty($settings['resimage'])) {
+      $this->setDimensionsOnce($settings, $this->firstItem);
     }
 
-    // Add the entity to formatter cache tags.
-    $settings['cache_tags'][] = $settings['entity_type_id'] . ':' . $settings['entity_id'];
+    // Allows altering the settings.
+    $this->getModuleHandler()->alter('blazy_settings', $build, $items);
+  }
 
-    $this->getModuleHandler()->alter($namespace . '_settings', $build, $items);
+  /**
+   * Modifies the field formatter settings not inherited by child elements.
+   *
+   * @param array $build
+   *   The array containing: items, settings, or a potential optionset.
+   * @param object $items
+   *   The Drupal\Core\Field\FieldItemListInterface items.
+   * @param array $entities
+   *   The optional entities array, not available for non-entities: text, image.
+   */
+  public function postBuildElements(array &$build, $items, array $entities = []) {
+    // Rebuild the first item to build colorbox/zoom-like gallery.
+    $build['settings']['first_item'] = $this->firstItem;
+  }
+
+  /**
+   * Extract the first image item to build colorbox/zoom-like gallery.
+   *
+   * @param array $settings
+   *   The $settings array being modified.
+   * @param object $item
+   *   The Drupal\image\Plugin\Field\FieldType\ImageItem item.
+   * @param object $entity
+   *   The optional media entity.
+   */
+  public function extractFirstItem(array &$settings, $item, $entity = NULL) {
+    if ($settings['field_type'] == 'image') {
+      $this->firstItem = $item;
+      $settings['first_uri'] = ($file = $item->entity) && empty($item->uri) ? $file->getFileUri() : $item->uri;
+    }
+    elseif ($entity && $entity->hasField('thumbnail') && $image = $entity->get('thumbnail')->first()) {
+      $this->firstItem = $image;
+      $settings['first_uri'] = $image->entity->getFileUri();
+    }
+  }
+
+  /**
+   * Sets dimensions once to reduce method calls, if image style contains crop.
+   *
+   * The implementor should only call this if not using Responsive image style.
+   *
+   * @param array $settings
+   *   The settings being modified.
+   * @param object $item
+   *   The first image item found.
+   */
+  public function setDimensionsOnce(array &$settings = [], $item = NULL) {
+    if (!isset($this->isDimensionSet[md5($settings['first_uri'])])) {
+      $dimensions['width']  = $settings['original_width'] = $item && isset($item->width) ? $item->width : NULL;
+      $dimensions['height'] = $settings['original_height'] = $item && isset($item->height) ? $item->height : NULL;
+
+      // If image style contains crop, sets dimension once, and let all inherit.
+      if (!empty($settings['image_style']) && ($style = $this->isCrop($settings['image_style']))) {
+        $style->transformDimensions($dimensions, $settings['first_uri']);
+
+        $settings['height'] = $dimensions['height'];
+        $settings['width']  = $dimensions['width'];
+
+        // Informs individual images that dimensions are already set once.
+        $settings['_dimensions'] = TRUE;
+      }
+
+      // Also sets breakpoint dimensions once, if cropped.
+      if (!empty($settings['breakpoints'])) {
+        $this->buildDataBlazy($settings, $item);
+      }
+
+      $this->isDimensionSet[md5($settings['first_uri'])] = TRUE;
+    }
   }
 
 }

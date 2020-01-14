@@ -4,11 +4,13 @@ namespace Drupal\blazy\Form;
 
 use Drupal\Core\Url;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\blazy\BlazyManagerInterface;
 
@@ -69,6 +71,13 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
   protected $typedConfig;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
    * The blazy manager service.
    *
    * @var \Drupal\blazy\BlazyManagerInterface
@@ -82,12 +91,15 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
    *   The entity display repository.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed config service.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
    * @param \Drupal\slick\BlazyManagerInterface $blazy_manager
    *   The blazy manager service.
    */
-  public function __construct(EntityDisplayRepositoryInterface $entity_display_repository, TypedConfigManagerInterface $typed_config, BlazyManagerInterface $blazy_manager) {
+  public function __construct(EntityDisplayRepositoryInterface $entity_display_repository, TypedConfigManagerInterface $typed_config, DateFormatterInterface $date_formatter, BlazyManagerInterface $blazy_manager) {
     $this->entityDisplayRepository = $entity_display_repository;
     $this->typedConfig             = $typed_config;
+    $this->dateFormatter           = $date_formatter;
     $this->blazyManager            = $blazy_manager;
   }
 
@@ -95,7 +107,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity_display.repository'), $container->get('config.typed'), $container->get('blazy.manager'));
+    return new static($container->get('entity_display.repository'), $container->get('config.typed'), $container->get('date.formatter'), $container->get('blazy.manager'));
   }
 
   /**
@@ -122,7 +134,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
   /**
    * Returns shared form elements across field formatter and Views.
    */
-  public function openingForm(array &$form, $definition = []) {
+  public function openingForm(array &$form, &$definition = []) {
     $this->blazyManager->getModuleHandler()->alter('blazy_form_element_definition', $definition);
 
     // Display style: column, plain static grid, slick grid, slick carousel.
@@ -140,6 +152,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
         ],
         '#weight'             => -112,
         '#wrapper_attributes' => ['class' => ['form-item--style', 'form-item--tooltip-bottom']],
+        '#required'           => !empty($definition['grid_required']),
       ];
     }
 
@@ -205,14 +218,13 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
    */
   public function breakpointsForm(array &$form, $definition = []) {
     $settings = isset($definition['settings']) ? $definition['settings'] : [];
-    $title    = $this->t('Leave Breakpoints empty to disable multi-serving images. <small>If provided, Blazy lazyload applies. Ignored if core Responsive image is provided.<br /> If only two is needed, simply leave the rest empty. At any rate, the last should target the largest monitor. <br />It uses <strong>max-width</strong>, not <strong>min-width</strong>.</small>');
+    $title    = $this->t('Leave Breakpoints empty to disable multi-serving images. <small>If provided, Blazy lazyload applies. Ignored if core Responsive image is provided.<br /> If only two is needed, simply leave the rest empty. At any rate, the last should target the largest monitor. <br>Choose an <b>Aspect ratio</b> and use an image effect with <b>CROP</b> in its name for all styles for best performance. <br>It uses <strong>max-width</strong>, not <strong>min-width</strong>.</small>');
 
     $form['sizes'] = [
       '#type'               => 'textfield',
       '#title'              => $this->t('Sizes'),
       '#description'        => $this->t('E.g.: (min-width: 1290px) 1290px, 100vw. Use sizes to implement different size image (different height, width) on different screen sizes along with the <strong>w (width)</strong> descriptor below. Ignored by Responsive image.'),
       '#weight'             => 114,
-      '#attributes'         => ['class' => ['form-text--sizes', 'js-expandable']],
       '#wrapper_attributes' => ['class' => ['form-item--sizes']],
       '#prefix'             => '<h2 class="form__title form__title--breakpoints">' . $title . '</h2>',
     ];
@@ -245,11 +257,14 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
       foreach ($elements as $key => $element) {
         $form['breakpoints'][$breakpoint][$key] = $element;
 
-        if (isset($definition['vanilla'])) {
+        if (!empty($definition['vanilla'])) {
           $form['breakpoints'][$breakpoint][$key]['#states']['enabled'][$vanilla] = ['checked' => FALSE];
         }
+
         $value = isset($settings['breakpoints'][$breakpoint][$key]) ? $settings['breakpoints'][$breakpoint][$key] : '';
-        $form['breakpoints'][$breakpoint][$key]['#default_value'] = $value;
+        if ($key != 'breakpoint') {
+          $form['breakpoints'][$breakpoint][$key]['#default_value'] = $value;
+        }
       }
     }
   }
@@ -260,7 +275,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
   public function breakpointElements($definition = []) {
     foreach ($definition['breakpoints'] as $breakpoint) {
       $form[$breakpoint]['breakpoint'] = [
-        '#type'               => 'item',
+        '#type'               => 'markup',
         '#markup'             => $breakpoint,
         '#weight'             => 1,
         '#wrapper_attributes' => ['class' => ['form-item--right']],
@@ -284,7 +299,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
         '#maz_length'         => 32,
         '#size'               => 6,
         '#weight'             => 3,
-        '#attributes'         => ['class' => ['form-text--width', 'js-expandable']],
+        '#attributes'         => ['class' => ['form-text--width']],
         '#wrapper_attributes' => ['class' => ['form-item--width']],
       ];
 
@@ -302,19 +317,28 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
   public function gridForm(array &$form, $definition = []) {
     $range = range(1, 12);
     $grid_options = array_combine($range, $range);
+    $required = !empty($definition['grid_required']);
 
     $header = $this->t('Group individual items as block grid<small>Depends on the <strong>Display style</strong>.</small>');
     $form['grid_header'] = [
-      '#type'   => 'item',
+      '#type'   => 'markup',
       '#markup' => '<h3 class="form__title form__title--grid">' . $header . '</h3>',
+      '#access' => !$required,
     ];
 
+    if ($required) {
+      $description = $this->t('The amount of block grid columns for large monitors 64.063em.');
+    }
+    else {
+      $description = $this->t('Select <strong>- None -</strong> first if trouble with changing form states. The amount of block grid columns for large monitors 64.063em+. <br /><strong>Requires</strong>:<ol><li>Visible items,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents.</li></ol>Leave empty to DIY, or to not build grids.');
+    }
     $form['grid'] = [
       '#type'        => 'select',
       '#title'       => $this->t('Grid large'),
       '#options'     => $grid_options,
-      '#description' => $this->t('Select <strong>- None -</strong> first if trouble with changing form states. The amount of block grid columns for large monitors 64.063em+. <br /><strong>Requires</strong>:<ol><li>Visible items,</li><li>Skin Grid for starter,</li><li>A reasonable amount of contents.</li></ol>Leave empty to DIY, or to not build grids.'),
+      '#description' => $description,
       '#enforced'    => TRUE,
+      '#required'    => $required,
     ];
 
     $form['grid_medium'] = [
@@ -342,6 +366,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
       '#type'        => 'checkbox',
       '#title'       => $this->t('Preserve keys'),
       '#description' => $this->t('If checked, keys will be preserved. Default is FALSE which will reindex the grid chunk numerically.'),
+      '#access'      => FALSE,
     ];
 
     $grids = [
@@ -405,14 +430,15 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
           'content' => $this->t('Image linked to content'),
         ],
         '#empty_option' => $this->t('- None -'),
-        '#description'  => $this->t('May depend on the enabled supported or supportive modules: colorbox, photobox etc. Be sure to add Thumbnail style if using Photobox. Try selecting "<strong>- None -</strong>" first before changing if trouble with this complex form states.'),
+        '#description'  => $this->t('May depend on the enabled supported or supportive modules: colorbox, photobox etc. Add Thumbnail style if using Photobox, Slick, or others which may need it. Try selecting "<strong>- None -</strong>" first before changing if trouble with this complex form states.'),
         '#weight'       => -99,
       ];
 
       // Optional lightbox integration.
       if (!empty($lightboxes)) {
         foreach ($lightboxes as $lightbox) {
-          $form['media_switch']['#options'][$lightbox] = $this->t('Image to @lightbox', ['@lightbox' => $lightbox]);
+          $name = Unicode::ucwords(str_replace('_', ' ', $lightbox));
+          $form['media_switch']['#options'][$lightbox] = $this->t('Image to @lightbox', ['@lightbox' => $name]);
         }
 
         // Re-use the same image style for both lightboxes.
@@ -421,7 +447,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
           '#title'   => $this->t('Lightbox image style'),
           '#options' => $image_styles,
           '#states'  => $this->getState(static::STATE_LIGHTBOX_ENABLED, $definition),
-          '#weight'  => -99,
+          '#weight'  => -97,
         ];
 
         if (!empty($definition['multimedia'])) {
@@ -431,7 +457,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
             '#options'     => $image_styles,
             '#description' => $this->t('Allows different lightbox video dimensions. Or can be used to have a swipable video if Blazy PhotoSwipe installed.'),
             '#states'      => $this->getState(static::STATE_LIGHTBOX_ENABLED, $definition),
-            '#weight'      => -99,
+            '#weight'      => -96,
           ];
         }
       }
@@ -449,12 +475,12 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
           '#title'        => $this->t('Aspect ratio'),
           '#options'      => array_combine($ratio, $ratio),
           '#empty_option' => $this->t('- None -'),
-          '#description'  => $this->t('Aspect ratio to get consistently responsive images and iframes. And to fix layout reflow and excessive height issues. <a href="@dimensions"   target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the aspect ratio</a>. If not, images will be distorted. Choose <strong>fluid</strong> if unsure. Choose <strong>enforced</strong> if you can stick to one aspect ratio and want multi-serving, or Responsive images. <a href="@link" target="_blank">Learn more</a>, or leave empty to DIY, or when working with multi-image-style plugin like GridStack. <br /><strong>Note!</strong> Only compatible with Blazy multi-serving images, but not Responsive image.', [
+          '#description'  => $this->t('Aspect ratio to get consistently responsive images and iframes. And to fix layout reflow and excessive height issues. <a href="@dimensions" target="_blank">Image styles and video dimensions</a> must <a href="@follow" target="_blank">follow the aspect ratio</a>. If not, images will be distorted. Choose <strong>enforced</strong> if you can stick to one aspect ratio and want multi-serving images. Try <strong>fluid</strong> if unsure. <a href="@link" target="_blank">Learn more</a>, or leave empty to DIY, or when working with multi-image-style plugin like GridStack. <br /><strong>Note!</strong> Only compatible with Blazy multi-serving images, but not Responsive image.', [
             '@dimensions'  => '//size43.com/jqueryVideoTool.html',
             '@follow'      => '//en.wikipedia.org/wiki/Aspect_ratio_%28image%29',
             '@link'        => '//www.smashingmagazine.com/2014/02/27/making-embedded-content-work-in-responsive-design/',
           ]),
-          '#weight'        => -96,
+          '#weight'        => -95,
         ];
 
         if ($is_responsive) {
@@ -469,11 +495,11 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
         '#options'     => $this->getViewModeOptions($definition['target_type']),
         '#title'       => $this->t('View mode'),
         '#description' => $this->t('Required to grab the fields, or to have custom entity display as fallback display. If it has fields, be sure the selected "View mode" is enabled, and the enabled fields here are not hidden there.'),
-        '#weight'      => -96,
+        '#weight'      => -94,
         '#enforced'    => TRUE,
       ];
 
-      if ($this->blazyManager()->getModuleHandler()->moduleExists('field_ui')) {
+      if ($this->blazyManager->getModuleHandler()->moduleExists('field_ui')) {
         $form['view_mode']['#description'] .= $this->t('Manage view modes on the <a href=":view_modes">View modes page</a>.', [':view_modes' => Url::fromRoute('entity.entity_view_mode.collection')->toString()]);
       }
     }
@@ -484,7 +510,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
         '#title'       => $this->t('Thumbnail style'),
         '#options'     => function_exists('image_style_options') ? image_style_options(TRUE) : [],
         '#description' => $this->t('Usages: Photobox/PhotoSwipe thumbnail, or custom work with thumbnails. Leave empty to not use thumbnails.'),
-        '#weight'      => -100,
+        '#weight'      => -96,
       ];
     }
 
@@ -499,7 +525,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
   public function mediaSwitchForm(array &$form, $definition = []) {
     $settings   = isset($definition['settings']) ? $definition['settings'] : [];
     $lightboxes = $this->blazyManager->getLightboxes();
-    $is_token   = function_exists('token_theme');
+    $is_token   = $this->blazyManager->getModuleHandler()->moduleExists('token');
 
     if (isset($settings['media_switch'])) {
       $form['media_switch'] = $this->baseForm($definition)['media_switch'];
@@ -508,16 +534,6 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
       if (empty($definition['no_ratio'])) {
         $form['ratio'] = $this->baseForm($definition)['ratio'];
       }
-    }
-
-    if (!empty($definition['multimedia']) && empty($definition['no_iframe_lazy'])) {
-      $form['iframe_lazy'] = [
-        '#type'        => 'checkbox',
-        '#title'       => $this->t('Lazy iframe'),
-        '#description' => $this->t('Check to make the video/audio iframes truly lazyloaded, and speed up loading time. Depends on JS enabled at client side. <a href=":more" target="_blank">Read more</a> to <a href=":url" target="_blank">decide</a>.', [':more' => '//goo.gl/FQLFQ6', ':url' => '//goo.gl/f78pMl']),
-        '#weight'      => -96,
-        '#states'      => $this->getState(static::STATE_IFRAME_ENABLED, $definition),
-      ];
     }
 
     // Optional lightbox integration.
@@ -543,7 +559,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
           '#type'        => 'select',
           '#title'       => $this->t('Lightbox caption'),
           '#options'     => $box_captions,
-          '#weight'      => -99,
+          '#weight'      => -95,
           '#states'      => $this->getState(static::STATE_LIGHTBOX_ENABLED, $definition),
           '#description' => $this->t('Automatic will search for Alt text first, then Title text. Try selecting <strong>- None -</strong> first when changing if trouble with form states.'),
         ];
@@ -551,7 +567,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
         $form['box_caption_custom'] = [
           '#title'       => $this->t('Lightbox custom caption'),
           '#type'        => 'textfield',
-          '#weight'      => -99,
+          '#weight'      => -94,
           '#states'      => $this->getState(static::STATE_LIGHTBOX_CUSTOM, $definition),
           '#description' => $this->t('Multi-value rich text field will be mapped to each image by its delta.'),
         ];
@@ -577,13 +593,19 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
   public function finalizeForm(array &$form, $definition = []) {
     $namespace = isset($definition['namespace']) ? $definition['namespace'] : 'slick';
     $settings = isset($definition['settings']) ? $definition['settings'] : [];
-    $vanilla = isset($definition['vanilla']) ? ' form--vanilla' : '';
-    $captions = empty($definition['captions']) ? 0 : count($definition['captions']);
-    $wide = $captions > 2 ? ' form--wide form--caption-' . $captions : ' form--caption-' . $captions;
+    $vanilla = !empty($definition['vanilla']) ? ' form--vanilla' : '';
+    $grid = !empty($definition['grid_required']) ? ' form--grid-required' : '';
+    $plugind_id = !empty($definition['plugin_id']) ? ' form--plugin-' . str_replace('_', '-', $definition['plugin_id']) : '';
+    $count = empty($definition['captions']) ? 0 : count($definition['captions']);
+    $count = empty($definition['captions_count']) ? $count : $definition['captions_count'];
+    $wide = $count > 2 ? ' form--wide form--caption-' . $count : ' form--caption-' . $count;
     $fallback = $namespace == 'slick' ? 'form--slick' : 'form--' . $namespace . ' form--slick';
+    $plugins = ' form--namespace-' . $namespace;
+    $custom = isset($definition['opening_class']) ? ' ' . $definition['opening_class'] : '';
+    // @todo remove form_opening_classes for opening_class.
     $classes = isset($definition['form_opening_classes'])
       ? $definition['form_opening_classes']
-      : $fallback . ' form--half has-tooltip' . $wide . $vanilla;
+      : $fallback . ' form--half has-tooltip' . $wide . $vanilla . $grid . $plugind_id . $custom . $plugins;
 
     if (!empty($definition['field_type'])) {
       $classes .= ' form--' . str_replace('_', '-', $definition['field_type']);
@@ -599,17 +621,22 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
       '#weight' => 120,
     ];
 
+    // @todo: Check if needed: 'button', 'container', 'submit'.
     $admin_css = isset($definition['admin_css']) ? $definition['admin_css'] : '';
     $admin_css = $admin_css ?: $this->blazyManager->configLoad('admin_css', 'blazy.settings');
+    $excludes  = ['details', 'fieldset', 'hidden', 'markup', 'item', 'table'];
+    $selects   = ['cache', 'optionset', 'view_mode'];
 
-    // @todo: Check if needed: 'button', 'container', 'submit'.
-    $excludes = ['details', 'fieldset', 'hidden', 'markup', 'item', 'table'];
-    $selects  = ['cache', 'optionset', 'view_mode'];
+    $this->blazyManager->getModuleHandler()->alter('blazy_form_element', $form, $definition);
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#type']) && !in_array($form[$key]['#type'], $excludes)) {
         if (!isset($form[$key]['#default_value']) && isset($settings[$key])) {
           $value = is_array($settings[$key]) ? array_values((array) $settings[$key]) : $settings[$key];
+
+          if (!empty($definition['grid_required']) && $key == 'grid' && empty($settings[$key])) {
+            $value = 3;
+          }
           $form[$key]['#default_value'] = $value;
         }
         if (!isset($form[$key]['#attributes']) && isset($form[$key]['#description'])) {
@@ -635,12 +662,15 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
         }
 
         if ($form[$key]['#type'] == 'select' && !in_array($key, $selects)) {
-          if (!isset($form[$key]['#empty_option']) && !isset($form[$key]['#required'])) {
+          if (!isset($form[$key]['#empty_option']) && empty($form[$key]['#required'])) {
             $form[$key]['#empty_option'] = $this->t('- None -');
+          }
+          if (!empty($form[$key]['#required'])) {
+            unset($form[$key]['#empty_option']);
           }
         }
 
-        if (!isset($form[$key]['#enforced']) && isset($definition['vanilla']) && isset($form[$key]['#type'])) {
+        if (!isset($form[$key]['#enforced']) && !empty($definition['vanilla']) && isset($form[$key]['#type'])) {
           $states['visible'][':input[name*="[vanilla]"]'] = ['checked' => FALSE];
           if (isset($form[$key]['#states'])) {
             $form[$key]['#states']['visible'][':input[name*="[vanilla]"]'] = ['checked' => FALSE];
@@ -685,7 +715,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
       43200,
       86400,
     ];
-    $period = array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($period, $period));
+    $period = array_map([$this->dateFormatter, 'formatInterval'], array_combine($period, $period));
     $period[0] = '<' . $this->t('No caching') . '>';
     return $period + [Cache::PERMANENT => $this->t('Permanent')];
   }
@@ -721,11 +751,13 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
    *
    * @param string $state
    *   The state to get that matches one of the state class constants.
+   * @param array $definition
+   *   The foem definitions or settings.
    *
    * @return array
    *   A corresponding form API state.
    */
-  protected function getState($state, $definition = []) {
+  protected function getState($state, array $definition = []) {
     $lightboxes = [];
 
     foreach ($this->blazyManager->getLightboxes() as $key => $lightbox) {

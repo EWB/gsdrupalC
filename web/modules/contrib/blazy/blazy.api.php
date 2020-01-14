@@ -12,12 +12,13 @@
  *
  * Modules may implement any of the available hooks to interact with Blazy.
  * Blazy may be configured using the web interface using formatters, or Views.
- * However below is a few sample coded ones as per Blazy RC2+.
+ * However below is a few sample coded ones.
  *
  * A single image sample.
  * @code
  * function my_module_render_blazy() {
  *   $settings = [
+ *     // URI is required to use BlazyManager::getBlazy().
  *     // URI is stored in #settings property so to allow traveling around video
  *     // and lightboxes before being passed into theme_blazy().
  *     'uri' => 'public://logo.jpg',
@@ -26,7 +27,7 @@
  *     // This allows Slick lazyLoad to not load Blazy.
  *     'lazy' => 'blazy',
  *
- *     // Optionally provide an image style:
+ *     // Optionally provide an image style. Valid URI is a must:
  *     'image_style' => 'thumbnail',
  *   ];
  *
@@ -56,7 +57,7 @@
  * }
  * @endcode
  * @see \Drupal\blazy\Blazy::buildAttributes()
- * @see \Drupal\blazy\Dejavu\BlazyDefault::imageSettings()
+ * @see \Drupal\blazy\BlazyDefault::imageSettings()
  *
  * A multiple image sample.
  *
@@ -64,7 +65,7 @@
  * lightboxes, lazyloaded images, or iframes, including CSS background and
  * aspect ratio, etc.:
  *   o Invoke blazy.manager, and or blazy.formatter.manager, services.
- *   o Use \Drupal\blazy\BlazyManager::getImage() method to work with images and
+ *   o Use \Drupal\blazy\BlazyManager::getBlazy() method to work with images and
  *     pass relevant settings which request for particular Blazy features
  *     accordingly.
  *   o Use \Drupal\blazy\BlazyManager::attach() to load relevant libraries.
@@ -85,7 +86,7 @@
  *
  *   // Build images.
  *   $build = [
- *     // Load images via $manager->getImage().
+ *     // Load images via $manager->getBlazy().
  *     // See below ...Formatter::buildElements() for consistent samples.
  *   ];
  *
@@ -95,12 +96,12 @@
  *   return $build;
  * }
  * @endcode
- * @see \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyFormatterTrait::buildElements()
+ * @see \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyFormatterBlazy::buildElements()
  * @see \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyVideoFormatter::buildElements()
  * @see \Drupal\gridstack\Plugin\Field\FieldFormatter\GridStackFileFormatterBase::buildElements()
  * @see \Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatterBase::buildElements()
- * @see \Drupal\blazy\BlazyManager::getImage()
- * @see \Drupal\blazy\Dejavu\BlazyDefault::imageSettings()
+ * @see \Drupal\blazy\BlazyManager::getBlazy()
+ * @see \Drupal\blazy\BlazyDefault::imageSettings()
  *
  *
  * Pre-render callback sample to modify/ extend Blazy output.
@@ -139,11 +140,10 @@ function hook_blazy_attach_alter(array &$load, array $settings = []) {
   if (!empty($settings['photoswipe'])) {
     $load['library'][] = 'my_module/load';
 
-    $manager = \Drupal::service('blazy.manager');
     $template = ['#theme' => 'photoswipe_container'];
     $load['drupalSettings']['photoswipe'] = [
-      'options' => $manager->configLoad('options', 'photoswipe.settings'),
-      'container' => $manager->getRenderer()->renderPlain($template),
+      'options' => blazy()->configLoad('options', 'photoswipe.settings'),
+      'container' => blazy()->getRenderer()->renderPlain($template),
     ];
   }
 }
@@ -165,16 +165,36 @@ function hook_blazy_lightboxes_alter(array &$lightboxes) {
 /**
  * Alters Blazy individual item output to support a custom lightbox.
  *
- * @param array $image
- *   The renderable array of image being modified.
+ * @param array $build
+ *   The renderable array of image/ video iframe being modified.
  * @param array $settings
  *   The available array of settings.
  *
  * @ingroup blazy_api
  */
-function hook_blazy_alter(array &$image, array $settings = []) {
+function hook_blazy_alter(array &$build, array $settings = []) {
   if (!empty($settings['media_switch']) && $settings['media_switch'] == 'photoswipe') {
-    $image['#pre_render'][] = 'my_module_pre_render';
+    $build['#pre_render'][] = 'my_module_pre_render';
+  }
+}
+
+/**
+ * Alters Blazy outputs entirely to support a custom (quasy-)lightbox.
+ *
+ * In a case of ElevateZoom Plus, it adds a prefix large image preview before
+ * the Blazy Grid elements by adding an extra #theme_wrappers via #pre_render
+ * element.
+ *
+ * @param array $build
+ *   The renderable array of the entire Blazy output being modified.
+ * @param array $settings
+ *   The available array of settings.
+ *
+ * @ingroup blazy_api
+ */
+function hook_blazy_build_alter(array &$build, array $settings = []) {
+  if (!empty($settings['elevatezoomplus'])) {
+    $build['#pre_render'][] = 'my_module_pre_render_build';
   }
 }
 
@@ -185,7 +205,7 @@ function hook_blazy_alter(array &$image, array $settings = []) {
  * blazy-related formatters within the designated compact form.
  * While third party settings offer more fine-grained control over a specific
  * formatter, this offers a swap to various blazy-related formatters at one go.
- * Any class extending \Drupal\blazy\Dejavu\BlazyDefault will be capable
+ * Any class extending \Drupal\blazy\BlazyDefault will be capable
  * to modify both form and UI options at one go.
  *
  * This requires 4 things: option definitions (this alter), schema, extended
@@ -204,7 +224,7 @@ function hook_blazy_alter(array &$image, array $settings = []) {
  *
  * In addition to the schema, implement hook_blazy_complete_form_element_alter()
  * to provide the actual extended forms, see far below. And lastly, implement
- * the options at fron-end via hook_preprocess().
+ * the options at front-end via hook_preprocess().
  *
  * @param array $settings
  *   The settings being modified.
@@ -213,7 +233,7 @@ function hook_blazy_alter(array &$image, array $settings = []) {
  *
  * @ingroup blazy_api
  */
-function hook_blazy_base_settings_alter(array &$settings, $context = []) {
+function hook_blazy_base_settings_alter(array &$settings, array $context = []) {
   // One override for both various Slick field formatters and Slick views style.
   // SlickDefault extends BlazyDefault, hence capable to modify/ extend options.
   // These options will be available at many Slick formatters at one go.
@@ -223,20 +243,68 @@ function hook_blazy_base_settings_alter(array &$settings, $context = []) {
 }
 
 /**
+ * Alters blazy settings inherited by all child elements.
+ *
+ * @param array $build
+ *   The array containing: settings, or potential optionset for extensions.
+ * @param object $items
+ *   The Drupal\Core\Field\FieldItemListInterface items.
+ *
+ * @ingroup blazy_api
+ */
+function hook_blazy_settings_alter(array &$build, $items) {
+  $settings = &$build['settings'];
+
+  // Overrides one pixel placeholder on particular pages relevant if using Views
+  // rewrite results which may strip out Data URI.
+  // See https://drupal.org/node/2908861.
+  if (isset($settings['entity_id']) && in_array($settings['entity_id'], [45, 67])) {
+    $settings['placeholder'] = 'https://mysite.com/blank.gif';
+  }
+}
+
+/**
  * Alters blazy-related formatter form elements.
+ *
+ * This takes advantage of Blazy taking care of a few elements finalizations,
+ * such as adding #empty_option, extras CSS classes, checkboxes, states, etc.
+ * This is run before hook_blazy_complete_form_element_alter().
  *
  * @param array $form
  *   The $form being modified.
  * @param array $definition
  *   The array defining the scope of form elements.
  *
+ * @see \Drupal\blazy\Form\BlazyAdminBase::finalizeForm()
+ *
  * @ingroup blazy_api
  */
-function hook_blazy_complete_form_element_alter(array &$form, $definition = []) {
+function hook_blazy_form_element_alter(array &$form, array $definition = []) {
   // Limit the scope to Slick formatters, blazy, gridstack, etc. Or swap em all.
   if (isset($definition['namespace']) && $definition['namespace'] == 'slick') {
     // Extend the formatter form elements as needed.
-    // SlickExtended::slickFormElementAlter($form, $definition);
+  }
+}
+
+/**
+ * Alters blazy-related formatter form elements.
+ *
+ * Modify anything Blazy forms output as you wish.
+ * This is run after hook_blazy_form_element_alter().
+ *
+ * @param array $form
+ *   The $form being modified.
+ * @param array $definition
+ *   The array defining the scope of form elements.
+ *
+ * @see \Drupal\blazy\Form\BlazyAdminBase::finalizeForm()
+ *
+ * @ingroup blazy_api
+ */
+function hook_blazy_complete_form_element_alter(array &$form, array $definition = []) {
+  // Limit the scope to Slick formatters, blazy, gridstack, etc. Or swap em all.
+  if (isset($definition['namespace']) && $definition['namespace'] == 'slick') {
+    // Extend the formatter form elements as needed.
   }
 }
 

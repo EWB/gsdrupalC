@@ -5,9 +5,6 @@
  * Provides Slick carousel configuration entity UI.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
-
 /**
  * Implements hook_entity_type_build().
  */
@@ -32,11 +29,13 @@ function slick_ui_entity_type_build(array &$entity_types) {
 /**
  * Implements hook_help().
  */
-function slick_ui_help($route_name, RouteMatchInterface $route_match) {
-  $output = '';
-  switch ($route_name) {
-    case 'help.page.slick_ui':
-      $output = check_markup(file_get_contents(dirname(__FILE__) . '/README.html'), 'restricted_html');
+function slick_ui_help($route_name) {
+  if ($route_name == 'help.page.slick_ui') {
+    $output = file_get_contents(dirname(dirname(__FILE__)) . '/docs/README.md');
+    $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/CONTRIBUTION.md');
+    $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/FAQS.md');
+    $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/TROUBLESHOOTING.md');
+    return function_exists('blazy_parse_markdown') ? blazy_parse_markdown($output) : '<pre>' . $output . '</pre>';
   }
-  return $output;
+  return '';
 }

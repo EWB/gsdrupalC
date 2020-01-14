@@ -41,10 +41,6 @@
   border: 0;
 }
 
-.form--slick .vertical-tabs .vertical-tabs__panes details.vertical-tabs__pane {
-  padding: 0;
-}
-
 .form--slick .vertical-tabs__panes {
   background: #f3f3f3;
   background: rgba(255, 255, 255, 0.9);
@@ -58,7 +54,10 @@
 .form--slick .vertical-tabs__panes > details:first-child {
   border: 0;
   margin: 0;
-  padding-top: 0 !important;
+}
+
+.form--slick .vertical-tabs__panes > details:first-child {
+  padding: 0;
 }
 
 .form--slick .details--responsive .details--settings .form-item:first-child {
@@ -75,5 +74,9 @@
   .form--slick .vertical-tabs__panes {
     margin: 0 0 0 200px;
     padding: 0;
+  }
+
+  .form--optionset .vertical-tabs__panes .form-item label {
+    width: 160px;
   }
 }

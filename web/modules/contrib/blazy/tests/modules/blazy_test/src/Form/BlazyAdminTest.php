@@ -109,7 +109,7 @@ class BlazyAdminTest implements BlazyAdminTestInterface {
   /**
    * Returns the opening form elements.
    */
-  public function openingForm(array &$form, $definition = []) {
+  public function openingForm(array &$form, &$definition = []) {
     $this->blazyAdmin->openingForm($form, $definition);
   }
 
@@ -172,24 +172,8 @@ class BlazyAdminTest implements BlazyAdminTestInterface {
 
   /**
    * Return the field formatter settings summary.
-   *
-   * @deprecated: Removed for self::getSettingsSummary().
    */
-  public function settingsSummary($plugin, $definition = []) {
-    return $this->blazyAdmin->settingsSummary($plugin, $definition);
-  }
-
-  /**
-   * Return the field formatter settings summary.
-   *
-   * @todo: Remove second param $plugin for post-release for Blazy RC2+.
-   */
-  public function getSettingsSummary(array $definition = [], $plugin = NULL) {
-    // @todo: Remove condition for Blazy RC2+.
-    if (!method_exists($this->blazyAdmin, 'getSettingsSummary')) {
-      return $this->blazyAdmin->settingsSummary($plugin, $definition);
-    }
-
+  public function getSettingsSummary(array $definition = []) {
     return $this->blazyAdmin->getSettingsSummary($definition);
   }
 

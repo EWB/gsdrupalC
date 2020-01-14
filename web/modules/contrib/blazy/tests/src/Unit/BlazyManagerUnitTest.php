@@ -80,23 +80,6 @@ class BlazyManagerUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests cases for config.
-   *
-   * @covers ::entityLoad
-   * @covers ::entityLoadMultiple
-   */
-  public function testEntityLoadResponsiveImageStyle() {
-    $styles = $this->setUpResponsiveImageStyle();
-
-    $ids = array_keys($styles);
-    $multiple = $this->blazyManager->entityLoadMultiple('responsive_image_style', $ids);
-    $this->assertArrayHasKey('blazy_picture_test', $multiple);
-
-    $expected = $this->blazyManager->entityLoad('blazy_picture_test', 'responsive_image_style');
-    $this->assertEquals($expected, $multiple['blazy_picture_test']);
-  }
-
-  /**
    * Test \Drupal\blazy\BlazyManager::cleanUpBreakpoints().
    *
    * @covers ::cleanUpBreakpoints
@@ -146,35 +129,20 @@ class BlazyManagerUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests for \Drupal\blazy\BlazyManager::preRenderImage().
+   * Tests for \Drupal\blazy\BlazyManager::getBlazy().
    *
-   * @covers ::getImage
-   * @covers ::preRenderImage
-   * @dataProvider providerTestPreRenderImage
+   * @covers ::getBlazy
+   * @dataProvider providerTestGetBlazy
    */
-  public function testPreRenderImage($item, $uri, $content, $expected_image, $expected_render) {
+  public function testGetBlazy($uri, $content, $expected_image, $expected_render) {
     $build = [];
-
-    $build['item'] = $item ? $this->testItem : [];
+    $build['item'] = NULL;
     $build['content'] = $content;
     $build['settings']['uri'] = $uri;
 
-    if ($item) {
-      $build['item']->_attributes['data-blazy-test'] = TRUE;
-    }
-
-    $image = $this->blazyManager->getImage($build);
-
-    $build_image['#build']['settings'] = array_merge($this->getCacheMetaData(), $build['settings']);
-    $build_image['#build']['item'] = $build['item'];
-
-    $pre_render = $this->blazyManager->preRenderImage($build_image);
-
+    $image = $this->blazyManager->getBlazy($build);
     $check_image = !$expected_image ? empty($image) : !empty($image);
     $this->assertTrue($check_image);
-
-    $check_pre_render = !$expected_render ? TRUE : !empty($pre_render);
-    $this->assertTrue($check_pre_render);
   }
 
   /**
@@ -183,30 +151,20 @@ class BlazyManagerUnitTest extends UnitTestCase {
    * @return array
    *   An array of tested data.
    */
-  public function providerTestPreRenderImage() {
+  public function providerTestGetBlazy() {
     $data[] = [
-      FALSE,
       '',
       '',
       FALSE,
       FALSE,
     ];
     $data[] = [
-      TRUE,
-      '',
-      '',
-      TRUE,
-      TRUE,
-    ];
-    $data[] = [
-      TRUE,
       'core/misc/druplicon.png',
       '',
       TRUE,
       TRUE,
     ];
     $data[] = [
-      TRUE,
       'core/misc/druplicon.png',
       '<iframe src="//www.youtube.com/watch?v=E03HFA923kw" class="b-lazy"></iframe>',
       TRUE,
