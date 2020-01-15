@@ -89,7 +89,7 @@ class GeocoderArgument extends ProximityArgument implements ContainerFactoryPlug
         '#default_value' => $this->options['geocoder'],
         '#ajax' => [
           'callback' => [get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax'],
-          'wrapper' => 'geocoder-plugin-settings',
+          'wrapper' => 'argument-geocoder-plugin-settings',
           'effect' => 'fade',
         ],
       ];
@@ -121,7 +121,7 @@ class GeocoderArgument extends ProximityArgument implements ContainerFactoryPlug
 
       $form['geocoder_settings'] = array_replace_recursive($form['geocoder_settings'], [
         '#flatten' => TRUE,
-        '#prefix' => '<div id="geocoder-plugin-settings">',
+        '#prefix' => '<div id="argument-geocoder-plugin-settings">',
         '#suffix' => '</div>',
       ]);
     }

@@ -154,7 +154,7 @@ trait PluginHelperTrait {
     if ($requested_value == 'storage') {
       return $storage;
     }
-    if (!$view_display) {
+    if (empty($view_display)) {
       $view_display = $storage->load($context);
     }
     if ($requested_value == 'view_display') {
@@ -201,7 +201,7 @@ trait PluginHelperTrait {
    *   The section storage manager.
    */
   private function sectionStorageManager() {
-    return $this->sectionStorageManager ?: \Drupal::service('plugin.manager.layout_builder.section_storage');
+    return $this->sectionStorageManager ?? \Drupal::service('plugin.manager.layout_builder.section_storage');
   }
 
   /**

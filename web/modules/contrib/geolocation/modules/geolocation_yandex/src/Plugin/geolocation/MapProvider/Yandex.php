@@ -17,6 +17,13 @@ use Drupal\Core\Render\BubbleableMetadata;
 class Yandex extends MapProviderBase {
 
   /**
+   * Yandex API Url.
+   *
+   * @var string
+   */
+  public static $APIURLBASE = 'https://api-maps.yandex.ru/2.1/';
+
+  /**
    * {@inheritdoc}
    */
   public static function getDefaultSettings() {
@@ -162,6 +169,22 @@ class Yandex extends MapProviderBase {
     );
 
     return $render_array;
+  }
+
+  /**
+   * Get Yandex API Base URL.
+   *
+   * @return string
+   *   Base Url.
+   */
+  public function getApiUrl() {
+    $config = \Drupal::config('geolocation_yandex.settings');
+
+    $api_key = $config->get('api_key');
+
+    $lang = \Drupal::languageManager()->getCurrentLanguage();
+
+    return self::$APIURLBASE . '?apikey=' . $api_key . '&lang=' . $lang->getId() . '_' . strtoupper($lang->getId()) . '&coordorder=longlat';
   }
 
 }

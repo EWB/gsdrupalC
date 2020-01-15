@@ -6,8 +6,6 @@
  */
 
 /**
- * {@inheritdoc}
- *
  * Enable Google Maps module by default.
  */
 function geolocation_update_8201(&$sandbox) {
@@ -19,8 +17,6 @@ function geolocation_update_8201(&$sandbox) {
 }
 
 /**
- * {@inheritdoc}
- *
  * Move specific map field formatters to generic one.
  */
 function geolocation_update_8202(&$sandbox) {
@@ -145,8 +141,6 @@ function geolocation_update_8202(&$sandbox) {
 }
 
 /**
- * {@inheritdoc}
- *
  * Move centre behavior to new format in views.
  */
 function geolocation_update_8203(&$sandbox) {

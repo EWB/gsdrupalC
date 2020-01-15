@@ -192,6 +192,10 @@ class MapCenterManager extends DefaultPluginManager {
      * Centre handling.
      */
     foreach ($settings as $option_id => $option) {
+      if (!empty($map['#centre'])) {
+        continue;
+      }
+
       // Ignore if not enabled.
       if (empty($option['enable'])) {
         continue;

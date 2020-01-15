@@ -95,7 +95,7 @@ class Geocoder extends LocationInputBase implements LocationInputInterface, Cont
         '#default_value' => $settings['plugin_id'],
         '#ajax' => [
           'callback' => [get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax'],
-          'wrapper' => 'geocoder-plugin-settings',
+          'wrapper' => 'location-input-geocoder-plugin-settings',
           'effect' => 'fade',
         ],
       ];
@@ -127,7 +127,7 @@ class Geocoder extends LocationInputBase implements LocationInputInterface, Cont
 
       $form['settings'] = array_replace_recursive($form['settings'], [
         '#flatten' => TRUE,
-        '#prefix' => '<div id="geocoder-plugin-settings">',
+        '#prefix' => '<div id="location-input-geocoder-plugin-settings">',
         '#suffix' => '</div>',
       ]);
 

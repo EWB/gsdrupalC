@@ -143,7 +143,7 @@ class BoundaryFilter extends FilterPluginBase implements ContainerFactoryPluginI
         '#default_value' => $geocoder_settings['plugin_id'],
         '#ajax' => [
           'callback' => [get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax'],
-          'wrapper' => 'geocoder-plugin-settings',
+          'wrapper' => 'boundary-geocoder-plugin-settings',
           'effect' => 'fade',
         ],
       ];
@@ -176,7 +176,7 @@ class BoundaryFilter extends FilterPluginBase implements ContainerFactoryPluginI
 
       $geocoder_container['settings'] = array_replace_recursive($geocoder_container['settings'], [
         '#flatten' => TRUE,
-        '#prefix' => '<div id="geocoder-plugin-settings">',
+        '#prefix' => '<div id="boundary-geocoder-plugin-settings">',
         '#suffix' => '</div>',
       ]);
     }

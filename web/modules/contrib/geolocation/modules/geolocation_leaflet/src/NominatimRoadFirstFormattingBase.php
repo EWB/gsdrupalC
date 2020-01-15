@@ -15,11 +15,12 @@ class NominatimRoadFirstFormattingBase extends NominatimCountryFormattingBase {
    */
   public function format(array $atomics) {
     $address_elements = parent::format($atomics);
-    if (
-      $atomics['houseNumber']
-      && $atomics['road']
-    ) {
-      $address_elements['addressLine1'] = $atomics['road'] . ' ' . $atomics['houseNumber'];
+    if (!empty($atomics['road'])) {
+      $address_elements['addressLine1'] = $atomics['road'];
+    }
+
+    if (!empty($atomics['houseNumber'])) {
+      $address_elements['addressLine1'] .= ' ' . $atomics['houseNumber'];
     }
 
     return $address_elements;

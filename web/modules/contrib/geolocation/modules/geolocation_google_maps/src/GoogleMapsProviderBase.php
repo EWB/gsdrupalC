@@ -80,7 +80,7 @@ abstract class GoogleMapsProviderBase extends MapProviderBase {
     $custom_parameters = $config->get('google_map_custom_url_parameters') ?: [];
 
     // Set the map language to site language if desired and possible.
-    if ($config->get('use_current_language') &&  \Drupal::moduleHandler()->moduleExists('language')) {
+    if ($config->get('use_current_language') && \Drupal::moduleHandler()->moduleExists('language')) {
       $custom_parameters['language'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
     }
 

@@ -62,6 +62,9 @@ geolocation.field.widget.map.base:
     allow_override_map_settings:
       type: integer
       label: 'Allow override map settings.'
+    hide_textfield_form:
+      type: boolean
+      label: 'Hide textfields'
     centre:
       type: sequence
       label: 'Center option settings'

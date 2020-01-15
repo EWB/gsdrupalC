@@ -25,7 +25,39 @@
          * @param {Object} featureSettings - Settings for current feature.
          */
         function (map, featureSettings) {
-          map.yandexMap.controls.add('zoomControl');
+          var options = {};
+
+          switch (featureSettings["position"]) {
+            case "right":
+              options = {
+                position: {
+                  top: "108px",
+                  right: "10px",
+                  bottom: "auto",
+                  left: "auto"
+                }
+              };
+              break;
+
+            case "left":
+              options = {
+                position: {
+                  top: "108px",
+                  right: "auto",
+                  bottom: "auto",
+                  left: "10px"
+                }
+              };
+              break;
+
+            case "top":
+            case "bottom":
+              // I don't know. Leave the default values.
+              options = {};
+              break;
+          }
+
+          map.yandexMap.controls.add('zoomControl', options);
 
           return true;
         },

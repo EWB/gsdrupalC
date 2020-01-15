@@ -1,0 +1,10 @@
+{
+  "name": "drupal/layout_builder_restrictions",
+  "description": "Manage which fields & layouts are available in Layout Builder",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/core": "^8.6.0 || ^9"
+  }
+}

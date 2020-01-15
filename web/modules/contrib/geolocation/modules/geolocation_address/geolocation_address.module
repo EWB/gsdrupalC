@@ -23,7 +23,7 @@ function geolocation_address_geolocation_field_map_widget_alter(&$element, $cont
   /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
   $field_definition = $context['field_definition'];
 
-  $settings = $widget->getThirdPartySettings('geolocation_address');
+  $settings = geolocation_address_get_widget_settings($widget);
 
   if (empty($settings['enable'])) {
     return;
@@ -31,7 +31,7 @@ function geolocation_address_geolocation_field_map_widget_alter(&$element, $cont
 
   $address_label = t('Address');
   /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $all_field_definitions */
-  $all_field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions(
+  $all_field_definitions = Drupal::service('entity_field.manager')->getFieldDefinitions(
     $field_definition->getTargetEntityTypeId(),
     $field_definition->getTargetBundle()
   );
@@ -53,7 +53,7 @@ function geolocation_address_geolocation_field_map_widget_alter(&$element, $cont
           'addressIntegration' => [
             $element['widget']['#field_name'] => [
               'geocoder' => $settings['geocoder'],
-              'geocoder_settings' => $settings['geocoder_settings'],
+              'settings' => $settings['settings'],
               'address_field' => $settings['address_field'],
               'sync_mode' => $settings['sync_mode'],
               'direction' => $settings['direction'],
@@ -132,23 +132,15 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
 
   $field_storage_definition = $field_definition->getFieldStorageDefinition();
 
-  $settings = $widget->getThirdPartySettings('geolocation_address');
-  $settings = array_replace_recursive(
-    [
-      'enable' => FALSE,
-      'address_field' => NULL,
-      'geocoder' => NULL,
-      'geocoder_settings' => [],
-      'sync_mode' => 'auto',
-      'direction' => 'duplex',
-      'button_position' => NULL,
-      'ignore' => '',
-    ],
-    $settings
-  );
+  $form_parent_name = 'fields[' . $field_definition->getName() . '][settings_edit_form][third_party_settings][geolocation_address]';
+
+  $settings = geolocation_address_get_widget_settings($widget);
+  if ($form_state->getTriggeringElement()['#name'] == $form_parent_name . '[geocoder]') {
+    $settings['geocoder'] = $form_state->getTriggeringElement()['#value'];
+  }
 
   /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $all_field_definitions */
-  $all_field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($field_definition->getTargetEntityTypeId(), $field_definition->getTargetBundle());
+  $all_field_definitions = Drupal::service('entity_field.manager')->getFieldDefinitions($field_definition->getTargetEntityTypeId(), $field_definition->getTargetBundle());
 
   $address_fields = [];
   foreach ($all_field_definitions as $single_field_definition) {
@@ -165,7 +157,7 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
   }
 
   /** @var \Drupal\geolocation\GeocoderManager $geocoder_manager */
-  $geocoder_manager = \Drupal::service('plugin.manager.geolocation.geocoder');
+  $geocoder_manager = Drupal::service('plugin.manager.geolocation.geocoder');
 
   $geocoder_options = [];
   foreach ($geocoder_manager->getDefinitions() as $geocoder_id => $geocoder_definition) {
@@ -184,8 +176,6 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
   if (empty($geocoder_options)) {
     return [];
   }
-
-  $form_parent_name = 'fields[' . $field_definition->getName() . '][settings_edit_form][third_party_settings][geolocation_address]';
 
   $element = [
     '#type' => 'details',
@@ -218,7 +208,7 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
     '#default_value' => $settings['geocoder'],
     '#ajax' => [
       'callback' => [get_class($geocoder_manager), 'addGeocoderSettingsFormAjax'],
-      'wrapper' => 'geocoder-plugin-settings',
+      'wrapper' => 'geolocation-address-geocoder-plugin-settings',
       'effect' => 'fade',
     ],
     '#states' => [
@@ -231,7 +221,7 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
   if (!empty($settings['geocoder'])) {
     $geocoder_plugin = $geocoder_manager->getGeocoder(
       $settings['geocoder'],
-      $settings['geocoder_settings']
+      $settings['settings']
     );
   }
   elseif (current(array_keys($geocoder_options))) {
@@ -241,22 +231,28 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
   if (!empty($geocoder_plugin)) {
     $geocoder_settings_form = $geocoder_plugin->getOptionsForm();
     if ($geocoder_settings_form) {
-      $element['geocoder_settings'] = $geocoder_settings_form;
+      $element['settings'] = $geocoder_settings_form;
     }
   }
 
-  if (empty($element['geocoder_settings'])) {
-    $element['geocoder_settings'] = [
+  if (empty($element['settings'])) {
+    $element['settings'] = [
       '#type' => 'html_tag',
       '#tag' => 'span',
       '#value' => t("No settings available."),
     ];
   }
 
-  $element['geocoder_settings'] = array_replace_recursive($element['geocoder_settings'], [
-    '#flatten' => TRUE,
-    '#prefix' => '<div id="geocoder-plugin-settings">',
+  $element['settings'] = array_replace_recursive($element['settings'], [
+    '#type' => 'container',
+    '#prefix' => '<div id="geolocation-address-geocoder-plugin-settings">',
     '#suffix' => '</div>',
+    '#flatten' => TRUE,
+    '#states' => [
+      'visible' => [
+        ':input[name="' . $form_parent_name . '[enable]"]' => ['checked' => TRUE],
+      ],
+    ],
   ]);
 
   $element['sync_mode'] = [
@@ -317,6 +313,11 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
       'administrative-area' => 'administrative-area',
       'postal-code' => 'postal-code',
     ],
+    '#states' => [
+      'visible' => [
+        ':input[name="' . $form_parent_name . '[enable]"]' => ['checked' => TRUE],
+      ],
+    ],
   ];
 
   return $element;
@@ -335,9 +336,40 @@ function geolocation_address_field_widget_settings_summary_alter(&$summary, $con
     return;
   }
 
-  $settings = $widget->getThirdPartySettings('geolocation_address');
+  $settings = geolocation_address_get_widget_settings($widget);
   if (!empty($settings['enable'])) {
     $summary[] = t('Syncing with %field address field', ['%field' => $settings['address_field']]);
   }
 
+}
+
+/**
+ * Returns geolocation_address third party settings of a widget.
+ *
+ * @param \Drupal\Core\Field\WidgetInterface $widget
+ *   The widget.
+ *
+ * @return array
+ *   The widget settings including defaults.
+ */
+function geolocation_address_get_widget_settings(WidgetInterface $widget) {
+  $settings = $widget->getThirdPartySettings('geolocation_address');
+
+  // Backwards compatibility if the third party settings have the
+  // geocoder_settings key but not settings.
+  if (isset($settings['geocoder_settings']) && !isset($settings['settings'])) {
+    $settings['settings'] = $settings['geocoder_settings'];
+    unset($settings['geocoder_settings']);
+  };
+
+  return $settings + [
+    'enable' => FALSE,
+    'address_field' => NULL,
+    'geocoder' => NULL,
+    'settings' => [],
+    'sync_mode' => 'auto',
+    'direction' => 'duplex',
+    'button_position' => NULL,
+    'ignore' => [],
+  ];
 }

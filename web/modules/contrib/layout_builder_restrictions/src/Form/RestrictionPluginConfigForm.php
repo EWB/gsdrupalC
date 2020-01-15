@@ -83,9 +83,16 @@ class RestrictionPluginConfigForm extends FormBase {
       $form['plugin-table'][$id]['#attributes']['class'][] = 'draggable';
       // Sort the row according to its existing/configured weight.
       $form['plugin-table'][$id]['#weight'] = $data['weight'];
-      $form['plugin-table'][$id]['title'] = [
-        '#plain_text' => $data['title'],
-      ];
+      if ($data['description']) {
+        $form['plugin-table'][$id]['title'] = [
+          '#markup' => '<strong>' . $data['title'] . '</strong><br>' . $data['description'],
+        ];
+      }
+      else {
+        $form['plugin-table'][$id]['title'] = [
+          '#markup' => '<strong>' . $data['title'] . '</strong>',
+        ];
+      }
       $form['plugin-table'][$id]['id'] = [
         '#plain_text' => $id,
       ];

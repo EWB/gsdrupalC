@@ -69,10 +69,6 @@ abstract class MapCenterBase extends PluginBase implements MapCenterInterface, C
    * {@inheritdoc}
    */
   public function alterMap(array $map, $center_option_id, array $center_option_settings, $context = NULL) {
-    $map['#centre'] = [
-      'lat' => 0,
-      'lng' => 0,
-    ];
     return $map;
   }
 

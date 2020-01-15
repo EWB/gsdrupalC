@@ -5,25 +5,42 @@
  * Yandex Maps hooks.
  */
 
+use Drupal\Core\Asset\AttachedAssetsInterface;
+
 /**
  * Implements hook_library_info_build().
  */
 function geolocation_yandex_library_info_build() {
-  $config = \Drupal::config('geolocation_yandex.settings');
-
-  $api_key = $config->get('api_key');
-
-  $lang = \Drupal::languageManager()->getCurrentLanguage();
+  /** @var \Drupal\geolocation_yandex\Plugin\geolocation\MapProvider\Yandex $yandex */
+  $yandex = Drupal::service('plugin.manager.geolocation.mapprovider')->getMapProvider('yandex');
 
   $libraries = [];
   $libraries['yandex_maps'] = [
     'version' => '1.x',
     'js' => [
-      'https://api-maps.yandex.ru/2.1/?apikey=' . $api_key . '&lang=' . $lang->getId() => [
+      $yandex->getApiUrl() => [
         'type' => 'external',
       ],
     ],
   ];
 
   return $libraries;
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function geolocation_yandex_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  if (!Drupal::moduleHandler()->moduleExists('language')) {
+    return;
+  }
+
+  /** @var \Drupal\geolocation_yandex\Plugin\geolocation\MapProvider\Yandex $yandex */
+  $yandex = Drupal::service('plugin.manager.geolocation.mapprovider')->getMapProvider('yandex');
+
+  foreach ($javascript as $key => $js) {
+    if (strpos($key, $yandex::$APIURLBASE) === 0 && strpos($key, 'lang=') > 0) {
+      $javascript[$key]['data'] = $yandex->getApiUrl();
+    }
+  }
 }

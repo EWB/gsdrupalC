@@ -26,7 +26,7 @@
       west: centerOption.settings.west
     });
 
-    return false;
+    return true;
   }
 
 })(Drupal);

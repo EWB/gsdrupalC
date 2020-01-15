@@ -31,4 +31,13 @@ class LayoutBuilderRestriction extends Plugin {
    */
   public $label;
 
+  /**
+   * A description of the plugin (optional).
+   *
+   * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
+   */
+  public $description = NULL;
+
 }

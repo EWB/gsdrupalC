@@ -15,6 +15,8 @@ regions:
   featured: Featured
   header: Header
   content: Content
+  sidebar_first: Sidebar First
+  sidebar_second: Sidebar Second
   page_bottom: Page bottom
   my_custom_region: My Custom Region
   footer: Footer

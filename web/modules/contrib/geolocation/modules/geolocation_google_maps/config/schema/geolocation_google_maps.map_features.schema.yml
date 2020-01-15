@@ -192,6 +192,18 @@ plugin.plugin_configuration.geolocation.map_feature.marker_icon:
               type: integer
               label: 'Height'
 
+plugin.plugin_configuration.geolocation.map_feature.marker_opacity:
+  type: geolocation.map_feature_settings
+  label: 'Marker Opacity'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        opacity:
+          type: float
+          label: 'Marker Opacity'
+
 plugin.plugin_configuration.geolocation.map_feature.marker_label:
   type: geolocation.map_feature_settings
   label: 'Marker Label'
@@ -289,6 +301,18 @@ plugin.plugin_configuration.geolocation.map_feature.control_recenter:
 plugin.plugin_configuration.geolocation.map_feature.control_locate:
   type: geolocation_google_maps.map_control_feature_settings
   label: 'Control Locate'
+
+plugin.plugin_configuration.geolocation.map_feature.control_loading_indicator:
+  type: geolocation_google_maps.map_control_feature_settings
+  label: 'Control Loading Indicator'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        loading_label:
+          type: string
+          label: 'Label'
 
 plugin.plugin_configuration.geolocation.map_feature.control_geocoder:
   type: geolocation_google_maps.map_control_feature_settings

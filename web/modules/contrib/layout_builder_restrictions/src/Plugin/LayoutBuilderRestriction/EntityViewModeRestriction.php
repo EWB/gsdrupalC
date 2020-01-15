@@ -16,7 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @LayoutBuilderRestriction(
  *   id = "entity_view_mode_restriction",
- *   title = @Translation("Restrict blocks/layouts per entity view mode")
+ *   title = @Translation("Entity View Mode"),
+ *   description = @Translation("Restrict blocks/layouts per entity view mode"),
  * )
  */
 class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {

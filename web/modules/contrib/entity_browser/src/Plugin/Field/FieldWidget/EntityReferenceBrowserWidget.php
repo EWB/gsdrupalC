@@ -24,6 +24,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Plugin implementation of the 'entity_reference' widget for entity browser.
@@ -173,7 +174,7 @@ class EntityReferenceBrowserWidget extends WidgetBase implements ContainerFactor
       }
     }
 
-    $id = Html::getId($this->fieldDefinition->getName()) . '-field-widget-display-settings-ajax-wrapper-' . md5($this->fieldDefinition->get('uuid'));
+    $id = Html::getId($this->fieldDefinition->getName()) . '-field-widget-display-settings-ajax-wrapper-' . Crypt::hashBase64($this->fieldDefinition->get('uuid'));
     $element['field_widget_display'] = [
       '#title' => $this->t('Entity display plugin'),
       '#type' => 'radios',
@@ -294,7 +295,7 @@ class EntityReferenceBrowserWidget extends WidgetBase implements ContainerFactor
   /**
    * Ajax callback that updates field widget display settings fieldset.
    */
-  public function updateFieldWidgetDisplaySettings(array $form, FormStateInterface $form_state) {
+  public static function updateFieldWidgetDisplaySettings(array $form, FormStateInterface $form_state) {
     $array_parents = $form_state->getTriggeringElement()['#array_parents'];
     $up_two_levels = array_slice($array_parents, 0, count($array_parents) - 2);
     $settings_path = array_merge($up_two_levels, ['field_widget_display_settings']);
@@ -590,6 +591,7 @@ class EntityReferenceBrowserWidget extends WidgetBase implements ContainerFactor
     return [
       '#theme_wrappers' => ['container'],
       '#attributes' => ['class' => $classes],
+      '#prefix' => '<p>' . $this->getCardinalityMessage($entities) . '</p>',
       'items' => array_map(
         function (ContentEntityInterface $entity, $row_id) use ($field_widget_display, $details_id, $field_parents, $replace_button_access) {
           $display = $field_widget_display->view($entity);
@@ -619,7 +621,7 @@ class EntityReferenceBrowserWidget extends WidgetBase implements ContainerFactor
                 'wrapper' => $details_id,
               ],
               '#submit' => [[get_class($this), 'removeItemSubmit']],
-              '#name' => $this->fieldDefinition->getName() . '_remove_' . $entity->id() . '_' . $row_id . '_' . md5(json_encode($field_parents)),
+              '#name' => $this->fieldDefinition->getName() . '_remove_' . $entity->id() . '_' . $row_id . '_' . Crypt::hashBase64(json_encode($field_parents)),
               '#limit_validation_errors' => [array_merge($field_parents, [$this->fieldDefinition->getName()])],
               '#attributes' => [
                 'data-entity-id' => $entity->getEntityTypeId() . ':' . $entity->id(),
@@ -636,7 +638,7 @@ class EntityReferenceBrowserWidget extends WidgetBase implements ContainerFactor
                 'wrapper' => $details_id,
               ],
               '#submit' => [[get_class($this), 'removeItemSubmit']],
-              '#name' => $this->fieldDefinition->getName() . '_replace_' . $entity->id() . '_' . $row_id . '_' . md5(json_encode($field_parents)),
+              '#name' => $this->fieldDefinition->getName() . '_replace_' . $entity->id() . '_' . $row_id . '_' . Crypt::hashBase64(json_encode($field_parents)),
               '#limit_validation_errors' => [array_merge($field_parents, [$this->fieldDefinition->getName()])],
               '#attributes' => [
                 'data-entity-id' => $entity->getEntityTypeId() . ':' . $entity->id(),
@@ -648,7 +650,7 @@ class EntityReferenceBrowserWidget extends WidgetBase implements ContainerFactor
             'edit_button' => [
               '#type' => 'submit',
               '#value' => $this->t('Edit'),
-              '#name' => $this->fieldDefinition->getName() . '_edit_button_' . $entity->id() . '_' . $row_id . '_' . md5(json_encode($field_parents)),
+              '#name' => $this->fieldDefinition->getName() . '_edit_button_' . $entity->id() . '_' . $row_id . '_' . Crypt::hashBase64(json_encode($field_parents)),
               '#ajax' => [
                 'url' => Url::fromRoute(
                   'entity_browser.edit_form', [
@@ -676,6 +678,42 @@ class EntityReferenceBrowserWidget extends WidgetBase implements ContainerFactor
   }
 
   /**
+   * Generates a message informing the user how many more items they can choose.
+   *
+   * @param array|int $selected
+   *   The current selections, or how many items are selected.
+   *
+   * @return string
+   *   A message informing the user who many more items they can select.
+   */
+  protected function getCardinalityMessage($selected) {
+    $message = NULL;
+
+    $storage = $this->fieldDefinition->getFieldStorageDefinition();
+    $cardinality = $storage->getCardinality();
+    $target_type = $storage->getSetting('target_type');
+    $target_type = $this->entityTypeManager->getDefinition($target_type);
+
+    if (is_array($selected)) {
+      $selected = count($selected);
+    }
+
+    if ($cardinality === 1 && $selected === 0) {
+      $message = $this->t('You can select one @entity_type.', [
+        '@entity_type' => $target_type->getSingularLabel(),
+      ]);
+    }
+    elseif ($cardinality >= $selected) {
+      $message = $this->t('You can select up to @maximum @entity_type (@remaining left).', [
+        '@maximum' => $cardinality,
+        '@entity_type' => $target_type->getPluralLabel(),
+        '@remaining' => $cardinality - $selected,
+      ]);
+    }
+    return (string) $message;
+  }
+
+  /**
    * Gets data that should persist across Entity Browser renders.
    *
    * @return array
@@ -691,6 +729,7 @@ class EntityReferenceBrowserWidget extends WidgetBase implements ContainerFactor
       'widget_context' => [
         'target_bundles' => !empty($handler['target_bundles']) ? $handler['target_bundles'] : [],
         'target_entity_type' => $settings['target_type'],
+        'cardinality' => $this->fieldDefinition->getFieldStorageDefinition()->getCardinality(),
       ],
     ];
   }

@@ -17578,8 +17578,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/ewil/sites/gs/docroot/web/themes/contrib/gs8_theme/src/js/gs8_theme.script.js */"./src/js/gs8_theme.script.js");
-module.exports = __webpack_require__(/*! /Users/ewil/sites/gs/docroot/web/themes/contrib/gs8_theme/src/sass/gs8_theme.style.scss */"./src/sass/gs8_theme.style.scss");
+__webpack_require__(/*! /Users/jlashomb/codebases/greengeeks.com/gardenshare/docroot/web/themes/contrib/gs8_theme/src/js/gs8_theme.script.js */"./src/js/gs8_theme.script.js");
+module.exports = __webpack_require__(/*! /Users/jlashomb/codebases/greengeeks.com/gardenshare/docroot/web/themes/contrib/gs8_theme/src/sass/gs8_theme.style.scss */"./src/sass/gs8_theme.style.scss");
 
 
 /***/ })

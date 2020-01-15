@@ -70,6 +70,7 @@ class LayoutBuilderRestrictionManager extends DefaultPluginManager {
             'weight' => (int) $config['weight'],
             'enabled' => (bool) $config['enabled'],
             'title' => $restriction_definition['title'],
+            'description' => $restriction_definition['description'],
           ];
         }
         elseif ($config['enabled'] == TRUE) {
@@ -77,6 +78,7 @@ class LayoutBuilderRestrictionManager extends DefaultPluginManager {
             'weight' => (int) $config['weight'],
             'enabled' => (bool) $config['enabled'],
             'title' => $restriction_definition['title'],
+            'description' => $restriction_definition['description'],
           ];
         }
       }
@@ -86,6 +88,7 @@ class LayoutBuilderRestrictionManager extends DefaultPluginManager {
           'weight' => 1,
           'enabled' => TRUE,
           'title' => $restriction_definition['title'],
+          'description' => $restriction_definition['description'],
         ];
       }
     }

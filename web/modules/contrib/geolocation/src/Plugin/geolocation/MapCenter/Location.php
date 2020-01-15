@@ -137,16 +137,37 @@ class Location extends MapCenterBase implements MapCenterInterface {
     $location = $this->locationManager->createInstance($center_plugin_id);
 
     if (!empty($center_option_settings['location_option_id'])) {
-      $center_option_id = $center_option_settings['location_option_id'];
+      $location_id = $center_option_settings['location_option_id'];
     }
     else {
-      $center_option_id = $center_plugin_id;
+      $location_id = $center_plugin_id;
     }
 
-    $map_center = $location->getCoordinates($center_option_id, $center_option_settings, $context);
+    $map['#attached']['drupalSettings']['geolocation']['maps'][$map['#id']]['map_center']['location_plugins_' . $location_id] = $map['#attached']['drupalSettings']['geolocation']['maps'][$map['#id']]['map_center']['location_plugins'];
+    unset($map['#attached']['drupalSettings']['geolocation']['maps'][$map['#id']]['map_center']['location_plugins']);
+
+    $map_center = $location->getCoordinates($location_id, $center_option_settings, $context);
     if (!empty($map_center)) {
       $map['#centre'] = $map_center;
     }
+    $map['#attached'] = array_merge_recursive($map['#attached'], [
+      'library' => [
+        'geolocation/map_center.static_location',
+      ],
+      'drupalSettings' => [
+        'geolocation' => [
+          'maps' => [
+            $map['#id'] => [
+              'map_center' => [
+                'location_plugins_' . $location_id => [
+                  'success' => !empty($map_center),
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ]);
 
     return $map;
   }

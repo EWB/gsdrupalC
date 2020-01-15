@@ -102,7 +102,7 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
     $settings['map_provider_settings'] = [];
     $settings['info_text'] = [
       'value' => '',
-      'format' => filter_default_format(),
+      'format' => filter_fallback_format(),
     ];
     $settings['use_overridden_map_settings'] = FALSE;
     return $settings;
@@ -348,10 +348,7 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
       '#type' => 'geolocation_map',
       '#settings' => $settings['map_provider_settings'],
       '#maptype' => $settings['map_provider_id'],
-      '#centre' => [
-        'lat' => 0,
-        'lng' => 0,
-      ],
+      '#centre' => [],
       '#context' => ['formatter' => $this],
     ];
 

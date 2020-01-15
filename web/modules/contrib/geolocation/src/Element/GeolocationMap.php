@@ -49,7 +49,7 @@ class GeolocationMap extends RenderElement {
   public function getInfo() {
     $class = get_class($this);
 
-    $info = [
+    return [
       '#process' => [
         [$class, 'processGroup'],
       ],
@@ -63,8 +63,6 @@ class GeolocationMap extends RenderElement {
       '#controls' => NULL,
       '#context' => [],
     ];
-
-    return $info;
   }
 
   /**
@@ -78,6 +76,19 @@ class GeolocationMap extends RenderElement {
    */
   public function preRenderMap(array $render_array) {
     $render_array['#theme'] = 'geolocation_map_wrapper';
+
+    if (empty($render_array['#cache'])) {
+      $render_array['#cache'] = [];
+    }
+
+    $render_array['#cache'] = array_merge_recursive(
+      $render_array['#cache'],
+      ['contexts' => ['languages:language_interface']]
+    );
+
+    if (empty($render_array['#attributes'])) {
+      $render_array['#attributes'] = [];
+    }
 
     if (empty($render_array['#attributes'])) {
       $render_array['#attributes'] = [];

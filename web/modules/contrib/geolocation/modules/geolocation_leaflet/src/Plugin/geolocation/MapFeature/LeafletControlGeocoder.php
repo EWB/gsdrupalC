@@ -95,7 +95,7 @@ class LeafletControlGeocoder extends ControlCustomElementBase {
         '#default_value' => $settings['geocoder'],
         '#ajax' => [
           'callback' => [get_class($this->geocoderManager), 'addGeocoderSettingsFormAjax'],
-          'wrapper' => 'geocoder-plugin-settings',
+          'wrapper' => 'leaflet-control-geocoder-plugin-settings',
           'effect' => 'fade',
         ],
       ];
@@ -127,7 +127,7 @@ class LeafletControlGeocoder extends ControlCustomElementBase {
 
       $form['settings'] = array_replace_recursive($form['settings'], [
         '#flatten' => TRUE,
-        '#prefix' => '<div id="geocoder-plugin-settings">',
+        '#prefix' => '<div id="leaflet-control-geocoder-plugin-settings">',
         '#suffix' => '</div>',
       ]);
     }

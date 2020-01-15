@@ -13,6 +13,23 @@ commonmap.yandex:
   dependencies:
     - geolocation/geolocation.commonmap
 
+# Yandex widget API.
+widget.api.yandex:
+  version: 8.x-3.x
+  js:
+    js/geolocation-widget-yandex-api.js: {}
+  dependencies:
+    - geolocation/geolocation.widget.api
+    - geolocation_yandex/geolocation.yandex
+
+widget.yandex:
+  version: 8.x-3.x
+  js:
+    js/geolocation-yandex-widget.js: {}
+  dependencies:
+    - geolocation/geolocation.widget
+    - geolocation_yandex/widget.api.yandex
+
 #
 # Map Features
 #

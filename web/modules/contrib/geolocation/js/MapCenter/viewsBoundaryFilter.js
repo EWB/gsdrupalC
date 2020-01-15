@@ -28,7 +28,7 @@
 
     map.fitBoundaries(centerBounds, 'views_boundary_filter');
 
-    return false;
+    return true;
   }
 
 })(Drupal);

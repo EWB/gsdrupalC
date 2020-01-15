@@ -11,7 +11,7 @@ test_dependencies:
   - layout_library:layout_library
   - mini_layouts:mini_layouts
   - dashboards:dashboards
-# Information added by Drupal.org packaging script on 2019-12-11
-version: '8.x-2.4'
+# Information added by Drupal.org packaging script on 2020-01-13
+version: '8.x-2.5'
 project: 'layout_builder_restrictions'
-datestamp: 1576099694
+datestamp: 1578955394

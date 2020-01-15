@@ -198,7 +198,6 @@ class GoogleMaps extends GoogleMapsProviderBase {
       empty($render_array['#attached']) ? [] : $render_array['#attached'],
       [
         'library' => [
-          'geolocation_google_maps/googlemapsapi',
           'geolocation_google_maps/google',
         ],
         'drupalSettings' => [

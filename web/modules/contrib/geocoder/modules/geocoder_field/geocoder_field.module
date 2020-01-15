@@ -326,7 +326,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
         }
         // Display a status message.
         if ($geocoder['failure']['status_message']) {
-          drupal_set_message($failure_status_message, 'warning');
+          \Drupal::messenger()->addMessage($failure_status_message, 'warning');
         }
         // Log the failure.
         if ($geocoder['failure']['log']) {

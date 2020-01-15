@@ -280,10 +280,7 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
       '#type' => 'geolocation_map',
       '#settings' => $this->configuration['map_provider_settings'],
       '#maptype' => $this->configuration['map_provider_id'],
-      '#centre' => [
-        'lat' => 0,
-        'lng' => 0,
-      ],
+      '#centre' => [],
       '#context' => ['block' => $this],
     ];
 

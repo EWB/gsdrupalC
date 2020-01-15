@@ -160,6 +160,13 @@ mapfeature.marker_infobubble:
     - geolocation_google_maps/googlemapsapi
     - geolocation_google_maps/infobubble
 
+# MarkerOpacity support.
+mapfeature.marker_opacity:
+  js:
+    js/MapFeature/geolocation-marker-opacity.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
 # MarkerIconAdjustment support.
 mapfeature.marker_icon:
   js:
@@ -252,6 +259,13 @@ mapfeature.control_fullscreen:
 mapfeature.control_recenter:
   js:
     js/MapFeature/geolocation-control-recenter.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# ControlLoadingIndicator support.
+mapfeature.control_loading_indicator:
+  js:
+    js/MapFeature/geolocation-control-loading-indicator.js: {}
   dependencies:
     - geolocation_google_maps/googlemapsapi
 

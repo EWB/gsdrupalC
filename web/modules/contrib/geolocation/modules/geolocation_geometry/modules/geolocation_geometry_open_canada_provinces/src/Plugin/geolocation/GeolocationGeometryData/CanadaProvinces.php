@@ -51,7 +51,10 @@ class CanadaProvinces extends GeolocationGeometryDataBase {
           continue;
         }
         else {
-          $name = utf8_decode($record['dbf']['name']);
+          if (utf8_decode($record['dbf']['ctry_en']) !== 'Canada') {
+            continue;
+          }
+          $name = utf8_decode($record['dbf']['juri_en']);
           if (empty($name)) {
             continue;
           }

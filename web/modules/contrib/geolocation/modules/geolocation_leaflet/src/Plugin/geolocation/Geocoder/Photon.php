@@ -19,10 +19,12 @@ use Drupal\Core\Render\BubbleableMetadata;
  *   locationCapable = true,
  *   boundaryCapable = true,
  *   frontendCapable = true,
- *   reverseCapable = false,
+ *   reverseCapable = true,
  * )
  */
 class Photon extends GeocoderBase implements GeocoderInterface {
+
+  public $requestBaseUrl = 'https://photon.komoot.de';
 
   /**
    * {@inheritdoc}
@@ -118,7 +120,7 @@ class Photon extends GeocoderBase implements GeocoderInterface {
       $options['lang'] = $lang;
     }
 
-    $url = Url::fromUri('https://photon.komoot.de/api/' . $address, [
+    $url = Url::fromUri($this->requestBaseUrl . '/api/', [
       'query' => $options,
     ]);
 
@@ -132,13 +134,13 @@ class Photon extends GeocoderBase implements GeocoderInterface {
 
     $location = [];
 
-    if (empty($result[0])) {
+    if (empty($result['features'][0])) {
       return FALSE;
     }
     else {
       $location['location'] = [
-        'lat' => $result[0]['lat'],
-        'lng' => $result[0]['lon'],
+        'lat' => $result['features'][0]['geometry']['coordinates'][1],
+        'lng' => $result['features'][0]['geometry']['coordinates'][0],
       ];
     }
 
@@ -156,6 +158,63 @@ class Photon extends GeocoderBase implements GeocoderInterface {
     }
 
     return $location;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function reverseGeocode($latitude, $longitude) {
+    $url = Url::fromUri($this->requestBaseUrl . '/reverse', [
+      'query' => [
+        'lat' => $latitude,
+        'lon' => $longitude,
+        'limit' => 20,
+      ],
+    ]);
+
+    try {
+      $result = Json::decode(\Drupal::httpClient()->get($url->toString())->getBody());
+    }
+    catch (RequestException $e) {
+      watchdog_exception('geolocation', $e);
+      return FALSE;
+    }
+
+    if (empty($result['features'][0]['properties'])) {
+      return FALSE;
+    }
+
+    $countries = \Drupal::service('address.country_repository')->getList();
+    $address_atomics = [];
+    foreach ($result['features'] as $id => $entry) {
+      if (empty($entry['properties']['osm_type'])) {
+        continue;
+      }
+
+      switch ($entry['properties']['osm_type']) {
+        case 'N':
+          $address_atomics = [
+            'houseNumber' => !empty($entry['properties']['housenumber']) ? $entry['properties']['housenumber'] : '',
+            'road' => $entry['properties']['street'],
+            'city' => $entry['properties']['city'],
+            'postcode' => $entry['properties']['postcode'],
+            'state' => $entry['properties']['state'],
+            'country' => $entry['properties']['country'],
+            'countryCode' => array_search($entry['properties']['country'], $countries),
+          ];
+          break 2;
+      }
+    }
+
+    if (empty($address_atomics)) {
+      return FALSE;
+    }
+
+    return [
+      'atomics' => $address_atomics,
+      'elements' => $this->addressElements($address_atomics),
+      'formatted_address' => empty($result['display_name']) ? '' : $result['display_name'],
+    ];
   }
 
 }

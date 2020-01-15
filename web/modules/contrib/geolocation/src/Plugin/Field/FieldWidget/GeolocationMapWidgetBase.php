@@ -124,6 +124,7 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
       'auto_client_location' => FALSE,
       'auto_client_location_marker' => FALSE,
       'allow_override_map_settings' => FALSE,
+      'hide_textfield_form' => FALSE,
     ];
     $settings[static::$mapProviderSettingsFormId] = \Drupal::service('plugin.manager.geolocation.mapprovider')->getMapProviderDefaultSettings(static::$mapProviderId);
     $settings += parent::defaultSettings();
@@ -170,6 +171,12 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
       '#type' => 'checkbox',
       '#title' => $this->t('Allow override the map settings when create/edit an content.'),
       '#default_value' => $settings['allow_override_map_settings'],
+    ];
+
+    $element['hide_textfield_form'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Hide textfields.'),
+      '#default_value' => $settings['hide_textfield_form'],
     ];
 
     if ($this->mapProvider) {
@@ -326,6 +333,20 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
       ]
     );
 
+    if ($settings['hide_textfield_form']) {
+      if (empty($element['widget']['#attributes'])) {
+        $element['widget']['#attributes'] = [];
+      }
+      $element['widget']['#attributes'] = array_merge_recursive(
+        $element['widget']['#attributes'],
+        [
+          'class' => [
+            'visually-hidden',
+          ],
+        ]
+      );
+    }
+
     $element['map'] = [
       '#type' => 'geolocation_map',
       '#weight' => -10,
@@ -384,13 +405,6 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
     }
 
     return $values;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getControlPositions() {
-    return FALSE;
   }
 
 }

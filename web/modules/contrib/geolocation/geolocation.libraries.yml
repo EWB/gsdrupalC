@@ -65,6 +65,10 @@ geolocation.commonmap:
 #
 # Map Center
 #
+map_center.static_location:
+  js:
+    js/MapCenter/static-location.js: {}
+
 map_center.fitlocations:
   js:
     js/MapCenter/fitlocations.js: {}

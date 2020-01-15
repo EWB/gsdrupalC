@@ -118,7 +118,7 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
         '#step' => 0.1,
         '#title' => $this->t('Distance'),
         '#description' => $this->t('Distance in %unit', ['%unit' => $this->options['unit'] === 'km' ? $this->t('Kilometers') : $this->t('Miles')]),
-        '#default_value' => self::convertDistance($form['value']['#default_value'], $this->options['unit'], TRUE),
+        '#default_value' => $form['value']['#default_value'],
       ]);
     }
     else {
@@ -128,7 +128,7 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
         '#step' => 0.1,
         '#title' => $this->t('Distance'),
         '#description' => $this->t('Distance in %unit', ['%unit' => $this->options['unit'] === 'km' ? $this->t('Kilometers') : $this->t('Miles')]),
-        '#default_value' => self::convertDistance($form['value']['value']['#default_value'], $this->options['unit'], TRUE),
+        '#default_value' => $form['value']['value']['#default_value'],
       ]);
     }
 
@@ -143,7 +143,7 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
    */
   protected function valueSubmit($form, FormStateInterface $form_state) {
     $value = $form_state->getValue(['options', 'value', 'value']);
-    $distance = self::convertDistance($value, $this->options['unit']);
+    $distance = (float) $value;
     $form_state->setValue(['options', 'value', 'value'], $distance);
 
     parent::valueSubmit($form, $form_state);

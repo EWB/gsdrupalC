@@ -17,7 +17,9 @@ use Drupal\entity_browser\FieldWidgetDisplayManager;
 use Drupal\image\Entity\ImageStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Component\Utility\Environment;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Entity browser file widget.
@@ -384,7 +386,7 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
             'wrapper' => $details_id,
           ],
           '#submit' => [[get_class($this), 'removeItemSubmit']],
-          '#name' => $field_machine_name . '_replace_' . $entity_id . '_' . md5(json_encode($field_parents)),
+          '#name' => $field_machine_name . '_replace_' . $entity_id . '_' . Crypt::hashBase64(json_encode($field_parents)),
           '#limit_validation_errors' => [array_merge($field_parents, [$field_machine_name, 'target_id'])],
           '#attributes' => [
             'data-entity-id' => $entity->getEntityTypeId() . ':' . $entity->id(),
@@ -401,7 +403,7 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
             'wrapper' => $details_id,
           ],
           '#submit' => [[get_class($this), 'removeItemSubmit']],
-          '#name' => $field_machine_name . '_remove_' . $entity_id . '_' . md5(json_encode($field_parents)),
+          '#name' => $field_machine_name . '_remove_' . $entity_id . '_' . Crypt::hashBase64(json_encode($field_parents)),
           '#limit_validation_errors' => [array_merge($field_parents, [$field_machine_name, 'target_id'])],
           '#attributes' => [
             'data-entity-id' => $entity->getEntityTypeId() . ':' . $entity->id(),
@@ -488,7 +490,7 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
 
     if ($upload) {
       // Cap the upload size according to the PHP limit.
-      $max_filesize = Bytes::toInt(file_upload_max_size());
+      $max_filesize = Bytes::toInt(Environment::getUploadMaxSize());
       if (!empty($settings['max_filesize'])) {
         $max_filesize = min($max_filesize, Bytes::toInt($settings['max_filesize']));
       }

@@ -16,13 +16,21 @@
    * @param {Boolean} centerOption.settings.reset_zoom
    */
   Drupal.geolocation.mapCenter.fit_bounds = function (map, centerOption) {
+    if (typeof map.mapMarkers === "undefined") {
+      return false;
+    }
+
+    if (map.mapMarkers.length === 0) {
+      return false;
+    }
+
     map.fitMapToMarkers();
 
     if (centerOption.settings.reset_zoom) {
       map.setZoom(undefined, true);
     }
 
-    return false;
+    return true;
   }
 
 })(Drupal);

@@ -15,7 +15,7 @@
  * @typedef {Object} AddressIntegrationSettings
 
  * @property {String} geocoder
- * @property {Object} geocoder_settings
+ * @property {Object} settings
  * @property {String} address_field
  * @property {String} direction
  * @property {String} sync_mode
@@ -42,9 +42,9 @@
     attach: function (context, drupalSettings) {
       $(document).once('geolocation-address-handler').ajaxComplete(function (event, xhr, settings) {
         if (
-            typeof settings.extraData === 'undefined'
-            || typeof settings.extraData._drupal_ajax === 'undefined'
-            || typeof settings.extraData._triggering_element_name === 'undefined'
+          typeof settings.extraData === 'undefined'
+          || typeof settings.extraData._drupal_ajax === 'undefined'
+          || typeof settings.extraData._triggering_element_name === 'undefined'
         ) {
           return;
         }
@@ -136,12 +136,17 @@
               addressInput = $(addressInput);
               var addressString = '';
               $.each(
-                  elements,
-                  function (index, property) {
-                    if (addressInput.find('.' + property).length) {
-                      addressString = addressString + ', ' + addressInput.find('.' + property).val()
+                elements,
+                function (index, property) {
+                  if (addressInput.find('.' + property).length) {
+                    if (addressInput.find('.' + property).val().trim().length) {
+                      if (addressString.length > 0) {
+                        addressString = addressString + ', ';
+                      }
+                      addressString = addressString + addressInput.find('.' + property).val().trim();
                     }
                   }
+                }
               );
 
               if (!addressString) {
@@ -155,29 +160,29 @@
             },
             addressToCoordinates: function (address) {
               return $.getJSON(
-                  Drupal.url('geolocation/address/geocoder/geocode'),
-                  {
-                    geocoder: this.settings.geocoder,
-                    geocoder_settings: this.settings.geocoder_settings,
-                    field_name: sourceFieldName,
-                    address: address
-                  }
+                Drupal.url('geolocation/address/geocoder/geocode'),
+                {
+                  geocoder: this.settings.geocoder,
+                  geocoder_settings: this.settings.settings,
+                  field_name: sourceFieldName,
+                  address: address
+                }
               );
             },
             coordinatesToAddress: function (latitude, longitude) {
               return $.getJSON(
-                  Drupal.url('geolocation/address/geocoder/reverse'),
-                  {
-                    geocoder: this.settings.geocoder,
-                    geocoder_settings: this.settings.geocoder_settings,
-                    field_name: sourceFieldName,
-                    latitude: latitude,
-                    longitude: longitude
-                  }
+                Drupal.url('geolocation/address/geocoder/reverse'),
+                {
+                  geocoder: this.settings.geocoder,
+                  geocoder_settings: this.settings.settings,
+                  field_name: sourceFieldName,
+                  latitude: latitude,
+                  longitude: longitude
+                }
               );
             },
             getAllAddressInputs: function () {
-              return addressWidgetWrapper.find("[data-drupal-selector^='edit-" + this.settings.address_field.replace(/_/g, '-') + "'][data-drupal-selector$='address']");
+              return addressWidgetWrapper.find("[data-drupal-selector^='edit-" + this.settings.address_field.replace(/_/g, '-') + "'] [data-drupal-selector$='-address']");
             },
             addNewAddressInput: function () {
               if (this.addressAddMoreCalled) {
@@ -188,7 +193,7 @@
                 return false;
               }
 
-              var button = addressWidgetWrapper.find("[data-drupal-selector^='edit-" + this.settings.address_field.replace(/_/g, '-') + "'][data-drupal-selector$='-add-more']");
+              var button = addressWidgetWrapper.find("[data-drupal-selector^='edit-" + this.settings.address_field.replace(/_/g, '-') + "'] [data-drupal-selector$='-add-more']");
               if (button.length) {
                 button.trigger("mousedown");
                 this.addressAddMoreCalled = true;
@@ -196,7 +201,11 @@
             },
             getAddressByDelta: function (delta) {
               delta = parseInt(delta) || 0;
-              var input = this.getAllAddressInputs().eq(delta);
+              var inputs = this.getAllAddressInputs();
+              if (inputs.length <= delta) {
+                return null;
+              }
+              var input = inputs.eq(delta);
               if (input.length) {
                 return input;
               }
@@ -209,8 +218,8 @@
               }
 
               if (
-                  typeof delta === 'undefined'
-                  || delta === false
+                typeof delta === 'undefined'
+                || delta === false
               ) {
                 console.error(location, Drupal.t('Could not determine delta for new address input.'));
                 return null;
