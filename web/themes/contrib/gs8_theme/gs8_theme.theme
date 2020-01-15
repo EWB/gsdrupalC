@@ -9,3 +9,37 @@ $includes_path = dirname(__FILE__) . '/includes/*.inc';
 foreach (glob($includes_path) as $filename) {
   require_once dirname(__FILE__) . '/includes/' . basename($filename);
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function gs8_theme_preprocess_page(&$variables) {
+  $variables['container'] = 'container';
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if(!is_object($node) && is_int((int) $node)) {
+    $node = Drupal\node\Entity\Node::load($node);
+  }
+  if (is_object($node)) {
+    if ($node->hasField('field_container_fluid') && $node->get('field_container_fluid')->value){
+      $variables['container'] = 'container-fluid';
+    }
+
+    // uncomment if you want to set all nodes of a content type to container-fluid
+    // $type = $node->getType();
+    // switch ($type) {
+    //   case 'narrative':
+    //     $variables['container'] = 'container-fluid';
+    //     break;
+    // }
+  } else {
+    $view_id = \Drupal::routeMatch()->getParameter('view_id');
+    if ($view_id && $view_id === 'food_guide'){
+      // if the display mode starts with 'fluid_'
+      if(($display_id = \Drupal::routeMatch()->getParameter('display_id')) && substr($display_id,0,6)==='fluid_'){
+        $variables['container'] = 'container-fluid';
+      }
+    }
+  }
+}
