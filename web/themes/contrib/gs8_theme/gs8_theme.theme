@@ -35,9 +35,10 @@ function gs8_theme_preprocess_page(&$variables) {
     // }
   } else {
     $view_id = \Drupal::routeMatch()->getParameter('view_id');
-    if ($view_id && $view_id === 'food_guide'){
+    if ($view_id){
       // if the display mode starts with 'fluid_'
-      if(($display_id = \Drupal::routeMatch()->getParameter('display_id')) && substr($display_id,0,6)==='fluid_'){
+      $display_id = \Drupal::routeMatch()->getParameter('display_id');
+      if($display_id && substr($display_id,0,6) === 'fluid_'){
         $variables['container'] = 'container-fluid';
       }
     }
