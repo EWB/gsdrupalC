@@ -9585,6 +9585,9 @@ a.text-dark:hover, a.text-dark:focus {
   visibility: hidden !important;
 }
 
+.view-food-guide .geolocation-map-container {
+  min-height: 100vh;
+}
 .view-food-guide .map-list-item {
   font-size: 14px;
   position: relative;

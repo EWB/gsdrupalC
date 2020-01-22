@@ -1,5 +1,7 @@
 .view-food-guide {
-
+  .geolocation-map-container {
+    min-height: 100vh;
+  }
   .map-list-item {
     font-size: 14px;
     position: relative;
