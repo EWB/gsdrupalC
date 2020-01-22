@@ -49,11 +49,11 @@
   {% endif %}
   <div class='row'>
     {% if attachment_before %}
-      <div class='col col-sm-12'>
+      <div class='col-sm-12'>
         {{ attachment_before }}
       </div>
     {% endif %}
-    <div class='col col-sm-8 order-12'>
+    <div class='col-sm-8 order-12'>
       {% if rows -%}
         {{ rows }}
       {% elseif empty -%}
@@ -61,7 +61,7 @@
       {% endif %}
       {{ pager }}
     </div>
-    <div class='col col-sm-4 vh-100 overflow-auto sidebar-scroll'>
+    <div class='col-sm-4 vh-100 overflow-auto sidebar-scroll'>
       {{ exposed }}
       {{ attachment_after }}
     </div>

@@ -9677,10 +9677,17 @@ a.text-dark:hover, a.text-dark:focus {
   text-align: right;
 }
 .view-food-guide .views-exposed-form details {
+  font-size: 1rem;
   margin: 3px !important;
 }
 .view-food-guide .views-exposed-form details summary {
   padding: 2px 10px;
+}
+.view-food-guide .views-exposed-form details .card-body {
+  padding: 2px !important;
+}
+.view-food-guide .views-exposed-form details .card-body label {
+  margin: 0 !important;
 }
 .view-food-guide .views-exposed-form .form-actions {
   text-align: right;
@@ -9698,8 +9705,20 @@ a.text-dark:hover, a.text-dark:focus {
   margin-right: 1em;
 }
 .view-food-guide .views-exposed-form .form-checkboxes {
-  -webkit-column-count: 3;
-          column-count: 3;
+  -webkit-column-count: 1;
+          column-count: 1;
+}
+@media (min-width: 900px) {
+  .view-food-guide .views-exposed-form .form-checkboxes {
+    -webkit-column-count: 2;
+            column-count: 2;
+  }
+}
+@media (min-width: 1300px) {
+  .view-food-guide .views-exposed-form .form-checkboxes {
+    -webkit-column-count: 3;
+            column-count: 3;
+  }
 }
 .view-food-guide .views-exposed-form .form-wrapper {
   display: block;
@@ -9718,8 +9737,7 @@ a.text-dark:hover, a.text-dark:focus {
   background: #dedede;
   background: rgba(0, 0, 0, 0.1);
 }
-
-[data-drupal-selector=edit-type] .js-form-type-checkbox label:after {
+.view-food-guide [data-drupal-selector=edit-type] .js-form-type-checkbox label:after {
   content: "";
   display: inline-block;
   border: 0.4em solid transparent;
@@ -9728,47 +9746,36 @@ a.text-dark:hover, a.text-dark:focus {
   border-radius: 1em 1em 0 0;
   margin-left: 0.2em;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-24 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-24 label:after {
   border-top-color: #cc0316;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-49 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-49 label:after {
   border-top-color: #b2bfb0;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-16 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-16 label:after {
   border-top-color: #771e04;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-17 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-17 label:after {
   border-top-color: #129203;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-18 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-18 label:after {
   border-top-color: #129203;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-19 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-19 label:after {
   border-top-color: #560260;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-20 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-20 label:after {
   border-top-color: #edc04e;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-50 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-50 label:after {
   border-top-color: #047757;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-21 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-21 label:after {
   border-top-color: #9ab5fc;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-22 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-22 label:after {
   border-top-color: #020360;
 }
-
-[data-drupal-selector=edit-type] .form-item-type-23 label:after {
+.view-food-guide [data-drupal-selector=edit-type] .form-item-type-23 label:after {
   border-top-color: #a87b06;
 }
