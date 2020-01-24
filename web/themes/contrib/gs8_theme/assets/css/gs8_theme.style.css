@@ -9680,7 +9680,6 @@ a.text-dark:hover, a.text-dark:focus {
   text-align: right;
 }
 .view-food-guide .views-exposed-form details {
-  font-size: 1rem;
   margin: 3px !important;
 }
 .view-food-guide .views-exposed-form details summary {
@@ -9711,9 +9710,13 @@ a.text-dark:hover, a.text-dark:focus {
   padding: 0 1rem;
 }
 .view-food-guide .views-exposed-form .card-body {
-  padding: 0 1rem;
+  font-size: 1rem;
+  padding: 2px !important;
   -webkit-column-count: 1;
           column-count: 1;
+}
+.view-food-guide .views-exposed-form .card-body label {
+  margin: 0 !important;
 }
 @media (min-width: 900px) {
   .view-food-guide .views-exposed-form .card-body {
