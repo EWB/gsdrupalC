@@ -9707,18 +9707,22 @@ a.text-dark:hover, a.text-dark:focus {
 .view-food-guide .views-exposed-form label {
   margin-right: 1em;
 }
-.view-food-guide .views-exposed-form .form-checkboxes {
+.view-food-guide .views-exposed-form .card-header {
+  padding: 0 1rem;
+}
+.view-food-guide .views-exposed-form .card-body {
+  padding: 0 1rem;
   -webkit-column-count: 1;
           column-count: 1;
 }
 @media (min-width: 900px) {
-  .view-food-guide .views-exposed-form .form-checkboxes {
+  .view-food-guide .views-exposed-form .card-body {
     -webkit-column-count: 2;
             column-count: 2;
   }
 }
 @media (min-width: 1300px) {
-  .view-food-guide .views-exposed-form .form-checkboxes {
+  .view-food-guide .views-exposed-form .card-body {
     -webkit-column-count: 3;
             column-count: 3;
   }

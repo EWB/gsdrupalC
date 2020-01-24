@@ -137,7 +137,11 @@
     label {
       margin-right: 1em;
     }
-    .form-checkboxes {
+    .card-header {
+      padding: 0 1rem;
+    }
+    .card-body {
+      padding: 0 1rem;
       column-count: 1;
       @media (min-width: 900px) {
         & {column-count: 2;}
