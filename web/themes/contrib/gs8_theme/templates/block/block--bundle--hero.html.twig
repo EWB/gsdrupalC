@@ -8,7 +8,9 @@
         {% endif %}
         {{ title_suffix }}
         <div class="lead">{{ content.body }}</div>
+        {% if content.field_button[0]['#title'] %}
         <div class="call-to-action d-flex justify-content-center"><a href="{{ content.field_button[0]['#url'] }}" class="btn btn-primary">{{ content.field_button[0]['#title'] }}</a></div>
+        {% endif %}
       </div>
     </div>
   </div>
