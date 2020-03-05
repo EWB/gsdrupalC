@@ -36,6 +36,7 @@
         "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.5",
         "drupal/address": "^1.4",
+        "drupal/addtoany": "^1.12",
         "drupal/anchor_link": "^1.6",
         "drupal/animate_any": "^1.1",
         "drupal/asset_injector": "^2.2",
