@@ -57,7 +57,6 @@
         "drupal/core-recommended": "^8.8",
         "drupal/crop": "^1.5",
         "drupal/ctools": "^3.0",
-        "drupal/devel": "^2.1",
         "drupal/embed": "^1.0",
         "drupal/entity": "^1.0",
         "drupal/entity_browser": "^2.0",
@@ -92,7 +91,6 @@
         "drupal/radix": "^4.6",
         "drupal/radix_layouts": "^4.1",
         "drupal/search_api": "^1.8",
-        "drupal/simplesamlphp_auth": "^3.0",
         "drupal/slick": "2.x",
         "drupal/slick_paragraphs": "^1.0",
         "drupal/slick_views": "^2.1",
@@ -191,9 +189,6 @@
             "drush/contrib/{$name}": ["type:drupal-drush"]
         },
         "patches": {
-          "drupal/core": {
-            "Error: Call to a member function getLabel() after enable layout_builder":"https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch"
-          }
         }
     }
 }
