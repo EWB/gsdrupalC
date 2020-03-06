@@ -4025,6 +4025,9 @@
                     "[web-root]/profiles/README.txt": "assets/scaffold/files/profiles.README.txt",
                     "[web-root]/themes/README.txt": "assets/scaffold/files/themes.README.txt"
                 }
+            },
+            "patches_applied": {
+                "Error: Call to a member function getLabel() after enable layout_builder": "https://www.drupal.org/files/issues/2018-07-16/2985882-entityfield-2.patch"
             }
         },
         "installation-source": "dist",
