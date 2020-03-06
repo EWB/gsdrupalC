@@ -20,7 +20,7 @@
   function blazyColorbox(i, box) {
     var $box = $(box);
     var media = $box.data('media') || {};
-    var isMedia = media.type !== 'image' ? true : false;
+    var isMedia = media.type === 'video';
     var runtimeOptions = {
       rel: media.rel || null,
       iframe: isMedia,

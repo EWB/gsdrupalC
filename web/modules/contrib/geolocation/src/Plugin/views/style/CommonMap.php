@@ -117,10 +117,10 @@ class CommonMap extends GeolocationStyleBase {
       return [];
     }
 
-
     if (!empty($this->options['dynamic_map']['enabled'])) {
       // TODO: Not unique enough, but uniqueid() changes on every AJAX request.
-      // For the geolocationCommonMapBehavior to work, this has to stay identical.
+      // For the geolocationCommonMapBehavior to work, this has to stay
+      // identical.
       $this->mapId = $this->view->id() . '-' . $this->view->current_display;
       $this->mapId = str_replace('_', '-', $this->mapId);
     }

@@ -2,8 +2,6 @@
 
 namespace Drupal\blazy;
 
-use Drupal\Component\Serialization\Json;
-
 /**
  * Provides grid utilities.
  */
@@ -21,8 +19,8 @@ class BlazyGrid {
    *   The modified array of grid items.
    */
   public static function build(array $items = [], array $settings = []) {
+    $settings  += BlazyDefault::htmlSettings();
     $style      = empty($settings['style']) ? '' : $settings['style'];
-    $is_gallery = !empty($settings['lightbox']) && !empty($settings['gallery_id']);
     $is_grid    = isset($settings['_grid']) ? $settings['_grid'] : (!empty($settings['style']) && !empty($settings['grid']));
     $class_item = $is_grid ? 'grid' : 'blazy__item';
 
@@ -55,54 +53,51 @@ class BlazyGrid {
       $contents[] = $content;
     }
 
-    // Provides hint about AJAX.
-    if (!empty($settings['use_ajax'])) {
-      $settings['blazy_data']['useAjax'] = TRUE;
-    }
-
-    $blazy   = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
-    $count   = empty($settings['count']) ? count($contents) : $settings['count'];
+    $settings['count'] = empty($settings['count']) ? count($contents) : $settings['count'];
     $wrapper = $style ? ['item-list--blazy', 'item-list--blazy-' . $style] : ['item-list--blazy'];
     $element = [
       '#theme'              => 'item_list',
       '#items'              => $contents,
       '#context'            => ['settings' => $settings],
-      '#attributes'         => ['class' => ['blazy'], 'data-blazy' => $blazy],
+      '#attributes'         => [],
       '#wrapper_attributes' => ['class' => array_merge(['item-list'], $wrapper)],
     ];
 
-    // Provides data-attributes to avoid conflict with original implementations.
-    if (!empty($settings['media_switch'])) {
-      $switch = str_replace('_', '-', $settings['media_switch']);
-      $element['#attributes']['data-' . $switch . '-gallery'] = TRUE;
-    }
+    self::attributes($element['#attributes'], $settings);
 
-    if (!empty($settings['field_name'])) {
-      $element['#attributes']['class'][] = 'blazy--field blazy--' . str_replace('_', '-', $settings['field_name']);
-    }
+    return $element;
+  }
+
+  /**
+   * Provides reusable container attributes.
+   */
+  public static function attributes(array &$attributes, array $settings = []) {
+    $style      = empty($settings['style']) ? '' : $settings['style'];
+    $is_gallery = !empty($settings['lightbox']) && !empty($settings['gallery_id']);
+    $is_grid    = isset($settings['_grid']) ? $settings['_grid'] : (!empty($settings['style']) && !empty($settings['grid']));
+
+    // Provides data-attributes to avoid conflict with original implementations.
+    Blazy::containerAttributes($attributes, $settings);
 
     // Provides gallery ID, although Colorbox works without it, others may not.
     // Uniqueness is not crucial as a gallery needs to work across entities.
     if (!empty($settings['id'])) {
-      $element['#attributes']['id'] = $is_gallery ? $settings['gallery_id'] : $settings['id'];
+      $attributes['id'] = $is_gallery ? $settings['gallery_id'] : $settings['id'];
     }
 
     // Limit to grid only, so to be usable for plain list.
     if ($is_grid) {
-      $element['#attributes']['class'][] = 'blazy--grid block-' . $style . ' block-count-' . $count;
+      $attributes['class'][] = 'blazy--grid block-' . $style . ' block-count-' . $settings['count'];
 
       // Adds common grid attributes for CSS3 column, Foundation, etc.
       if ($settings['grid_large'] = $settings['grid']) {
         foreach (['small', 'medium', 'large'] as $grid) {
-          // Only makes sense if grid is larger than 1.
-          if (!empty($settings['grid_' . $grid]) && $settings['grid_' . $grid] > 1) {
-            $element['#attributes']['class'][] = $grid . '-block-' . $style . '-' . $settings['grid_' . $grid];
+          if (!empty($settings['grid_' . $grid])) {
+            $attributes['class'][] = $grid . '-block-' . $style . '-' . $settings['grid_' . $grid];
           }
         }
       }
     }
-
-    return $element;
   }
 
 }

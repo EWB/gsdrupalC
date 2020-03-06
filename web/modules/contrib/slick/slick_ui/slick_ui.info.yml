@@ -7,7 +7,7 @@ configure: entity.slick.collection
 dependencies:
   - slick:slick (>= 2.x)
 
-# Information added by Drupal.org packaging script on 2020-01-01
-version: '8.x-2.0'
+# Information added by Drupal.org packaging script on 2020-02-15
+version: '8.x-2.1'
 project: 'slick'
-datestamp: 1577874488
+datestamp: 1581756262

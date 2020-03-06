@@ -50,7 +50,7 @@ class Drawing extends MapFeatureBase {
   public function getSettingsForm(array $settings, array $parents) {
     $settings = $this->getSettings($settings);
 
-    $states_prefix = array_shift($parents) . '[' . implode($parents, '][') . ']';
+    $states_prefix = array_shift($parents) . '[' . implode('][', $parents) . ']';
 
     $form['polyline'] = [
       '#type' => 'checkbox',

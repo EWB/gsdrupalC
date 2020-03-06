@@ -20,7 +20,7 @@
 
             var $context = $(context);
 
-            $context.find('.color-field-widget-box-form').each(function (index, element) {
+            $context.find('.color-field-widget-box-form').once('colorField').each(function (index, element) {
                 var $element = $(element);
                 var $input = $element.prev().find('input');
                 $input.hide();

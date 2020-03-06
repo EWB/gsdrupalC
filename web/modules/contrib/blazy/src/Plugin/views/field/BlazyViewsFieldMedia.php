@@ -20,6 +20,7 @@ class BlazyViewsFieldMedia extends BlazyViewsFieldPluginBase {
 
     $data['settings'] = $this->mergedViewsSettings();
     $data['settings']['delta'] = $values->index;
+    $this->mergedSettings = $data['settings'];
 
     // Pass results to \Drupal\blazy\BlazyEntity.
     return $this->blazyEntity->build($data, $media, $media->label());

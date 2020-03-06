@@ -88,8 +88,8 @@ class MarkerClusterer extends MapFeatureBase {
     $form['max_zoom'] = [
       '#title' => $this->t('Max Zoom'),
       '#type' => 'number',
-      '#min' => GoogleMaps::$MINZOOMLEVEL,
-      '#max' => GoogleMaps::$MAXZOOMLEVEL,
+      '#min' => GoogleMaps::$minZoomLevel,
+      '#max' => GoogleMaps::$maxZoomLevel,
       '#default_value' => $settings['max_zoom'],
     ];
 

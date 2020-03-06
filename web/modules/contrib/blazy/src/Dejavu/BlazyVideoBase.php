@@ -6,16 +6,13 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\blazy\BlazyDefault;
 
+@trigger_error('The ' . __NAMESPACE__ . '\BlazyVideoBase is deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatterBase instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
+
 /**
  * Base class for blazy video embed field formatters.
  *
  * This means Slick Video which depends on VEF is deprecated for Slick Media
  * at Blazy 8.2.x with core Media only.
- *
- * @deprecated BlazyVideoBase is deprecated in blazy:8.x-2.0 and will be removed
- *   from blazy:9.x-1.x. Use
- *   \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatterBase instead.
- * @see https://www.drupal.org/node/3103018
  */
 abstract class BlazyVideoBase extends FormatterBase {
 
@@ -51,7 +48,6 @@ abstract class BlazyVideoBase extends FormatterBase {
 
     return [
       'background'        => TRUE,
-      'breakpoints'       => BlazyDefault::getConstantBreakpoints(),
       'current_view_mode' => $this->viewMode,
       'entity_type'       => $entity_type,
       'field_name'        => $this->fieldDefinition->getName(),

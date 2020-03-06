@@ -77,7 +77,7 @@ class SlickFormatterTest extends BlazyKernelTestBase {
     $this->displayEmpty = $this->setUpFormatterDisplay($bundle, $data);
 
     $this->formatterInstance = $this->getFormatterInstance();
-    $this->skins = $this->slickManager->getSkins();
+    $this->skins = $this->slickManager->skinManager()->getSkins();
 
     $this->setUpContentWithItems($bundle);
     $this->setUpRealImage();
@@ -131,7 +131,7 @@ class SlickFormatterTest extends BlazyKernelTestBase {
     $settings = $this->getFormatterSettings() + SlickDefault::extendedSettings();
     $settings['uri'] = empty($uri) ? '' : $this->uri;
 
-    $thumbnail = $this->slickFormatter->getThumbnail($settings, $this->image);
+    $thumbnail = $this->slickFormatter->getThumbnail($settings, $this->testItem);
     $this->assertEquals($expected, !empty($thumbnail));
   }
 

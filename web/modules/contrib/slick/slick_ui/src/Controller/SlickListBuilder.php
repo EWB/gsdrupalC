@@ -37,7 +37,7 @@ class SlickListBuilder extends SlickListBuilderBase {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $skins = $this->manager->getSkins()['skins'];
+    $skins = $this->manager->skinManager()->getSkins()['skins'];
     $skin = $entity->getSkin();
 
     $row['label'] = Html::escape($entity->label());
@@ -70,7 +70,7 @@ class SlickListBuilder extends SlickListBuilderBase {
     ];
 
     $availaible_skins = [];
-    $skins = $manager->getSkins()['skins'];
+    $skins = $manager->skinManager()->getSkins()['skins'];
 
     foreach ($skins as $key => $skin) {
       $name = isset($skin['name']) ? $skin['name'] : $key;

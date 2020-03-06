@@ -78,7 +78,12 @@
             }
 
             if (typeof drupalSettings.geolocation.geocoder.photon.locationPriority !== 'undefined') {
-              $.extend(options, drupalSettings.geolocation.geocoder.photon.locationPriority);
+              if (
+                drupalSettings.geolocation.geocoder.photon.locationPriority.lat
+                && drupalSettings.geolocation.geocoder.photon.locationPriority.lon
+              ) {
+                $.extend(options, drupalSettings.geolocation.geocoder.photon.locationPriority);
+              }
             }
 
             $.getJSON(
@@ -146,6 +151,7 @@
               }
             };
 
+            /** @var ui.item.result.properties.extent array */
             if (typeof ui.item.result.properties.extent !== 'undefined') {
               result.geometry.bounds = {
                 north: ui.item.result.properties.extent[1],

@@ -6,14 +6,9 @@
  * as long as the list item has class "grid".
  */
 
-[class*="block-grid-"],
-[class*="block-grid-"] * {
-  box-sizing: border-box;
-}
-
-[class*="block-grid-"],
-.block [class*="block-grid-"],
-.item-list > [class*="block-grid-"] {
+.block-grid,
+.blazy.block-grid,
+.item-list > .block-grid {
   clear: both;
   display: block;
   list-style: none;
@@ -21,17 +16,17 @@
   margin: 0 -0.625rem;
 }
 
-[class*="block-grid-"]::before,
-[class*="block-grid-"]::after {
+.block-grid::before,
+.block-grid::after {
   content: " ";
   display: table;
 }
 
-[class*="block-grid-"]::after {
+.block-grid::after {
   clear: both;
 }
 
-[class*="block-grid-"] > .grid {
+.block-grid > .grid {
   display: block;
   float: left;
   height: auto;
@@ -40,20 +35,20 @@
   padding: 0 0.625rem 1.25rem;
 }
 
-.block-grid--centered[class*="block-grid"],
-.item-list > .block-grid--centered[class*="block-grid"] {
+.block-grid.block-grid--centered,
+.item-list > .block-grid.block-grid--centered {
   text-align: center;
 }
 
-.block-grid--centered[class*="block-grid"] > .grid,
-.item-list > .block-grid--centered[class*="block-grid"] > .grid {
+.block-grid.block-grid--centered > .grid,
+.item-list > .block-grid.block-grid--centered > .grid {
   text-align: left;
   display: inline-block;
   float: none;
   vertical-align: top;
 }
 
-[class*="block-grid-"] .grid__content {
+.block-grid .grid__content {
   position: relative;
 }
 

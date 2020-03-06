@@ -14,7 +14,9 @@ function blazy_ui_help($route_name) {
     $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/UPDATING.md');
     $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/TROUBLESHOOTING.md');
     $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/ROADMAP.md');
+    $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/FAQ.md');
     $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/CONTRIBUTION.md');
+    $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/ASPECT_RATIO.md');
     $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/ISSUE_TEMPLATE.md');
     return blazy_parse_markdown($output);
   }

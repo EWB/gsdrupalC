@@ -8,13 +8,6 @@ namespace Drupal\blazy;
 class BlazyDefault {
 
   /**
-   * The supported $breakpoints.
-   *
-   * @var array
-   */
-  private static $breakpoints = ['xs', 'sm', 'md', 'lg', 'xl'];
-
-  /**
    * Defines constant for the supported text tags.
    */
   const TAGS = ['a', 'em', 'strong', 'h2', 'p', 'span', 'ul', 'ol', 'li'];
@@ -40,9 +33,11 @@ class BlazyDefault {
 
   /**
    * Returns Blazy specific breakpoints.
+   *
+   * @todo remove custom breakpoints anytime before blazy:3.x.
    */
   public static function getConstantBreakpoints() {
-    return self::$breakpoints;
+    return ['xs', 'sm', 'md', 'lg', 'xl'];
   }
 
   /**
@@ -56,19 +51,38 @@ class BlazyDefault {
   }
 
   /**
+   * Returns settings provided by various UI.
+   */
+  public static function anywhereSettings() {
+    return ['fx' => '', 'style' => ''];
+  }
+
+  /**
    * Returns basic plugin settings.
    */
   public static function baseSettings() {
     $settings = [
       'cache'             => 0,
       'current_view_mode' => '',
-      'optionset'         => 'default',
       'skin'              => '',
-      'style'             => '',
-    ];
+    ] + self::anywhereSettings();
 
     blazy_alterable_settings($settings);
     return $settings;
+  }
+
+  /**
+   * Returns cherry-picked settings for field formatters and Views fields.
+   */
+  public static function cherrySettings() {
+    return [
+      'box_style'       => '',
+      'image_style'     => '',
+      'media_switch'    => '',
+      'ratio'           => '',
+      'thumbnail_style' => '',
+      '_uri'            => '',
+    ];
   }
 
   /**
@@ -79,15 +93,22 @@ class BlazyDefault {
       'background'             => FALSE,
       'box_caption'            => '',
       'box_caption_custom'     => '',
-      'box_style'              => '',
       'box_media_style'        => '',
-      'breakpoints'            => [],
       'caption'                => [],
-      'image_style'            => '',
-      'media_switch'           => '',
-      'ratio'                  => '',
       'responsive_image_style' => '',
-      'sizes'                  => '',
+    ] + self::cherrySettings();
+  }
+
+  /**
+   * Returns deprecated settings.
+   *
+   * @todo remove custom breakpoints anytime before 3.x.
+   */
+  public static function deprecatedSettings() {
+    return [
+      'breakpoints' => [],
+      'sizes'       => '',
+      'grid_header' => '',
     ];
   }
 
@@ -96,11 +117,10 @@ class BlazyDefault {
    */
   public static function imageSettings() {
     return [
-      'icon'            => '',
-      'layout'          => '',
-      'thumbnail_style' => '',
-      'view_mode'       => '',
-    ] + self::baseSettings() + self::baseImageSettings();
+      'icon'      => '',
+      'layout'    => '',
+      'view_mode' => '',
+    ] + self::baseSettings() + self::baseImageSettings() + self::deprecatedSettings();
   }
 
   /**
@@ -134,8 +154,7 @@ class BlazyDefault {
       'grid_header' => '',
       'grid_medium' => 0,
       'grid_small'  => 0,
-      'style'       => '',
-    ];
+    ] + self::anywhereSettings();
   }
 
   /**
@@ -162,6 +181,36 @@ class BlazyDefault {
   }
 
   /**
+   * Returns default options common for rich Media entities: Facebook, etc.
+   *
+   * This basically disables few Blazy features for rendered-entity-like.
+   */
+  public static function richSettings() {
+    return [
+      'background'   => FALSE,
+      'lazy'         => '',
+      'lightbox'     => FALSE,
+      'media_switch' => '',
+      'placeholder'  => '',
+      'resimage'     => FALSE,
+      'use_loading'  => FALSE,
+      'type'         => 'rich',
+    ] + self::anywhereSettings();
+  }
+
+  /**
+   * Returns shared global form settings which should be consumed at formatters.
+   */
+  public static function uiSettings() {
+    return [
+      'one_pixel'        => TRUE,
+      'noscript'         => FALSE,
+      'placeholder'      => '',
+      'responsive_image' => FALSE,
+    ] + self::anywhereSettings();
+  }
+
+  /**
    * Returns sensible default container settings to shutup notices when lacking.
    */
   public static function htmlSettings() {
@@ -170,7 +219,11 @@ class BlazyDefault {
       'lightbox'   => FALSE,
       'namespace'  => 'blazy',
       'id'         => '',
-    ] + self::imageSettings();
+      'is_preview' => FALSE,
+      'route_name' => '',
+      'use_field'  => FALSE,
+      'view_name'  => '',
+    ] + self::imageSettings() + self::uiSettings();
   }
 
   /**
@@ -179,6 +232,8 @@ class BlazyDefault {
   public static function itemSettings() {
     return [
       '_api'           => FALSE,
+      'bundle'         => '',
+      'classes'        => [],
       'content_url'    => '',
       'delta'          => 0,
       'embed_url'      => '',
@@ -188,8 +243,6 @@ class BlazyDefault {
       'item_id'        => 'blazy',
       'lazy_attribute' => 'src',
       'lazy_class'     => 'b-lazy',
-      'one_pixel'      => TRUE,
-      'placeholder'    => '',
       'padding_bottom' => '',
       'player'         => FALSE,
       'resimage'       => FALSE,
@@ -206,14 +259,21 @@ class BlazyDefault {
 
   /**
    * Returns blazy theme properties, its image and container attributes.
+   *
+   * The reserved attributes mentioned here might be instantiated as an
+   * instanceof \Drupal\Core\Template\Attribute before entering Blazy.
    */
   public static function themeProperties() {
     return [
       'attributes',
       'captions',
+      'content',
+      'iframe',
       'image',
       'item',
       'item_attributes',
+      'noscript',
+      'postscript',
       'settings',
       'url',
     ];
@@ -221,6 +281,9 @@ class BlazyDefault {
 
   /**
    * Returns additional/ optional blazy theme attributes.
+   *
+   * The attributes mentioned here are only instantiated at theme_blazy() and
+   * might be an empty array, not instanceof \Drupal\Core\Template\Attribute.
    */
   public static function themeAttributes() {
     return ['caption', 'media', 'url', 'wrapper'];

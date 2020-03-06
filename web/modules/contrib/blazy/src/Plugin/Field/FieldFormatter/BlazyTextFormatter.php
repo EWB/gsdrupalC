@@ -7,7 +7,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\blazy\BlazyManagerInterface;
 use Drupal\blazy\BlazyDefault;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -24,33 +23,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   },
  *   quickedit = {"editor" = "disabled"}
  * )
+ *
+ * @todo remove ContainerFactoryPluginInterface since D8.8 has it by default.
  */
 class BlazyTextFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   use BlazyFormatterTrait;
 
   /**
-   * Constructs a BlazyImageFormatter instance.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, BlazyManagerInterface $formatter) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->formatter = $formatter;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('blazy.formatter.manager')
-    );
+    /**
+     * @var \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyTextFormatter
+     */
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->formatter = $container->get('blazy.manager');
+
+    return $instance;
   }
 
   /**
@@ -70,11 +60,10 @@ class BlazyTextFormatter extends FormatterBase implements ContainerFactoryPlugin
     }
 
     // Build the settings.
-    $settings               = $this->buildSettings();
-    $settings['namespace']  = 'blazy';
-    $settings['langcode']   = $langcode;
-    $settings['_grid']      = TRUE;
-    $settings['field_name'] = $items->getFieldDefinition()->getName();
+    $settings             = $this->buildSettings();
+    $settings['lazy']     = FALSE;
+    $settings['langcode'] = $langcode;
+    $settings['_grid']    = $settings['_unblazy'] = TRUE;
 
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
@@ -106,16 +95,13 @@ class BlazyTextFormatter extends FormatterBase implements ContainerFactoryPlugin
    */
   public function getScopedFormElements() {
     return [
-      'current_view_mode' => $this->viewMode,
-      'grid_form'         => TRUE,
-      'grid_required'     => TRUE,
-      'no_image_style'    => TRUE,
-      'no_layouts'        => TRUE,
-      'responsive_image'  => FALSE,
-      'style'             => TRUE,
-      'plugin_id'         => $this->getPluginId(),
-      'settings'          => $this->getSettings(),
-    ];
+      'grid_form'        => TRUE,
+      'grid_required'    => TRUE,
+      'no_image_style'   => TRUE,
+      'no_layouts'       => TRUE,
+      'responsive_image' => FALSE,
+      'style'            => TRUE,
+    ] + $this->getCommonScopedFormElements();
   }
 
   /**

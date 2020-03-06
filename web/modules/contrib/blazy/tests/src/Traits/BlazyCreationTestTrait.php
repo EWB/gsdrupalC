@@ -256,7 +256,7 @@ trait BlazyCreationTestTrait {
         $max = $multiple ? $this->maxItems : 2;
         if (isset($node->{$field_name})) {
           // @see \Drupal\Core\Field\FieldItemListInterface::generateSampleItems
-          $node->{$field_name}->generateSampleItems($max);
+          $node->get($field_name)->generateSampleItems($max);
         }
       }
     }
@@ -486,13 +486,13 @@ trait BlazyCreationTestTrait {
     }
 
     if (empty($this->url)) {
-      $source = DRUPAL_ROOT . '/core/misc/druplicon.png';
+      $source = $this->root . '/core/misc/druplicon.png';
       $uri = 'public://test.png';
       $this->fileSystem->copy($source, $uri, FileSystemInterface::EXISTS_REPLACE);
       $this->url = file_create_url($uri);
     }
 
-    $this->testItem = $item;
+    $this->testItem = $this->image = $item;
 
     $this->data = [
       'settings' => $this->getFormatterSettings(),
@@ -506,7 +506,7 @@ trait BlazyCreationTestTrait {
    * Returns path to the stored image location.
    */
   protected function getImagePath($is_dir = FALSE) {
-    $path            = \Drupal::root() . '/sites/default/files/simpletest/' . $this->testPluginId;
+    $path            = $this->root . '/sites/default/files/simpletest/' . $this->testPluginId;
     $item            = $this->createDummyImage();
     $this->dummyUrl  = file_url_transform_relative(file_create_url($this->dummyUri));
     $this->dummyItem = $item;
@@ -522,9 +522,9 @@ trait BlazyCreationTestTrait {
    * Returns the created image file.
    */
   protected function createDummyImage($name = '', $source = '') {
-    $path   = \Drupal::root() . '/sites/default/files/simpletest/' . $this->testPluginId;
+    $path   = $this->root . '/sites/default/files/simpletest/' . $this->testPluginId;
     $name   = empty($name) ? $this->testPluginId . '.png' : $name;
-    $source = empty($source) ? \Drupal::root() . '/core/misc/druplicon.png' : $source;
+    $source = empty($source) ? $this->root . '/core/misc/druplicon.png' : $source;
     $uri    = $path . '/' . $name;
 
     if (!is_file($uri)) {
@@ -550,7 +550,7 @@ trait BlazyCreationTestTrait {
    * Prepares test directory to store screenshots, or images.
    */
   protected function prepareTestDirectory() {
-    $this->testDirPath = \Drupal::root() . '/sites/default/files/simpletest/' . $this->testPluginId;
+    $this->testDirPath = $this->root . '/sites/default/files/simpletest/' . $this->testPluginId;
     $this->fileSystem->prepareDirectory($this->testDirPath, FileSystemInterface::CREATE_DIRECTORY);
   }
 

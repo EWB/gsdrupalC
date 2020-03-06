@@ -45,14 +45,14 @@ function geolocation_google_maps_js_alter(&$javascript, AttachedAssetsInterface 
     $google_url = $config->get('google_maps_base_url');
   }
   elseif ($config->get('china_mode')) {
-    $google_url = GoogleMapsProviderBase::$GOOGLEMAPSAPIURLBASECHINA;
+    $google_url = GoogleMapsProviderBase::$googleMapsApiUrlBaseChina;
   }
   else {
-    $google_url = GoogleMapsProviderBase::$GOOGLEMAPSAPIURLBASE;
+    $google_url = GoogleMapsProviderBase::$googleMapsApiUrlBase;
   }
 
   foreach ($javascript as $key => $js) {
-    if (strpos($key, $google_url . GoogleMapsProviderBase::$GOOGLEMAPSAPIURLPATH) === 0 && strpos($key, 'language=') > 0) {
+    if (strpos($key, $google_url . GoogleMapsProviderBase::$googleMapsApiUrlPath) === 0 && strpos($key, 'language=') > 0) {
       $javascript[$key]['data'] = Drupal::service('plugin.manager.geolocation.mapprovider')->getMapProvider('google_maps')->getGoogleMapsApiUrl();
     }
   }

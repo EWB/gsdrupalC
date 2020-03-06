@@ -1,7 +1,8 @@
+.
 ***
 ***
-
-# ISSUE TEMPLATE
+.
+# <a name="issue-template"></a>ISSUE TEMPLATE
 
 ## Please describe the issue in crystal-clear sentences:
 (Steps to reproduce, if it is a bug/ support report.)
@@ -33,7 +34,8 @@ It doesn't dictate, it should help us be on the same page, and narrows down.
 
 ### Before you proceed creating the issue, please:
 * visit **/admin/help**, and find the relevant module documentations.
-* install the samples, if relevant: [Slick example](http://dgo.to/slick_extras).
+* install the samples, if relevant:
+  [Slick example](https://www.drupal.org/project/slick_extras).
 * ensure the library is loaded, not 404, by viewing it in a browser.
 * cross-check against other versions of the library.
 * switch to stock (Responsive) Bartik for just in case it is your custom theme.

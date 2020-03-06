@@ -4,9 +4,6 @@ namespace Drupal\slick_ui\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\slick\SlickManagerInterface;
-use Drupal\slick\Form\SlickAdminInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,13 +40,6 @@ abstract class SlickFormBase extends EntityForm {
   protected $manager;
 
   /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * The form elements.
    *
    * @var array
@@ -64,23 +54,13 @@ abstract class SlickFormBase extends EntityForm {
   protected $jsEasingOptions;
 
   /**
-   * Constructs a SlickForm object.
-   */
-  public function __construct(MessengerInterface $messenger, SlickAdminInterface $admin, SlickManagerInterface $manager) {
-    $this->messenger = $messenger;
-    $this->admin = $admin;
-    $this->manager = $manager;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('messenger'),
-      $container->get('slick.admin'),
-      $container->get('slick.manager')
-    );
+    $instance = parent::create($container);
+    $instance->admin = $container->get('slick.admin');
+    $instance->manager = $container->get('slick.manager');
+    return $instance;
   }
 
   /**
@@ -151,12 +131,12 @@ abstract class SlickFormBase extends EntityForm {
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity.
       // @todo #2278383.
-      $this->messenger->addMessage($this->t('@config_prefix %label has been updated.', $message));
+      $this->messenger()->addMessage($this->t('@config_prefix %label has been updated.', $message));
       $this->logger(static::$machineName)->notice('@config_prefix %label has been updated.', $notice);
     }
     else {
       // If we created a new entity.
-      $this->messenger->addMessage($this->t('@config_prefix %label has been added.', $message));
+      $this->messenger()->addMessage($this->t('@config_prefix %label has been added.', $message));
       $this->logger(static::$machineName)->notice('@config_prefix %label has been added.', $notice);
     }
 

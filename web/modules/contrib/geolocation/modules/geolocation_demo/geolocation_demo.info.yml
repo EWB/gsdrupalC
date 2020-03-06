@@ -1,7 +1,7 @@
 name: Geolocation - Demo
 type: module
 description: 'Example views and pages for some more common use cases.'
-core: 8.x
+core_version_requirement: ^8.7.7 || ^9
 package: Geolocation
 dependencies:
   - geolocation:geolocation

@@ -15,13 +15,13 @@ abstract class BlazyViewsTestBase extends ViewsKernelTestBase {
   /**
    * Set to TRUE to strict check all configuration saved.
    *
-   * This is not crucial as this affects views.view.., not Blazy stuffs.
+   * Let's keep it enabled here for just in case core breaks it again related to
+   * views.view.test_blazy_entity.
    *
    * @var bool
-   * @todo remove once fixed for: views.view.test_blazy_entity.
    * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    */
-  protected $strictConfigSchema = FALSE;
+  protected $strictConfigSchema = TRUE;
 
   /**
    * {@inheritdoc}

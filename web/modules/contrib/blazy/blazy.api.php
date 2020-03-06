@@ -56,7 +56,7 @@
  *   return $build;
  * }
  * @endcode
- * @see \Drupal\blazy\Blazy::buildAttributes()
+ * @see \Drupal\blazy\Blazy::preprocessBlazy()
  * @see \Drupal\blazy\BlazyDefault::imageSettings()
  *
  * A multiple image sample.
@@ -64,7 +64,7 @@
  * For advanced usages with multiple images, and a few Blazy features such as
  * lightboxes, lazyloaded images, or iframes, including CSS background and
  * aspect ratio, etc.:
- *   o Invoke blazy.manager, and or blazy.formatter.manager, services.
+ *   o Invoke blazy.manager, and or blazy.formatter, services.
  *   o Use \Drupal\blazy\BlazyManager::getBlazy() method to work with images and
  *     pass relevant settings which request for particular Blazy features
  *     accordingly.
@@ -97,7 +97,6 @@
  * }
  * @endcode
  * @see \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyFormatterBlazy::buildElements()
- * @see \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyVideoFormatter::buildElements()
  * @see \Drupal\gridstack\Plugin\Field\FieldFormatter\GridStackFileFormatterBase::buildElements()
  * @see \Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatterBase::buildElements()
  * @see \Drupal\blazy\BlazyManager::getBlazy()
@@ -217,7 +216,7 @@ function hook_blazy_build_alter(array &$build, array $settings = []) {
  * @code
  * function hook_config_schema_info_alter(array &$definitions) {
  *   $settings = ['color' => '', 'arrowpos' => '', 'dotpos' => ''];
- *   Blazy::configSchemaInfoAlter($definitions,
+ *   BlazyAlter::configSchemaInfoAlter($definitions,
  *     'slick_base', SlickDefault::extendedSettings() + $settings);
  * }
  * @endcode

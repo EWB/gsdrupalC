@@ -19,23 +19,21 @@
     return function (response, status) {
       var me = _blazy.init;
 
-      if (me === null) {
-        return _ajax.apply(this, arguments);
+      if (me !== null) {
+        window.clearTimeout(_revTimer);
+        // DOM ready fix. Be sure Views "Use field template" is disabled.
+        _revTimer = window.setTimeout(function () {
+          var elms = document.querySelectorAll(me.options.selector);
+          if (elms !== null) {
+            // ::load() means forcing them to load at once, great for small
+            // amount of items, bad for large amount.
+            // ::revalidate() means re-observe newly loaded AJAX contents without
+            // forcing all images to load at once, great for large, bad for small.
+            // Unfortunately revalidate() not always work, likely layout reflow.
+            me.load(elms);
+          }
+        }, 100);
       }
-
-      window.clearTimeout(_revTimer);
-      // DOM ready fix. Be sure Views "Use field template" is disabled.
-      _revTimer = window.setTimeout(function () {
-        var elms = document.querySelectorAll(me.options.selector);
-        if (elms !== null) {
-          // ::load() means forcing them to load at once, great for small
-          // amount of items, bad for large amount.
-          // ::revalidate() means re-observe newly loaded AJAX contents without
-          // forcing all images to load at once, great for large, bad for small.
-          // Unfortunately revalidate() not always work, likely layout reflow.
-          me.load(elms);
-        }
-      }, 100);
 
       return _ajax.apply(this, arguments);
     };

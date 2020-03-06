@@ -3,11 +3,7 @@
  * The CSS and class names below are based on Slick media for easy migration.
  */
 
-[data-blazy],
-[data-blazy] * {
-  box-sizing: border-box;
-}
-
+/* Touch me not! Or boom when outside .blazy such as within lightboxes. */
 .media {
   position: relative;
 }
@@ -19,13 +15,9 @@
 .media.media--ratio {
   display: block;
   height: 0;
+  min-height: 1px;
   overflow: hidden;
   width: 100%;
-}
-
-/* Allows to fix broken images with hidden elements, see slick.load.js. */
-.media.js-media--ratio {
-  height: auto;
 }
 
 /* Aspect ratio element: IMG, IFRAME, DIV. */
@@ -33,10 +25,13 @@
   display: block;
   height: 100%;
   left: 0;
+  min-height: 1px;
   position: absolute;
   top: 0;
   width: 100%;
   z-index: 0;
+  /** Temp fix, also to fix the VIDEO element to max width, not only IMG. */
+  object-fit: cover;
 }
 
 /* 1:1 ratio */
@@ -62,9 +57,4 @@
 /* 16:9 ratio */
 .media--ratio--169 {
   padding-bottom: 56.25%;
-}
-
-/* Be sure to add width to the container accordingly, otherwise collapsed. */
-.field[data-blazy] {
-  min-width: 50%;
 }

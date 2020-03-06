@@ -3,6 +3,10 @@
   width: 100%;
 }
 
+.geolocation-map-container * {
+  box-sizing: unset;
+}
+
 .geolocation-context-popup {
   z-index: 1;
   position: absolute;

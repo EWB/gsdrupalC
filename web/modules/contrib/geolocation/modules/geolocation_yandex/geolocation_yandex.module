@@ -39,7 +39,7 @@ function geolocation_yandex_js_alter(&$javascript, AttachedAssetsInterface $asse
   $yandex = Drupal::service('plugin.manager.geolocation.mapprovider')->getMapProvider('yandex');
 
   foreach ($javascript as $key => $js) {
-    if (strpos($key, $yandex::$APIURLBASE) === 0 && strpos($key, 'lang=') > 0) {
+    if (strpos($key, $yandex::$apiBaseUrl) === 0 && strpos($key, 'lang=') > 0) {
       $javascript[$key]['data'] = $yandex->getApiUrl();
     }
   }

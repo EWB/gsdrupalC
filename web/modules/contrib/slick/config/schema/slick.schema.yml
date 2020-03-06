@@ -5,15 +5,15 @@ slick.settings:
   type: config_object
   label: 'Slick settings'
   mapping:
-    admin_css:
-      type: boolean
-      label: 'Enable Slick admin CSS'
     module_css:
       type: boolean
       label: 'Enable Slick module slick.theme.css'
     slick_css:
       type: boolean
       label: 'Enable Slick library slick-theme.css'
+    disable_old_skins:
+      type: boolean
+      label: 'Disable old skins'
 
 # Slick JS settings managed by UI.
 slick_optionset:

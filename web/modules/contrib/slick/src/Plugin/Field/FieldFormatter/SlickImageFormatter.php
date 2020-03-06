@@ -13,8 +13,4 @@ namespace Drupal\slick\Plugin\Field\FieldFormatter;
  *   quickedit = {"editor" = "disabled"}
  * )
  */
-class SlickImageFormatter extends SlickFileFormatterBase {
-
-  use SlickFormatterTrait;
-
-}
+class SlickImageFormatter extends SlickFileFormatterBase {}

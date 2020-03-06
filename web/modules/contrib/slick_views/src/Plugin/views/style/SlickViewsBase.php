@@ -2,10 +2,8 @@
 
 namespace Drupal\slick_views\Plugin\views\style;
 
-use Drupal\blazy\BlazyManagerInterface;
 use Drupal\blazy\Dejavu\BlazyStylePluginBase;
 use Drupal\slick\SlickDefault;
-use Drupal\slick\SlickManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,18 +19,21 @@ abstract class SlickViewsBase extends BlazyStylePluginBase {
   protected $manager;
 
   /**
-   * Constructs a SlickManager object.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlazyManagerInterface $blazy_manager, SlickManagerInterface $manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $blazy_manager);
-    $this->manager = $manager;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('blazy.manager'), $container->get('slick.manager'));
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->manager = $container->get('slick.manager');
+    $instance->blazyManager = isset($instance->blazyManager) ? $instance->blazyManager : $container->get('blazy.manager');
+
+    return $instance;
+  }
+
+  /**
+   * Returns the slick manager.
+   */
+  public function manager() {
+    return $this->manager;
   }
 
   /**
@@ -138,13 +139,14 @@ abstract class SlickViewsBase extends BlazyStylePluginBase {
    * {@inheritdoc}
    */
   protected function buildSettings() {
+    // @todo move it into self::prepareSettings() post blazy:2.x.
+    $this->options['item_id'] = 'slide';
+    $this->options['namespace'] = 'slick';
     $settings = parent::buildSettings();
 
     // Prepare needed settings to work with.
-    $settings['item_id']      = 'slide';
-    $settings['caption']      = array_filter($settings['caption']);
-    $settings['namespace']    = 'slick';
-    $settings['nav']          = !$settings['vanilla'] && $settings['optionset_thumbnail'] && isset($this->view->result[1]);
+    $settings['caption'] = array_filter($settings['caption']);
+    $settings['nav'] = !$settings['vanilla'] && $settings['optionset_thumbnail'] && isset($this->view->result[1]);
     $settings['overridables'] = empty($settings['override']) ? array_filter($settings['overridables']) : $settings['overridables'];
 
     return $settings;
@@ -167,9 +169,7 @@ abstract class SlickViewsBase extends BlazyStylePluginBase {
       // Provides a potential unique thumbnail different from the main image.
       if (!empty($settings['thumbnail'])) {
         $thumbnail = $this->getFieldRenderable($row, 0, $settings['thumbnail']);
-        if (isset($thumbnail['rendered']['#image_style'], $thumbnail['rendered']['#item'])) {
-          $item = $thumbnail['rendered']['#item'];
-
+        if (isset($thumbnail['rendered']['#image_style'], $thumbnail['rendered']['#item']) && $item = $thumbnail['rendered']['#item']) {
           $uri = (($entity = $item->entity) && empty($item->uri)) ? $entity->getFileUri() : $item->uri;
           $settings['thumbnail_style'] = $thumbnail['rendered']['#image_style'];
           $settings['thumbnail_uri'] = $this->manager->entityLoad($settings['thumbnail_style'], 'image_style')->buildUri($uri);

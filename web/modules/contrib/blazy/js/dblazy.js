@@ -5,7 +5,7 @@
  * @todo: Use Cash or Underscore when jQuery is dropped by supported plugins.
  */
 
-/* global window, document, define, module */
+/* global define, module */
 (function (root, factory) {
 
   'use strict';
@@ -71,12 +71,80 @@
         };
     }
 
-    // Check if matches.
+    // Check if matches, excluding HTMLDocument, see ::closest().
     if (elem.matches(selector)) {
       return true;
     }
 
     return false;
+  };
+
+  /**
+   * Returns device pixel ratio.
+   *
+   * @return {Integer}
+   *   Returns the device pixel ratio.
+   */
+  dBlazy.pixelRatio = function () {
+    return window.devicePixelRatio || 1;
+  };
+
+  /**
+   * Returns cross-browser window width.
+   *
+   * @return {Integer}
+   *   Returns the window width.
+   */
+  dBlazy.windowWidth = function () {
+    return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth || window.screen.width;
+  };
+
+  /**
+   * Returns data from the current active window.
+   *
+   * @name dBlazy.activeWidth
+   *
+   * @param {Object} dataset
+   *   The dataset object must be keyed by window width.
+   * @param {Boolean} mobileFirst
+   *   Whether to use min-width, or max-width.
+   *
+   * @return {mixed}
+   *   Returns data from the current active window.
+   */
+  dBlazy.activeWidth = function (dataset, mobileFirst) {
+    var me = this;
+    var keys = Object.keys(dataset);
+    var xs = keys[0];
+    var xl = keys[keys.length - 1];
+    var mw = function (w) {
+      // The picture wants <= (approximate), non-picture wants >=, wtf.
+      var pr = (me.windowWidth() * me.pixelRatio());
+      return mobileFirst ? w <= me.windowWidth() : w >= pr;
+    };
+
+    var data = keys.filter(mw).map(function (v) {
+      return dataset[v];
+    })[mobileFirst ? 'pop' : 'shift']();
+
+    return data === 'undefined' ? dataset[me.windowWidth() >= xl ? xl : xs] : data;
+  };
+
+  /**
+   * Check if the HTML tag matches a specified string.
+   *
+   * @name dBlazy.closest
+   *
+   * @param {Element} el
+   *   The element to compare.
+   * @param {String} str
+   *   HTML tag to match against.
+   *
+   * @return {Boolean}
+   *   Returns true if matches, else false.
+   */
+  dBlazy.equal = function (el, str) {
+    return el !== null && el.nodeName.toLowerCase() === str;
   };
 
   /**
@@ -99,7 +167,8 @@
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
    */
   dBlazy.closest = function (elem, selector) {
-    for (; elem && elem !== document; elem = elem.parentNode) {
+    // Don't use document to support traversal within iframe.
+    for (; elem && !(elem instanceof HTMLDocument); elem = elem.parentNode) {
       if (dBlazy.matches(elem, selector)) {
         return elem;
       }
@@ -130,7 +199,7 @@
       }
 
       for (var key in arguments[i]) {
-        if (arguments[i].hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(arguments[i], key)) {
           out[key] = arguments[i][key];
         }
       }
@@ -163,7 +232,7 @@
         }
       }
     }
-    else {
+    else if (collection) {
       for (var i = 0, len = collection.length; i < len; i++) {
         callback.call(scope, collection[i], i, collection);
       }
@@ -182,6 +251,8 @@
    *
    * @return {bool}
    *   True if of of the method is supported.
+   *
+   * @todo remove for el.classList.contains() alone.
    */
   dBlazy.hasClass = function (el, name) {
     if (el.classList) {
@@ -190,6 +261,120 @@
     else {
       return el.className.indexOf(name) !== -1;
     }
+  };
+
+  /**
+   * A simple attributes wrapper.
+   *
+   * @name dBlazy.setAttr
+   *
+   * @param {Element} el
+   *   The HTML element.
+   * @param {String} attr
+   *   The attr name.
+   * @param {Boolean} remove
+   *   True if should remove.
+   */
+  dBlazy.setAttr = function (el, attr, remove) {
+    if (el.hasAttribute('data-' + attr)) {
+      var dataAttr = el.getAttribute('data-' + attr);
+      if (attr === 'src') {
+        el.src = dataAttr;
+      }
+      else {
+        el.setAttribute(attr, dataAttr);
+      }
+
+      if (remove) {
+        el.removeAttribute('data-' + attr);
+      }
+    }
+  };
+
+  /**
+   * A simple attributes wrapper looping based on the given attributes.
+   *
+   * @name dBlazy.setAttrs
+   *
+   * @param {Element} el
+   *   The HTML element.
+   * @param {Array} attrs
+   *   The attr names.
+   * @param {Boolean} remove
+   *   True if should remove.
+   */
+  dBlazy.setAttrs = function (el, attrs, remove) {
+    var me = this;
+
+    me.forEach(attrs, function (src) {
+      me.setAttr(el, src, remove);
+    });
+  };
+
+  /**
+   * A simple attributes wrapper, looping based on sources (picture/ video).
+   *
+   * @name dBlazy.setAttrsWithSources
+   *
+   * @param {Element} el
+   *   The starting HTML element.
+   * @param {String} attr
+   *   The attr name, can be SRC or SRCSET.
+   * @param {Boolean} remove
+   *   True if should remove.
+   */
+  dBlazy.setAttrsWithSources = function (el, attr, remove) {
+    var me = this;
+    var parent = el.parentNode || null;
+    var isPicture = parent && me.equal(parent, 'picture');
+    var targets = isPicture ? parent.getElementsByTagName('source') : el.getElementsByTagName('source');
+
+    attr = attr || (isPicture ? 'srcset' : 'src');
+
+    if (targets.length) {
+      me.forEach(targets, function (source) {
+        me.setAttr(source, attr, remove);
+      });
+    }
+  };
+
+  /**
+   * Updates CSS background with multi-breakpoint images.
+   *
+   * @name dBlazy.updateBg
+   *
+   * @param {Element} el
+   *   The container HTML element.
+   * @param {Boolean} mobileFirst
+   *   Whether to use min-width or max-width.
+   */
+  dBlazy.updateBg = function (el, mobileFirst) {
+    var me = this;
+    var backgrounds = me.parse(el.getAttribute('data-backgrounds'));
+
+    if (backgrounds) {
+      var bg = me.activeWidth(backgrounds, mobileFirst);
+      if (bg && bg !== 'undefined') {
+        el.style.backgroundImage = 'url("' + bg.src + '")';
+        el.style.paddingBottom = bg.ratio + '%';
+      }
+    }
+  };
+
+  /**
+   * A simple removeAttribute wrapper.
+   *
+   * @name dBlazy.removeAttrs
+   *
+   * @param {Element} el
+   *   The HTML element.
+   * @param {Array} attrs
+   *   The attr names.
+   */
+  dBlazy.removeAttrs = function (el, attrs) {
+    this.forEach(attrs, function (attr) {
+      el.removeAttribute('data-' + attr);
+    });
   };
 
   /**
@@ -271,7 +456,46 @@
   };
 
   /**
-   * A simple wrapper to delay callback function, tasken out of blazy library.
+   * A simple wrapper to animate anything using animate.css.
+   *
+   * @name dBlazy.animate
+   *
+   * @param {Element} el
+   *   The animated HTML element.
+   */
+  dBlazy.animate = function (el) {
+    var me = this;
+    var animation = el.dataset.animation;
+    var props = [
+      'animation',
+      'animation-duration',
+      'animation-delay',
+      'animation-iteration-count'
+    ];
+
+    el.classList.add('animated', animation);
+    me.forEach(['Duration', 'Delay', 'IterationCount'], function (key) {
+      if ('animation' + key in el.dataset) {
+        el.style['animation' + key] = el.dataset['animation' + key];
+      }
+    });
+
+    me.removeAttrs(el, props);
+
+    function animationEnd() {
+      el.classList.remove('animated', animation);
+      el.removeEventListener('animationend', animationEnd);
+
+      me.forEach(props, function (key) {
+        el.style.removeProperty(key);
+      });
+    }
+
+    el.addEventListener('animationend', animationEnd);
+  };
+
+  /**
+   * A simple wrapper to delay callback function, taken out of blazy library.
    *
    * Alternative to core Drupal.debounce for D7 compatibility, and easy port.
    *
@@ -282,7 +506,7 @@
    * @param {Int} minDelay
    *   The execution delay in milliseconds.
    * @param {Object} scope
-   *   The the scope of the function to apply to, normally this.
+   *   The scope of the function to apply to, normally this.
    *
    * @return {Function}
    *   The function executed at the specified minDelay.

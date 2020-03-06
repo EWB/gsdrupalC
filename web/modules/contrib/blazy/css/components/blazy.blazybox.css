@@ -29,6 +29,7 @@
 }
 
 .blazybox__close {
+  box-sizing: border-box;
   border: 1px solid rgba(255, 255, 255, .8);
   border-top: 0;
   color: #fff;

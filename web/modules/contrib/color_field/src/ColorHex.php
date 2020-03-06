@@ -55,7 +55,7 @@ class ColorHex extends ColorBase {
    *   The color in format: #RRGGBB.
    */
   public function toString($opacity = TRUE) {
-    $rgb = $this->toRGB();
+    $rgb = $this->toRgb();
     $hex = '#';
     $hex .= str_pad(dechex($rgb->getRed()), 2, "0", STR_PAD_LEFT);
     $hex .= str_pad(dechex($rgb->getGreen()), 2, "0", STR_PAD_LEFT);
@@ -76,12 +76,19 @@ class ColorHex extends ColorBase {
   /**
    * {@inheritdoc}
    */
-  public function toRGB() {
+  public function toRgb() {
     $red = (($this->color & 0xFF0000) >> 16);
     $green = (($this->color & 0x00FF00) >> 8);
     $blue = (($this->color & 0x0000FF));
     $opacity = $this->getOpacity();
     return new ColorRGB($red, $green, $blue, $opacity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toHsl() {
+    return $this->toRGB()->toHsl();
   }
 
 }

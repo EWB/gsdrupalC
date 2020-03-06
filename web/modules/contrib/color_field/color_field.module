@@ -16,15 +16,17 @@ function color_field_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.color_field':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Color Field is simple field that use a hexadecimal notation (HEX) for the combination of Red, Green, and Blue color values (RGB). See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!link_documentation">online documentation for the Link module</a>.', [
-        '!field' => Url::fromRoute('help.page', ['name' => 'field']),
-        '!field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui']),
-        '!link_documentation' => 'https://drupal.org/documentation/modules/link',
+      $output .= '<p>' . t('Color Field is simple field that use a hexadecimal notation (HEX) for the combination of Red, Green, and Blue color values (RGB). See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":link_documentation">online documentation for the Link module</a>.', [
+        ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(),
+        ':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#',
+        ':link_documentation' => 'https://drupal.org/documentation/modules/link',
       ]) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing and displaying color fields') . '</dt>';
-      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the link field can be configured separately. See the <a href="!field_ui">Field UI help</a> for more information on how to manage fields and their display.', ['!field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui'])]) . '</dd>';
+      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the link field can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', [
+        ':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#',
+      ]) . '</dd>';
       $output .= '<dt>' . t('Adding link text') . '</dt>';
       $output .= '<dd>' . t('In the field settings you can define additional link text to be <em>optional</em> or <em>required</em> in any link field.') . '</dd>';
       $output .= '<dt>' . t('Displaying link text') . '</dt>';
@@ -52,23 +54,18 @@ function color_field_theme() {
       'height' => NULL,
     ],
   ];
+  $theme['color_field_formatter_swatch_option'] = [
+    'variables' => [
+      'id' => NULL,
+      'name' => NULL,
+      'input_type' => NULL,
+      'value' => NULL,
+      'shape' => NULL,
+      'color' => NULL,
+      'width' => NULL,
+      'height' => NULL,
+    ],
+  ];
 
   return $theme;
-}
-
-/**
- * Prepares variables for the color_field formatter swatch template.
- *
- * This template outputs a color swatch.
- *
- * Default template: color-field-formatter-swatch.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *     - color: The color background.
- *     - shape: The shape of the color swatch.
- *     - width: The width of the color swatch.
- *     - height: The height of the color swatch.
- */
-function template_preprocess_color_field_formatter_swatch(array &$variables) {
 }

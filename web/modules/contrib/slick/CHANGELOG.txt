@@ -1,4 +1,48 @@
 
+Slick 8.x-2.0-dev, 2020-02-14
+-----------------------------
+- Issue #3112913 by thalles, gausarts: Fix subclassing and stop overriding
+  constructors in slick\SlickManager.
+- Issue #3113224 by thalles, gausarts: Fix subclassing and stop overriding
+  constructors in slick\Plugin\Field\FieldFormatter\SlickTextFormatter.
+- Issue #3113230 by thalles, gausarts: Fix subclassing and stop overriding
+  constructors in slick\Plugin\Field\FieldFormatter\SlickEntityFormatterBase.
+- Issue #3113227 by thalles, gausarts: Fix subclassing and stop overriding
+  constructors in
+  slick\Plugin\Field\FieldFormatter\SlickEntityReferenceFormatterBase.
+- Issue #3113159 by thalles, gausarts: Fix subclassing and stop overriding
+  constructors in slick\Plugin\Field\FieldFormatter\SlickFileFormatter.
+
+Slick 8.x-2.0-dev, 2020-01-31
+-----------------------------
+- Issue #3112363 by chr.fritsch: Integrate the new
+  libraries_directory_file_finder service.
+
+Slick 8.x-2.0-dev, 2020-01-31
+-----------------------------
+- Removed deprecated methods used mostly internally such as for/in hook_alter:
+  SlickManager::libraryInfoBuild, SlickManager::getEasingPath, etc.
+- Added app.root service to slick.skin_manager, and other fixes.
+
+Slick 8.x-2.0-dev, 2020-01-22
+-----------------------------
+- Added micro optimizations, similarity found -> code reuse, etc.
+- Updated docs, cleanups, minor fixes.
+
+Slick 8.x-2.0-dev, 2020-01-15
+-----------------------------
+- Removed slick_hook_info() for the new skins as plugins.
+- Updated docs.
+
+Slick 8.x-2.0-dev, 2020-01-13
+-----------------------------
+- Issue #3075838 by volkerk, gausarts: Configuration translation disallowed HTML
+
+Slick 8.x-2.0-dev, 2020-01-11
+-----------------------------
+- Issue #3105670 by gausarts: hook_hook_info is to be deprecated, consider skins
+  as plugins.
+
 Slick 8.x-2.0-dev, 2020-01-01
 -----------------------------
 - Issue #3088244 by aarnau, d70rr3s, igonzalez: [Regression]: Dots are not

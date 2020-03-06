@@ -22,6 +22,8 @@ use Drupal\Core\Field\FieldItemListInterface;
  */
 class SlickMediaFormatter extends SlickEntityReferenceFormatterBase {
 
+  use SlickFormatterViewTrait;
+
   /**
    * Returns the blazy manager.
    */
@@ -40,30 +42,16 @@ class SlickMediaFormatter extends SlickEntityReferenceFormatterBase {
       return [];
     }
 
-    // Collects specific settings to this formatter.
-    $settings = $this->buildSettings();
-    $build = ['settings' => $settings];
-
-    // Modifies settings before building elements.
-    $this->formatter->preBuildElements($build, $items, $entities);
-
-    // Build the elements.
-    $this->buildElements($build, $entities, $langcode);
-
-    // Modifies settings post building elements.
-    $this->formatter->postBuildElements($build, $items, $entities);
-
-    return $this->manager()->build($build);
+    return $this->commonViewElements($items, $langcode, $entities);
   }
 
   /**
    * Builds the settings.
+   *
+   * @todo inherit and extends parent post blazy:2.x.
    */
   public function buildSettings() {
-    $settings = parent::buildSettings();
-    $settings['blazy'] = TRUE;
-
-    return $settings;
+    return ['blazy' => TRUE] + $this->traitBuildSettings();
   }
 
   /**
@@ -75,7 +63,7 @@ class SlickMediaFormatter extends SlickEntityReferenceFormatterBase {
     return [
       'grid_form' => $multiple,
       'style'     => $multiple,
-    ] + parent::getScopedFormElements();
+    ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
   }
 
   /**

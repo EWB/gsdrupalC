@@ -3,26 +3,27 @@ services:
     abstract: true
     class: Drupal\blazy\BlazyManagerBase
     arguments: ['@entity.repository', '@entity_type.manager', '@module_handler', '@renderer', '@config.factory', '@cache.default']
+    calls:
+      # @todo remove and use DI instead after sub-module updates, and put as the
+      # last argument only if to support careless users ignoring hook_update().
+      - [setRoot, ['@app.root']]
 
   blazy.manager:
     abstract: false
     class: Drupal\blazy\BlazyManager
     parent: blazy.manager.base
 
-  blazy.formatter.manager:
-    class: Drupal\blazy\BlazyFormatterManager
+  blazy.formatter:
+    class: Drupal\blazy\BlazyFormatter
     parent: blazy.manager
 
   blazy.oembed:
     class: Drupal\blazy\BlazyOEmbed
-    arguments: ['@request_stack', '@media.oembed.resource_fetcher', '@media.oembed.url_resolver', '@media.oembed.iframe_url_helper', '@blazy.manager']
+    arguments: ['@request_stack', '@media.oembed.resource_fetcher', '@media.oembed.url_resolver', '@media.oembed.iframe_url_helper', '@image.factory', '@blazy.manager']
 
   blazy.entity:
     class: Drupal\blazy\BlazyEntity
     arguments: ['@blazy.oembed']
-
-  blazy:
-    class: Drupal\blazy\Blazy
 
   blazy.admin.base:
     abstract: true
@@ -40,3 +41,17 @@ services:
   blazy.admin:
     class: Drupal\blazy\Form\BlazyAdmin
     parent: blazy.admin.base
+
+  # @todo deprecate this if you can't make it non-static at blazy: 8.3+.
+  blazy.media:
+    class: Drupal\blazy\BlazyMedia
+    # @todo arguments: ['@blazy.entity']
+
+  # @todo deprecated and is removed for blazy.formatter at blazy: 8.3+.
+  blazy.formatter.manager:
+    class: Drupal\blazy\BlazyFormatterManager
+    parent: blazy.formatter
+
+  # @todo deprecated and is removed from blazy: 8.2.1+.
+  blazy:
+    class: Drupal\blazy\Blazy

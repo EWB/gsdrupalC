@@ -2,15 +2,9 @@
 
 namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Image\ImageFactory;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\blazy\BlazyEntity;
 use Drupal\blazy\Dejavu\BlazyEntityReferenceBase;
 use Drupal\slick\SlickDefault;
-use Drupal\slick\SlickFormatterInterface;
-use Drupal\slick\SlickManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,7 +15,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class SlickEntityReferenceFormatterBase extends BlazyEntityReferenceBase implements ContainerFactoryPluginInterface {
 
-  use SlickFormatterTrait;
+  use SlickFormatterTrait {
+    buildSettings as traitBuildSettings;
+  }
 
   /**
    * The logger factory.
@@ -31,36 +27,11 @@ abstract class SlickEntityReferenceFormatterBase extends BlazyEntityReferenceBas
   protected $loggerFactory;
 
   /**
-   * Constructs a SlickMediaFormatter instance.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, ImageFactory $image_factory, BlazyEntity $blazy_entity, SlickFormatterInterface $formatter, SlickManagerInterface $manager) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->loggerFactory = $logger_factory;
-    $this->imageFactory = $image_factory;
-    $this->blazyEntity = $blazy_entity;
-    $this->blazyOembed = $blazy_entity->oembed();
-    $this->formatter = $formatter;
-    $this->manager = $manager;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('logger.factory'),
-      $container->get('image.factory'),
-      $container->get('blazy.entity'),
-      $container->get('slick.formatter'),
-      $container->get('slick.manager')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    return self::injectServices($instance, $container, 'entity');
   }
 
   /**
@@ -88,16 +59,6 @@ abstract class SlickEntityReferenceFormatterBase extends BlazyEntityReferenceBas
   }
 
   /**
-   * Builds the settings.
-   */
-  public function buildSettings() {
-    $settings              = $this->getSettings();
-    $settings['plugin_id'] = $this->getPluginId();
-
-    return $settings;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getScopedFormElements() {
@@ -109,11 +70,10 @@ abstract class SlickEntityReferenceFormatterBase extends BlazyEntityReferenceBas
     $texts       = $admin->getFieldOptions($bundles, $texts, $target_type);
 
     return [
-      'namespace'       => 'slick',
       'thumb_captions'  => $texts,
       'thumb_positions' => TRUE,
       'nav'             => TRUE,
-    ] + parent::getScopedFormElements();
+    ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
   }
 
 }

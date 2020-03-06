@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -37,7 +38,7 @@ function geolocation_demo_install() {
     ]);
 
     $data = file_get_contents($icon_path . 'druplicon-deadpool.png');
-    $file = file_save_data($data, 'public://druplicon-deadpool.png', FILE_EXISTS_REPLACE);
+    $file = file_save_data($data, 'public://druplicon-deadpool.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       $term_a->set('field_geolocation_demo_term_icon', [
         'target_id' => $file->id(),
@@ -54,7 +55,7 @@ function geolocation_demo_install() {
     ]);
 
     $data = file_get_contents($icon_path . 'druplicon-wolverine.png');
-    $file = file_save_data($data, 'public://druplicon-wolverine.png', FILE_EXISTS_REPLACE);
+    $file = file_save_data($data, 'public://druplicon-wolverine.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       $term_b->set('field_geolocation_demo_term_icon', [
         'target_id' => $file->id(),
@@ -71,7 +72,7 @@ function geolocation_demo_install() {
     ]);
 
     $data = file_get_contents($icon_path . 'druplicon-wonder-woman.png');
-    $file = file_save_data($data, 'public://druplicon-wonder-woman.png', FILE_EXISTS_REPLACE);
+    $file = file_save_data($data, 'public://druplicon-wonder-woman.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       $term_c->set('field_geolocation_demo_term_icon', [
         'target_id' => $file->id(),
@@ -109,7 +110,7 @@ function geolocation_demo_install() {
     ]);
 
     $data = file_get_contents($icon_path . 'druplicon-nick-fury.png');
-    $file = file_save_data($data, 'public://druplicon-nick-fury.png', FILE_EXISTS_REPLACE);
+    $file = file_save_data($data, 'public://druplicon-nick-fury.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       $term_single->set('field_geolocation_demo_term_icon', [
         'target_id' => $file->id(),

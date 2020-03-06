@@ -3,6 +3,10 @@
  * Provides shared lightbox stylings for both Colorbox and Photobox.
  */
 
+.litebox {
+  position: relative;
+}
+
 .media__icon--litebox {
   cursor: pointer;
   display: block;
@@ -67,9 +71,4 @@
 .media--switch .media__image {
   opacity: 1;
   visibility: visible;
-}
-
-.litebox {
-  border: 0;
-  display: block;
 }

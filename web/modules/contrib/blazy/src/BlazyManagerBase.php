@@ -10,12 +10,25 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Implements BlazyManagerInterface.
  */
 abstract class BlazyManagerBase implements BlazyManagerInterface {
+
+  // Fixed for EB AJAX issue: #2893029.
+  use DependencySerializationTrait;
+  use StringTranslationTrait;
+
+  /**
+   * The app root.
+   *
+   * @var \SplString
+   */
+  protected $root;
 
   /**
    * The entity repository service.
@@ -60,32 +73,25 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
   protected $cache;
 
   /**
-   * The supported lightboxes.
+   * The blazy IO settings.
    *
-   * @var array
+   * @var object
    */
-  protected $lightboxes = [];
+  protected $ioSettings;
 
   /**
    * Checks if the image style contains crop in the effect name.
    *
    * @var array
    */
-  private $isCrop;
+  protected $isCrop;
 
   /**
    * Returns available styles with crop in the effect name.
    *
    * @var array
    */
-  private $cropStyles;
-
-  /**
-   * The blazy IO settings.
-   *
-   * @var object
-   */
-  protected $isIoSettings;
+  protected $cropStyles;
 
   /**
    * Constructs a BlazyManager object.
@@ -103,7 +109,7 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
+    $instance = new static(
       $container->get('entity.repository'),
       $container->get('entity_type.manager'),
       $container->get('module_handler'),
@@ -111,6 +117,27 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
       $container->get('config.factory'),
       $container->get('cache.default')
     );
+
+    // @todo remove and use DI at 2.x+ post sub-classes updates.
+    $instance->setRoot($container->get('app.root'));
+    return $instance;
+  }
+
+  /**
+   * Returns the app root.
+   */
+  public function root() {
+    return $this->root;
+  }
+
+  /**
+   * Sets app root service.
+   *
+   * @todo remove and use DI at 2.x+ post sub-classes updates.
+   */
+  public function setRoot($root) {
+    $this->root = $root;
+    return $this;
   }
 
   /**
@@ -180,7 +207,7 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
   }
 
   /**
-   * Returns array of needed assets suitable for #attached property.
+   * {@inheritdoc}
    */
   public function attach(array $attach = []) {
     $load   = [];
@@ -191,14 +218,20 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
 
       if (in_array($switch, $this->getLightboxes())) {
         $load['library'][] = 'blazy/lightbox';
+
+        if (!empty($attach['colorbox'])) {
+          BlazyAlter::attachColorbox($load, $attach);
+        }
       }
     }
 
     // Allow both variants of grid or column to co-exist for different fields.
     if (!empty($attach['style'])) {
-      foreach (['column', 'grid'] as $grid) {
-        $attach[$grid] = $attach['style'];
-      }
+      $attach[$attach['style']] = $attach['style'];
+    }
+
+    if (!empty($attach['fx']) && $attach['fx'] == 'blur') {
+      $load['library'][] = 'blazy/fx.blur';
     }
 
     foreach (['column', 'filter', 'grid', 'media', 'photobox', 'ratio'] as $component) {
@@ -207,12 +240,12 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
       }
     }
 
-    $io = $this->getIoSettings($attach);
-
-    // Core Blazy libraries, enforced to prevent JS error when optional.
-    $load['library'][] = 'blazy/load';
-    $load['drupalSettings']['blazy'] = $this->configLoad('blazy');
-    $load['drupalSettings']['blazyIo'] = $io;
+    // Allows Blazy libraries to be disabled by a special flag _unblazy.
+    if (empty($attach['_unblazy'])) {
+      $load['library'][] = 'blazy/load';
+      $load['drupalSettings']['blazy'] = $this->configLoad('blazy');
+      $load['drupalSettings']['blazyIo'] = $this->getIoSettings($attach);
+    }
 
     // Adds AJAX helper to revalidate Blazy/ IO, if using VIS, or alike.
     if (!empty($attach['use_ajax'])) {
@@ -224,10 +257,10 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
   }
 
   /**
-   * Returns drupalSettings for IO.
+   * {@inheritdoc}
    */
   public function getIoSettings(array $attach = []) {
-    if (!isset($this->isIoSettings)) {
+    if (!isset($this->ioSettings)) {
       $thold = trim($this->configLoad('io.threshold')) ?: '0';
       $number = strpos($thold, '.') !== FALSE ? (float) $thold : (int) $thold;
       $thold = strpos($thold, ',') !== FALSE ? array_map('trim', explode(',', $thold)) : [$number];
@@ -239,14 +272,159 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
         $io[$key] = isset($attach['io.' . $key]) ? $attach['io.' . $key] : ($value ?: $default);
       }
 
-      $this->isIoSettings = (object) $io;
+      $this->ioSettings = (object) $io;
     }
 
-    return $this->isIoSettings;
+    return $this->ioSettings;
+  }
+
+  /**
+   * Returns the common UI settings inherited down to each item.
+   */
+  public function getCommonSettings(array &$settings) {
+    $settings += array_intersect_key($this->configLoad(), BlazyDefault::uiSettings());
+    $settings['media_switch'] = $switch = empty($settings['media_switch']) ? '' : $settings['media_switch'];
+    $settings['iframe_domain'] = $this->configLoad('iframe_domain', 'media.settings');
+    $settings['is_preview'] = Blazy::isPreview();
+    $settings['lightbox'] = ($switch && in_array($switch, $this->getLightboxes())) ? $switch : FALSE;
+    $settings['namespace'] = empty($settings['namespace']) ? 'blazy' : $settings['namespace'];
+    $settings['route_name'] = Blazy::routeMatch() ? Blazy::routeMatch()->getRouteName() : '';
+
+    if ($switch) {
+      // Allows lightboxes to provide its own optionsets, e.g.: ElevateZoomPlus.
+      $settings[$switch] = empty($settings[$switch]) ? $switch : $settings[$switch];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLightboxes() {
+    $lightboxes = [];
+    foreach (['colorbox', 'photobox'] as $lightbox) {
+      if (function_exists($lightbox . '_theme')) {
+        $lightboxes[] = $lightbox;
+      }
+    }
+
+    if (is_file($this->root . '/libraries/photobox/photobox/jquery.photobox.js')) {
+      $lightboxes[] = 'photobox';
+    }
+
+    $this->moduleHandler->alter('blazy_lightboxes', $lightboxes);
+    return array_unique($lightboxes);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getImageEffects() {
+    $effects[] = 'blur';
+
+    $this->moduleHandler->alter('blazy_image_effects', $effects);
+    $effects = array_unique($effects);
+    return array_combine($effects, $effects);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isBlazy(array &$settings, array $item = []) {
+    // Retrieves Blazy formatter related settings from within Views style.
+    $content = !empty($settings['item_id']) && isset($item[$settings['item_id']]) ? $item[$settings['item_id']] : $item;
+    $image = isset($item['item']) ? $item['item'] : NULL;
+    // @todo replace first_item with _item for consistency with _width, _height.
+    $settings['first_item'] = $image;
+
+    // 1. Blazy formatter within Views fields by supported modules.
+    if (isset($item['settings'])) {
+      $blazy = $item['settings'];
+
+      // Merge the first found (Responsive) image data.
+      if (!empty($blazy['blazy_data'])) {
+        $settings['blazy_data'] = empty($settings['blazy_data']) ? $blazy['blazy_data'] : array_merge($settings['blazy_data'], $blazy['blazy_data']);
+        $settings['_dimensions'] = !empty($settings['blazy_data']['dimensions']);
+      }
+
+      $cherries = BlazyDefault::cherrySettings() + ['uri' => ''];
+      foreach ($cherries as $key => $value) {
+        $fallback = isset($settings[$key]) ? $settings[$key] : $value;
+        $settings[$key] = isset($blazy[$key]) && empty($fallback) ? $blazy[$key] : $fallback;
+      }
+
+      // @todo replace first_uri with _uri for consistency with _width, _height.
+      $uri = empty($settings['first_uri']) ? $settings['uri'] : $settings['first_uri'];
+      $settings['_uri'] = $settings['first_uri'] = empty($settings['_uri']) ? $uri : $settings['_uri'];
+      unset($settings['uri']);
+    }
+
+    // 2. Blazy Views fields by supported modules.
+    // Prevents edge case with unexpected flattened Views results which is
+    // normally triggered by checking "Use field template" option.
+    if (is_array($content) && isset($content['#view']) && ($view = $content['#view'])) {
+      if ($blazy_field = BlazyViews::viewsField($view)) {
+        $settings = array_merge(array_filter($blazy_field->mergedViewsSettings()), array_filter($settings));
+      }
+    }
+
+    unset($settings['first_image']);
+  }
+
+  /**
+   * Return the cache metadata common for all blazy-related modules.
+   */
+  public function getCacheMetadata(array $build = []) {
+    $settings          = isset($build['settings']) ? $build['settings'] : $build;
+    $max_age           = $this->configLoad('cache.page.max_age', 'system.performance');
+    $max_age           = empty($settings['cache']) ? $max_age : $settings['cache'];
+    $id                = isset($settings['id']) ? $settings['id'] : Blazy::getHtmlId($settings['namespace']);
+    $suffixes[]        = empty($settings['count']) ? count(array_filter($settings)) : $settings['count'];
+    $cache['tags']     = Cache::buildTags($settings['namespace'] . ':' . $id, $suffixes, '.');
+    $cache['contexts'] = ['languages'];
+    $cache['max-age']  = $max_age;
+    $cache['keys']     = isset($settings['cache_metadata']['keys']) ? $settings['cache_metadata']['keys'] : [$id];
+
+    if (!empty($settings['cache_tags'])) {
+      $cache['tags'] = Cache::mergeTags($cache['tags'], $settings['cache_tags']);
+    }
+
+    return $cache;
+  }
+
+  /**
+   * Returns available image styles with crop in the name.
+   */
+  public function cropStyles() {
+    if (!isset($this->cropStyles)) {
+      $this->cropStyles = [];
+      foreach ($this->entityLoadMultiple('image_style') as $style) {
+        foreach ($style->getEffects() as $effect) {
+          if (strpos($effect->getPluginId(), 'crop') !== FALSE) {
+            $this->cropStyles[$style->getName()] = $style;
+            break;
+          }
+        }
+      }
+    }
+    return $this->cropStyles;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCrop($style) {
+    if (!isset($this->isCrop[$style])) {
+      $this->isCrop[$style] = $this->cropStyles() && isset($this->cropStyles()[$style]) ? $this->cropStyles()[$style] : FALSE;
+    }
+    return $this->isCrop[$style];
   }
 
   /**
    * Collects defined skins as registered via hook_MODULE_NAME_skins_info().
+   *
+   * @todo deprecate for sub-modules own skins as plugins at blazy:8.x-2+.
+   * @see https://www.drupal.org/node/2233261
+   * @see https://www.drupal.org/node/3105670
    */
   public function buildSkins($namespace, $skin_class, $methods = []) {
     $cid = $namespace . ':skins';
@@ -282,234 +460,6 @@ abstract class BlazyManagerBase implements BlazyManagerInterface {
     $this->cache->set($cid, $skins, Cache::PERMANENT, $tags);
 
     return $skins;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLightboxes() {
-    $boxes = $this->lightboxes + ['colorbox', 'photobox'];
-
-    $lightboxes = [];
-    foreach (array_unique($boxes) as $lightbox) {
-      if (function_exists($lightbox . '_theme')) {
-        $lightboxes[] = $lightbox;
-      }
-    }
-
-    $this->moduleHandler->alter('blazy_lightboxes', $lightboxes);
-    return array_unique($lightboxes);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setLightboxes($lightbox) {
-    $this->lightboxes[] = $lightbox;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function cleanUpBreakpoints(array &$settings = []) {
-    if (!empty($settings['breakpoints'])) {
-      $breakpoints = array_filter(array_map('array_filter', $settings['breakpoints']));
-
-      $settings['breakpoints'] = NestedArray::filter($breakpoints, function ($breakpoint) {
-        return !(is_array($breakpoint) && (empty($breakpoint['width']) || empty($breakpoint['image_style'])));
-      });
-
-      // Identify that Blazy can be activated only by breakpoints.
-      if (empty($settings['blazy'])) {
-        $settings['blazy'] = !empty($settings['breakpoints']);
-      }
-    }
-  }
-
-  /**
-   * Returns available image styles with crop in the name.
-   */
-  public function cropStyles() {
-    if (!isset($this->cropStyles)) {
-      $this->cropStyles = [];
-      foreach ($this->entityLoadMultiple('image_style') as $style) {
-        foreach ($style->getEffects() as $effect) {
-          if (strpos($effect->getPluginId(), 'crop') !== FALSE) {
-            $this->cropStyles[$style->getName()] = $style;
-            break;
-          }
-        }
-      }
-    }
-    return $this->cropStyles;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isCrop($style) {
-    if (!isset($this->isCrop[$style])) {
-      $this->isCrop[$style] = $this->cropStyles() && isset($this->cropStyles()[$style]) ? $this->cropStyles()[$style] : FALSE;
-    }
-    return $this->isCrop[$style];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isBlazy(array &$settings, array $item = []) {
-    // Retrieves Blazy formatter related settings from within Views style.
-    $content = !empty($settings['item_id']) && isset($item[$settings['item_id']]) ? $item[$settings['item_id']] : $item;
-    $image = isset($item['item']) ? $item['item'] : NULL;
-
-    // 1. Blazy formatter within Views fields by supported modules.
-    if (isset($item['settings'])) {
-      $blazy = $item['settings'];
-
-      // Allows breakpoints overrides such as multi-styled images by GridStack.
-      if (empty($settings['breakpoints']) && isset($blazy['breakpoints'])) {
-        $settings['breakpoints'] = $blazy['breakpoints'];
-      }
-
-      $cherries = [
-        'box_style',
-        'image_style',
-        'media_switch',
-        'ratio',
-        'thumbnail_style',
-        'uri',
-      ];
-
-      foreach ($cherries as $key) {
-        $fallback = isset($settings[$key]) ? $settings[$key] : '';
-        $settings[$key] = isset($blazy[$key]) && empty($fallback) ? $blazy[$key] : $fallback;
-      }
-
-      $settings['first_item'] = $image;
-      $settings['first_uri'] = empty($settings['first_uri']) ? $settings['uri'] : $settings['first_uri'];
-      unset($settings['uri']);
-    }
-
-    // 2. Blazy Views fields by supported modules.
-    // Prevents edge case with unexpected flattened Views results which is
-    // normally triggered by checking "Use field template" option.
-    if (is_array($content) && isset($content['#view']) && ($view = $content['#view'])) {
-      if ($blazy_field = BlazyViews::viewsField($view)) {
-        $settings = array_merge(array_filter($blazy_field->mergedViewsSettings()), array_filter($settings));
-      }
-    }
-
-    // Allows lightboxes to provide its own optionsets.
-    $switch = empty($settings['media_switch']) ? FALSE : $settings['media_switch'];
-    if ($switch) {
-      $settings[$switch] = empty($settings[$switch]) ? $switch : $settings[$switch];
-    }
-
-    // Provides data for the [data-blazy] attribute at the containing element.
-    $this->cleanUpBreakpoints($settings);
-    if (!empty($settings['breakpoints'])) {
-      $this->buildDataBlazy($settings, $image);
-    }
-
-    unset($settings['first_image']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildDataBlazy(array &$settings, $item = NULL) {
-    // Identify that Blazy can be activated by breakpoints, regardless results.
-    $settings['blazy'] = TRUE;
-
-    // Bail out if blazy_data has been defined at self::setDimensionsOnce().
-    // Blazy doesn't always deal with image formatters, see self::isBlazy().
-    if (!empty($settings['blazy_data'])) {
-      return;
-    }
-
-    // This may be set at self::setDimensionsOnce() if using formatters, yet it
-    // is not set from non-formatters like views fields, see self::isBlazy().
-    if (empty($settings['original_width'])) {
-      $settings['original_width'] = $item && isset($item->width) ? $item->width : NULL;
-      $settings['original_height'] = $item && isset($item->height) ? $item->height : NULL;
-    }
-
-    $sources = $styles = [];
-    $end = end($settings['breakpoints']);
-
-    // Check for cropped images at the 5 given styles before any hard work.
-    // Ok as run once at the top container regardless of thousand of images.
-    foreach ($settings['breakpoints'] as $key => $breakpoint) {
-      if ($style = $this->isCrop($breakpoint['image_style'])) {
-        $styles[$key] = $style;
-      }
-    }
-
-    // Bail out if not all images are cropped at all breakpoints.
-    // The site builder just don't read the performance tips section.
-    if (count($styles) != count($settings['breakpoints'])) {
-      return;
-    }
-
-    // We have all images cropped here.
-    foreach ($settings['breakpoints'] as $key => $breakpoint) {
-      if (!($width = Blazy::widthFromDescriptors($breakpoint['width']))) {
-        continue;
-      }
-
-      // Sets dimensions once, and let all images inherit.
-      if (($style = $styles[$key]) && (!empty($settings['first_uri']) && !empty($settings['ratio']))) {
-        $dimensions['width'] = $settings['original_width'];
-        $dimensions['height'] = $settings['original_height'];
-
-        $style->transformDimensions($dimensions, $settings['first_uri']);
-        $padding = round((($dimensions['height'] / $dimensions['width']) * 100), 2);
-        $settings['blazy_data']['dimensions'][$width] = $padding;
-
-        // Only set padding-bottom for the last breakpoint to avoid FOUC.
-        if ($end['width'] == $breakpoint['width']) {
-          $settings['padding_bottom'] = $padding;
-        }
-      }
-
-      // If BG, provide [data-src-BREAKPOINT], regardless uri or ratio.
-      if (!empty($settings['background'])) {
-        $sources[] = ['width' => (int) $width, 'src' => 'data-src-' . $key];
-      }
-    }
-
-    // Supported modules can add blazy_data as [data-blazy] to the container.
-    // This also informs individual images to not work with dimensions any more
-    // as _all_ breakpoint image styles contain 'crop'.
-    // As of Blazy v1.6.0 applied to BG only.
-    if ($sources) {
-      $settings['blazy_data']['breakpoints'] = $sources;
-    }
-
-    if (!empty($settings['use_ajax'])) {
-      $settings['blazy_data']['useAjax'] = TRUE;
-    }
-  }
-
-  /**
-   * Return the cache metadata common for all blazy-related modules.
-   */
-  public function getCacheMetadata(array $build = []) {
-    $settings          = $build['settings'];
-    $max_age           = $this->configLoad('cache.page.max_age', 'system.performance');
-    $max_age           = empty($settings['cache']) ? $max_age : $settings['cache'];
-    $id                = isset($settings['id']) ? $settings['id'] : Blazy::getHtmlId($settings['namespace']);
-    $suffixes[]        = empty($settings['count']) ? count(array_filter($settings)) : $settings['count'];
-    $cache['tags']     = Cache::buildTags($settings['namespace'] . ':' . $id, $suffixes, '.');
-    $cache['contexts'] = ['languages'];
-    $cache['max-age']  = $max_age;
-    $cache['keys']     = isset($settings['cache_metadata']['keys']) ? $settings['cache_metadata']['keys'] : [$id];
-
-    if (!empty($settings['cache_tags'])) {
-      $cache['tags'] = Cache::mergeTags($cache['tags'], $settings['cache_tags']);
-    }
-
-    return $cache;
   }
 
 }

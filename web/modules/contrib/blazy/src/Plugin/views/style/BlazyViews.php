@@ -101,7 +101,6 @@ class BlazyViews extends StylePluginBase {
 
       // Supports Blazy multi-breakpoint images if using Blazy formatter.
       $settings['first_image'] = isset($rows[0]) ? $this->getFirstImage($rows[0]) : [];
-
       $build = ['items' => $items, 'settings' => $settings];
       $elements = $this->blazyManager->build($build);
 

@@ -5,6 +5,12 @@ blazy.settings:
     admin_css:
       type: boolean
       label: 'Admin CSS'
+    fx:
+      type: string
+      label: 'Image effect'
+    noscript:
+      type: boolean
+      label: 'Add noscript'
     one_pixel:
       type: boolean
       label: 'One pixel placeholder'
@@ -14,9 +20,6 @@ blazy.settings:
     responsive_image:
       type: boolean
       label: 'Support Responsive image'
-    unbreakpoints:
-      type: boolean
-      label: 'Disable custom breakpoints'
     blazy:
       type: mapping
       label: Blazy
@@ -33,6 +36,9 @@ blazy.settings:
         validateDelay:
           type: integer
           label: 'Set validate delay'
+        container:
+          type: string
+          label: 'Scrolling container'
     io:
       type: mapping
       label: IO
@@ -66,6 +72,9 @@ blazy_base:
       sequence:
         - type: string
           label: Caption
+    optionset:
+      type: string
+      label: Optionset
 
 field.formatter.settings.blazy:
   type: blazy_base
@@ -82,6 +91,22 @@ field.formatter.settings.blazy_video:
 field.formatter.settings.blazy_media:
   type: blazy_base
   label: 'Blazy media display format settings'
+
+field.formatter.settings.blazy_oembed:
+  type: blazy_base
+  label: 'Blazy oembed display format settings'
+
+field.formatter.settings.blazy_text:
+  type: blazy_base
+  label: 'Blazy text display format settings'
+
+field.formatter.third_party.blazy:
+  type: mapping
+  label: 'Blazy third party display format settings'
+  mapping:
+    blazy:
+      type: boolean
+      label: Blazy
 
 filter_settings.blazy_filter:
   type: filter

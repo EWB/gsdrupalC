@@ -41,6 +41,11 @@ class ColorFieldWidgetJavascriptTests extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -191,7 +196,7 @@ class ColorFieldWidgetJavascriptTests extends WebDriverTestBase {
     // one field's palette isn't shown. 4 for the one palette plus one each for
     // the widget and the current color value.
     $boxes = $page->findAll('css', '.sp-thumb-el');
-    $this->assertEquals(6, count($boxes));
+    $this->assertEquals(7, count($boxes));
 
     // Confirm that alpha slider is hidden if the field doesn't support opacity.
     $alpha = $page->findAll('css', '.sp-alpha-enabled');

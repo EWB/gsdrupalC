@@ -3,6 +3,8 @@
 namespace Drupal\Tests\blazy\Unit;
 
 use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\blazy\Traits\BlazyUnitTestTrait;
+use Drupal\blazy\BlazyDefault;
 use Drupal\blazy\BlazyGrid;
 
 /**
@@ -12,12 +14,15 @@ use Drupal\blazy\BlazyGrid;
  */
 class BlazyGridUnitTest extends UnitTestCase {
 
+  use BlazyUnitTestTrait;
+
   /**
    * Tests \Drupal\blazy\BlazyGrid::build().
    *
    * @covers ::build
    */
   public function testBuild() {
+    $settings                    = BlazyDefault::htmlSettings();
     $settings['grid']            = 4;
     $settings['grid_medium']     = 3;
     $settings['grid_small']      = 2;

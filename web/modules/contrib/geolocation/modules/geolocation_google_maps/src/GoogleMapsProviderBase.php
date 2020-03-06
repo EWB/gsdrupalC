@@ -17,49 +17,49 @@ abstract class GoogleMapsProviderBase extends MapProviderBase {
    *
    * @var string
    */
-  public static $ROADMAP = 'ROADMAP';
+  public static $roadmap = 'ROADMAP';
 
   /**
    * Google map style - Satellite.
    *
    * @var string
    */
-  public static $SATELLITE = 'SATELLITE';
+  public static $satellite = 'SATELLITE';
 
   /**
    * Google map style - Hybrid.
    *
    * @var string
    */
-  public static $HYBRID = 'HYBRID';
+  public static $hybrid = 'HYBRID';
 
   /**
    * Google map style - Terrain.
    *
    * @var string
    */
-  public static $TERRAIN = 'TERRAIN';
+  public static $terrain = 'TERRAIN';
 
   /**
    * Google maps url.
    *
    * @var string
    */
-  public static $GOOGLEMAPSAPIURLBASE = 'https://maps.googleapis.com';
+  public static $googleMapsApiUrlBase = 'https://maps.googleapis.com';
 
   /**
    * Google maps url from PR China.
    *
    * @var string
    */
-  public static $GOOGLEMAPSAPIURLBASECHINA = 'https://maps.google.cn';
+  public static $googleMapsApiUrlBaseChina = 'https://maps.google.cn';
 
   /**
    * Google maps url from PR China.
    *
    * @var string
    */
-  public static $GOOGLEMAPSAPIURLPATH = '/maps/api';
+  public static $googleMapsApiUrlPath = '/maps/api';
 
   /**
    * Return all module and custom defined parameters.
@@ -114,17 +114,17 @@ abstract class GoogleMapsProviderBase extends MapProviderBase {
       $google_url = $config->get('google_maps_base_url');
     }
     elseif ($config->get('china_mode')) {
-      $google_url = static::$GOOGLEMAPSAPIURLBASECHINA;
+      $google_url = static::$googleMapsApiUrlBaseChina;
     }
     else {
-      $google_url = static::$GOOGLEMAPSAPIURLBASE;
+      $google_url = static::$googleMapsApiUrlBase;
     }
 
     $parameters = [];
     foreach ($this->getGoogleMapsApiParameters($additional_parameters) as $parameter => $value) {
       $parameters[$parameter] = is_array($value) ? implode(',', $value) : $value;
     }
-    $url = Url::fromUri($google_url . static::$GOOGLEMAPSAPIURLPATH, [
+    $url = Url::fromUri($google_url . static::$googleMapsApiUrlPath, [
       'query' => $parameters,
       'https' => TRUE,
     ]);
@@ -139,10 +139,10 @@ abstract class GoogleMapsProviderBase extends MapProviderBase {
    */
   private function getMapTypes() {
     $mapTypes = [
-      static::$ROADMAP => 'Road map view',
-      static::$SATELLITE => 'Google Earth satellite images',
-      static::$HYBRID => 'A mixture of normal and satellite views',
-      static::$TERRAIN => 'A physical map based on terrain information',
+      static::$roadmap => 'Road map view',
+      static::$satellite => 'Google Earth satellite images',
+      static::$hybrid => 'A mixture of normal and satellite views',
+      static::$terrain => 'A physical map based on terrain information',
     ];
 
     return array_map([$this, 't'], $mapTypes);
@@ -155,7 +155,7 @@ abstract class GoogleMapsProviderBase extends MapProviderBase {
     return array_replace_recursive(
       parent::getDefaultSettings(),
       [
-        'type' => static::$ROADMAP,
+        'type' => static::$roadmap,
         'zoom' => 10,
         'height' => '400px',
         'width' => '100%',

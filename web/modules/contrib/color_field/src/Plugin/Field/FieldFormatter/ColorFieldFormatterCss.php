@@ -171,7 +171,7 @@ class ColorFieldFormatterCss extends FormatterBase implements ContainerFactoryPl
     $tokens = [
       $entity->getEntityType()->id() => $entity,
     ];
-    foreach ($items as $delta => $item) {
+    foreach ($items as $item) {
       $value = $this->viewValue($item);
       $selector = $this->tokenService->replace(
         $settings['selector'],
@@ -205,10 +205,10 @@ class ColorFieldFormatterCss extends FormatterBase implements ContainerFactoryPl
     $color_hex = new ColorHex($item->color, $item->opacity);
 
     if ($opacity && $settings['opacity']) {
-      $rgbtext = $color_hex->toRGB()->toString(TRUE);
+      $rgbtext = $color_hex->toRgb()->toString(TRUE);
     }
     else {
-      $rgbtext = $color_hex->toRGB()->toString(FALSE);
+      $rgbtext = $color_hex->toRgb()->toString(FALSE);
     }
 
     return $rgbtext;

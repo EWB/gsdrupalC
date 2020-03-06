@@ -57,8 +57,6 @@ class BlazyViewsFileTest extends BlazyViewsTestBase {
     $this->setUpContentTypeTest($bundle, $data);
 
     $data['settings'] = $this->getFormatterSettings();
-    $data['settings']['breakpoints'] = $this->getDataBreakpoints(TRUE);
-
     $display = $this->setUpFormatterDisplay($bundle, $data);
 
     $display->setComponent('field_image', [

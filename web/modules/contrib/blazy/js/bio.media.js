@@ -6,7 +6,7 @@
  * @see https://developers.google.com/web/updates/2016/04/intersectionobserver
  */
 
-/* global window, document, define, module */
+/* global define, module */
 (function (root, factory) {
 
   'use strict';
@@ -61,70 +61,6 @@
   var _proto = BioMedia.prototype = Object.create(Bio.prototype);
   _proto.constructor = BioMedia;
 
-  _proto.removeAttrs = function (el, attrs) {
-    _db.forEach(attrs, function (attr) {
-      el.removeAttribute('data-' + attr);
-    });
-  };
-
-  _proto.setAttrs = function (el, attrs) {
-    var me = this;
-
-    _db.forEach(attrs, function (src) {
-      me.setAttr(el, src);
-    });
-  };
-
-  _proto.setAttr = function (el, attr, remove) {
-    if (el.hasAttribute('data-' + attr)) {
-      var dataAttr = el.getAttribute('data-' + attr);
-      if (attr === _src) {
-        el.src = dataAttr;
-      }
-      else {
-        el.setAttribute(attr, dataAttr);
-      }
-
-      if (remove) {
-        el.removeAttribute('data-' + attr);
-      }
-    }
-  };
-
-  _proto.prepare = (function (_bio) {
-    return function () {
-      var me = this;
-
-      // DIV elements with multi-serving CSS background images.
-      if (me.options.breakpoints) {
-        var _bgSrcs = [];
-
-        _db.forEach(me.options.breakpoints, function (object) {
-          _bgSources.push(object.src.replace('data-', ''));
-
-          // We have several values here, the last wins, but not good.
-          // The original bLazy uses max-width, stick to it. The custom aspect
-          // ratio works were also already based on this decision.
-          if (object.width >= me.windowWidth) {
-            _bgSrc = object.src;
-            _bgSrcs.push(_bgSrc);
-            return false;
-          }
-        });
-
-        // This part is the betterment to the original bLazy.
-        // Fetches the nearest to window width, not the farthest/ largest.
-        // Not always available when the window is larger than the last item.
-        // In such cases, this is easily fixed via configuration UI.
-        if (_bgSrcs.length > 0) {
-          _bgSrc = _bgSrcs[0];
-        }
-      }
-
-      return _bio.call(this);
-    };
-  })(_proto.prepare);
-
   _proto.lazyLoad = (function (_bio) {
     return function (el) {
       // Image may take time to load after being hit, and it may be intersected
@@ -137,25 +73,22 @@
 
       var me = this;
       var parent = el.parentNode;
-      var isImage = me.equal(el, 'img');
+      var isImage = _db.equal(el, 'img');
       var isBg = typeof el.src === 'undefined' && el.classList.contains(me.options.bgClass);
-      var isPicture = parent && me.equal(parent, 'picture');
-      var isVideo = me.equal(el, 'video');
+      var isPicture = parent && _db.equal(parent, 'picture');
+      var isVideo = _db.equal(el, 'video');
 
       // PICTURE elements.
       if (isPicture) {
-        _db.forEach(parent.getElementsByTagName('source'), function (source) {
-          me.setAttr(source, _srcSet, true);
-        });
+        _db.setAttrsWithSources(el, _srcSet, true);
+
         // Tiny controller image inside picture element won't get preloaded.
-        me.setAttr(el, _src, true);
+        _db.setAttr(el, _src, true);
         me.loaded(el, me._ok);
       }
       // VIDEO elements.
       else if (isVideo) {
-        _db.forEach(el.getElementsByTagName('source'), function (source) {
-          me.setAttr(source, _src, true);
-        });
+        _db.setAttrsWithSources(el, _src, true);
         el.load();
         me.loaded(el, me._ok);
       }
@@ -167,7 +100,7 @@
         // IFRAME elements, etc.
         else {
           if (el.getAttribute(_dataSrc) && el.hasAttribute(_src)) {
-            me.setAttr(el, _src, true);
+            _db.setAttr(el, _src, true);
             me.loaded(el, me._ok);
           }
         }
@@ -198,7 +131,7 @@
           me.setBg(el);
         }
         else {
-          me.setAttrs(el, _imgSources);
+          _db.setAttrs(el, _imgSources, false);
         }
       };
 
@@ -222,7 +155,7 @@
     return me.promise(el, isBg)
       .then(function (status) {
         me.loaded(el, status);
-        me.removeAttrs(el, isBg ? _bgSources : _imgSources);
+        _db.removeAttrs(el, isBg ? _bgSources : _imgSources);
       })
       .catch(function (status) {
         me.loaded(el, status);

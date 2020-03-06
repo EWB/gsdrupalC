@@ -1,17 +1,112 @@
 
-# ABOUT BLAZY
-Provides integration with bLazy and or Intersection Observer API to lazy load
-and multi-serve images to save bandwidth and server requests. The user will have
-faster load times and save data usage if they don't browse the whole page.
+# <a name="top"> </a>CONTENTS OF THIS FILE
 
-## REQUIREMENTS
+ * [Introduction](#introduction)
+ * [Requirements](#requirements)
+ * [Recommended modules](#recommended-modules)
+ * [Installation](#installation)
+ * [Configuration](#configuration)
+ * [Features](#features)
+ * [Updating](#updating)
+ * [Troubleshooting](#troubleshooting)
+ * [Roadmap](#roadmap)
+ * [FAQ](#faq)
+ * [Aspect ratio template](#aspect-ratio-template)
+ * [Contribution](#contribution)
+ * [Maintainers](#maintainers)
+
+
+.
+***
+***
+.
+# <a name="introduction"></a>INTRODUCTION
+Provides integration with bLazy and or Intersection Observer API, or browser
+native lazy loading to lazy load and multi-serve images to save bandwidth and
+server requests. The user will have faster load times and save data usage if
+they don't browse the whole page.
+
+
+.
+***
+***
+.
+# <a name="requirements"> </a>REQUIREMENTS
 1. bLazy library:
    * [Download bLazy](https://github.com/dinbror/blazy)
    * Extract it as is, rename **blazy-master** to **blazy**, so the assets are:
 
       + **/libraries/blazy/blazy.js**
 
-## INSTALLATION
+2. Media and Filter module in core.
+
+
+.
+***
+***
+.
+# <a name="recommended-modules"> </a>RECOMMENDED MODULES
+* [Markdown](https://www.drupal.org/project/markdown)
+
+  To make reading this README a breeze at [Blazy help](/admin/help/blazy_ui)
+
+
+## MODULES THAT INTEGRATE WITH OR REQUIRE BLAZY
+* [Ajaxin](https://www.drupal.org/project/ajaxin)
+* [Intersection Observer](https://www.drupal.org/project/io)
+* [Blazy PhotoSwipe](https://www.drupal.org/project/blazy_photoswipe)
+* [GridStack](https://www.drupal.org/project/gridstack)
+* [Outlayer](https://www.drupal.org/project/outlayer)
+* [Intense](https://www.drupal.org/project/intense)
+* [Mason](https://www.drupal.org/project/mason)
+* [Slick](https://www.drupal.org/project/slick)
+* [Slick Lightbox](https://www.drupal.org/project/slick_lightbox)
+* [Slick Views](https://www.drupal.org/project/slick_views)
+* [Slick Paragraphs](https://www.drupal.org/project/slick_paragraphs)
+* [Slick Browser](https://www.drupal.org/project/slick_browser)
+* [Jumper](https://www.drupal.org/project/jumper)
+* [Zooming](https://www.drupal.org/project/zooming)
+* [ElevateZoom Plus](https://www.drupal.org/project/elevatezoomplus)
+
+
+Most duplication efforts from the above modules will be merged into
+`\Drupal\blazy\Dejavu`, or anywhere else namespace.
+
+
+**What dups?**
+
+The most obvious is the removal of formatters from Intense, Zooming,
+Slick Lightbox, Blazy PhotoSwipe, and other (quasi-)lightboxes. Any lightbox
+supported by Blazy can use Blazy, or Slick formatters if applicable instead.
+We do not have separate formatters when its prime functionality is embedding
+a lightbox, or superceded by Blazy.
+
+Blazy provides a versatile and reusable formatter for a few known lightboxes
+with extra advantages:
+
+lazyloading, grid, multi-serving images, Responsive image,
+CSS background, captioning, etc.
+
+Including making those lightboxes available for free at Views Field for
+File entity, Media and Blazy Filter for inline images.
+
+If you are developing lightboxes and using Blazy, I would humbly invite you
+to give Blazy a try, and consider joining forces with Blazy, and help improve it
+for the above-mentioned advantages. We are also continuously improving and
+solidifying the API to make advanced usages a lot easier, and DX friendly.
+Currently, of course, not perfect, but have been proven to play nice with at
+least 7 lightboxes, and likely more.
+
+
+## SIMILAR MODULES
+[Lazyloader](https://www.drupal.org/project/lazyloader)
+
+
+.
+***
+***
+.
+# <a name="installation"> </a>INSTALLATION
 1. **MANUAL:**
 
    Install the module as usual, more info can be found on:
@@ -23,9 +118,9 @@ faster load times and save data usage if they don't browse the whole page.
    There are various ways to install third party bower/npm asset libraries.
    Check out any below suitable to your workflow:
 
-   * https://www.drupal.org/project/blazy/issues/3021902
-   * https://www.drupal.org/project/slick/issues/2907371
-   * https://www.drupal.org/project/slick/issues/2907371#comment-12882235
+     + [#3021902](https://www.drupal.org/project/blazy/issues/3021902)
+     + [#2907371](https://www.drupal.org/project/slick/issues/2907371)
+     + [#2907371](https://www.drupal.org/project/slick/issues/2907371#comment-12882235)  
 
    It is up to you to decide which works best. Composer is not designed to
    manage JS, CSS or HTML framework assets. It is for PHP. Then come Composer
@@ -34,17 +129,33 @@ faster load times and save data usage if they don't browse the whole page.
    above-mentioned issues.
 
 
-## USAGES
-Be sure to enable Blazy UI which can be uninstalled at production later.
+.
+***
+***
+.
+# <a name="configuration"> </a>CONFIGURATION
+Visit the following to configure and make use of Blazy:
 
-* Go to Manage display page, e.g.:
-  [Admin page displays](/admin/structure/types/manage/page/display)
+1. `/admin/config/media/blazy`
 
-* Find **Blazy** formatter under **Manage display**.
+   Enable Blazy UI sub-module first, otherwise regular **Access denied**.
+   Contains few global options, including enabling support to bring core
+   Responsive image into blazy-related formatters.
+   Blazy UI can be uninstalled at production later without problems.
 
-* Go to [Blazy UI](/admin/config/media/blazy) to manage few global options,
-  including enabling support to bring core Responsive image into blazy-related
-  formatters.
+2. Visit any entity types:
+
+  + `/admin/structure/types`
+  + `/admin/structure/block/block-content/types`
+  + `/admin/structure/paragraphs_type`
+  + etc.
+
+   Use Blazy as a formatter under **Manage display** for the supported fields:
+   Image, Media, Entity reference, or even Text.
+
+3. `/admin/structure/views`
+
+   Use Blazy Grid as standalone blocks, or pages.
 
 
 ### USAGES: BLAZY FOR MULTIMEDIA GALLERY VIA VIEWS UI
@@ -89,13 +200,11 @@ is a standalone output from Views so to use field template in this case.
 
 Check out the relevant sub-module docs for details.
 
-## RECOMMENDED
-* [Markdown](http://dgo.to/markdown)
-
-  To make reading this README a breeze at [Blazy help](/admin/help/blazy_ui)
-
-
-## FEATURES
+.
+***
+***
+.
+# <a name="features"> </a>FEATURES
 * Supports core Image.
 * Supports core Responsive image.
 * Supports Colorbox/ Photobox/ PhotoSwipe, also multimedia lightboxes.
@@ -114,81 +223,19 @@ Check out the relevant sub-module docs for details.
 
 
 ## OPTIONAL FEATURES
-* Views fields for File Entity and Media integration, see Slick Browser.
-* Views style plugin Blazy Grid for Grid Foundation or CSS3 Masonry.
+* Views fields for File Entity and Media integration, see
+  [Slick Browser](https://www.drupal.org/project/slick_browser).
+* Views style plugin `Blazy Grid` for Grid Foundation or pure CSS3 Masonry.
 
 
-## MODULES THAT INTEGRATE WITH OR REQUIRE BLAZY
-* [Ajaxin](http://dgo.to/ajaxin)
-* [Intersection Observer](http://dgo.to/io)
-* [Blazy PhotoSwipe](http://dgo.to/blazy_photoswipe)
-* [GridStack](http://dgo.to/gridstack)
-* [Outlayer](http://dgo.to/outlayer)
-* [Intense](http://dgo.to/intense)
-* [Mason](http://dgo.to/mason)
-* [Slick](http://dgo.to/slick)
-* [Slick Lightbox](http://dgo.to/slick_lightbox)
-* [Slick Views](http://dgo.to/slick_views)
-* [Slick Media](http://dgo.to/slick_media)
-* [Slick Paragraphs](http://dgo.to/slick_paragraphs)
-* [Slick Video](http://dgo.to/slick_video)
-* [Slick Browser](http://dgo.to/slick_browser)
-* [Jumper](http://dgo.to/jumper)
-* [Zooming](http://dgo.to/zooming)
-* [ElevateZoom Plus](http://dgo.to/elevatezoomplus)
 
-
-Most duplication efforts from the above modules will be merged into
-\Drupal\blazy\Dejavu or anywhere else namespace.
-
-**What dups?**
-
-The most obvious is the removal of formatters from Intense, Zooming,
-Slick Lightbox, Blazy PhotoSwipe, and other (quasi-)lightboxes. Any lightbox
-supported by Blazy can use Blazy, or Slick formatters if applicable instead.
-We do not have separate formatters when its prime functionality is embedding
-a lightbox, or superceded by Blazy.
-
-Blazy provides a versatile and reusable formatter for a few known lightboxes
-with extra advantages:
-
-lazyloading, grid, multi-serving images, Responsive image,
-CSS background, captioning, etc.
-
-Including making those lightboxes available for free at Views Field for
-File entity, Media and Blazy Filter for inline images.
-
-If you are developing lightboxes and using Blazy, I would humbly invite you
-to give Blazy a try, and consider joining forces with Blazy, and help improve it
-for the above-mentioned advantages. We are also continuously improving and
-solidifying the API to make advanced usages a lot easier, and DX friendly.
-Currently, of course, not perfect, but have been proven to play nice with at
-least 7 lightboxes, and likely more.
-
-
-## SIMILAR MODULES
-[Lazyloader](https://www.drupal.org/project/lazyloader)
-
-
-## CURRENT DEVELOPMENT STATUS
-A full release should be reasonable after proper feedbacks from the community,
-some code cleanup, and optimization where needed. Patches are very much welcome.
-
-
-## PROGRAMATICALLY
-See blazy.api.php for details.
-
-
-## PERFORMANCE TIPS:
-* If breakpoints provided with tons of images, using image styles with ANY crop
-  is recommended to avoid image dimension calculation with individual images.
-  The image dimensions will be set once, and inherited by all images as long as
-  they contain word crop. If using scaled image styles, regular calculation
-  applies.
-
-
-## AUTHOR/MAINTAINER/CREDITS
+.
+***
+***
+.
+# <a name="maintainers"> </a>MAINTAINERS/CREDITS
 * [Gaus Surahman](https://www.drupal.org/user/159062)
+* [geek-merlin](https://www.drupal.org/u/geek-merlin)
 * [Contributors](https://www.drupal.org/node/2663268/committers)
 * CHANGELOG.txt for helpful souls with their patches, suggestions and reports.
 
@@ -196,7 +243,7 @@ See blazy.api.php for details.
 ## READ MORE
 See the project page on drupal.org:
 
-* [Blazy module](http://drupal.org/project/blazy)
+* [Blazy module](https://www.drupal.org/project/blazy)
 
 See the bLazy docs at:
 

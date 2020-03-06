@@ -56,12 +56,12 @@
       that.addPopulatedCallback(function (map) {
         map.yandexMap.events.add('click', function (e) {
           var coords = e.get('coords');
-          map.clickCallback({lat: coords[0], lng: coords[1]});
+          map.clickCallback({lat: coords[1], lng: coords[0]});
         });
 
         map.yandexMap.events.add('contextmenu', function (e) {
           var coords = e.get('coords');
-          map.contextClickCallback({lat: coords[0], lng: coords[1]});
+          map.contextClickCallback({lat: coords[1], lng: coords[0]});
         });
       });
 
@@ -71,6 +71,12 @@
   }
   GeolocationYandexMap.prototype = Object.create(Drupal.geolocation.GeolocationMapBase.prototype);
   GeolocationYandexMap.prototype.constructor = GeolocationYandexMap;
+  GeolocationYandexMap.prototype.getZoom = function () {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+      resolve(that.yandexMap.getZoom());
+    });
+  };
   GeolocationYandexMap.prototype.setZoom = function (zoom, defer) {
     if (typeof zoom === 'undefined') {
       zoom = this.settings.yandex_settings.zoom;
@@ -142,16 +148,16 @@
 
     if (Drupal.geolocation.GeolocationMapBase.prototype.boundariesNormalized.call(this, boundaries)) {
       return [
-        [boundaries.south, boundaries.west],
-        [boundaries.north, boundaries.east]
+        [boundaries.west, boundaries.south],
+        [boundaries.east, boundaries.north]
       ];
     }
     else {
       boundaries = Drupal.geolocation.GeolocationMapBase.prototype.normalizeBoundaries.call(this, boundaries);
       if (boundaries) {
         return [
-          [boundaries.south, boundaries.west],
-          [boundaries.north, boundaries.east]
+          [boundaries.west, boundaries.south],
+          [boundaries.east, boundaries.north]
         ];
       }
     }

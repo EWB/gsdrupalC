@@ -1,7 +1,7 @@
 name: Geolocation - Address
 type: module
 description: 'Address integration.'
-core: 8.x
+core_version_requirement: ^8.7.7 || ^9
 package: Geolocation
 dependencies:
   - geolocation:geolocation

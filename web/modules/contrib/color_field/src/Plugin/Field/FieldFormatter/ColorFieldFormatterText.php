@@ -132,10 +132,10 @@ class ColorFieldFormatterText extends FormatterBase {
 
       case 'rgb':
         if ($opacity && $settings['opacity']) {
-          $output = $color_hex->toRGB()->toString(TRUE);
+          $output = $color_hex->toRgb()->toString(TRUE);
         }
         else {
-          $output = $color_hex->toRGB()->toString(FALSE);
+          $output = $color_hex->toRgb()->toString(FALSE);
         }
         break;
     }

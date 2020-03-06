@@ -2,12 +2,8 @@
 
 namespace Drupal\slick\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\blazy\BlazyOEmbed;
 use Drupal\blazy\Dejavu\BlazyVideoTrait;
-use Drupal\slick\SlickFormatterInterface;
-use Drupal\slick\SlickManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,39 +11,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * This is not 'Slick Media', instead a simple mix of image and optional video.
  *
- * @deprecated for Slick Media (with oEmbed).
- * @todo remove post/ prior to 2.x release.
+ * @todo TBD; deprecate for core Media and remove post/ prior to 3.x release.
+ * @todo deprecated in blazy:8.x-2.0 and is removed from blazy:8.x-3.0. Use
+ *   \Drupal\slick\Plugin\Field\FieldFormatter\SlickMediaFormatter instead.
  */
 class SlickFileFormatter extends SlickFileFormatterBase {
 
-  use SlickFormatterTrait;
+  // @@todo remove post blazy:2.x.
   use BlazyVideoTrait;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, ImageFactory $image_factory, SlickFormatterInterface $formatter, SlickManagerInterface $manager, BlazyOEmbed $oembed) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $image_factory, $formatter, $manager);
-    $this->blazyOembed = $oembed;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('image.factory'),
-      $container->get('slick.formatter'),
-      $container->get('slick.manager'),
-      $container->get('blazy.oembed')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    return self::injectServices($instance, $container, 'entity');
   }
 
   /**
@@ -55,11 +33,23 @@ class SlickFileFormatter extends SlickFileFormatterBase {
    */
   public function buildElement(array &$build, $entity) {
     $settings = $build['settings'];
+    $data = [];
     /** @var Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $item */
     // EntityReferenceItem provides $item->entity Drupal\file\Entity\File.
-    if ($item = $this->getImageItem($entity)) {
-      $build['item'] = $item['item'];
-      $build['settings'] = array_merge($settings, $item['settings']);
+    if (empty($build['item'])) {
+      // @todo remove condition post blazy:2.x.
+      if (method_exists($this->blazyOembed, 'getImageItem')) {
+        $data = $this->blazyOembed->getImageItem($entity);
+      }
+      // @todo remove post blazy:2.x.
+      elseif (method_exists($this, 'getImageItem')) {
+        $data = $this->getImageItem($entity);
+      }
+
+      if ($data) {
+        $build['item'] = $data['item'];
+        $build['settings'] = array_merge($settings, $data['settings']);
+      }
     }
 
     $this->blazyOembed->getMediaItem($build, $entity);
@@ -80,7 +70,7 @@ class SlickFileFormatter extends SlickFileFormatterBase {
       'fieldable_form' => TRUE,
       'multimedia'     => TRUE,
       'view_mode'      => $this->viewMode,
-    ] + parent::getScopedFormElements();
+    ] + $this->getCommonScopedFormElements() + parent::getScopedFormElements();
   }
 
   /**

@@ -1,4 +1,6 @@
-# SLICK FORMATTERS
+***
+***
+# <a name="formatters"> </a>SLICK FORMATTERS
 
 Adds a field display formatter to allow you to display field content using
 Slick carousel. The module doesn't require Field UI to be enabled by default
@@ -12,7 +14,7 @@ All is applicable only to multi-value fields. Ignored for single value.
 * Image
 * Core Media
 * Text, Text long, Text with summary
-* [Paragraphs](http://dgo.to/paragraphs)
+* [Paragraphs](https://drupal.org/project/paragraphs)
 
 
 ## USAGE
@@ -41,7 +43,7 @@ site building.
 ## OPTIONSET
 To create your option sets, go to:
 
-[Slick UI]("/admin/config/media/slick)
+[Slick UI](/admin/config/media/slick)
 
 
 ## SLIDE LAYOUT

@@ -42,6 +42,13 @@ trait BlazyStyleBaseTrait {
   }
 
   /**
+   * Prepares commons settings for the style plugins.
+   */
+  protected function prepareSettings(array &$settings = []) {
+    // Do nothing to let extenders modify.
+  }
+
+  /**
    * Provides commons settings for the style plugins.
    */
   protected function buildSettings() {
@@ -59,6 +66,8 @@ trait BlazyStyleBaseTrait {
         'keys' => [$id, $view_mode, $count],
       ],
     ] + BlazyDefault::lazySettings();
+
+    $this->prepareSettings($settings);
 
     // Prepare needed settings to work with.
     $settings['check_blazy']       = TRUE;
@@ -78,6 +87,8 @@ trait BlazyStyleBaseTrait {
       $settings = NestedArray::mergeDeep($settings, $this->htmlSettings);
     }
 
+    $this->blazyManager()->getCommonSettings($settings);
+
     $this->blazyManager()->getModuleHandler()->alter('blazy_settings_views', $settings, $view);
     return $settings;
   }
@@ -91,7 +102,11 @@ trait BlazyStyleBaseTrait {
   }
 
   /**
-   * Returns the first Blazy formatter found.
+   * Returns the first Blazy formatter found, to save image dimensions once.
+   *
+   * Given 100 images on a page, Blazy will call
+   * ImageStyle::transformDimensions() once rather than 100 times and let the
+   * 100 images inherit it as long as the image style has CROP in the name.
    */
   public function getFirstImage($row) {
     if (!isset($this->firstImage)) {

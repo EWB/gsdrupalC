@@ -24,6 +24,12 @@ use Drupal\Core\Render\BubbleableMetadata;
  */
 class Photon extends GeocoderBase implements GeocoderInterface {
 
+  /**
+   * Base URL.
+   *
+   * @var string
+   *   Photon URL.
+   */
   public $requestBaseUrl = 'https://photon.komoot.de';
 
   /**

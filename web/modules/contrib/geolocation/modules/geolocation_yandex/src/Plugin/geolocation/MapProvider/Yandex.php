@@ -21,7 +21,7 @@ class Yandex extends MapProviderBase {
    *
    * @var string
    */
-  public static $APIURLBASE = 'https://api-maps.yandex.ru/2.1/';
+  public static $apiBaseUrl = 'https://api-maps.yandex.ru/2.1/';
 
   /**
    * {@inheritdoc}
@@ -182,9 +182,37 @@ class Yandex extends MapProviderBase {
 
     $api_key = $config->get('api_key');
 
-    $lang = \Drupal::languageManager()->getCurrentLanguage();
+    return self::$apiBaseUrl . '?apikey=' . $api_key . '&lang=' . self::getApiUrlLangcode() . '&coordorder=longlat';
+  }
 
-    return self::$APIURLBASE . '?apikey=' . $api_key . '&lang=' . $lang->getId() . '_' . strtoupper($lang->getId()) . '&coordorder=longlat';
+  /**
+   * Get allowed langcode by language ID.
+   *
+   * @param string $langId
+   *   Two-letter language code.
+   *
+   * @return string
+   *   Yandex API allowed language code.
+   */
+  public static function getApiUrlLangcode($langId = NULL) {
+    if (empty($langId)) {
+      $langId = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    }
+
+    $langId = strtolower((string) $langId);
+
+    $langcode = 'en_US';
+    $langcode_mapping = [
+      'ru' => 'ru_RU',
+      'uk' => 'uk_UA',
+      'tr' => 'tr_TR',
+    ];
+
+    if (!empty($langcode_mapping[$langId])) {
+      return $langcode_mapping[$langId];
+    }
+
+    return $langcode;
   }
 
 }

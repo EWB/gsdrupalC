@@ -23,6 +23,7 @@ class FitLocations extends MapCenterBase implements MapCenterInterface {
    */
   public static function getDefaultSettings() {
     return [
+      'min_zoom' => FALSE,
       'reset_zoom' => FALSE,
     ];
   }
@@ -32,6 +33,13 @@ class FitLocations extends MapCenterBase implements MapCenterInterface {
    */
   public function getSettingsForm($option_id = NULL, array $settings = [], $context = NULL) {
     $form = parent::getSettingsForm($option_id, $settings, $context);
+    $form['min_zoom'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#step' => 1,
+      '#title' => $this->t('Set a minimum zoom, especially useful when only location is centered on.'),
+      '#default_value' => $settings['min_zoom'],
+    ];
     $form['reset_zoom'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Reset zoom after fit.'),

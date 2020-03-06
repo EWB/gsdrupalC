@@ -2,13 +2,14 @@
 
 namespace Drupal\Tests\blazy\FunctionalJavascript;
 
+use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\blazy\Traits\BlazyUnitTestTrait;
 use Drupal\Tests\blazy\Traits\BlazyCreationTestTrait;
 
 /**
- * Tests the Blazy Filter JavaScript using PhantomJS, or Chromedriver.
+ * Tests the Blazy Filter JavaScript using Selenium, or Chromedriver.
  *
  * @group blazy
  */
@@ -16,6 +17,16 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
 
   use BlazyUnitTestTrait;
   use BlazyCreationTestTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
 
   /**
    * {@inheritdoc}
@@ -39,12 +50,15 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
 
     $this->setUpVariables();
 
+    $this->root                   = $this->container->get('app.root');
     $this->fileSystem             = $this->container->get('file_system');
     $this->entityFieldManager     = $this->container->get('entity_field.manager');
     $this->formatterPluginManager = $this->container->get('plugin.manager.field.formatter');
     $this->blazyAdmin             = $this->container->get('blazy.admin');
+    $this->blazyOembed            = $this->container->get('blazy.oembed');
     $this->blazyManager           = $this->container->get('blazy.manager');
     $this->testPluginId           = 'blazy_filter';
+    $this->maxParagraphs          = 280;
 
     // Create a text format.
     $full_html = FilterFormat::create([
@@ -86,8 +100,9 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
     $this->drupalGet('node/' . $this->entity->id());
 
     // Ensures Blazy is not loaded on page load.
-    $this->assertSession()->elementNotExists('css', '.b-loaded');
-
+    // @todo with Native lazyload, b-loaded is enforced on page load. And
+    // since the testing browser Chrome support it, it is irrelevant.
+    // @todo $this->assertSession()->elementNotExists('css', '.b-loaded');
     // Capture the initial page load moment.
     $this->createScreenshot($image_path . '/1_blazy_filter_initial.png');
     $this->assertSession()->elementExists('css', '.b-lazy');
@@ -105,14 +120,9 @@ class BlazyFilterJavaScriptTest extends WebDriverTestBase {
     // Also verifies that [data-unblazy] should not be touched, nor lazyloaded.
     $this->assertSession()->elementNotContains('css', '.media-wrapper--blazy', 'data-unblazy');
 
-    // Wait a moment.
-    $session->wait(3000);
-
     // Verifies that one of the images is there once loaded.
-    $this->assertNotEmpty($this->assertSession()->waitForElement('css', '.b-loaded'));
-
-    $loaded = $this->assertSession()->waitForElementVisible('css', '.b-loaded');
-    $this->assertNotEmpty($loaded);
+    $result = $this->assertSession()->waitForElement('css', '.b-loaded');
+    $this->assertNotEmpty($result);
 
     // Capture the loaded moment.
     // The screenshots are at sites/default/files/simpletest/blazy.

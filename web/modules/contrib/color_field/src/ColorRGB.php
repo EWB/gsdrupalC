@@ -119,8 +119,47 @@ class ColorRGB extends ColorBase {
   /**
    * {@inheritdoc}
    */
-  public function toRGB() {
+  public function toRgb() {
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toHsl() {
+    $r = $this->getRed() / 255;
+    $g = $this->getGreen() / 255;
+    $b = $this->getBlue() / 255;
+    $max = max($r, $g, $b);
+    $min = min($r, $g, $b);
+    $l = ($max + $min) / 2;
+    if ($max == $min) {
+      // Achromatic.
+      $h = $s = 0;
+    }
+    else {
+      $d = $max - $min;
+      $s = $l > 0.5 ? $d / (2 - $max - $min) : $d / ($max + $min);
+      switch ($max) {
+        case $r:
+          $h = ($g - $b) / $d + ($g < $b ? 6 : 0);
+          break;
+
+        case $g:
+          $h = ($b - $r) / $d + 2;
+          break;
+
+        case $b:
+          $h = ($r - $g) / $d + 4;
+          break;
+      }
+      $h /= 6;
+    }
+    $h = floor($h * 360);
+    $s = floor($s * 100);
+    $l = floor($l * 100);
+
+    return new ColorHSL(intval($h), intval($s), intval($l), $this->getOpacity());
   }
 
 }

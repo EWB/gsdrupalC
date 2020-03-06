@@ -16,7 +16,6 @@ description: 'Testing file entity with Blazy Test style'
 tag: ''
 base_table: file_managed
 base_field: fid
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -91,10 +90,10 @@ display:
       row:
         type: fields
         options:
+          default_field_elements: true
           inline: {  }
           separator: ''
           hide_empty: false
-          default_field_elements: true
       fields:
         filename:
           id: filename

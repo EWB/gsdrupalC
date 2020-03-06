@@ -48,8 +48,8 @@
     var location = marker.geometry.getCoordinates();
     marker.properties.set('balloonContent', Drupal.t('[@delta] Latitude: @latitude Longitude: @longitude', {
       '@delta': delta,
-      '@latitude': location[0],
-      '@longitude': location[1]
+      '@latitude': location[1],
+      '@longitude': location[0]
     }));
     marker.options.draggable = true;
     marker.properties.set('balloonContentHeader', (delta + 1).toString());
@@ -58,8 +58,8 @@
     marker.events.add('dragend', function (e) {
       var location = e.geometry.getCoordinates();
       that.locationAlteredCallback('marker', {
-        lat: Number(location[0]),
-        lng: Number(location[1])
+        lat: Number(location[1]),
+        lng: Number(location[0])
       }, marker.delta);
     });
 

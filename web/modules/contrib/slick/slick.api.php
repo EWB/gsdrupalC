@@ -5,8 +5,6 @@
  * Hooks and API provided by the Slick module.
  */
 
-use Drupal\slick\Entity\Slick;
-
 /**
  * @defgroup slick_api Slick API
  * @{
@@ -154,12 +152,10 @@ use Drupal\slick\Entity\Slick;
  *       // Individual slide supports some useful settings like layout, classes,
  *       // etc.
  *       // Meaning each slide can have different layout, or classes.
- *       // @see src/Plugin/Field/README.txt
  *       'settings' => [
  *
  *         // Optionally add a custom layout, can be a static uniform value, or
  *         // dynamic one based on the relevant field value.
- *         // @see src/Plugin/Field/README.txt for the supported layout keys.
  *         'layout' => 'bottom',
  *
  *         // Optionally add a custom class, can be a static uniform class, or
@@ -340,17 +336,20 @@ use Drupal\slick\Entity\Slick;
  *
  * @section sec_skin Registering Slick skins
  *
- * To register a skin, implement hook_slick_skins_info() in a module file, and
- * defines skins at the registered class which implements SlickSkinInterface.
+ * To register a skin, copy \Drupal\slick\Plugin\slick\SlickSkin into your
+ * module /src/Plugin/slick directory. Adjust everything accordinngly: rename
+ * the file, change SlickSkin ID and label, change class name and its namespace,
+ * define skin name, and its CSS and JS assets.
  *
- * The class must implement \Drupal\slick\SlickSkinInterface, and it has 3
- * supported methods: ::skins(), ::dots(), ::arrows() to have skin options for
- * main/thumbnail/overlay/nested displays, dots, and arrows skins respectively.
+ * The SlickSkin object has 3 supported methods: ::setSkins(), ::setDots(),
+ * ::setArrows() to have skin options for main/thumbnail/overlay displays, dots,
+ * and arrows skins respectively.
  * The declared skins will be available for custom coded, or UI selections.
  *
- * @see \Drupal\slick\SlickSkinInterface
- * @see \Drupal\slick_example\SlickExampleSkin
- * @see \Drupal\slick_extras\SlickExtrasSkin
+ * @see \Drupal\slick\SlickSkinPluginInterface
+ * @see \Drupal\slick_example\Plugin\slick\SlickExampleSkin
+ * @see \Drupal\slick_extras\Plugin\slick\SlickExtrasSkin
+ * @see \Drupal\slick_test\Plugin\slick\SlickSkin for the most complete samples
  *
  * Add the needed methods accordingly.
  * This can be used to register skins for the Slick. Skins will be
@@ -364,18 +363,24 @@ use Drupal\slick\Entity\Slick;
  * A skin can specify CSS and JS files to include when Slick is displayed,
  * except for a thumbnail skin which accepts CSS only.
  *
- * Each skin supports 5 keys:
+ * Each skin supports a few keys:
  * - name: The human readable name of the skin.
  * - description: The description about the skin, for help and manage pages.
  * - css: An array of CSS files to attach.
  * - js: An array of JS files to attach, e.g.: image zoomer, reflection, etc.
- * - group: A string grouping the current skin: main, thumbnail.
+ * - group: A string grouping the current skin: main, thumbnail, arrows, dots.
+ * - dependencies: Similar to how core library dependencies constructed.
  * - provider: A module name registering the skins.
+ * - options: Extra JavaScript (Slicebox, 3d carousel, etc) options merged into
+ *     existing [data-slick] attribute to be consumed by custom JS.
  *
  * @section sec_skins Defines the Slick main and thumbnail skins
  *
  * @code
- * public function skins() {
+ * protected function setSkins() {
+ *   // If you copy this file, be sure to add base_path() before any asset path
+ *   // (css or js) as otherwise failing to load the assets. Your module can
+ *   // register paths pointing to a theme. Almost similar to library.
  *   $theme_path = base_path() . drupal_get_path('theme', 'my_theme');
  *
  *   return [
@@ -384,7 +389,7 @@ use Drupal\slick\Entity\Slick;
  *       'name' => 'Skin name',
  *
  *       // Description of the skin.
- *       'description' => t('Skin description.'),
+ *       'description' => $this->t('Skin description.'),
  *
  *       // Group skins to reduce confusion on form selection: main, thumbnail.
  *       'group' => 'main',
@@ -443,9 +448,9 @@ use Drupal\slick\Entity\Slick;
  * The provided dot skins will be available at sub-module UI form.
  * A skin dot named 'hop' will have a class 'slick-dots--hop' for the UL.
  *
- * The array is similar to the self::skins(), excluding group, JS.
+ * The array is similar to the self::setSkins(), excluding group, JS.
  * @code
- * public function dots() {
+ * protected function setDots() {
  *   // Create an array of dot skins.
  *   return [];
  * }
@@ -456,12 +461,12 @@ use Drupal\slick\Entity\Slick;
  * The provided arrow skins will be available at sub-module UI form.
  * A skin arrow 'slit' will have a class 'slick__arrow--slit' for the NAV.
  *
- * The array is similar to the self::skins(), excluding group, JS.
+ * The array is similar to the self::setSkins(), excluding group, JS.
  *
  * @return array
  *   The array of the arrow skins.
  * @code
- * public function arrows() {
+ * protected function setArrows() {
  *   // Create an array of arrow skins.
  *   return [];
  * }
@@ -473,25 +478,6 @@ use Drupal\slick\Entity\Slick;
  * @addtogroup hooks
  * @{
  */
-
-/**
- * Registers a class that should hold skin definitions.
- *
- * @deprecated, will be removed anytime when a core solution is available.
- * @see #2233261
- * Postponed till D9.
- *
- * @see slick_hook_info()
- * @see slick_example.module
- * @see slick_extras.module
- * @see \Drupal\slick\SlickSkinInterface
- * @see sec_skin
- *
- * @ingroup slick_api
- */
-function hook_slick_skins_info() {
-  return '\Drupal\my_module\MyModuleSlickSkin';
-}
 
 /**
  * Modifies overridable options at admin UI to re-use one optionset.

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\blazy\Traits;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\blazy\BlazyManager;
 
 /**
  * A Trait common for Blazy related service managers.
@@ -39,6 +38,30 @@ trait BlazyManagerUnitTestTrait {
         'blazy' => ['loadInvisible' => FALSE, 'offset' => 100],
       ],
     ]);
+
+    $this->blazyManager = $this->getMockBuilder('\Drupal\blazy\BlazyManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->blazyManager->expects($this->any())
+      ->method('getModuleHandler')
+      ->willReturn($this->moduleHandler);
+
+    $this->blazyManager->expects($this->any())
+      ->method('getEntityTypeManager')
+      ->willReturn($this->entityTypeManager);
+
+    $this->blazyManager->expects($this->any())
+      ->method('getRenderer')
+      ->willReturn($this->renderer);
+
+    $this->blazyManager->expects($this->any())
+      ->method('getConfigFactory')
+      ->willReturn($this->configFactory);
+
+    $this->blazyManager->expects($this->any())
+      ->method('getCache')
+      ->willReturn($this->cache);
   }
 
   /**
@@ -54,17 +77,9 @@ trait BlazyManagerUnitTestTrait {
     $container->set('config.factory', $this->configFactory);
     $container->set('cache.default', $this->cache);
     $container->set('token', $this->token);
+    $container->set('blazy.manager', $this->blazyManager);
 
     \Drupal::setContainer($container);
-
-    $this->blazyManager = new BlazyManager(
-      $this->entityRepository,
-      $this->entityTypeManager,
-      $this->moduleHandler,
-      $this->renderer,
-      $this->configFactory,
-      $this->cache
-    );
   }
 
   /**

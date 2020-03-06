@@ -5,4 +5,4 @@ services:
 
   blazy_test.formatter:
     class: Drupal\blazy_test\BlazyFormatterTest
-    parent: blazy.formatter.manager
+    parent: blazy.formatter

@@ -9,6 +9,11 @@ blazy:
   js:
     /libraries/blazy/blazy.js: { weight: -4 }
 
+base:
+  css:
+    component:
+      css/blazy.css: {}
+
 filter:
   css:
     component:
@@ -18,6 +23,25 @@ loading:
   css:
     component:
       css/components/blazy.loading.css: {}
+  dependencies:
+    - blazy/base
+
+fx.blur:
+  css:
+    component:
+      css/components/blazy.fx.blur.css: {}
+  dependencies:
+    - blazy/loading
+
+oembed:
+  css:
+    component:
+      css/components/blazy.oembed.css: {}
+
+preview:
+  css:
+    component:
+      css/components/blazy.preview.css: {}
 
 ratio:
   css:
@@ -28,17 +52,21 @@ grid:
   css:
     component:
       css/components/blazy.grid.css: {}
+  dependencies:
+    - blazy/base
 
 column:
   css:
     component:
       css/components/blazy.column.css: {}
+  dependencies:
+    - blazy/base
 
 dblazy:
   js:
     js/dblazy.js: { weight: -4 }
   dependencies:
-    - core/classList
+    - blazy/base
 
 # @todo adjust weights to use hundredth decimals.
 bio:
@@ -60,7 +88,6 @@ load:
     - core/drupal
     - blazy/blazy
     - blazy/dblazy
-    - blazy/bio.media
     - blazy/loading
 
 bio.ajax:
@@ -88,7 +115,6 @@ blazybox:
       css/components/blazy.blazybox.css: {}
   dependencies:
     - core/drupal
-    - core/classList
     - blazy/dblazy
     - blazy/lightbox
 

@@ -19,7 +19,7 @@
     attach: function (context, settings) {
       var $context = $(context);
 
-      $context.find('.js-color-field-widget-grid__color').each(function (index, element) {
+      $context.find('.js-color-field-widget-grid__color').once('colorFieldJquerySimpleColor').each(function (index, element) {
         var $element = $(element);
         var widgetSettings = settings.color_field.color_field_widget_grid[$(this).attr('id')];
 

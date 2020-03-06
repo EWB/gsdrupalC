@@ -55,7 +55,7 @@ class ColorFieldWidgetSpectrum extends ColorFieldWidgetBase {
       '#type' => 'textarea',
       '#title' => $this->t('Color Palette'),
       '#default_value' => $this->getSetting('palette'),
-      '#description' => $this->t('Selectable color palette to accompany the Spectrum Widget. Separate values with a comma, and group them with square brackets. Ex: <br> ["#fff","#aaa","#f00","#00f"],<br>["#414141","#242424","#0a8db9"]'),
+      '#description' => $this->t('Selectable color palette to accompany the Spectrum Widget. Separate values with a comma, and group them with square brackets - ensure one group per line. Ex: <br> ["#fff","#aaa","#f00","#00f"],<br>["#414141","#242424","#0a8db9"]'),
       '#states' => [
         'visible' => [
           ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][show_palette]"]' => ['checked' => TRUE],
@@ -117,17 +117,18 @@ class ColorFieldWidgetSpectrum extends ColorFieldWidgetBase {
 
     // Parsing Palette data so that it works with spectrum color picker.
     // This will create a multidimensional array of hex values.
+    // Do some cleanup to reduce risk of malformed data.
     if (!empty($settings['palette'])) {
       // Remove any whitespace.
-      $settings['palette'] = str_replace(' ', '', $settings['palette']);
+      $settings['palette'] = str_replace([' ', "\n", '"', "'"], '', $settings['palette']);
 
       // Parse each row first and reset the palette.
-      $rows = explode("\n", $settings['palette']);
+      $rows = explode("\r", $settings['palette']);
       $settings['palette'] = [];
 
       foreach ($rows as $row) {
         // Next explode each row into an array of values.
-        $settings['palette'][] = $columns = explode(',', $row);
+        $settings['palette'][] = explode(',', trim($row, " \t\n\r\0\x0B,]["));
       }
     }
 

@@ -2,65 +2,42 @@
 
 namespace Drupal\blazy;
 
-use Drupal\image\Entity\ImageStyle;
+use Drupal\Component\Utility\NestedArray;
 
 /**
- * Provides extra utilities to work with core Media.
- *
- * @todo rework this for core Media.
+ * Impelements BlazyMediaInterface.
  */
-class BlazyMedia {
+class BlazyMedia implements BlazyMediaInterface {
 
   /**
-   * Builds the media field which cannot be displayed using theme_blazy().
-   *
-   * Some use URLs from inputs, some local files.
-   *
-   * @param object $media
-   *   The media being rendered.
-   * @param array $settings
-   *   The contextual settings array.
-   *
-   * @return array|bool
-   *   The renderable array of the media field, or false if not applicable.
+   * {@inheritdoc}
    */
   public static function build($media, array $settings = []) {
     // Prevents fatal error with disconnected internet when having ME Facebook,
     // ME SlideShare, resorted to static thumbnails to avoid broken displays.
     if (!empty($settings['input_url'])) {
-      // @todo: Remove when ME Facebook alike handles this.
       try {
-        \Drupal::httpClient()->get($settings['input_url'], ['timeout' => 7]);
+        \Drupal::httpClient()->get($settings['input_url'], ['timeout' => 3]);
       }
       catch (\Exception $e) {
         return FALSE;
       }
     }
 
-    $build = $media->get($settings['source_field'])->view($settings['view_mode']);
+    $settings['type'] = 'rich';
+    $options = $settings['media_source'] == 'video_file' ? ['type' => 'file_video'] : $settings['view_mode'];
+    $build = $media->get($settings['source_field'])->view($options);
     $build['#settings'] = $settings;
 
     return isset($build[0]) ? self::wrap($build) : $build;
   }
 
   /**
-   * Returns a field to be wrapped by theme_container().
-   *
-   * Currently Instagram, and SlideShare are known to use iframe, and thus can
-   * be converted into a responsive Blazy with fluid ratio. The rest are
-   * returned as is, only wrapped by .media wrapper for consistency with complex
-   * interaction like EB.
-   *
-   * @param array $field
-   *   The source renderable array $field.
-   *
-   * @return array
-   *   The new renderable array of the media item wrapped by theme_container().
+   * {@inheritdoc}
    */
   public static function wrap(array $field = []) {
-    // Media entity is a single being, reasonable to work with multi-value?
     $item       = $field[0];
-    $settings   = isset($field['#settings']) ? $field['#settings'] : [];
+    $settings   = $field['#settings'];
     $iframe     = isset($item['#tag']) && $item['#tag'] == 'iframe';
     $attributes = [];
 
@@ -68,52 +45,139 @@ class BlazyMedia {
       $attributes = &$item['#attributes'];
     }
 
+    // Update iframe/video dimensions based on configurable image style, if any.
+    foreach (['width', 'height'] as $key) {
+      if (!empty($settings[$key])) {
+        $attributes[$key] = $settings[$key];
+      }
+    }
+
     // Converts iframes into lazyloaded ones.
+    // Iframes: Googledocs, SlideShare. Hardcoded: Soundcloud, Spotify.
     if ($iframe && !empty($attributes['src'])) {
-      $attributes['data-src'] = $attributes['src'];
-      $attributes['class'][] = 'b-lazy media__iframe media__element';
-      $attributes['src'] = 'about:blank';
-      $attributes['allowfullscreen'] = TRUE;
+      $settings['embed_url'] = $attributes['src'];
+      $attributes = NestedArray::mergeDeep($attributes, Blazy::iframeAttributes($settings));
+    }
+    // Media with local files: video.
+    elseif (isset($item['#files'], $item['#files'][0]['file'])) {
+      self::videoItem($item, $settings);
     }
 
-    // Wraps the media item to allow consistency for EB/SB.
-    $build = [
-      '#theme'      => 'container',
-      '#children'   => $item,
-      '#attributes' => ['class' => ['media']],
-      '#settings'   => $settings,
-    ];
-
-    if (!empty($settings['bundle'])) {
-      $build['#attributes']['class'][] = 'media--' . str_replace('_', '-', $settings['bundle']);
-    }
-
-    // Adds helper for Entity Browser small thumbnail selection.
-    if (!empty($settings['thumbnail_style']) && !empty($settings['uri'])) {
-      $build['#attributes']['data-thumb'] = ImageStyle::load($settings['thumbnail_style'])->buildUrl($settings['uri']);
-    }
-
-    // See comment above for known media entities using iframe.
-    if ($iframe) {
-      $build['#attributes']['class'][] = 'media--ratio';
-
-      if (!empty($attributes['width']) && !empty($attributes['height'])) {
-        $padding_bottom = round((($attributes['height'] / $attributes['width']) * 100), 2);
-        $build['#attributes']['style'] = 'padding-bottom: ' . $padding_bottom . '%';
+    // Clone relevant keys since field wrapper is no longer in use.
+    foreach (['attached', 'cache', 'third_party_settings'] as $key) {
+      if (!empty($field["#$key"])) {
+        $item["#$key"] = isset($item["#$key"]) ? NestedArray::mergeDeep($field["#$key"], $item["#$key"]) : $field["#$key"];
       }
     }
-    else {
-      $build['#attributes']['class'][] = 'media--rendered';
+    // Keep original formatter configurations intact here for custom works.
+    $item['#settings'] = new BlazySettings(array_filter($settings));
+    return $item;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function mediaItem(array &$data, $media) {
+    $item     = NULL;
+    $settings = &$data['settings'];
+
+    $settings['bundle']       = $media->bundle();
+    $settings['source_field'] = $media->getSource()->getConfiguration()['source_field'];
+    $settings['media_url']    = $media->toUrl()->toString();
+    $settings['media_id']     = $media->id();
+    $settings['media_source'] = $media->getSource()->getPluginId();
+    $settings['view_mode']    = empty($settings['view_mode']) ? 'default' : $settings['view_mode'];
+
+    // Prioritize custom high-res or poster image such as (remote|file) video.
+    if (!empty($settings['image'])) {
+      $item = $media->hasField($settings['image']) ? $media->get($settings['image'])->first() : NULL;
+      $settings['_hires'] = !empty($item);
     }
 
-    // Clone relevant keys as field wrapper is no longer in use.
-    foreach (['attached', 'cache'] as $key) {
-      if (isset($field["#$key"])) {
-        $build["#$key"] = $field["#$key"];
+    // If Media has a defined thumbnail, add it to data item, not all has this.
+    if (!$item && $media->hasField('thumbnail')) {
+      /** @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
+      // Title is NULL from thumbnail, likely core bug, so use source.
+      $item = $media->get($settings['media_source'] == 'image' ? $settings['source_field'] : 'thumbnail')->first();
+    }
+
+    // Checks if Image item is available.
+    if ($item) {
+      $settings['file_tags'] = ['file:' . $item->target_id];
+      $settings['uri'] = Blazy::uri($item);
+
+      // Pass through image item including poster image overrides.
+      $data['item'] = $item;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function videoItem(array &$item, array $settings) {
+    // Do this as $item['#settings'] is not available as file_video variables.
+    foreach ($item['#files'] as &$file) {
+      $file['blazy'] = new BlazySettings($settings);
+    }
+    $item['#attributes']->setAttribute('data-b-lazy', TRUE);
+    if (!empty($settings['is_preview'])) {
+      $item['#attributes']->setAttribute('data-b-preview', TRUE);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function fakeImageItem(array &$data, $entity, $image) {
+    /** @var \Drupal\file\Entity\File $entity */
+    list($type,) = explode('/', $entity->getMimeType(), 2);
+    if ($type == 'image' && $image->isValid()) {
+      $settings = [
+        'uri'       => $entity->getFileUri(),
+        'target_id' => $entity->id(),
+        'width'     => $image->getWidth(),
+        'height'    => $image->getHeight(),
+        'alt'       => $entity->getFilename(),
+        'title'     => $entity->getFilename(),
+        'type'      => 'image',
+      ];
+
+      // Build item and settings.
+      $item             = Blazy::image($settings);
+      $item->entity     = $entity;
+      $data['item']     = $item;
+      $data['settings'] = empty($data['settings']) ? $settings : array_merge($data['settings'], $settings);
+      unset($item);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function imageItem(array &$data, $entity) {
+    $settings = &$data['settings'];
+    $stage = $settings['image'];
+
+    // The actual video thumbnail has already been downloaded earlier.
+    // This fetches the highres image if provided and available.
+    // With a mix of image and video, image is not always there.
+    /** @var \Drupal\file\Plugin\Field\FieldType\FileFieldItemList $file */
+    if (isset($entity->{$stage}) && $file = $entity->get($stage)) {
+      $value = $file->getValue();
+
+      // Do not proceed if it is a Media entity video. This means File here.
+      if (isset($value[0]) && !empty($value[0]['target_id'])) {
+        // If image, even if multi-value, we can only have one stage per slide.
+        if (method_exists($file, 'referencedEntities') && isset($file->referencedEntities()[0])) {
+          /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $item */
+          $data['item'] = $file->get(0);
+
+          // Collects cache tags to be added for each item in the field.
+          $settings['file_tags'] = $file->referencedEntities()[0]->getCacheTags();
+          $settings['uri'] = Blazy::uri($data['item']);
+        }
       }
     }
-
-    return $build;
   }
 
 }

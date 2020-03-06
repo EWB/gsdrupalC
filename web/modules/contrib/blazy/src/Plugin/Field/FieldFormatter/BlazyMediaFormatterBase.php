@@ -2,24 +2,24 @@
 
 namespace Drupal\blazy\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\blazy\BlazyDefault;
-use Drupal\blazy\BlazyFormatterManager;
-use Drupal\blazy\BlazyEntity;
 use Drupal\blazy\Dejavu\BlazyEntityMediaBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for blazy/slick media ER formatters.
  *
- * @see Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatter.
+ * @see \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatter
+ * @see \Drupal\gridstack\Plugin\Field\FieldFormatter\GridStackMediaFormatter
+ *
+ * @todo remove ContainerFactoryPluginInterface since D8.8 has it by default.
  */
 abstract class BlazyMediaFormatterBase extends BlazyEntityMediaBase implements ContainerFactoryPluginInterface {
 
   use BlazyFormatterTrait;
+  use BlazyFormatterViewTrait;
 
   /**
    * The logger factory.
@@ -29,46 +29,11 @@ abstract class BlazyMediaFormatterBase extends BlazyEntityMediaBase implements C
   protected $loggerFactory;
 
   /**
-   * Constructs a BlazyFormatter object.
-   */
-  public function __construct(
-    $plugin_id,
-    $plugin_definition,
-    FieldDefinitionInterface $field_definition,
-    array $settings,
-    $label,
-    $view_mode,
-    array $third_party_settings,
-    LoggerChannelFactoryInterface $logger_factory,
-    ImageFactory $image_factory,
-    BlazyEntity $blazy_entity,
-    BlazyFormatterManager $formatter) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-
-    $this->loggerFactory = $logger_factory;
-    $this->imageFactory = $image_factory;
-    $this->blazyEntity = $blazy_entity;
-    $this->formatter = $this->blazyManager = $formatter;
-    $this->blazyOembed = $blazy_entity->oembed();
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('logger.factory'),
-      $container->get('image.factory'),
-      $container->get('blazy.entity'),
-      $container->get('blazy.formatter.manager')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    return self::injectServices($instance, $container, 'entity');
   }
 
   /**

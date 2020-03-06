@@ -11,6 +11,30 @@ use Drupal\Component\Utility\Unicode;
 abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
 
   /**
+   * Defines re-usable basic form elements.
+   */
+  public function basicImageForm(array &$form, $definition = []) {
+    $this->imageStyleForm($form, $definition);
+
+    if (!empty($definition['media_switch_form']) && !isset($form['media_switch'])) {
+      $this->mediaSwitchForm($form, $definition);
+    }
+
+    if (isset($definition['images'])) {
+      $form['image'] = $this->baseForm($definition)['image'];
+      $form['image']['#prefix'] = '';
+    }
+
+    if (isset($form['responsive_image_style'])) {
+      $form['responsive_image_style']['#description'] = $this->t('Be sure to enable <strong>Responsive image</strong> option via Blazy UI. Leave empty to disable.');
+
+      if ($this->blazyManager()->getModuleHandler()->moduleExists('blazy_ui')) {
+        $form['responsive_image_style']['#description'] .= ' ' . $this->t('<a href=":url" target="_blank">Enable lazyloading Responsive image</a>.', [':url' => Url::fromRoute('blazy.settings')->toString()]);
+      }
+    }
+  }
+
+  /**
    * Returns re-usable image formatter form elements.
    */
   public function imageStyleForm(array &$form, $definition = []) {
@@ -30,14 +54,10 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
         '#type'        => 'select',
         '#title'       => $this->t('Responsive image'),
         '#options'     => $this->getResponsiveImageOptions(),
-        '#description' => $this->t('Responsive image style for the main stage image is more reasonable for large images. Works with multi-serving IMG, or PICTURE element. Not compatible with breakpoints and aspect ratio, yet. Leave empty to disable. <a href=":url" target="_blank">Manage responsive image styles</a>.', [':url' => $url]),
+        '#description' => $this->t('Responsive image style for the main stage image is more reasonable for large images. Works with multi-serving IMG, or PICTURE element. Leave empty to disable. <a href=":url" target="_blank">Manage responsive image styles</a>.', [':url' => $url]),
         '#access'      => $this->getResponsiveImageOptions(),
         '#weight'      => -100,
       ];
-
-      if (!empty($definition['background'])) {
-        $form['background']['#states'] = $this->getState(static::STATE_RESPONSIVE_IMAGE_STYLE_DISABLED, $definition);
-      }
     }
 
     if (!empty($definition['thumbnail_effect'])) {
@@ -52,26 +72,10 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
 
   /**
    * Return the field formatter settings summary.
-   *
-   * @deprecated self::settingsSummary is deprecated in blazy:8.x-2.0 and will
-   *   be removed from blazy:9.x-1.x. Use self::getSettingsSummary() instead.
-   * @see https://www.drupal.org/node/3103018
-   */
-  public function settingsSummary($plugin, $definition = []) {
-    $definition = isset($definition) ? $definition : $plugin->getScopedFormElements();
-    $definition['settings'] = isset($definition['settings']) ? $definition['settings'] : $plugin->getSettings();
-
-    return $this->getSettingsSummary($definition);
-  }
-
-  /**
-   * Return the field formatter settings summary.
    */
   public function getSettingsSummary($definition = []) {
-    $summary = [];
-
     if (empty($definition['settings'])) {
-      return $summary;
+      return [];
     }
 
     $this->getExcludedSettingsSummary($definition);
@@ -87,49 +91,39 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
       'vanilla',
     ];
 
-    $enforced    = isset($definition['enforced']) ? $definition['enforced'] : $enforced;
-    $settings    = array_filter($definition['settings']);
-    $breakpoints = isset($settings['breakpoints']) && is_array($settings['breakpoints']) ? array_filter($settings['breakpoints']) : [];
+    $summary  = [];
+    $enforced = isset($definition['enforced']) ? $definition['enforced'] : $enforced;
+    $settings = array_filter($definition['settings']);
 
     foreach ($definition['settings'] as $key => $setting) {
       $title   = Unicode::ucfirst(str_replace('_', ' ', $key));
       $vanilla = !empty($settings['vanilla']);
 
+      // @todo remove deprecated breakpoints anytime before 3.x.
       if ($key == 'breakpoints') {
-        $widths = [];
-        if ($breakpoints) {
-          foreach ($breakpoints as $breakpoint) {
-            if (!empty($breakpoint['width'])) {
-              $widths[] = $breakpoint['width'];
-            }
-          }
-        }
-
-        $title   = 'Breakpoints';
-        $setting = $widths ? implode(', ', $widths) : 'none';
+        continue;
       }
-      else {
-        if ($vanilla && !in_array($key, $enforced)) {
-          continue;
-        }
 
-        if ($key == 'override' && empty($setting)) {
-          unset($settings['overridables']);
-        }
+      if ($vanilla && !in_array($key, $enforced)) {
+        continue;
+      }
 
-        if (is_bool($setting) && $setting) {
-          $setting = 'yes';
-        }
-        elseif (is_array($setting)) {
-          $setting = array_filter($setting);
-          if (!empty($setting)) {
-            $setting = implode(', ', $setting);
-          }
-        }
+      if ($key == 'override' && empty($setting)) {
+        unset($settings['overridables']);
+      }
 
-        if ($key == 'cache') {
-          $setting = $this->getCacheOptions()[$setting];
+      if (is_bool($setting) && $setting) {
+        $setting = 'yes';
+      }
+      elseif (is_array($setting)) {
+        $setting = array_filter($setting);
+        if (!empty($setting)) {
+          $setting = implode(', ', $setting);
         }
+      }
+
+      if ($key == 'cache') {
+        $setting = $this->getCacheOptions()[$setting];
       }
 
       if (empty($setting)) {
@@ -154,9 +148,8 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
     $excludes     = empty($definition['excludes']) ? [] : $definition['excludes'];
     $plugin_id    = isset($definition['plugin_id']) ? $definition['plugin_id'] : '';
     $blazy        = $plugin_id && strpos($plugin_id, 'blazy') !== FALSE;
-    $image_styles = function_exists('image_style_options') ? image_style_options(TRUE) : [];
-
-    unset($image_styles['']);
+    $image_styles = $this->getEntityAsOptions('image_style');
+    $lightboxes   = $this->blazyManager->getLightboxes();
 
     $excludes['current_view_mode'] = TRUE;
 
@@ -164,14 +157,14 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
       $excludes['optionset'] = TRUE;
     }
 
-    if (!empty($settings['responsive_image_style'])) {
-      foreach (['ratio', 'breakpoints', 'background', 'sizes'] as $key) {
+    if (empty($settings['grid'])) {
+      foreach (['grid', 'grid_medium', 'grid_small', 'visible_items'] as $key) {
         $excludes[$key] = TRUE;
       }
     }
 
-    if (empty($settings['grid'])) {
-      foreach (['grid', 'grid_medium', 'grid_small', 'visible_items'] as $key) {
+    if ($lightboxes && !empty($settings['media_switch']) && !in_array($settings['media_switch'], $lightboxes)) {
+      foreach (['box_style', 'box_media_style', 'box_caption'] as $key) {
         $excludes[$key] = TRUE;
       }
     }
@@ -233,33 +226,36 @@ abstract class BlazyAdminFormatterBase extends BlazyAdminBase {
   }
 
   /**
-   * Declutters options from less relevant options.
+   * Declutters options from less relevant options, specific to captions.
    */
   public function getExcludedFieldOptions() {
-    $excludes = 'field_document_size field_id field_media_in_library field_mime_type field_source field_tweet_author field_tweet_id field_tweet_url field_media_video_embed_field field_instagram_shortcode field_instagram_url';
-    $excludes = explode(' ', $excludes);
-    $excludes = array_combine($excludes, $excludes);
+    // @todo figure out a more efficient way than blacklisting.
+    // Do not exclude field_media_image  as needed for Main stage.
+    $fields = 'document_size media_file id media_in_library mime_type source tweet_author tweet_id tweet_url media_video_embed_field instagram_shortcode instagram_url media_soundcloud media_oembed_video media_audio_file media_video_file media_facebook media_flickr file_url external_thumbnail local_thumbnail local_thumbnail_uri media_unsplash';
+    $fields = explode(' ', $fields);
+
+    $excludes = [];
+    foreach ($fields as $exclude) {
+      $excludes['field_' . $exclude] = 'field_' . $exclude;
+    }
 
     $this->blazyManager->getModuleHandler()->alter('blazy_excluded_field_options', $excludes);
     return $excludes;
   }
 
   /**
-   * Returns Responsive image for select options.
+   * Return the field formatter settings summary.
+   *
+   * @deprecated in blazy:8.x-1.0 and is removed from blazy:8.x-2.0. Use
+   *   self::getSettingsSummary() instead.
+   * @see https://www.drupal.org/node/3103018
    */
-  public function getResponsiveImageOptions() {
-    $options = [];
-    if ($this->blazyManager()->getModuleHandler()->moduleExists('responsive_image')) {
-      $image_styles = $this->blazyManager()->entityLoadMultiple('responsive_image_style');
-      if (!empty($image_styles)) {
-        foreach ($image_styles as $name => $image_style) {
-          if ($image_style->hasImageStyleMappings()) {
-            $options[$name] = strip_tags($image_style->label());
-          }
-        }
-      }
-    }
-    return $options;
+  public function settingsSummary($plugin, $definition = []) {
+    @trigger_error('settingsSummary is deprecated in blazy:8.x-1.0 and is removed from blazy:8.x-2.0. Use \Drupal\blazy\BlazyAdminFormatterBase::getSettingsSummary() instead. See https://www.drupal.org/node/3103018', E_USER_DEPRECATED);
+    $definition = isset($definition) ? $definition : $plugin->getScopedFormElements();
+    $definition['settings'] = isset($definition['settings']) ? $definition['settings'] : $plugin->getSettings();
+
+    return $this->getSettingsSummary($definition);
   }
 
 }

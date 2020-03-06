@@ -3,9 +3,10 @@
  * Provides colorbox integration.
  *
  * @requires coder shutup
- * Colorbox has no classes, just IDs, so shutup chatty coder.
+ * phpcs:ignoreFile -- Colorbox has no classes, just IDs, with inline styles.
  */
 
+/* csslint ignore:start */
 .colorbox-on--media #colorbox,
 .colorbox-on--media #colorbox * {
   box-sizing: border-box;
@@ -20,7 +21,7 @@
 .colorbox-on--media #cboxTopLeft,
 .colorbox-on--media #cboxMiddleLeft,
 .colorbox-on--media #cboxMiddleRight {
-  display: none !important;
+  display: none !important; /* csslint allow: known-properties, important */
 }
 
 .colorbox-on--media #cboxWrapper,
@@ -32,11 +33,11 @@
 .colorbox-on--media #cboxWrapper,
 .colorbox-on--media #cboxContent,
 .colorbox-on--media #cboxLoadedContent {
-  overflow: visible !important;
+  overflow: visible !important; /* csslint allow: known-properties, important */
 }
 
 #cboxLoadedContent.media--ratio {
-  height: 0 !important;
+  height: 0 !important; /* csslint allow: known-properties, important */
   padding-bottom: 56%;
 }
 
@@ -45,3 +46,4 @@
   border-radius: 0;
   border: 8px solid #37465b;
 }
+/* csslint ignore:end */

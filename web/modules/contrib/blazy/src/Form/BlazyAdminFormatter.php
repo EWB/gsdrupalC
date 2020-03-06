@@ -2,8 +2,6 @@
 
 namespace Drupal\blazy\Form;
 
-use Drupal\Core\Url;
-
 /**
  * Provides admin form specific to Blazy admin formatter.
  */
@@ -17,11 +15,7 @@ class BlazyAdminFormatter extends BlazyAdminFormatterBase {
     $definition['responsive_image'] = isset($definition['responsive_image']) ? $definition['responsive_image'] : TRUE;
 
     $this->openingForm($form, $definition);
-    $this->imageStyleForm($form, $definition);
-
-    if (!empty($definition['media_switch_form']) && !isset($form['media_switch'])) {
-      $this->mediaSwitchForm($form, $definition);
-    }
+    $this->basicImageForm($form, $definition);
 
     if (!empty($definition['grid_form']) && !isset($form['grid'])) {
       $this->gridForm($form, $definition);
@@ -30,19 +24,7 @@ class BlazyAdminFormatter extends BlazyAdminFormatterBase {
       unset($form['preserve_keys'], $form['visible_items']);
 
       if (isset($form['grid'])) {
-        $form['grid']['#description'] = $this->t('The amount of block grid columns for large monitors 64.063em+. <br /><strong>Requires</strong>:<ol><li>Display style.</li><li>A reasonable amount of contents.</li></ol>Leave empty to DIY, or to not build grids.');
-      }
-    }
-
-    if (!empty($definition['breakpoints']) && !$this->blazyManager()->configLoad('unbreakpoints', 'blazy.settings')) {
-      $this->breakpointsForm($form, $definition);
-    }
-
-    if (isset($form['responsive_image_style'])) {
-      $form['responsive_image_style']['#description'] = $this->t('Not compatible with below breakpoints, aspect ratio, yet. However it can still lazyload by checking <strong>Responsive image</strong> option via Blazy UI. Leave empty to disable.');
-
-      if ($this->blazyManager()->getModuleHandler()->moduleExists('blazy_ui')) {
-        $form['responsive_image_style']['#description'] .= ' ' . $this->t('<a href=":url" target="_blank">Enable lazyloading Responsive image</a>.', [':url' => Url::fromRoute('blazy.settings')->toString()]);
+        $form['grid']['#description'] = $this->t('The amount of block grid columns for large monitors 64.063em+. <br /><strong>Requires</strong>:<ol><li>Display style.</li><li>A reasonable amount of contents.</li></ol>Unless required, leave empty to DIY, or to not build grids.');
       }
     }
 

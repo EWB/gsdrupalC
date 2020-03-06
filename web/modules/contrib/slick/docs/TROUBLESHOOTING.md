@@ -2,13 +2,16 @@
 ***
 ***
 ## <a name="troubleshooting"></a>TROUBLESHOOTING
-Please read this before submitting issues. This 4-year+-old brief is worth
+Please read this before submitting issues. This 5-year+-old brief is worth
 reading to save you from headaches.
 
+If you don't find the below solve your issues, check out:
+[Slick Gotchas](https://www.drupal.org/project/issues/search?issue_tags=slick%20gotchas)
+
 1. When upgrading from Slick v1.3.6 to later version, try to re-save options at:
-   * admin/config/media/slick
-   * admin/structure/types/manage/CONTENT_TYPE/display
-   * admin/structure/views/view/VIEW_NAME
+   * `/admin/config/media/slick`
+   * `/admin/structure/types/manage/CONTENT_TYPE/display`
+   * `/admin/structure/views/view/VIEW_NAME`
 
      Only if trouble to see the new options, or when options don't apply
      properly. Most likely true when the library adds/changes options, or the
@@ -17,7 +20,7 @@ reading to save you from headaches.
 
 2. Always clear the cache, and re-generate JS (if aggregation is on) when
    updating the module to ensure things are picked up:
-   * /admin/config/development/performance
+   * `/admin/config/development/performance`
 
 3. If you are customizing template files, or theme functions, be sure to
    re-check against the latest.
@@ -39,35 +42,29 @@ reading to save you from headaches.
    Picture. Some other options such as Aspect ratio is currently not
    supported either.
 
-3. Photobox is best for:
-   * infinite true + slidesToShow 1
-   * infinite false + slidesToShow N
-
-   If "infinite true + slidesToShow > 1" is a must, but you don't want dup
-   thumbnails, simply override the JS to disable 'thumbs' option.
-
-4. The following is not module related, but worth a note:
-   * lazyLoad ondemand has issue with dummy image excessive height.
-     Added fixes to suppress it via option Aspect ratio (fluid | enforced).
-     Or use Blazy lazyload for more advanced options.
-   * Aspect ratio is not compatible with Picture or multi-serving
-     images.
-     However if you can stick to one Aspect ratio, choose 'enforced' instead.
-     Otherwise disable Aspect ratio for multi-serving images.
-   * If the total < slidesToShow, Slick behaves. Previously added a workaround
+3. The following is not module related, but worth a note:
+   * lazyLoad `onDemand` has issue with dummy image excessive height.
+     Added fixes to suppress it via option Aspect ratio (fluid).
+     Or use `Blazy` lazyload for more advanced options.
+   * If the total < `slidesToShow`, Slick behaves. Previously added a workaround
      to fix this, but later dropped and handed over to the core instead.
      Brought back the temp fix for 1.6+ as per 10/18/16:
      See https://github.com/kenwheeler/slick/issues/262
-   * Fade option with slideToShow > 1 will screw up.
-   * variableWidth ignores slidesToShow.
-   * Too much centerPadding at small device affects slidesToShow.
-   * If thumbnail display is Infinite, the main one must be infinite too, else
+   * Fade option with `slideToShow` > 1 will screw up.
+   * `variableWidth` ignores `slidesToShow`.
+   * Too much `centerPadding` at small device affects `slidesToShow`.
+   * If thumbnail display is `Infinite`, the main one must be infinite too, else
      incorrect syncing.
-   * adaptiveHeight is no good for vertical.
-   * Infinite option will create duplicates or clone slides which look more
-     obvious if slidesToShow > 1. Simply disable it if not desired.
-     This means that lightboxes (Colorbox, Photobox, PhotoSwipe) will have dups.   
-   * Colorbox integration is not working well with lazyload onDemand.  
+   * `adaptiveHeight` is no good for vertical.  
+
+4. Lighbox integration
+   * `Infinite` option will create duplicates or clone slides which look more
+     obvious if `slidesToShow` > 1. This means that lightboxes (Colorbox,
+     Photobox, PhotoSwipe) will have dups.  
+     **Solution:**
+
+     Disable `Infinite` option.
+   * Colorbox integration is not working well with lazyload `onDemand`.  
      **Solution:**
 
      Choose one of other lazyload options: **Anticipated, Blazy, Progressive**.
@@ -75,8 +72,14 @@ reading to save you from headaches.
      As the issue with similar setup never happens with Photobox nor PhotoSwipe,
      we can only conclude Slick with lazyload onDemand just doesn't play nice
      with Colorbox.
+   * Photobox is best for:
+     - infinite true + slidesToShow 1
+     - infinite false + slidesToShow N
 
-5. Slick carousel is designed for multi-value fields.
+      If "infinite true + slidesToShow > 1" is a must, but you don't want dup
+      thumbnails, simply override the JS to disable 'thumbs' option.
+
+5. Slick carousel is designed for multi-value fields, specific to D7.
    Unfortunately no handy way to disable formatters for single value at D7.
    So the formatter is available even for single value, but not actually
    functioning, please ignore it till we can get rid of it at D7.

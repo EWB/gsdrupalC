@@ -3,21 +3,17 @@
 namespace Drupal\blazy\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Image\ImageFactory;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\blazy\BlazyDefault;
 use Drupal\blazy\BlazyManagerInterface;
-use Drupal\blazy\BlazyEntity;
-use Drupal\blazy\Dejavu\BlazyVideoTrait;
+use Drupal\blazy\BlazyEntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a base views field plugin to render a preview of supported fields.
  */
 abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
-
-  use BlazyVideoTrait;
 
   /**
    * The blazy service manager.
@@ -27,21 +23,26 @@ abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
   protected $blazyManager;
 
   /**
+   * The blazy merged settings.
+   *
+   * @var array
+   */
+  protected $mergedSettings = [];
+
+  /**
    * Constructs a BlazyViewsFieldPluginBase object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ImageFactory $image_factory, BlazyManagerInterface $blazy_manager, BlazyEntity $blazy_entity) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlazyManagerInterface $blazy_manager, BlazyEntityInterface $blazy_entity) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->imageFactory = $image_factory;
     $this->blazyManager = $blazy_manager;
     $this->blazyEntity = $blazy_entity;
-    $this->blazyOembed = $blazy_entity->oembed();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('image.factory'), $container->get('blazy.manager'), $container->get('blazy.entity'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('blazy.manager'), $container->get('blazy.entity'));
   }
 
   /**
@@ -127,7 +128,7 @@ abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
    * Merges the settings.
    */
   public function mergedViewsSettings() {
-    $settings = [];
+    $settings = $this->mergedSettings;
 
     // Only fetch what we already asked for.
     foreach ($this->getDefaultValues() as $key => $default) {
@@ -137,6 +138,8 @@ abstract class BlazyViewsFieldPluginBase extends FieldPluginBase {
     $settings['count'] = count($this->view->result);
     $settings['current_view_mode'] = $this->view->current_display;
     $settings['view_name'] = $this->view->storage->id();
+    $settings['view_plugin_id'] = $this->view->style_plugin->getPluginId();
+    $settings['namespace'] = 'blazy';
 
     return array_merge(BlazyDefault::entitySettings(), $settings);
   }

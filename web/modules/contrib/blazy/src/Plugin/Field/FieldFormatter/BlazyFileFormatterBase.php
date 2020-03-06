@@ -3,14 +3,11 @@
 namespace Drupal\blazy\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
-use Drupal\blazy\BlazyFormatterManager;
 use Drupal\blazy\BlazyDefault;
 use Drupal\blazy\Dejavu\BlazyDependenciesTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,36 +22,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see Drupal\blazy\Plugin\Field\FieldFormatter\BlazyFileFormatter.
  * @see Drupal\slick\Plugin\Field\FieldFormatter\SlickImageFormatter.
  * @see Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatter.
+ *
+ * @todo remove no longer in use: ImageFactory at blazy:3.x.
+ * @todo remove ContainerFactoryPluginInterface since D8.8 has it by default.
  */
 abstract class BlazyFileFormatterBase extends FileFormatterBase implements ContainerFactoryPluginInterface {
 
   use BlazyFormatterTrait;
+  use BlazyFormatterViewTrait;
   use BlazyDependenciesTrait;
-
-  /**
-   * Constructs a BlazyFormatter object.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, ImageFactory $image_factory, BlazyFormatterManager $formatter) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->imageFactory = $image_factory;
-    $this->formatter = $this->blazyManager = $formatter;
-  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['label'],
-      $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('image.factory'),
-      $container->get('blazy.formatter.manager')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    return self::injectServices($instance, $container, 'image');
   }
 
   /**
@@ -84,7 +67,7 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase implements Conta
       // Disables problematic options for GridStack plugin since GridStack
       // will not work with Responsive image, and has its own breakpoints.
       if ($view->getExecutable()->getStyle()->getPluginId() == 'gridstack') {
-        $definition['breakpoints'] = $definition['ratio'] = FALSE;
+        $definition['ratio'] = FALSE;
         $definition['responsive_image'] = FALSE;
         $definition['no_ratio'] = TRUE;
       }
@@ -99,30 +82,18 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase implements Conta
    * Defines the scope for the form elements.
    */
   public function getScopedFormElements() {
-    $field       = $this->fieldDefinition;
-    $entity_type = $field->getTargetEntityTypeId();
-    $target_type = $this->getFieldSetting('target_type');
-    $multiple    = $field->getFieldStorageDefinition()->isMultiple();
+    $multiple = $this->fieldDefinition->getFieldStorageDefinition()->isMultiple();
 
     return [
       'background'        => TRUE,
       'box_captions'      => TRUE,
-      'breakpoints'       => BlazyDefault::getConstantBreakpoints(),
       'captions'          => ['title' => $this->t('Title'), 'alt' => $this->t('Alt')],
-      'current_view_mode' => $this->viewMode,
-      'entity_type'       => $entity_type,
-      'field_name'        => $field->getName(),
-      'field_type'        => $field->getType(),
       'grid_form'         => $multiple,
       'image_style_form'  => TRUE,
       'media_switch_form' => TRUE,
-      'namespace'         => 'blazy',
-      'plugin_id'         => $this->getPluginId(),
-      'settings'          => $this->getSettings(),
       'style'             => $multiple,
-      'target_type'       => $target_type,
       'thumbnail_style'   => TRUE,
-    ];
+    ] + $this->getCommonScopedFormElements();
   }
 
   /**

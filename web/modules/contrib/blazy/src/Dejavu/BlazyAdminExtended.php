@@ -47,13 +47,7 @@ class BlazyAdminExtended extends BlazyAdminFormatterBase implements BlazyAdminIn
    */
   public function fieldableForm(array &$form, $definition = []) {
     if (isset($definition['images'])) {
-      $form['image'] = [
-        '#type'        => 'select',
-        '#title'       => $this->t('Main stage'),
-        '#options'     => is_array($definition['images']) ? $definition['images'] : [],
-        '#description' => $this->t('Main background/stage image field.'),
-        '#prefix'      => '<h3 class="form__title form__title--fields">' . $this->t('Fields') . '</h3>',
-      ];
+      $form['image'] = $this->baseForm($definition)['image'];
     }
 
     if (isset($definition['thumbnails'])) {
@@ -75,11 +69,14 @@ class BlazyAdminExtended extends BlazyAdminFormatterBase implements BlazyAdminIn
     }
 
     if (isset($definition['titles'])) {
+      if (!empty($definition['images'])) {
+        $definition['titles']['title'] = $this->t('Image Title');
+      }
       $form['title'] = [
         '#type'        => 'select',
         '#title'       => $this->t('Title'),
         '#options'     => is_array($definition['titles']) ? $definition['titles'] : [],
-        '#description' => $this->t('If provided, it will bre wrapped with H2.'),
+        '#description' => $this->t('If provided, it will be wrapped with H2. Also supported the basic non-field Image title'),
       ];
     }
 

@@ -153,7 +153,7 @@ class ColorFieldType extends FieldItemBase {
       ],
     ]);
 
-    if ($opacity = $this->getSetting('opacity')) {
+    if ($this->getSetting('opacity')) {
       $min = 0;
       $constraints[] = $constraint_manager->create('ComplexData', [
         'opacity' => [

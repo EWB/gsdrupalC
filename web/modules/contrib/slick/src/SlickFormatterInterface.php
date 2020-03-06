@@ -4,6 +4,8 @@ namespace Drupal\slick;
 
 /**
  * Defines re-usable services and functions for slick field plugins.
+ *
+ * @todo extends BlazyFormatterInterface post blazy:2.x release.
  */
 interface SlickFormatterInterface {
 

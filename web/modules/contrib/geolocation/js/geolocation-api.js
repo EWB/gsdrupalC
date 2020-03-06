@@ -131,6 +131,7 @@
  * @property {function({GeolocationMapMarker})} removeMapMarker - Remove single marker.
  * @property {function()} removeMapMarkers - Remove all markers from map.
  *
+ * @property {function():{Promise}} getZoom - Get zoom.
  * @property {function({string}?, {Boolean}?)} setZoom - Set zoom.
  * @property {function():{GeolocationCoordinates}} getCenter - Get map center coordinates.
  * @property {function({string})} setCenter - Center map by plugin.
@@ -219,6 +220,9 @@
       // Stub.
     },
     removeControls: function () {
+      // Stub.
+    },
+    getZoom: function () {
       // Stub.
     },
     setZoom: function (zoom, defer) {

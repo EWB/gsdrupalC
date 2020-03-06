@@ -20,7 +20,7 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
   /**
    * {@inheritdoc}
    */
-  public static $GOOGLEMAPSAPIURLPATH = '/maps/api/staticmap';
+  public static $googleMapsApiUrlPath = '/maps/api/staticmap';
 
   /**
    * {@inheritdoc}

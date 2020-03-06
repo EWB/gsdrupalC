@@ -24,7 +24,8 @@ body.path-admin .form--slick *,
 
 .form--slick::after,
 .form--slick .fieldset-wrapper::after,
-.form--slick .form-checkboxes {
+.form--slick .form-checkboxes::after,
+.form--slick .claro-details__content::after {
   content: "";
   display: table;
   clear: both;
@@ -62,7 +63,7 @@ body.path-admin .form--slick *,
   padding: 8px;
 }
 
-.form--slick #edit-delete {
+.form--slick #edit-delete { /* csslint allow: ids */
   display: block;
 }
 
@@ -108,7 +109,6 @@ body.path-admin .form--slick *,
   border-color: #ff6d2c;
   box-shadow: 0 2px 5px -3px rgba(0, 0, 0, 0.5) inset;
   color: #fff;
-  outline: 0;
 }
 
 .form--slick .form-disabled button,
@@ -180,15 +180,10 @@ body.path-admin .form--slick *,
   padding: 5px 15px;
 }
 
-.form--slick details.form-wrapper {
-  margin: 0 0 20px;
-  padding: 30px 0;
-  border: 0;
-}
-
-.form--slick details.filter-wrapper {
-  margin: 2px 0 0;
+.form--slick .form-wrapper > details {
+  margin: 0;
   padding: 0;
+  border: 0;
 }
 
 .form--slick > .details-wrapper {
@@ -200,6 +195,10 @@ body.path-admin .form--slick *,
   font-size: 18px;
   font-size: 1.125rem;
   padding: 0 0.8em;
+}
+
+.form--slick .claro-details summary {
+  padding-left: 2em;
 }
 
 .form--slick details .details-title {
@@ -218,13 +217,9 @@ body.path-admin .form--slick *,
   text-decoration: none;
 }
 
-.form--slick details .details-title:focus {
-  outline: 0;
-}
-
 .form--slick .details--responsive--ajax > summary,
 .form--slick .details--responsive--ajax .details--settings > summary {
-  position: absolute !important;
+  position: absolute !important; /* csslint allow: known-properties, important */
   clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
   height: 1px;
@@ -286,8 +281,8 @@ html.js .form--slick .collapsible .details-legend::after {
   content: "";
 }
 
-html.js .form--slick .collapsible .details-legend span.summary {
-  position: absolute !important;
+html.js .form--slick .collapsible .details-legend .summary {
+  position: absolute !important; /* csslint allow: known-properties, important */
   clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
   height: 1px;
@@ -305,11 +300,14 @@ html.js .form--slick .collapsible .details-legend .details-legend-prefix {
   line-height: 42px;
   margin-right: 10px;
   position: relative;
-  text-indent: -9999px;
   top: 0;
   vertical-align: middle;
   width: 36px;
-  transition: background 0.3s 0.5s ease;
+}
+
+html.js .form--slick .collapsible .details-legend .details-legend-prefix {
+  direction: ltr;
+  text-indent: -9999px; /* LTR */
 }
 
 html.js .form--slick .collapsible .details-legend .details-legend-prefix::before,
@@ -319,7 +317,6 @@ html.js .form--slick .collapsible .details-legend .details-legend-prefix::after 
   height: 0.17857rem;
   background: #fff;
   border-radius: 0.08929rem;
-  transition: 0.3s;
   position: absolute;
   left: 8px;
   content: '';
@@ -377,6 +374,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 }
 
 .form--slick > div[id^="field-"] fieldset {
+  box-sizing: border-box; /* dups due to csslint ignoring inheritance */
   border-left: 0;
   border-right: 0;
   float: none;
@@ -409,7 +407,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   border-radius: 2px;
   bottom: 120%;
   box-shadow: 0 2px 10px -2px #000;
-  color: #dadada !important;
+  color: #dadada !important; /* csslint allow: known-properties, important */
   display: block;
   font-size: 12px;
   font-size: 0.75rem;
@@ -417,8 +415,8 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   min-height: 40px;
   max-width: 320px;
   min-width: 210px;
-  position: absolute !important;
-  padding: 12px !important;
+  position: absolute !important; /* csslint allow: known-properties, important */
+  padding: 12px !important; /* csslint allow: known-properties, important */
   opacity: 0;
   overflow: hidden;
   right: 0;
@@ -464,10 +462,10 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 .has-tooltip .form-item.form-type-textarea > .description,
 .has-tooltip .form-composite > .fieldset-wrapper.form-composite > .description,
 .has-tooltip .form-composite > .fieldset-wrapper.form-type-textarea > .description {
-  margin-left: -30% !important;
-  max-width: 60% !important;
-  min-width: 60% !important;
-  width: 60% !important;
+  margin-left: -30% !important; /* csslint allow: known-properties, important */
+  max-width: 60% !important; /* csslint allow: known-properties, important */
+  min-width: 60% !important; /* csslint allow: known-properties, important */
+  width: 60% !important; /* csslint allow: known-properties, important */
 }
 
 .has-tooltip .form-item.is-selected > .description,
@@ -480,19 +478,19 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 .has-tooltip .form-composite > .fieldset-wrapper.is-hovered > .fieldset-wrapper > .description {
   bottom: 100%;
   display: block;
-  opacity: 1 !important;
+  opacity: 1 !important; /* csslint allow: known-properties, important */
   visibility: visible;
-  overflow: visible !important;
+  overflow: visible !important; /* csslint allow: known-properties, important */
 }
 
-.has-tooltip .form-item.is-selected > .hint,
-.has-tooltip .form-item.is-hovered > .hint,
-.has-tooltip .form-item.is-selected > .fieldset-wrapper > .hint,
-.has-tooltip .form-item.is-hovered > .fieldset-wrapper > .hint,
-.has-tooltip .form-composite > .fieldset-wrapper.is-selected > .hint,
-.has-tooltip .form-composite > .fieldset-wrapper.is-hovered > .hint,
-.has-tooltip .form-composite > .fieldset-wrapper.is-selected > .fieldset-wrapper > .hint,
-.has-tooltip .form-composite > .fieldset-wrapper.is-hovered > .fieldset-wrapper > .hint {
+.has-tooltip .form-item.is-selected > .b-hint,
+.has-tooltip .form-item.is-hovered > .b-hint,
+.has-tooltip .form-item.is-selected > .fieldset-wrapper > .b-hint,
+.has-tooltip .form-item.is-hovered > .fieldset-wrapper > .b-hint,
+.has-tooltip .form-composite > .fieldset-wrapper.is-selected > .b-hint,
+.has-tooltip .form-composite > .fieldset-wrapper.is-hovered > .b-hint,
+.has-tooltip .form-composite > .fieldset-wrapper.is-selected > .fieldset-wrapper > .b-hint,
+.has-tooltip .form-composite > .fieldset-wrapper.is-hovered > .fieldset-wrapper > .b-hint {
   display: block;
 }
 
@@ -500,7 +498,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 .has-tooltip .form-item.is-selected > .fieldset-wrapper > .description,
 .has-tooltip .form-composite > .fieldset-wrapper.is-selected > .description,
 .has-tooltip .form-composite > .fieldset-wrapper.is-selected > .fieldset-wrapper > .description {
-  padding-left: 20px !important;
+  padding-left: 20px !important; /* csslint allow: known-properties, important */
 }
 
 .has-tooltip .form-item.is-selected > .description:before,
@@ -522,7 +520,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 }
 
 .has-tooltip .form-item--tooltip-bottom > .description {
-  bottom: auto !important;
+  bottom: auto !important; /* csslint allow: known-properties, important */
   top: 100%;
 }
 
@@ -539,12 +537,12 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 .no-js .has-tooltip .form-item:hover > .description {
   bottom: 100%;
   display: block;
-  opacity: 1 !important;
+  opacity: 1 !important; /* csslint allow: known-properties, important */
   visibility: visible;
-  overflow: visible !important;
+  overflow: visible !important; /* csslint allow: known-properties, important */
 }
 
-.form-item .hint {
+.form-item .b-hint {
   background: #828282;
   border-radius: 50%;
   color: #fff;
@@ -565,12 +563,12 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   z-index: 8;
 }
 
-.form__header .form-item .hint {
+.form__header .form-item .b-hint {
   top: 16px;
   right: -5px;
 }
 
-.form-item:hover > .hint {
+.form-item:hover > .b-hint {
   display: block;
 }
 
@@ -578,6 +576,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
  * Form items
  */
 .form--slick .form-item {
+  box-sizing: border-box; /* dups due to csslint ignoring inheritance */
   background: none;
   border-bottom: 1px solid #dadada;
   border-top: 1px solid white;
@@ -618,6 +617,10 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   float: left;
   max-width: 150px;
   min-width: 40px;
+}
+
+.form--slick .form-type--boolean .form-boolean {
+  min-width: 18px;
 }
 
 .form--slick .form-item .form-text,
@@ -668,13 +671,15 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   white-space: nowrap; /* Fix for Bartik */
 }
 
-.form--slick .form-type-textfield .field-prefix {
+.form--slick .form-type-textfield .field-prefix,
+.form--slick .form-type--textfield .form-item__prefix {
   float: left;
   line-height: 22px;
   padding: 5px;
 }
 
-.form--slick .form-type-textfield .field-suffix {
+.form--slick .form-type-textfield .field-suffix,
+.form--slick .form-type--textfield .form-item__prefix {
   padding-left: 5px;
 }
 
@@ -700,7 +705,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 .form--slick .form-item label {
   display: block;
   /* Overrides over-specified Seven */
-  padding: 2px 5px 2px 0 !important;
+  padding: 2px 5px 2px 0 !important; /* csslint allow: known-properties, important */
   margin: 0;
   /* text-align: right; */
   white-space: normal;
@@ -711,7 +716,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   max-width: 150px;
 }
 
-.form--slick .form-item.form-type-textfield .form-text--int {
+.form--slick .form-item.form-type-textfield .form-number {
   max-width: 50px;
 }
 
@@ -747,7 +752,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   line-height: 42px;
   margin-top: -1px;
   min-height: 42px;
-  padding-right: 0 !important;
+  padding-right: 0 !important; /* csslint allow: known-properties, important */
   padding-top: 20px;
   width: 100%;
 }
@@ -868,8 +873,8 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 
 .form--slick .form-type-radio label::before,
 .form--slick .form-type-checkbox .field-suffix {
+  box-sizing: border-box; /* dups due to csslint ignoring inheritance */
   background: #fff;
-  outline: 0;
   border: 2px solid #dadada;
   width: 22px;
   height: 22px;
@@ -897,7 +902,6 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 .form--slick .form-type-radio .form-radio:checked + label::before,
 .form--slick .form-type-checkbox .form-checkbox:checked + .field-suffix {
   background: #fff;
-  outline: 0;
   border-color: #ff6d2c;
   color: #ff6d2c;
 }
@@ -960,6 +964,7 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 .form--views > .details-wrapper > .description,
 .form--slick .form-item.fieldgroup.form-composite > legend,
 .form__title {
+  box-sizing: border-box; /* dups due to csslint ignoring inheritance */
   background: #fafafa;
   clear: both;
   display: block;
@@ -970,24 +975,10 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
   line-height: 1.2;
   margin: 0;
   min-height: 42px;
-  padding: 10px 5px 10px !important;
+  padding: 10px 5px 10px !important; /* csslint allow: known-properties, important */
   text-align: center;
   text-transform: uppercase;
   width: 100%;
-}
-
-.form--slick .form-item.form-item--sizes {
-  background: none;
-  border: 0;
-  min-height: 42px;
-  padding: 10px 0;
-  max-width: 100%;
-  min-width: 100%;
-}
-
-.form--slick .form-item.form-item--sizes .form-text {
-  min-width: 72%;
-  max-width: 80%;
 }
 
 td .form__title {
@@ -1001,7 +992,7 @@ td .form__title {
 
 .form--vanilla .form__header {
   left: 0;
-  padding-left: 240px !important;
+  padding-left: 240px !important; /* csslint allow: known-properties, important */
   position: absolute;
   text-align: left;
   top: 0;
@@ -1026,7 +1017,7 @@ td .form__title {
 }
 
 .form--slick .details--no-checkboxes-label .form-item.fieldgroup.form-composite > legend {
-  position: absolute !important;
+  position: absolute !important; /* csslint allow: known-properties, important */
   clip: rect(1px, 1px, 1px, 1px);
   overflow: hidden;
   height: 1px;
@@ -1060,15 +1051,16 @@ td .form__title {
 
 .form--slick .form__header .form-item .form-checkbox {
   max-width: 100%;
+  width: auto;
 }
 
 .form--slick .form__header .form-item label {
   float: none;
   text-align: left;
+  padding-left: 0 !important; /* csslint allow: known-properties, important */
 }
 
-.form--slick .form__header .form-item-skin label,
-.form--slick .form__header .form-item-breakpoints label {
+.form--slick .form__header .form-item-skin label {
   width: auto;
 }
 
@@ -1077,7 +1069,7 @@ td .form__title {
 }
 
 .form--slick .form__header .form-item-skin .description {
-  bottom: 90% !important;
+  bottom: 90% !important; /* csslint allow: known-properties, important */
   max-width: 480px;
   width: 480px;
 }
@@ -1114,6 +1106,7 @@ td .form__title {
 }
 
 .form--slick .form-radios label {
+  box-sizing: border-box; /* dups due to csslint ignoring inheritance */
   display: block;
   font-size: 12px;
   line-height: 12px;
@@ -1132,7 +1125,8 @@ td .form__title {
 }
 
 .ui-dialog-content .form--views > .details-wrapper {
-  padding: 0 !important; /* Fix for Rubik */
+  /* Fix for Rubik */
+  padding: 0 !important; /* csslint allow: known-properties, important */
 }
 
 .ui-dialog-content .form--slick > summary {
@@ -1166,22 +1160,22 @@ td .form__title {
  * Misc
  */
 .no-padding {
-  padding: 0 !important;
+  padding: 0 !important; /* csslint allow: known-properties, important */
 }
 
-#edit-label-machine-name-suffix {
+#edit-label-machine-name-suffix { /* csslint allow: ids */
   padding-left: 5px;
 }
 
-.path-admin-config-media-slick #main {
+.path-admin-config-media-slick #main { /* csslint allow: ids */
   width: 100%;
 }
 
-#field-display-overview .field-plugin-settings-edit-form .form--slick .form-item {
+#field-display-overview .field-plugin-settings-edit-form .form--slick .form-item { /* csslint allow: ids */
   margin: 0;
 }
 
-.form--optionset #edit-options {
+.form--optionset #edit-options { /* csslint allow: ids */
   clear: both;
   width: 100%;
 }
@@ -1209,7 +1203,7 @@ td .form__title {
 }
 
 .form--slick .form-actions,
-.form--optionset #edit-options {
+.form--optionset #edit-options { /* csslint allow: ids */
   clear: both;
 }
 
@@ -1245,6 +1239,10 @@ td .form__title {
   text-align: center;
 }
 
+.form--slick .fieldset__description {
+  text-align: center;
+}
+
 @media screen and (min-width: 760px) {
   .form--slick .form-item {
     border-right: 1px solid #e7e7e7;
@@ -1254,7 +1252,7 @@ td .form__title {
 
   .form--slick .form-item label {
     /* Overrides over-specified Seven */
-    padding: 2px 5px 2px 5px !important;
+    padding: 2px 5px 2px 5px !important; /* csslint allow: known-properties, important */
   }
 
   .form--optionset .form-item,
@@ -1278,7 +1276,7 @@ td .form__title {
   }
 
   .form--slick .form-type-vertical-tabs {
-    width: 100% !important;
+    width: 100% !important; /* csslint allow: known-properties, important */
   }
 
   .has-tooltip .form-item > .description,
@@ -1347,12 +1345,61 @@ td .form__title {
     max-width: 160px;
   }
 
-  .form--slick #edit-delete {
-    float: right;
+  .form--slick #edit-delete { /* csslint allow: ids */
+    position: absolute;
+    right: 0;
   }
 }
 
 @media screen and (min-width: 1280px) {
+  .form--slick .claro-details {
+    box-shadow: none;
+  }
+
+  .form--slick.slick-form .vertical-tabs .claro-details .details-wrapper {
+    top: -112px;
+    position: relative;
+  }
+
+  .form--slick.slick-form .vertical-tabs .details-wrapper .details-wrapper {
+    top: 0;
+    margin: 2px;
+  }
+
+  .form--slick.slick-form .vertical-tabs .claro-details .details-wrapper .details-wrapper {
+    padding: 0 1.5em 1em 1.5em;
+  }
+
+  .form--slick.slick-form .vertical-tabs .details-wrapper .details--settings .details-wrapper {
+    margin: 0;
+    padding: 0;
+  }
+
+  .form--slick .vertical-tabs details {
+    overflow: visible;
+  }
+
+  .form--slick .vertical-tabs .details--responsive--ajax {
+    padding: 0;
+  }
+
+  .form--slick .claro-details__description {
+    padding: 1em;
+  }
+
+  .form--slick .form-type--boolean .form-boolean {
+    margin-left: 0;
+  }
+
+  .form--slick .form-item .form-number {
+    min-height: 2rem;
+    padding: 2px 15px;
+  }
+
+  .form--slick .vertical-tabs .claro-details__content--vertical-tabs-item {
+    margin: auto;
+  }
+
   .form--optionset .form-item,
   .toolbar-tray-open .form--optionset .form-item {
     width: 33.2666%;
@@ -1362,6 +1409,11 @@ td .form__title {
   .form--half .form-item,
   .toolbar-vertical.toolbar-tray-open .form--slick .form-item {
     width: 49.9999%;
+  }
+
+  .form--optionset .form-item.form-type--vertical-tabs,
+  .toolbar-tray-open .form--optionset .form-item.form-type--vertical-tabs {
+    width: 100%;
   }
 
   /** Blazy grid at Views UI */
@@ -1395,6 +1447,14 @@ td .form__title {
     width: 100%;
   }
 
+  .form--slick .vertical-tabs__items {
+    margin-left: 190px;
+  }
+
+  .form--gridstack .vertical-tabs__items {
+    margin-left: 0;
+  }
+
   .form--slick .form-type-item {
     float: left;
     width: 100%;
@@ -1407,6 +1467,10 @@ td .form__title {
 
   .form--slick.form--half .form-checkboxes .form-item {
     width: 24.9999%;
+  }
+
+  .toolbar-tray-open .form--slick.slick-form .form__half--last .form-item {
+    max-width: 24%;
   }
 
   .form--slick.form--image .form-wrapper--caption .form-item,
@@ -1486,18 +1550,8 @@ td .form__title {
 /** Declutter form when Vanilla is enabled coz table form states are broken. */
 .form--vanilla-on .form__title--media-switch,
 .form--vanilla-on .form__title--fields,
-.form--vanilla-on .form__title--breakpoints,
-.form--vanilla-on .tableresponsive-toggle-columns,
-.form--vanilla-on .form-wrapper--table-breakpoints,
-.form--responsive-image-on .form__title--breakpoints,
-.form--responsive-image-on .tableresponsive-toggle-columns,
-.form--responsive-image-on .form-wrapper--table-breakpoints,
-.form--responsive-image-on .form-item--sizes,
-.form--media-switch-rendered .form__title--breakpoints,
-.form--media-switch-rendered .tableresponsive-toggle-columns,
-.form--media-switch-rendered .form-wrapper--table-breakpoints,
 .form--media-switch-rendered .form-item--background,
 .form--media-switch-rendered .form-item--image-style,
 .form--media-switch-rendered .form-item--ratio {
-  display: none !important;
+  display: none !important; /* csslint allow: known-properties, important */
 }

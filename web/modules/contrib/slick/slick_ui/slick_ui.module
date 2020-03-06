@@ -32,9 +32,10 @@ function slick_ui_entity_type_build(array &$entity_types) {
 function slick_ui_help($route_name) {
   if ($route_name == 'help.page.slick_ui') {
     $output = file_get_contents(dirname(dirname(__FILE__)) . '/docs/README.md');
-    $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/CONTRIBUTION.md');
     $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/FAQS.md');
     $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/TROUBLESHOOTING.md');
+    $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/CONTRIBUTION.md');
+    $output .= file_get_contents(dirname(dirname(__FILE__)) . '/docs/MAINTAINERS.md');
     return function_exists('blazy_parse_markdown') ? blazy_parse_markdown($output) : '<pre>' . $output . '</pre>';
   }
   return '';

@@ -94,13 +94,13 @@ class ColorCMY extends ColorBase {
    * {@inheritdoc}
    */
   public function toHex() {
-    return $this->toRGB()->toHex();
+    return $this->toRgb()->toHex();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function toRGB() {
+  public function toRgb() {
     $red = (1 - $this->cyan) * 255;
     $green = (1 - $this->magenta) * 255;
     $blue = (1 - $this->yellow) * 255;
@@ -110,11 +110,18 @@ class ColorCMY extends ColorBase {
   /**
    * {@inheritdoc}
    */
-  public function toCMY() {
+  public function toCmy() {
     $cyan = ($this->cyan * (1 - $this->key) + $this->key);
     $magenta = ($this->magenta * (1 - $this->key) + $this->key);
     $yellow = ($this->yellow * (1 - $this->key) + $this->key);
     return new ColorCMY($cyan, $magenta, $yellow);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toHsl() {
+    return $this->toRgb()->toHsl();
   }
 
 }

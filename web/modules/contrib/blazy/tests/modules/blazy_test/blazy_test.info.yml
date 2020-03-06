@@ -3,15 +3,13 @@ description: 'Testing a few Blazy hooks, etc.'
 type: module
 hidden: true
 package: Testing
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8.8 || ^9
 dependencies:
   - blazy:blazy
   - drupal:responsive_image
   - drupal:views
-  - drupal:media (>= 8.8)
 
-# Information added by Drupal.org packaging script on 2019-12-25
-version: '8.x-2.0-rc6'
+# Information added by Drupal.org packaging script on 2020-02-29
+version: '8.x-2.0'
 project: 'blazy'
-datestamp: 1577248389
+datestamp: 1582995237

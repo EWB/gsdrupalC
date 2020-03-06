@@ -1,4 +1,8 @@
 
+Slick Views 8.x-2.0-dev, 2020-02-15
+-----------------------------------
+- Changed for safer sub-classing.
+
 Slick Views 8.x-2.0-dev, 2020-01-03
 -----------------------------------
 - Issue #3073842 by vuil: Update README.md (apply Drupal best practices).

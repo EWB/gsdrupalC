@@ -24,6 +24,7 @@ color-field-widget-spectrum:
   css:
     component:
       /libraries/spectrum/spectrum.css: {}
+      css/color_field_widget_spectrum.css: {}
   license:
     name: MIT
     url: https://github.com/bgrins/spectrum/blob/master/LICENSE
@@ -53,3 +54,8 @@ color-field-formatter-swatch:
   css:
     component:
       css/color_field_formatter_swatch.css: {}
+
+color-field-formatter-swatch-options:
+  css:
+    component:
+      css/color_field_formatter_swatch_options.css: {}

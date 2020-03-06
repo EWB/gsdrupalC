@@ -8,6 +8,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Component\Serialization\Json;
 use Drupal\geolocation\GeocoderBase;
 use Drupal\geolocation\GeocoderInterface;
+use Drupal\geolocation_yandex\Plugin\geolocation\MapProvider\Yandex as YandexMapProvider;
 
 /**
  * Provides the Yandex.
@@ -53,14 +54,12 @@ class Yandex extends GeocoderBase implements GeocoderInterface {
 
     $config = \Drupal::config('geolocation_yandex.settings');
 
-    $lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
-
     $url = Url::fromUri('https://geocode-maps.yandex.ru/1.x/', [
       'query' => [
         'geocode' => $address,
         'format' => 'json',
         'apikey' => $config->get('api_key'),
-        'lang' => strtolower($lang) . '_' . strtoupper($lang),
+        'lang' => YandexMapProvider::getApiUrlLangcode(),
       ],
     ]);
 

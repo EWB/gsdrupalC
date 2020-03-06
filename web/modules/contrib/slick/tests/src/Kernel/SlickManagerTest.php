@@ -63,11 +63,7 @@ class SlickManagerTest extends BlazyKernelTestBase {
     $this->slickFormatter = $this->container->get('slick.formatter');
     $this->slickManager = $this->container->get('slick.manager');
 
-    $this->slickForm = new SlickForm(
-      $this->messenger,
-      $this->slickAdmin,
-      $this->slickManager
-    );
+    $this->slickForm = SlickForm::create($this->container);
 
     $this->testPluginId  = 'slick_image';
     $this->testFieldName = 'field_slick_image';
@@ -87,11 +83,6 @@ class SlickManagerTest extends BlazyKernelTestBase {
    * Tests cases for various methods.
    *
    * @covers ::attach
-   * @covers ::attachSkin
-   * @covers ::getSkins
-   * @covers ::getConstantSkins
-   * @covers ::getSkinsByGroup
-   * @covers ::libraryInfoBuild
    */
   public function testSlickManagerMethods() {
     $manager = $this->slickManager;
@@ -108,29 +99,6 @@ class SlickManagerTest extends BlazyKernelTestBase {
 
     $attachments = $manager->attach($settings);
     $this->assertArrayHasKey('slick', $attachments['drupalSettings']);
-
-    // Tests for skins.
-    $skins = $manager->getSkins();
-    $this->assertArrayHasKey('skins', $skins);
-    $this->assertArrayHasKey('arrows', $skins);
-    $this->assertArrayHasKey('dots', $skins);
-
-    // Verify we have cached skins.
-    $cid = 'slick:skins';
-    $cached_skins = $manager->getCache()->get($cid);
-    $this->assertEquals($cid, $cached_skins->cid);
-    $this->assertEquals($skins, $cached_skins->data);
-
-    // Verify skins has thumbnail constant.
-    $defined_skins = $manager::getConstantSkins();
-    $this->assertTrue(in_array('thumbnail', $defined_skins));
-
-    // Verify libraries.
-    $libraries = $manager->libraryInfoBuild();
-    $this->assertArrayHasKey('slick.main.default', $libraries);
-
-    $skins = $manager->getSkinsByGroup('dots');
-    $this->assertArrayHasKey('dots', $skins);
   }
 
   /**

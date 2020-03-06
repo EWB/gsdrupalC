@@ -16,13 +16,16 @@ class BlazyViewsFieldFile extends BlazyViewsFieldPluginBase {
    */
   public function render(ResultRow $values) {
     /** @var \Drupal\file\Entity\File $entity */
-    $entity   = $values->_entity;
+    $entity = $values->_entity;
     $settings = $this->mergedViewsSettings();
-
     $settings['delta'] = $values->index;
+    $settings['entity_id'] = $entity->id();
+    $settings['bundle'] = $entity->bundle();
+    $settings['entity_type_id'] = $entity->getEntityTypeId();
 
-    $data = $this->getImageItem($entity);
+    $data = $this->blazyEntity->oembed()->getImageItem($entity);
     $data['settings'] = isset($data['settings']) ? array_merge($settings, $data['settings']) : $settings;
+    $this->mergedSettings = $data['settings'];
 
     // Pass results to \Drupal\blazy\BlazyEntity.
     return $this->blazyEntity->build($data, $entity, $entity->getFilename());

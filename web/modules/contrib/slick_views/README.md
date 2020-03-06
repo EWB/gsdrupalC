@@ -1,6 +1,4 @@
 
-# Slick Views
-
 ## INTRODUCTION
 
 This adds two new display styles to views called:
@@ -18,10 +16,10 @@ interface. This ensures you can leave Views UI off once everything is setup.
 
 ## REQUIREMENTS
 * Views (in core)
-* [Slick 2.x above](http://dgo.to/slick)
+* [Slick 2.x above](https://drupal.org/project/slick)
 
-Be sure to install the [Slick example](http://dgo.to/slick_extras) to avoid
-adventures in the first place.
+Be sure to install the [Slick example](https://drupal.org/project/slick_extras)
+to avoid adventures in the first place.
 
 
 ## INSTALLATION & OPTION SETS:

@@ -20,8 +20,7 @@
 
       var $context = $(context);
 
-
-      $context.find('.js-color-field-widget-spectrum').each(function (index, element) {
+      $context.find('.js-color-field-widget-spectrum').once('colorFieldSpectrum').each(function (index, element) {
         var $element = $(element);
         var $element_color = $element.find('.js-color-field-widget-spectrum__color');
         var $element_opacity = $element.find('.js-color-field-widget-spectrum__opacity');
@@ -40,11 +39,11 @@
           showAlpha: spectrum_settings.show_alpha,
           showPalette: spectrum_settings.show_palette,
           showPaletteOnly: spectrum_settings.show_palette_only,
-          palette: JSON.parse('[' + spectrum_settings.palette + ']'),
+          palette:  spectrum_settings.palette,
           showButtons: spectrum_settings.show_buttons,
           allowEmpty: spectrum_settings.allow_empty,
 
-          change: function(tinycolor) {
+          change: function (tinycolor) {
             var hexColor = '';
             var opacity = '';
 

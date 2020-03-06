@@ -34,6 +34,22 @@ class GeolocationYandexWidget extends GeolocationMapWidgetBase {
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    $settings = parent::defaultSettings();
+
+    $settings[self::$mapProviderSettingsFormId]['map_features']['yandex_control_search'] = [
+      'enabled' => TRUE,
+      'weight' => -100,
+    ];
+    $settings[self::$mapProviderSettingsFormId]['map_features']['yandex_control_zoom']['enabled'] = TRUE;
+    $settings[self::$mapProviderSettingsFormId]['map_features']['yandex_control_geolocation']['enabled'] = TRUE;
+
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, $get_delta = NULL) {
     $element = parent::form($items, $form, $form_state, $get_delta);
 

@@ -1,4 +1,3 @@
-core: '8.x'
 name: 'Geolocation Views Test'
 type: module
 description: 'Support module for Geolocation Views tests'
@@ -11,3 +10,4 @@ dependencies:
   - drupal:node
   - drupal:field
 hidden: true
+core_version_requirement: ^8.7.7 || ^9

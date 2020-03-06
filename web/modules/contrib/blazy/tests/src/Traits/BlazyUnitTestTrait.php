@@ -20,48 +20,6 @@ trait BlazyUnitTestTrait {
   protected $formatterSettings = [];
 
   /**
-   * Add empty data for breakpoints.
-   *
-   * @return array
-   *   The dummy breakpoints.
-   */
-  protected function getEmptyBreakpoints() {
-    $build = [];
-
-    foreach (BlazyDefault::getConstantBreakpoints() as $breakpoint) {
-      $build[$breakpoint]['image_style'] = '';
-      $build[$breakpoint]['width'] = '';
-    }
-
-    return $build;
-  }
-
-  /**
-   * Add partially empty data for breakpoints.
-   *
-   * @param string $clean
-   *   The flag for clean breakpoints.
-   *
-   * @return array
-   *   The dummy breakpoints.
-   */
-  protected function getDataBreakpoints($clean = FALSE) {
-    $build  = [];
-    $widths = ['xs' => 210, 'sm' => 1024, 'md' => 1900];
-    $styles = ['xs' => 'blazy_crop', 'sm' => 'blazy_crop', 'md' => 'blazy_crop'];
-
-    foreach (BlazyDefault::getConstantBreakpoints() as $breakpoint) {
-      if ($clean && (!isset($styles[$breakpoint]) || !isset($widths[$breakpoint]))) {
-        continue;
-      }
-      $build[$breakpoint]['image_style'] = isset($styles[$breakpoint]) ? $styles[$breakpoint] : '';
-      $build[$breakpoint]['width'] = isset($widths[$breakpoint]) ? $widths[$breakpoint] : '';
-    }
-
-    return $build;
-  }
-
-  /**
    * Returns sensible formatter settings for testing purposes.
    *
    * @return array
@@ -71,7 +29,6 @@ trait BlazyUnitTestTrait {
     $defaults = [
       'box_caption'     => 'custom',
       'box_style'       => 'large',
-      'breakpoints'     => $this->getDataBreakpoints(),
       'cache'           => 0,
       'image_style'     => 'blazy_crop',
       'media_switch'    => 'blazy_test',
@@ -79,7 +36,7 @@ trait BlazyUnitTestTrait {
       'ratio'           => 'fluid',
       'caption'         => ['alt' => 'alt', 'title' => 'title'],
       'sizes'           => '100w',
-    ] + BlazyDefault::extendedSettings() + BlazyDefault::itemSettings();
+    ] + BlazyDefault::extendedSettings() + BlazyDefault::itemSettings() + $this->getDefaultFieldDefinition();
 
     return empty($this->formatterSettings) ? $defaults : array_merge($defaults, $this->formatterSettings);
   }
@@ -115,6 +72,22 @@ trait BlazyUnitTestTrait {
   }
 
   /**
+   * Returns the default field definition.
+   *
+   * @return array
+   *   The default field definition.
+   */
+  protected function getDefaultFieldDefinition() {
+    return [
+      'bundle'            => isset($this->bundle) ? $this->bundle : 'bundle_test',
+      'current_view_mode' => 'default',
+      'entity_type'       => $this->entityType,
+      'field_name'        => $this->testFieldName,
+      'field_type'        => 'image',
+    ];
+  }
+
+  /**
    * Returns the default field formatter definition.
    *
    * @return array
@@ -132,13 +105,8 @@ trait BlazyUnitTestTrait {
     return [
       'background'        => TRUE,
       'box_captions'      => TRUE,
-      'breakpoints'       => BlazyDefault::getConstantBreakpoints(),
       'captions'          => ['alt' => 'Alt', 'title' => 'Title'],
       'classes'           => ['field_class' => 'Classes'],
-      'current_view_mode' => 'default',
-      'entity_type'       => $this->entityType,
-      'field_name'        => $this->testFieldName,
-      'field_type'        => 'image',
       'multimedia'        => TRUE,
       'images'            => [$this->testFieldName => $this->testFieldName],
       'layouts'           => ['top' => 'Top'],
@@ -158,7 +126,7 @@ trait BlazyUnitTestTrait {
         'image_style',
         'media_switch',
       ],
-    ] + $deprecated;
+    ] + $deprecated + $this->getDefaultFieldDefinition();
   }
 
   /**
@@ -245,7 +213,7 @@ trait BlazyUnitTestTrait {
 
     $image['#build']['settings'] = array_merge($this->getCacheMetaData(), $build['settings']);
     $image['#build']['item'] = $build['item'];
-    return $this->blazyManager->preRenderImage($image);
+    return $this->blazyManager->preRenderBlazy($image);
   }
 
   /**
@@ -287,7 +255,7 @@ trait BlazyUnitTestTrait {
     $this->testFieldType = 'image';
     $this->testPluginId  = 'blazy';
     $this->maxItems      = 3;
-    $this->maxParagraphs = 20;
+    $this->maxParagraphs = 30;
   }
 
   /**
@@ -379,6 +347,18 @@ if (!function_exists('file_valid_uri')) {
    * Dummy function.
    */
   function file_valid_uri() {
+    // Empty block to satisfy coder.
+  }
+
+}
+
+
+if (!function_exists('blazy')) {
+
+  /**
+   * Dummy function.
+   */
+  function blazy() {
     // Empty block to satisfy coder.
   }
 

@@ -3,14 +3,6 @@
  * Provides media integration with pure CSS fluid video wrapper.
  */
 
-.litebox,
-.media__iframe,
-[data-blazy] iframe {
-  border: 0 none;
-  display: block;
-  max-width: 100%;
-}
-
 /** Ensures not affecting iframe only without media switcher */
 .media--switch iframe {
   opacity: 0;
@@ -48,10 +40,6 @@
   display: block;
   position: absolute;
   pointer-events: none;
-}
-
-.media--loading .media__icon--play::before {
-  display: none;
 }
 
 .media__icon--close::before,
@@ -131,25 +119,11 @@
   z-index: 3;
 }
 
-/**
- * Fallback non-JS.
- */
-.no-js .media--player .media__image,
-.no-js .media--player .media__icon {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.no-js .media--player .media__iframe {
-  opacity: 1;
-  visibility: visible;
-}
-
 /** @requires coder shutup, front-end complication with inline styles. */
 /** Prevents Twitter iframe from breaking grid, even if unholy. */
 .grid .twitter-tweet-rendered {
-  margin: 0 !important;
-  min-width: 1px !important;
+  margin: 0 !important; /* csslint allow: known-properties, important */
+  min-width: 1px !important; /* csslint allow: known-properties, important */
 }
 
 /** Fix for overflowing Facebook/ Twitter iframes. */
@@ -159,9 +133,9 @@
 }
 
 .grid .fb_iframe_widget span {
-  width: 100% !important;
+  width: 100% !important; /* csslint allow: known-properties, important */
 }
 
 .grid .fb_iframe_widget iframe {
-  position: relative !important;
+  position: relative !important; /* csslint allow: known-properties, important */
 }

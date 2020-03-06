@@ -212,6 +212,14 @@
       Drupal.geolocation.GeolocationMapBase.prototype.fitBoundaries.call(this, boundaries, identifier);
     }
   };
+  GeolocationGoogleMap.prototype.getZoom = function () {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+      google.maps.event.addListenerOnce(that.googleMap, "idle", function () {
+        resolve(that.googleMap.getZoom());
+      });
+    });
+  };
   GeolocationGoogleMap.prototype.setZoom = function (zoom, defer) {
     if (typeof zoom === 'undefined') {
       zoom = this.settings.google_map_settings.zoom;

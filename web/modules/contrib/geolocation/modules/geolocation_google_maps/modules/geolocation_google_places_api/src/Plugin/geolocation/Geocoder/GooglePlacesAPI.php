@@ -50,9 +50,9 @@ class GooglePlacesAPI extends GoogleGeocoderBase {
 
     $config = \Drupal::config('geolocation_google_maps.settings');
 
-    $request_url = GoogleMaps::$GOOGLEMAPSAPIURLBASE;
+    $request_url = GoogleMaps::$googleMapsApiUrlBase;
     if ($config->get('china_mode')) {
-      $request_url = GoogleMaps::$GOOGLEMAPSAPIURLBASECHINA;
+      $request_url = GoogleMaps::$googleMapsApiUrlBaseChina;
     }
     $request_url .= '/maps/api/place/autocomplete/json?input=' . $address;
 
@@ -95,10 +95,10 @@ class GooglePlacesAPI extends GoogleGeocoderBase {
         $details_url = $config->get('google_maps_base_url');
       }
       elseif ($config->get('china_mode')) {
-        $details_url = GoogleMaps::$GOOGLEMAPSAPIURLBASECHINA;
+        $details_url = GoogleMaps::$googleMapsApiUrlBaseChina;
       }
       else {
-        $details_url = GoogleMaps::$GOOGLEMAPSAPIURLBASE;
+        $details_url = GoogleMaps::$googleMapsApiUrlBase;
       }
 
       $details_url .= '/maps/api/place/details/json?placeid=' . $result['predictions'][0]['place_id'];

@@ -5,12 +5,9 @@ namespace Drupal\slick\Plugin\Field\FieldFormatter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\slick\SlickFormatterInterface;
-use Drupal\slick\SlickManagerInterface;
 use Drupal\slick\SlickDefault;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'Slick Text' formatter.
@@ -28,32 +25,25 @@ use Drupal\slick\SlickDefault;
  */
 class SlickTextFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
-  use SlickFormatterTrait;
-
-  /**
-   * Constructs a SlickImageFormatter instance.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, SlickFormatterInterface $formatter, SlickManagerInterface $manager) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->formatter = $formatter;
-    $this->manager   = $manager;
+  use SlickFormatterViewTrait;
+  use SlickFormatterTrait {
+    buildSettings as traitBuildSettings;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
+    $instance = new static(
       $plugin_id,
       $plugin_definition,
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['label'],
       $configuration['view_mode'],
-      $configuration['third_party_settings'],
-      $container->get('slick.formatter'),
-      $container->get('slick.manager')
+      $configuration['third_party_settings']
     );
+    return self::injectServices($instance, $container, 'text');
   }
 
   /**
@@ -67,19 +57,13 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    // Early opt-out if the field is empty.
-    if ($items->isEmpty()) {
-      return [];
-    }
+    return $this->commonViewElements($items, $langcode);
+  }
 
-    $settings = $this->buildSettings();
-
-    // Build the settings.
-    $build = ['settings' => $settings];
-
-    // Modifies settings before building elements.
-    $this->formatter->preBuildElements($build, $items);
-
+  /**
+   * Build the slick carousel elements.
+   */
+  public function buildElements(array &$build, $items) {
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $key => $item) {
@@ -92,11 +76,6 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
       $build['items'][$key] = $element;
       unset($element);
     }
-
-    // Modifies settings post building elements.
-    $this->formatter->postBuildElements($build, $items);
-
-    return $this->manager()->build($build);
   }
 
   /**
@@ -114,10 +93,7 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
    * Builds the settings.
    */
   public function buildSettings() {
-    $settings              = $this->getSettings();
-    $settings['plugin_id'] = $this->getPluginId();
-    $settings['vanilla']   = TRUE;
-    return $settings;
+    return ['vanilla' => TRUE] + $this->traitBuildSettings();
   }
 
   /**
@@ -125,14 +101,12 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
    */
   public function getScopedFormElements() {
     return [
-      'current_view_mode' => $this->viewMode,
-      'no_image_style'    => TRUE,
-      'no_layouts'        => TRUE,
-      'responsive_image'  => FALSE,
-      'style'             => TRUE,
-      'plugin_id'         => $this->getPluginId(),
-      'settings'          => $this->getSettings(),
-    ];
+      'grid_form'        => TRUE,
+      'no_image_style'   => TRUE,
+      'no_layouts'       => TRUE,
+      'responsive_image' => FALSE,
+      'style'            => TRUE,
+    ] + $this->getCommonScopedFormElements();
   }
 
 }

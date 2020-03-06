@@ -11,13 +11,9 @@
  * horizontal text) must also be specified.
  */
 
-[class*="block-column-"],
-[class*="block-column-"] * {
-  box-sizing: border-box;
-}
-
-[class*="block-column-"],
-.item-list > [class*="block-column-"] {
+.block-column,
+.blazy.block-column,
+.item-list > .block-column {
   clear: both;
   display: block;
   list-style: none;
@@ -27,7 +23,7 @@
 }
 
 /** https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside */
-[class*="block-column-"] > .grid {
+.block-column > .grid {
   display: block;
   float: none;
   height: auto;
@@ -39,14 +35,14 @@
   break-inside: avoid-column;
 }
 
-[class*="block-column-"] > .grid ,
-.item-list > [class*="block-column-"] > .grid {
+.block-column > .grid ,
+.item-list > .block-column > .grid {
   margin: 0 0 1rem;
   padding: 0;
 }
 
 /** Fix for broken break-inside with extremely tall grid for FF. */
-[class*="block-column-"] .grid__content {
+.block-column .grid__content {
   display: inline-block;
   margin: 0;
   max-width: 100%;

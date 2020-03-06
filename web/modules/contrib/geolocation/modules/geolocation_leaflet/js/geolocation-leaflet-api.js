@@ -84,6 +84,12 @@
   }
   GeolocationLeafletMap.prototype = Object.create(Drupal.geolocation.GeolocationMapBase.prototype);
   GeolocationLeafletMap.prototype.constructor = GeolocationLeafletMap;
+  GeolocationLeafletMap.prototype.getZoom = function () {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+      resolve(that.leafletMap.getZoom());
+    });
+  };
   GeolocationLeafletMap.prototype.setZoom = function (zoom, defer) {
     if (typeof zoom === 'undefined') {
       zoom = this.settings.leaflet_settings.zoom;

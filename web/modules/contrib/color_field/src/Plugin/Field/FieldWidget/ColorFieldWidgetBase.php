@@ -38,6 +38,7 @@ abstract class ColorFieldWidgetBase extends WidgetBase {
     if ($this->getFieldSetting('opacity')) {
       $element['color'] = $input;
       $element['color']['#title'] = $this->t('Color');
+      $element['color']['#error_no_message'] = TRUE;
       $element['#type'] = 'fieldset';
 
       $element['opacity'] = [
@@ -49,10 +50,12 @@ abstract class ColorFieldWidgetBase extends WidgetBase {
         '#required' => $element['#required'],
         '#default_value' => isset($items[$delta]->opacity) ? $items[$delta]->opacity : NULL,
         '#placeholder' => $this->getSetting('placeholder_opacity'),
+        '#error_no_message' => TRUE,
       ];
     }
     else {
       $element['color'] = $element + $input;
+      $element['#type'] = 'fieldset';
     }
 
     return $element;

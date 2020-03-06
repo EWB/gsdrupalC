@@ -20,7 +20,6 @@ class BlazyLightbox {
   public static function build(array &$element = []) {
     $item       = $element['#item'];
     $settings   = &$element['#settings'];
-    $type       = empty($settings['type']) ? 'image' : $settings['type'];
     $uri        = $settings['uri'];
     $switch     = $settings['media_switch'];
     $switch_css = str_replace('_', '-', $switch);
@@ -39,7 +38,6 @@ class BlazyLightbox {
     $settings['gallery_id'] = !$gallery_enabled ? NULL : (empty($settings['gallery_id']) ? $gallery_id : $settings['gallery_id']);
     $settings['box_url']    = file_create_url($uri);
     $settings['icon']       = empty($settings['icon']) ? ['#markup' => '<span class="media__icon media__icon--litebox"></span>'] : $settings['icon'];
-    $settings['lightbox']   = $switch;
     $settings['box_width']  = isset($item->width) ? $item->width : (empty($settings['width']) ? NULL : $settings['width']);
     $settings['box_height'] = isset($item->height) ? $item->height : (empty($settings['height']) ? NULL : $settings['height']);
 
@@ -58,7 +56,8 @@ class BlazyLightbox {
     }
 
     $json = [
-      'type'   => $type,
+      'bundle' => $settings['bundle'],
+      'type'   => $settings['type'],
       'width'  => $settings['box_width'],
       'height' => $settings['box_height'],
     ];
@@ -71,12 +70,12 @@ class BlazyLightbox {
     }
 
     if (!empty($settings['embed_url'])) {
-      $json['scheme'] = $settings['scheme'];
       $json['width']  = 640;
       $json['height'] = 360;
 
       // Force autoplay for media URL on lightboxes, saving another click.
-      $url = empty($settings['autoplay_url']) ? $settings['embed_url'] : $settings['autoplay_url'];
+      $url = $settings['embed_url'];
+      $url_attributes['data-oembed-url'] = $settings['embed_url'];
 
       // This allows PhotoSwipe with videos still swipable.
       if (!empty($settings['box_media_style'])) {
@@ -106,7 +105,7 @@ class BlazyLightbox {
       // Must use consistent key for multiple entities, hence cannot use id.
       // We do not have option for this like colorbox, as it is only limited
       // to the known Blazy formatters, or Blazy Views style plugins for now.
-      // The hustle is Colorbox uses rel on individual item to group, unlike
+      // The hustle is Colorbox wants rel on individual item to group, unlike
       // other lightbox library which provides a way to just use a container.
       $json['rel'] = $settings['gallery_id'];
     }
@@ -131,7 +130,7 @@ class BlazyLightbox {
    * @return array
    *   The renderable array of caption, or empty array.
    */
-  public static function buildCaptions($item, array $settings = []) {
+  private static function buildCaptions($item, array $settings = []) {
     $title   = empty($item->title) ? '' : $item->title;
     $alt     = empty($item->alt) ? '' : $item->alt;
     $delta   = empty($settings['delta']) ? 0 : $settings['delta'];

@@ -58,10 +58,10 @@ class GoogleGeocodingAPI extends GoogleGeocoderBase {
       $request_url = $config->get('google_maps_base_url');
     }
     elseif ($config->get('china_mode')) {
-      $request_url = GoogleMaps::$GOOGLEMAPSAPIURLBASECHINA;
+      $request_url = GoogleMaps::$googleMapsApiUrlBaseChina;
     }
     else {
-      $request_url = GoogleMaps::$GOOGLEMAPSAPIURLBASE;
+      $request_url = GoogleMaps::$googleMapsApiUrlBase;
     }
     $request_url .= '/maps/api/geocode/json?address=' . urlencode($address);
 
@@ -138,9 +138,9 @@ class GoogleGeocodingAPI extends GoogleGeocoderBase {
   public function reverseGeocode($latitude, $longitude) {
     $config = \Drupal::config('geolocation_google_maps.settings');
 
-    $request_url = GoogleMaps::$GOOGLEMAPSAPIURLBASE;
+    $request_url = GoogleMaps::$googleMapsApiUrlBase;
     if ($config->get('china_mode')) {
-      $request_url = GoogleMaps::$GOOGLEMAPSAPIURLBASECHINA;
+      $request_url = GoogleMaps::$googleMapsApiUrlBaseChina;
     }
     $request_url .= '/maps/api/geocode/json?latlng=' . (float) $latitude . ',' . (float) $longitude;
 

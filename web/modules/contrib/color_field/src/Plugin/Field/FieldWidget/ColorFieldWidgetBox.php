@@ -108,7 +108,12 @@ class ColorFieldWidgetBox extends ColorFieldWidgetBase {
         $element['color']['#default_value'] = '#' . $element['color']['#default_value'];
       }
     }
-
+    elseif ($element['#required']) {
+      // If the element is required but has no default value and the element is
+      // hidden like the color boxes widget does, prevent HTML5 Validation from
+      // being invisible and blocking save with no apparent reason.
+      $element['color']['#attributes']['class'][] = 'color_field_widget_box__color';
+    }
     $element['#attached']['library'][] = 'color_field/color-field-widget-box';
 
     // Set Drupal settings.

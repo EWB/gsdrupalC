@@ -1,9 +1,11 @@
 .color_field_widget_box__square {
   border: 1px solid #000;
   box-shadow: 0 0 1px #000;
+  box-sizing: border-box;
   height: 16px;
   margin: 2px;
   width: 16px;
+  display: inline-block;
 }
 
 .color_field_widget_box__square.active,
@@ -17,6 +19,7 @@
   background-repeat: no-repeat;
   border: 1px solid #000;
   box-shadow: 0 0 1px #000;
+  box-sizing: border-box;
   height: 16px;
   margin: 2px;
   width: 16px;
@@ -27,4 +30,13 @@
   background-image: url(../images/transparent_box32.gif);
   height: 32px;
   width: 32px;
+}
+
+.color_field_widget_box__color.required {
+  display: block !important;
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
 }

@@ -2,11 +2,14 @@
 
 namespace Drupal\blazy\Dejavu;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\blazy\BlazyDefault;
 
 /**
  * Base class for all entity reference formatters with field details.
+ *
+ * @see \Drupal\slick\Plugin\Field\FieldFormatter\SlickEntityReferenceFormatterBase
  */
 abstract class BlazyEntityReferenceBase extends BlazyEntityMediaBase {
 
@@ -50,8 +53,13 @@ abstract class BlazyEntityReferenceBase extends BlazyEntityMediaBase {
     $view_mode = $settings['view_mode'];
 
     // Title can be plain text, or link field.
-    if (!empty($settings['title']) && isset($entity->{$settings['title']})) {
-      $element['caption']['title'] = $this->blazyEntity()->getFieldTextOrLink($entity, $settings['title'], $settings);
+    if (!empty($settings['title'])) {
+      if (isset($entity->{$settings['title']})) {
+        $element['caption']['title'] = $this->blazyEntity()->getFieldTextOrLink($entity, $settings['title'], $settings);
+      }
+      elseif (($item = $element['item']) && ($settings['title'] == 'title') && ($caption = trim($item->get('title')->getString()))) {
+        $element['caption']['title'] = ['#markup' => Xss::filter($caption, BlazyDefault::TAGS)];
+      }
     }
 
     // Link, if so configured.

@@ -37,7 +37,7 @@ function template_preprocess_slick(&$variables) {
   $settings['unslick'] = $settings['unslick'] || $settings['count'] == 1;
 
   foreach (SlickDefault::jsSettings() as $key => $default) {
-    $settings[$key] = isset($js[$key]) ? $js[$key] : $default;
+    $settings[$key] = isset($js[$key]) ? strip_tags($js[$key]) : $default;
   }
 
   // Blazy can still lazyload an unslick.

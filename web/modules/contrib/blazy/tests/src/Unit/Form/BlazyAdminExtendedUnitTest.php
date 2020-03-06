@@ -47,6 +47,7 @@ class BlazyAdminExtendedUnitTest extends UnitTestCase {
     $container->set('config.typed', $this->typedConfig);
     $container->set('string_translation', $this->getStringTranslationStub());
     $container->set('date.formatter', $this->dateFormatter);
+    $container->set('blazy.manager', $this->blazyManager);
 
     \Drupal::setContainer($container);
 
@@ -78,7 +79,6 @@ class BlazyAdminExtendedUnitTest extends UnitTestCase {
    * @covers ::fieldableForm
    * @covers ::mediaSwitchForm
    * @covers ::gridForm
-   * @covers ::breakpointsForm
    * @covers ::closingForm
    * @covers ::finalizeForm
    * @dataProvider providerTestBuildSettingsForm

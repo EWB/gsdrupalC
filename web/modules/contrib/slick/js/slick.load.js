@@ -33,7 +33,7 @@
 
     if (r) {
       for (b in r) {
-        if (r.hasOwnProperty(b) && r[b].settings !== 'unslick') {
+        if (Object.prototype.hasOwnProperty.call(r, b) && r[b].settings !== 'unslick') {
           r[b].settings = $.extend({}, drupalSettings.slick, globals(o), r[b].settings);
         }
       }

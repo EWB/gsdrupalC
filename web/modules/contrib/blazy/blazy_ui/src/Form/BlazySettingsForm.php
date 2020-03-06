@@ -3,10 +3,8 @@
 namespace Drupal\blazy_ui\Form;
 
 use Drupal\Core\Url;
-use Drupal\Core\Asset\LibraryDiscoveryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,27 +20,23 @@ class BlazySettingsForm extends ConfigFormBase {
   protected $libraryDiscovery;
 
   /**
-   * Constructs a \Drupal\system\ConfigFormBase object.
+   * The blazy manager service.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
-   * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
-   *   Discovers available asset libraries in Drupal.
+   * @var \Drupal\blazy\BlazyManagerInterface
    */
-  public function __construct(ConfigFactoryInterface $config_factory, LibraryDiscoveryInterface $library_discovery) {
-    parent::__construct($config_factory);
-
-    $this->libraryDiscovery = $library_discovery;
-  }
+  protected $manager;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('library.discovery')
-    );
+    /**
+     * @var \Drupal\blazy_ui\Form\BlazySettingsForm
+     */
+    $instance = parent::create($container);
+    $instance->libraryDiscovery = $container->get('library.discovery');
+    $instance->manager = $container->get('blazy.manager');
+    return $instance;
   }
 
   /**
@@ -72,25 +66,26 @@ class BlazySettingsForm extends ConfigFormBase {
       '#description'   => $this->t('Uncheck to disable blazy related admin compact form styling, only if not compatible with your admin theme.'),
     ];
 
+    $form['noscript'] = [
+      '#type'          => 'checkbox',
+      '#title'         => $this->t('Add noscript'),
+      '#default_value' => $config->get('noscript'),
+      '#description'   => $this->t('Enable noscript if you want to support <a href=":url">non-javascript users</a>.', [':url' => 'https://stackoverflow.com/questions/9478737']),
+    ];
+
     $form['responsive_image'] = [
       '#type'          => 'checkbox',
       '#title'         => $this->t('Support Responsive image'),
       '#default_value' => $config->get('responsive_image'),
       '#description'   => $this->t('Check to support lazyloading for the core Responsive image module. Be sure to use blazy-related formatters.'),
-    ];
-
-    $form['unbreakpoints'] = [
-      '#type'          => 'checkbox',
-      '#title'         => $this->t('Disable custom breakpoints'),
-      '#default_value' => $config->get('unbreakpoints'),
-      '#description'   => $this->t('Check to permanently disable custom breakpoints which is always disabled when choosing a Responsive image. Only reasonable if consistently using core Responsive image. Note: multi-breakpoint CSS background image will then be disabled, as well.'),
+      '#disabled'      => !function_exists('responsive_image_get_image_dimensions'),
     ];
 
     $form['one_pixel'] = [
       '#type'          => 'checkbox',
       '#title'         => $this->t('Responsive image 1px placeholder'),
       '#default_value' => $config->get('one_pixel'),
-      '#description'   => $this->t('By default a 1px Data URI image is the placeholder for lazyloaded Responsive image. Useful to perform a lot better. Uncheck to disable, and use Drupal-managed smallest/fallback image style instead. Be sure to add proper dimensions or at least min-height/min-width via CSS accordingly to avoid layout reflow since Aspect ratio is not supported with Responsive image yet. Disabling this will result in downloading fallback image as well for non-PICTURE element (double downloads).'),
+      '#description'   => $this->t('By default a 1px Data URI image is the placeholder for lazyloaded Responsive image. Useful to perform a lot better. Uncheck to disable, and use Drupal-managed smallest/fallback image style instead. Be sure to add proper dimensions or at least min-height/min-width via CSS accordingly to avoid layout reflow, or choose an Aspect ratio via Blazy formatters. Disabling this will result in downloading fallback image as well for non-PICTURE element (double downloads).'),
     ];
 
     $form['placeholder'] = [
@@ -98,6 +93,15 @@ class BlazySettingsForm extends ConfigFormBase {
       '#title'         => $this->t('Placeholder'),
       '#default_value' => $config->get('placeholder'),
       '#description'   => $this->t('Overrides global 1px placeholder. Can be URL, e.g.: https://mysite.com/blank.gif. Only useful if continuously using Views rewrite results, see <a href=":url">#2908861</a>. Alternatively use <code>hook_blazy_settings_alter()</code> for more fine-grained control. Leave it empty to use default Data URI to avoid extra HTTP requests. If you have 100 images on a page, you will save 100 extra HTTP requests by leaving it empty.', [':url' => 'https://drupal.org/node/2908861']),
+    ];
+
+    $form['fx'] = [
+      '#type'          => 'select',
+      '#title'         => $this->t('Image effect'),
+      '#empty_option'  => '- None -',
+      '#options'       => $this->manager->getImageEffects(),
+      '#default_value' => $config->get('fx'),
+      '#description'   => $this->t('Choose the image effect. Note! This will override Placeholder option. Will use Thumbnail style option at Blazy formatters for the placeholder with fallback to core Thumbnail style. For best results: use similar aspect ratio for both Thumbnail and Image styles; adjust Offset and or threshold; the smaller the better. Use <code>hook_blazy_image_effects_alter()</code> to add more effects -- curtain, fractal, slice, whatever. <b>Limitations</b>: Currently only works with a proper Aspect ratio as otherwise collapsed image. Be sure to add one. If not, add regular CSS <code>width: 100%</code> to the blurred image if doable with your design.'),
     ];
 
     $form['blazy'] = [
@@ -143,6 +147,13 @@ class BlazySettingsForm extends ConfigFormBase {
       '#field_suffix'  => 'ms',
       '#maxlength'     => 5,
       '#size'          => 10,
+    ];
+
+    $form['blazy']['container'] = [
+      '#type'          => 'textfield',
+      '#title'         => $this->t('Scrolling container'),
+      '#default_value' => $config->get('blazy.container'),
+      '#description'   => $this->t('If you put Blazy within a scrolling container, provide valid comma separated CSS selectors, except <code>#drupal-modal</code>, e.g.: <code>#my-scrolling-container, .another-scrolling-container</code>. A known scrolling container is <code>#drupal-modal</code> like seen at Media library. A scrolling modal with an iframe like Entity Browser has no issue since the scrolling container is the entire DOM. Must know <code>.blazy</code> parent container which has CSS rules containing <code>overflow</code> with values anything but <code>hidden</code> such as <code>auto or scroll</code>. Press <code>F12</code> at any browser to inspect elements. IO does not need it, old bLazy does. Default to known <code>#drupal-modal</code>.'),
     ];
 
     $form['io'] = [
@@ -211,14 +222,16 @@ class BlazySettingsForm extends ConfigFormBase {
     $config = $this->configFactory->getEditable('blazy.settings');
     $config
       ->set('admin_css', $form_state->getValue('admin_css'))
+      ->set('fx', $form_state->getValue('fx'))
+      ->set('noscript', $form_state->getValue('noscript'))
       ->set('responsive_image', $form_state->getValue('responsive_image'))
-      ->set('unbreakpoints', $form_state->getValue('unbreakpoints'))
       ->set('one_pixel', $form_state->getValue('one_pixel'))
       ->set('placeholder', $form_state->getValue('placeholder'))
       ->set('blazy.loadInvisible', $form_state->getValue(['blazy', 'loadInvisible']))
       ->set('blazy.offset', $form_state->getValue(['blazy', 'offset']))
       ->set('blazy.saveViewportOffsetDelay', $form_state->getValue(['blazy', 'saveViewportOffsetDelay']))
       ->set('blazy.validateDelay', $form_state->getValue(['blazy', 'validateDelay']))
+      ->set('blazy.container', $form_state->getValue(['blazy', 'container']))
       ->set('io.enabled', $form_state->getValue(['io', 'enabled']))
       ->set('io.unblazy', $form_state->getValue(['io', 'unblazy']))
       ->set('io.rootMargin', $form_state->getValue(['io', 'rootMargin']))
