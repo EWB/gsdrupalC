@@ -1,0 +1,10 @@
+uuid: ad2b3afc-c6be-4121-8fd8-18f6886569c5
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.square_medium
+label: 'Square Medium'
+targetEntityType: media
+cache: true

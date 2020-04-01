@@ -1,0 +1,31 @@
+uuid: 3b5f9370-1d8d-49b2-b5fc-7b670f579606
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:f356ba4b-54eb-4cbc-9697-7f6a37b9fa52'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: communitymealshero
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:f356ba4b-54eb-4cbc-9697-7f6a37b9fa52'
+settings:
+  id: 'block_content:f356ba4b-54eb-4cbc-9697-7f6a37b9fa52'
+  label: 'Community Meals'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /content/community-meals
+    negate: false
+    context_mapping: {  }

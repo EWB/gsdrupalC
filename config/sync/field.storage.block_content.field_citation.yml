@@ -1,0 +1,19 @@
+uuid: 34695ffa-5a1a-46cf-8f71-4a60d1f8b915
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - text
+id: block_content.field_citation
+field_name: field_citation
+entity_type: block_content
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

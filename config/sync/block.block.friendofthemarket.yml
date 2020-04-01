@@ -1,0 +1,31 @@
+uuid: 558be24e-7410-40c8-b17f-984abd3fe3f1
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:31bddf86-f429-42e3-ba28-b53eabcaadf6'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: friendofthemarket
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:31bddf86-f429-42e3-ba28-b53eabcaadf6'
+settings:
+  id: 'block_content:31bddf86-f429-42e3-ba28-b53eabcaadf6'
+  label: 'Friend of the Market'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/265/
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,27 @@
+uuid: 52d81e2a-1554-4264-adbe-5775ee7b338c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_files
+    - node.type.resource
+  module:
+    - file
+id: node.resource.field_files
+field_name: field_files
+entity_type: node
+bundle: resource
+label: File
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: pdf
+  max_filesize: '6 MB'
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

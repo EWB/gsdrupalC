@@ -1,0 +1,21 @@
+uuid: 0f04210e-0411-4835-9c10-536ea8de813d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_citation
+    - media.type.image
+  module:
+    - text
+id: media.image.field_citation
+field_name: field_citation
+entity_type: media
+bundle: image
+label: Citation
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

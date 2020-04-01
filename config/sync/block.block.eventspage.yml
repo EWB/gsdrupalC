@@ -1,0 +1,31 @@
+uuid: 68527b3d-34bf-49c2-bf5a-1e349f25062d
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:c7e8767d-b0f4-4fee-88ea-5c2630cae9a1'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: eventspage
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:c7e8767d-b0f4-4fee-88ea-5c2630cae9a1'
+settings:
+  id: 'block_content:c7e8767d-b0f4-4fee-88ea-5c2630cae9a1'
+  label: 'News & Events'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /content/news-events
+    negate: false
+    context_mapping: {  }

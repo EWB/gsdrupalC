@@ -1,0 +1,34 @@
+uuid: cdde7f62-05cb-4dd0-98d1-b594d0db1919
+langcode: en
+status: false
+dependencies:
+  config:
+    - views.view.narrative_listing
+  module:
+    - block_class
+    - system
+    - views
+  theme:
+    - gs8_theme
+third_party_settings:
+  block_class:
+    classes: 'university-section-block university-grid color-gray-light row clearfix'
+id: gs8_theme_views_block__narrative_listing_block_1
+theme: gs8_theme
+region: content
+weight: -11
+provider: null
+plugin: 'views_block:narrative_listing-block_1'
+settings:
+  id: 'views_block:narrative_listing-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

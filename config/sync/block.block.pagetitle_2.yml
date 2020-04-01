@@ -1,0 +1,35 @@
+uuid: 66145a84-b64e-4ce2-87cf-77e920b6cc16
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+  theme:
+    - gs8_theme
+id: pagetitle_2
+theme: gs8_theme
+region: content
+weight: -24
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      article: article
+      entity: entity
+      event: event
+      front_page: front_page
+      location_reference: location_reference
+      narrative: narrative
+      person: person
+      timeline: timeline
+      timeline_slide: timeline_slide
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

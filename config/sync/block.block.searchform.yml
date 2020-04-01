@@ -1,0 +1,21 @@
+uuid: 0e8b8616-f5fb-4941-aede-61957d81ffe9
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - gs8_theme
+id: searchform
+theme: gs8_theme
+region: navbar_right
+weight: 0
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: 'Search form'
+  provider: search
+  label_display: '0'
+  page_id: ''
+visibility: {  }

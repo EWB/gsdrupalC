@@ -1,0 +1,11 @@
+uuid: 2a60af10-8715-4719-8749-32971670336d
+langcode: en
+status: true
+dependencies: {  }
+id: safari_layout_bugfix_row_before_
+label: 'Safari Layout bugfix (.row:before)'
+code: "html body .row:before {\r\n  display: none;\r\n}\r\n/* https://stackoverflow.com/questions/34250282/flexbox-wraps-last-column-of-the-first-row-in-safari */\r\n/* Overwriting styling provided in web/modules/contrib/radix_layouts/radix_layouts.css */"
+media: all
+preprocess: true
+conditions: {  }
+conditions_require_all: true

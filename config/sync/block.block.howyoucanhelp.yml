@@ -1,0 +1,31 @@
+uuid: 9863c015-c991-41d5-b01d-ce51f7dca505
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:ff8dfd7b-90c8-4b57-b7ce-a460e5e39f27'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: howyoucanhelp
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:ff8dfd7b-90c8-4b57-b7ce-a460e5e39f27'
+settings:
+  id: 'block_content:ff8dfd7b-90c8-4b57-b7ce-a460e5e39f27'
+  label: 'How You Can Help'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/302
+    negate: false
+    context_mapping: {  }

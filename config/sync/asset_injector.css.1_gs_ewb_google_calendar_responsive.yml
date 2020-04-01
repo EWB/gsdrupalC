@@ -1,0 +1,17 @@
+uuid: f53a3f12-ec80-4c1c-8ce6-fbb0780ffead
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_ewb_google_calendar_responsive
+label: '1 - GS - EWB - Google Calendar Responsive'
+code: ".googleCalendar{\r\n  position: relative;\r\n  height: 0;\r\n  width: 50%;\r\n  padding-bottom: 50%;\r\n}\r\n\r\n.googleCalendar iframe{\r\n  position: absolute;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /node/312
+    negate: false
+conditions_require_all: true

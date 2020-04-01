@@ -25,7 +25,6 @@ description: ''
 tag: ''
 base_table: node_field_data
 base_field: nid
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -781,7 +780,7 @@ display:
           click_sort_column: value
           type: string
           settings:
-            link_to_entity: true
+            link_to_entity: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1093,6 +1092,68 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        field_geolocation_entity_1:
+          id: field_geolocation_entity_1
+          table: node__field_geolocation_entity
+          field: field_geolocation_entity
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: 'Google Maps Directions <span class="sr-only">for {{ title }}</span>'
+            make_link: true
+            path: 'https://www.google.com/maps/dir//{{ field_geolocation_entity_1__lat }},{{ field_geolocation_entity_1__lng }} '
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: 'btn btn-link'
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: ''
+          type: geolocation_latlng
+          settings: {  }
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: geolocation_field
       filters:
         status:
           value: '1'
@@ -1104,6 +1165,8 @@ display:
           id: status
           expose:
             operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
           group: 1
         type:
           id: type
@@ -1115,6 +1178,9 @@ display:
           entity_field: type
           plugin_id: bundle
           group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
       sorts:
         title:
           id: title
@@ -1141,9 +1207,9 @@ display:
           group_type: group
           admin_label: ''
           empty: false
-          tokenize: false
+          tokenize: true
           content:
-            value: '<a href="/food-guide" class="btn btn-primary pull-right">View all locations on the Food Guide</a>'
+            value: '<a href="/food-guide" class="btn btn-light pull-right"><img width="50" alt="" src="/sites/default/files/media/image/2019-12/county%20outline%20with%20icons.png"> View all locations on the Food Guide</a> {{ field_geolocation_entity_1 }}'
             format: full_html
           plugin_id: text
       empty:

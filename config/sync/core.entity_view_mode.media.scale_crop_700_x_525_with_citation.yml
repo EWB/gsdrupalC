@@ -1,0 +1,10 @@
+uuid: 6c2aa809-4400-4abe-88c7-e3564b9f5b29
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.scale_crop_700_x_525_with_citation
+label: 'Scale Crop 700x525 with citation'
+targetEntityType: media
+cache: true

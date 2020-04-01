@@ -1,0 +1,8 @@
+uuid: 87afb163-d6e6-4e72-9ade-439d6c57d2ae
+langcode: en
+status: true
+dependencies: {  }
+id: gs_custom_date
+label: 'GS Custom Date'
+locked: false
+pattern: 'D, M n, Y - g a'

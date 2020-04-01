@@ -1,4 +1,4 @@
-uuid: f2fedd48-0349-4ea4-a1c9-75c7ca82941d
+uuid: 7d0b7a07-5c2d-4354-975c-42c1f056ea07
 langcode: en
 status: true
 dependencies:
@@ -8,11 +8,11 @@ dependencies:
     - facets
     - system
   theme:
-    - university_bootstrap
+    - gs8_theme
 id: products
-theme: university_bootstrap
+theme: gs8_theme
 region: sidebar_first
-weight: -16
+weight: -20
 provider: null
 plugin: 'facet_block:products'
 settings:
@@ -24,6 +24,6 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: "/entities*\r\n/guide*"
+    pages: /guide
     negate: false
     context_mapping: {  }

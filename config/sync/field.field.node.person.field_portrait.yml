@@ -1,0 +1,28 @@
+uuid: 90dc6623-8a47-438f-989d-6125b7ee8536
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_portrait
+    - media.type.image
+    - node.type.person
+id: node.person.field_portrait
+field_name: field_portrait
+entity_type: node
+bundle: person
+label: Portrait
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

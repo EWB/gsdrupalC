@@ -1,0 +1,18 @@
+uuid: 72838b5b-6815-40cd-82ab-0c29fddc9de9
+langcode: en
+status: true
+dependencies:
+  theme:
+    - gs_theme
+id: pagetitle
+theme: gs_theme
+region: content
+weight: -15
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,31 @@
+uuid: 99b95cdc-fd92-45b3-8cf0-9c3803dfef77
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:07817f6a-bb32-45c6-a79c-f9e6ac634b5d'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: growingcommunity
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:07817f6a-bb32-45c6-a79c-f9e6ac634b5d'
+settings:
+  id: 'block_content:07817f6a-bb32-45c6-a79c-f9e6ac634b5d'
+  label: 'Growing Community'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/309
+    negate: false
+    context_mapping: {  }

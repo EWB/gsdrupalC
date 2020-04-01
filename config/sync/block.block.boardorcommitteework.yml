@@ -1,0 +1,31 @@
+uuid: df887d5b-cd6b-4cf6-ade7-48ee7c91f8f0
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:13f2933c-ad83-41ca-9e91-912e0f6f65c4'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: boardorcommitteework
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:13f2933c-ad83-41ca-9e91-912e0f6f65c4'
+settings:
+  id: 'block_content:13f2933c-ad83-41ca-9e91-912e0f6f65c4'
+  label: 'Board or Committee Work'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/295
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,31 @@
+uuid: 78f3f943-85c6-47c5-a500-dc73d4fa5096
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:1f8c047f-418d-466a-9b85-27e3bb40e996'
+  module:
+    - block_content
+    - system
+  theme:
+    - radix
+id: radix_events
+theme: radix
+region: content
+weight: -9
+provider: null
+plugin: 'block_content:1f8c047f-418d-466a-9b85-27e3bb40e996'
+settings:
+  id: 'block_content:1f8c047f-418d-466a-9b85-27e3bb40e996'
+  label: Events
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: 'http://new.gardenshare.org/narrative/test'
+    negate: false
+    context_mapping: {  }

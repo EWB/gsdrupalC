@@ -1,0 +1,22 @@
+uuid: dd389bb4-9113-4d7b-96e1-38775ad84cd5
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - gs8_theme
+_core:
+  default_config_hash: 9RnnTUBcn0WRWXfrGOnId2H0Q31uQUeu_F5TnDxl2yg
+id: gs8_theme_messages
+theme: gs8_theme
+region: header
+weight: -20
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+visibility: {  }

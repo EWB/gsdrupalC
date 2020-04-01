@@ -1,0 +1,35 @@
+uuid: 8133e01b-ad0e-46f4-85db-623c0f329d52
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.nesletter.body
+    - field.field.node.nesletter.field_date
+    - field.field.node.nesletter.field_files
+    - node.type.nesletter
+  module:
+    - text
+    - user
+id: node.nesletter.teaser
+targetEntityType: node
+bundle: nesletter
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_date: true
+  field_files: true
+  search_api_excerpt: true

@@ -1,0 +1,25 @@
+uuid: a92d0f86-f663-44a3-ab12-7bb4e128ca74
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:821f15f8-65e8-44bf-b3e2-9c34aa8f69e2'
+  module:
+    - block_content
+  theme:
+    - gs8_theme
+id: phonenumberandemail
+theme: gs8_theme
+region: footer
+weight: 0
+provider: null
+plugin: 'block_content:821f15f8-65e8-44bf-b3e2-9c34aa8f69e2'
+settings:
+  id: 'block_content:821f15f8-65e8-44bf-b3e2-9c34aa8f69e2'
+  label: 'Phone Number and Email'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

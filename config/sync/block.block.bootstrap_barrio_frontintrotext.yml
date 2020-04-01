@@ -1,0 +1,35 @@
+uuid: c3bf5ac9-f210-44b2-8147-a0b76febd4e8
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:234d0e8d-a13b-4fe3-af87-241ee13d018b'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - bootstrap_barrio
+third_party_settings:
+  block_class:
+    classes: 'col-sm-6 col-md-4 col-md-offset-2 col-lg-3 col-lg-offset-3 front-intro-text'
+id: bootstrap_barrio_frontintrotext
+theme: bootstrap_barrio
+region: content
+weight: -13
+provider: null
+plugin: 'block_content:234d0e8d-a13b-4fe3-af87-241ee13d018b'
+settings:
+  id: 'block_content:234d0e8d-a13b-4fe3-af87-241ee13d018b'
+  label: 'Front Intro Text'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,31 @@
+uuid: d7d59dc7-b3d3-4055-8adc-adc75cbc2d17
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:3b045ceb-4fa9-4487-a132-ffe6f06824ff'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: bonusbucks
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:3b045ceb-4fa9-4487-a132-ffe6f06824ff'
+settings:
+  id: 'block_content:3b045ceb-4fa9-4487-a132-ffe6f06824ff'
+  label: 'Bonus Bucks'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/264
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,31 @@
+uuid: 1e54a25f-4421-4eb6-bb28-45b21e0f4a81
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:aab8e9e8-d1d4-4b12-b38d-67e9d9948076'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: assesscommunityneedsandresources
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:aab8e9e8-d1d4-4b12-b38d-67e9d9948076'
+settings:
+  id: 'block_content:aab8e9e8-d1d4-4b12-b38d-67e9d9948076'
+  label: 'Assess Community Needs and Resources'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/253
+    negate: false
+    context_mapping: {  }

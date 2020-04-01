@@ -1,0 +1,37 @@
+uuid: 8ca6699a-0c18-469c-aacb-0b2b624c517e
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.login
+  module:
+    - block_class
+    - system
+    - user
+  theme:
+    - radix
+third_party_settings:
+  block_class:
+    classes: 'navbar-right navbar-nav'
+id: radix_login
+theme: radix
+region: navbar_branding
+weight: 0
+provider: null
+plugin: 'system_menu_block:login'
+settings:
+  id: 'system_menu_block:login'
+  label: Login
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility:
+  user_role:
+    id: user_role
+    roles:
+      anonymous: anonymous
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

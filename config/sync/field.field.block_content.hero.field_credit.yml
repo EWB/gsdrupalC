@@ -1,0 +1,21 @@
+uuid: d774c94f-79c6-47a7-b3e6-25ee3296350a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.hero
+    - field.storage.block_content.field_credit
+  module:
+    - text
+id: block_content.hero.field_credit
+field_name: field_credit
+entity_type: block_content
+bundle: hero
+label: Credit
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

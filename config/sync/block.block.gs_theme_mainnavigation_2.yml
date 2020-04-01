@@ -1,0 +1,27 @@
+uuid: 4dfe2523-033b-4c64-9e6a-c577a632a4b7
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - menu_block
+  theme:
+    - gs_theme
+id: gs_theme_mainnavigation_2
+theme: gs_theme
+region: sidebar_first
+weight: -13
+provider: null
+plugin: 'menu_block:main'
+settings:
+  id: 'menu_block:main'
+  label: 'Main navigation'
+  provider: menu_block
+  label_display: '0'
+  level: 1
+  depth: 2
+  expand: 1
+  parent: 'main:'
+  suggestion: side
+visibility: {  }

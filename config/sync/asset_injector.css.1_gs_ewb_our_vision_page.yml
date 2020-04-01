@@ -1,0 +1,17 @@
+uuid: ad9cfa9b-21d2-4a1e-9436-34dc2d01e1db
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_ewb_our_vision_page
+label: '1 GS EWB Our Mission Page'
+code: "h2#OurVision {\r\n    margin-bottom: 0;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /node/301
+    negate: false
+conditions_require_all: true

@@ -1,0 +1,31 @@
+uuid: 133129c2-0155-4790-85da-ae61b2ee18a2
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:4558832d-4ea4-4ab6-aa10-d16b76ec1710'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: growingcommunityaward
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:4558832d-4ea4-4ab6-aa10-d16b76ec1710'
+settings:
+  id: 'block_content:4558832d-4ea4-4ab6-aa10-d16b76ec1710'
+  label: 'Growing Community Award'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/263/
+    negate: false
+    context_mapping: {  }

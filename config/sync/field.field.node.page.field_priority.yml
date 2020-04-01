@@ -1,0 +1,23 @@
+uuid: 466518b1-74b9-4641-aedb-dbbe487b6739
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_priority
+    - node.type.page
+id: node.page.field_priority
+field_name: field_priority
+entity_type: node
+bundle: page
+label: Priority
+description: 'Use to sort appearance in a view. '
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

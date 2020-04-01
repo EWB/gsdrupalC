@@ -1,0 +1,19 @@
+uuid: 636b9691-5867-479f-9e94-e04b1ec0ce66
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: v2_gs_ewb
+label: '1 GS EWB'
+code: ".navbar-brand img {\r\n    width: 180px;\r\n}\r\nbody {\r\n    margin: 0;\r\n    padding: 0;\r\n     font-family: \"Helvetica Neue\",helvetica,arial,sans-serif;\r\n    text-rendering: optimizeLegibility;\r\n    -webkit-font-smoothing: antialiased;\r\n    color: rgba(0,0,0,0.8);\r\n    position: relative;\r\n    min-height: 100vh;\r\n    font-size:1.2rem;\r\n    font-weight:300;\r\n\r\n}\r\n#navbar-top {\r\n    background-color: rgba(0,0,0,.03);\r\n    border-top: 1px solid rgba(0,0,0,.125);\r\n}\r\n#navbar-main {\r\n    background-color: rgba(0,0,0,.03);\r\n    border-top: 1px solid rgba(0,0,0,.125);\r\n}\r\n#navbar-main a {\r\n    color: #000000;\r\n}\r\np, .layout span {\r\n    font-family: \"Helvetica Neue\",helvetica,arial,sans-serif;\r\n    font-weight: 300;\r\n    font-size: 1.3rem;\r\n    line-height: 1.5;\r\n    color: #333333;\r\n}\r\n\r\na {\r\n  color: #0579b8;\r\n  text-decoration: none;\r\n  background-color: transparent;\r\n}\r\nh2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {\r\n    font-family: \"Merriweather\",Georgia,\"Times New Roman\",Times,serif;\r\n    line-height: 1.3;\r\n    margin-top: 1.5em;\r\n    margin-bottom: .5em;\r\n}\r\nh2.field-content.card-title-view-headers {\r\n    margin-top: .4rem;\r\n    font-size: 1.3rem;\r\n    font-family: \"Helvetica Neue\",helvetica,arial,sans-serif;\r\n    font-family: \"Merriweather\",Georgia,\"Times New Roman\",Times,serif;\r\n}\r\n.page__footer {\r\n    padding-top: 3rem;\r\n    margin-top: 10rem;\r\n    background-color: #f8f9fa;\r\n}\r\n.page__footer .container {\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    text-align: center;\r\n}\r\n"
+media: all
+preprocess: true
+conditions:
+  current_theme:
+    id: current_theme
+    theme:
+      gs8_theme: gs8_theme
+      gs_theme: gs_theme
+    negate: false
+conditions_require_all: true

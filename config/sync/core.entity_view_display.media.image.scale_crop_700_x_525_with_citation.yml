@@ -1,0 +1,57 @@
+uuid: 371f00d6-8c71-43d7-9501-0d0c7d8ba414
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.scale_crop_700_x_525_with_citation
+    - field.field.media.image.field_caption
+    - field.field.media.image.field_citation
+    - field.field.media.image.field_height
+    - field.field.media.image.field_image
+    - field.field.media.image.field_width
+    - image.style.scale_crop_700x525
+    - media.type.image
+  module:
+    - image
+    - layout_builder
+    - text
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.image.scale_crop_700_x_525_with_citation
+targetEntityType: media
+bundle: image
+mode: scale_crop_700_x_525_with_citation
+content:
+  field_caption:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_citation:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_image:
+    type: image
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: scale_crop_700x525
+      image_link: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_height: true
+  field_width: true
+  name: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

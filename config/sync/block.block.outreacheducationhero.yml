@@ -1,0 +1,31 @@
+uuid: 9b1b34e1-4885-47fd-8ad5-55d5b61f386c
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:4a849bb0-3759-4535-9c0f-06cdab60cf48'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: outreacheducationhero
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:4a849bb0-3759-4535-9c0f-06cdab60cf48'
+settings:
+  id: 'block_content:4a849bb0-3759-4535-9c0f-06cdab60cf48'
+  label: 'Outreach & Education'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/269
+    negate: false
+    context_mapping: {  }

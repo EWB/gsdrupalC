@@ -1,0 +1,17 @@
+uuid: be012cb8-6b6d-45a7-9049-b97fb9c7d382
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Newsletter
+type: nesletter
+description: 'Use to add newsletters to archive.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

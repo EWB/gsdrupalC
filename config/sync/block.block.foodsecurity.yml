@@ -1,0 +1,25 @@
+uuid: 63f5dd90-d403-420d-b651-6930e91fa19f
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:hero:5857cc89-2b2f-4c07-a475-d677ce367538'
+  module:
+    - block_content
+  theme:
+    - gs8_theme
+id: foodsecurity
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:5857cc89-2b2f-4c07-a475-d677ce367538'
+settings:
+  id: 'block_content:5857cc89-2b2f-4c07-a475-d677ce367538'
+  label: 'Food Security'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

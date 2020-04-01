@@ -1,0 +1,20 @@
+uuid: 2b6b4e6b-bff6-4f39-b2d4-b56e322ad274
+langcode: en
+status: true
+dependencies:
+  theme:
+    - gs_theme
+_core:
+  default_config_hash: ffxthelqQF8xcr4GTG4HlaNNsluiHftN0pujmQpW0bQ
+id: gs_theme_local_actions
+theme: gs_theme
+region: content
+weight: -17
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

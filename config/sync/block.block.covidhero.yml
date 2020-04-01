@@ -1,0 +1,31 @@
+uuid: e97770a0-a4b1-4076-a168-e7fdb1fc5879
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:dc12f4ec-2eea-43c0-b9ac-cde156ab2809'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: covidhero
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:dc12f4ec-2eea-43c0-b9ac-cde156ab2809'
+settings:
+  id: 'block_content:dc12f4ec-2eea-43c0-b9ac-cde156ab2809'
+  label: COVID-19
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /content/covid-19
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,31 @@
+uuid: 59d26f06-177f-4560-880c-aca3606f33de
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:jumbotron_block:4d586810-24bc-4a38-adb7-fc046d8bd013'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: jumbotronvolunteers
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:4d586810-24bc-4a38-adb7-fc046d8bd013'
+settings:
+  id: 'block_content:4d586810-24bc-4a38-adb7-fc046d8bd013'
+  label: 'Jumbotron - Volunteers'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/254
+    negate: false
+    context_mapping: {  }

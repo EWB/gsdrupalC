@@ -1,0 +1,25 @@
+uuid: ae949e67-7c1b-405b-842a-5cd9091e4bef
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:jumbotron_block:e969ef14-9446-4284-aa18-09f99d74ca93'
+  module:
+    - block_content
+  theme:
+    - gs8_theme
+id: jumbotronfoodassistance
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:e969ef14-9446-4284-aa18-09f99d74ca93'
+settings:
+  id: 'block_content:e969ef14-9446-4284-aa18-09f99d74ca93'
+  label: 'Jumbotron - Food Assistance'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

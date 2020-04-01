@@ -1,0 +1,31 @@
+uuid: 8e4f9a48-8ca5-41ad-8426-d1e8511dac17
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:6c001054-3515-4687-b219-7ceb570a3209'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: becomeabusinesssponsor
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:6c001054-3515-4687-b219-7ceb570a3209'
+settings:
+  id: 'block_content:6c001054-3515-4687-b219-7ceb570a3209'
+  label: 'Be a Business Sponsor'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/267
+    negate: false
+    context_mapping: {  }

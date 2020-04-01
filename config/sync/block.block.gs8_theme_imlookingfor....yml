@@ -1,0 +1,33 @@
+uuid: 61a5ed2e-6e35-49a0-9cd8-e05efcd9ba4e
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.i-m-looking-for-
+  module:
+    - menu_block
+    - system
+  theme:
+    - gs8_theme
+id: gs8_theme_imlookingfor...
+theme: gs8_theme
+region: navbar_branding
+weight: -11
+provider: null
+plugin: 'menu_block:i-m-looking-for-'
+settings:
+  id: 'menu_block:i-m-looking-for-'
+  label: 'I''m looking for...'
+  provider: menu_block
+  label_display: visible
+  level: 1
+  depth: 0
+  expand: 0
+  parent: 'i-m-looking-for-:'
+  suggestion: i_m_looking_for_
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

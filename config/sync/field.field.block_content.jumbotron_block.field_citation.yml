@@ -1,0 +1,21 @@
+uuid: 7be1af82-64cb-45f9-b2e0-649a18e49f16
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.jumbotron_block
+    - field.storage.block_content.field_citation
+  module:
+    - text
+id: block_content.jumbotron_block.field_citation
+field_name: field_citation
+entity_type: block_content
+bundle: jumbotron_block
+label: Citation
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

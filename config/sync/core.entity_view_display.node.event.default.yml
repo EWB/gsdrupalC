@@ -10,9 +10,106 @@ dependencies:
     - field.field.node.event.field_media
     - node.type.event
   module:
+    - addtoany
     - datetime
+    - field_group
+    - layout_builder
+    - radix_layouts
     - text
     - user
+third_party_settings:
+  field_group:
+    group_time:
+      children:
+        - field_date
+        - field_event_end_date
+      parent_name: ''
+      weight: 3
+      format_type: fieldset
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+      label: Time
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: radix_burr_flipped
+        layout_settings:
+          label: ''
+        components:
+          8b72b45e-cfc9-4703-bdbc-e304da821725:
+            uuid: 8b72b45e-cfc9-4703-bdbc-e304da821725
+            region: contentmain
+            configuration:
+              id: 'field_block:node:event:body'
+              label: Description
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+          670e2e65-d404-450b-bd92-1302aef8d651:
+            uuid: 670e2e65-d404-450b-bd92-1302aef8d651
+            region: sidebar
+            configuration:
+              id: 'field_block:node:event:field_date'
+              label: 'Start Date'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: datetime_default
+                settings:
+                  timezone_override: ''
+                  format_type: gs_custom_date
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+          3c76952f-15f7-40d4-9168-6191aa510d9c:
+            uuid: 3c76952f-15f7-40d4-9168-6191aa510d9c
+            region: sidebar
+            configuration:
+              id: 'field_block:node:event:field_media'
+              label: Photograph
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_entity_view
+                settings:
+                  view_mode: scale_crop_700x525
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 1
+          1878b439-0bf6-4cb6-9675-6011be8bba07:
+            uuid: 1878b439-0bf6-4cb6-9675-6011be8bba07
+            region: contentmain
+            configuration:
+              id: addtoany_block
+              label: 'AddToAny buttons'
+              provider: addtoany
+              label_display: '0'
+              context_mapping: {  }
+            additional: {  }
+            weight: 1
+        third_party_settings: {  }
 id: node.event.default
 targetEntityType: node
 bundle: event
@@ -21,30 +118,30 @@ content:
   body:
     label: hidden
     type: text_default
-    weight: 101
+    weight: 1
     settings: {  }
     third_party_settings: {  }
     region: content
   field_date:
-    weight: 103
-    label: above
+    weight: 4
+    label: hidden
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: gs_custom_date
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_event_end_date:
-    weight: 105
-    label: above
+    weight: 5
+    label: hidden
     settings:
-      format_type: medium
       timezone_override: ''
+      format_type: gs_custom_date
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_event_location:
-    weight: 102
+    weight: 2
     label: above
     settings:
       link: true
@@ -52,16 +149,19 @@ content:
     type: entity_reference_label
     region: content
   field_media:
-    weight: 104
-    label: above
+    weight: 5
+    label: hidden
     settings:
-      link: true
+      view_mode: default
+      link: false
     third_party_settings: {  }
-    type: entity_reference_label
+    type: entity_reference_entity_view
     region: content
   links:
-    weight: 100
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  addtoany: true
+  search_api_excerpt: true

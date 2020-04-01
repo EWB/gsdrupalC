@@ -1,0 +1,25 @@
+uuid: 85a7fcb6-d4e6-43d6-8e3c-636fd41a069b
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:c9f7a2e7-d38e-4382-bd26-73855d096b34'
+  module:
+    - block_content
+  theme:
+    - gs8_theme
+id: gs8_theme_searchblockewb
+theme: gs8_theme
+region: navbar_branding
+weight: -16
+provider: null
+plugin: 'block_content:c9f7a2e7-d38e-4382-bd26-73855d096b34'
+settings:
+  id: 'block_content:c9f7a2e7-d38e-4382-bd26-73855d096b34'
+  label: 'Search Block EWB'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

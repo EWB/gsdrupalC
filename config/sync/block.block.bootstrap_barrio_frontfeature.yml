@@ -1,0 +1,35 @@
+uuid: 097c3c7b-207c-4c43-a5b0-3912ecce2bcc
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:3df8d339-5c16-4742-b221-3cf99cb789de'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - bootstrap_barrio
+third_party_settings:
+  block_class:
+    classes: front-hero
+id: bootstrap_barrio_frontfeature
+theme: bootstrap_barrio
+region: content
+weight: -17
+provider: null
+plugin: 'block_content:3df8d339-5c16-4742-b221-3cf99cb789de'
+settings:
+  id: 'block_content:3df8d339-5c16-4742-b221-3cf99cb789de'
+  label: 'Front Feature'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

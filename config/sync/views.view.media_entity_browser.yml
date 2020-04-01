@@ -9,6 +9,7 @@ dependencies:
     - image
     - media
     - user
+    - views_layout
 _core:
   default_config_hash: MSnbnsWG7VkwgnXIUbEX_BebVc2LygnbeD7UJG3QeLo
 id: media_entity_browser
@@ -18,7 +19,6 @@ description: ''
 tag: ''
 base_table: media_field_data
 base_field: mid
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -73,11 +73,218 @@ display:
             offset_label: Offset
           quantity: 9
       style:
-        type: default
+        type: views_layout_style
         options:
-          grouping: {  }
           row_class: ''
           default_row_class: true
+          layout_name: radix_mccoppin
+          layout_regions:
+            layout_twocol_section:
+              first: 0
+              second: 0
+            layout_threecol_section:
+              first: first
+              second: second
+              third: third
+            layout_fourcol_section:
+              first: 0
+              second: 0
+              third: 0
+              fourth: 0
+            layout_onecol:
+              content: 0
+            layout_twocol:
+              top: 0
+              first: 0
+              second: 0
+              bottom: 0
+            layout_twocol_bricks:
+              top: 0
+              first_above: 0
+              second_above: 0
+              middle: 0
+              first_below: 0
+              second_below: 0
+              bottom: 0
+            layout_threecol_25_50_25:
+              top: 0
+              first: 0
+              second: 0
+              third: 0
+              bottom: 0
+            layout_threecol_33_34_33:
+              top: 0
+              first: 0
+              second: 0
+              third: 0
+              bottom: 0
+            radix_bryant_flipped:
+              sidebar: 0
+              contentmain: 0
+            radix_bartlett_flipped:
+              sidebar: 0
+              contentheader: 0
+              contentcolumn1: 0
+              contentcolumn2: 0
+            radix_bartlett:
+              sidebar: 0
+              contentheader: 0
+              contentcolumn1: 0
+              contentcolumn2: 0
+            radix_boxton:
+              contentmain: 0
+            radix_brenham_flipped:
+              header: 0
+              sidebar: 0
+              contentmain: 0
+            radix_brenham:
+              header: 0
+              sidebar: 0
+              contentmain: 0
+            radix_brown:
+              slider: 0
+              slidergutter: 0
+              column1: 0
+              column2: 0
+              column3: 0
+              footercolumn1: 0
+              footercolumn2: 0
+              footercolumn3: 0
+            radix_bryant:
+              sidebar: 0
+              contentmain: 0
+            radix_burr_flipped:
+              sidebar: 0
+              contentmain: 0
+            radix_burr:
+              sidebar: 0
+              contentmain: 0
+            radix_geary:
+              header: 0
+              column1: 0
+              column2: 0
+              column3: 0
+            radix_harris:
+              header: 0
+              column1: 0
+              column2: 0
+              contentmain: 0
+            radix_hewston_flipped:
+              slider: 0
+              slidergutter: 0
+              column1: 0
+              column2: 0
+              column3: 0
+            radix_hewston:
+              slider: 0
+              slidergutter: 0
+              column1: 0
+              column2: 0
+              column3: 0
+            radix_mccoppin:
+              column1: column1
+              column2: column2
+              column3: column3
+            radix_moscone_flipped:
+              header: 0
+              sidebar: 0
+              contentmain: 0
+              footer: 0
+            radix_moscone:
+              header: 0
+              sidebar: 0
+              contentmain: 0
+              footer: 0
+            radix_phelan:
+              column1: 0
+              column2: 0
+            radix_pond:
+              header: 0
+              column1: 0
+              column2: 0
+              column3: 0
+              secondarycolumn1: 0
+              secondarycolumn2: 0
+              secondarycolumn3: 0
+              footer: 0
+            radix_rolph:
+              header: 0
+              quarter1: 0
+              quarter2: 0
+              quarter3: 0
+              quarter4: 0
+              footer: 0
+            radix_sanderson_flipped:
+              column1: 0
+              column2: 0
+              column3: 0
+              secondarycolumn1: 0
+              secondarycolumn2: 0
+            radix_sanderson:
+              column1: 0
+              column2: 0
+              secondarycolumn1: 0
+              secondarycolumn2: 0
+              secondarycolumn3: 0
+            radix_selby_flipped:
+              sidebar: 0
+              contentheader: 0
+              contentcolumn1: 0
+              contentcolumn2: 0
+              contentfooter: 0
+            radix_selby:
+              sidebar: 0
+              contentheader: 0
+              contentcolumn1: 0
+              contentcolumn2: 0
+              contentfooter: 0
+            radix_sutro_double:
+              header: 0
+              column1: 0
+              column2: 0
+              middle: 0
+              secondcolumn1: 0
+              secondcolumn2: 0
+              footer: 0
+            radix_sutro:
+              header: 0
+              column1: 0
+              column2: 0
+              footer: 0
+            radix_taylor_flipped:
+              header: 0
+              quarter1: 0
+              quarter2: 0
+              half: 0
+              footer: 0
+            radix_taylor:
+              header: 0
+              half: 0
+              quarter1: 0
+              quarter2: 0
+              footer: 0
+            radix_webb_flipped:
+              header: 0
+              sidebar: 0
+              contentheader: 0
+              contentcolumn1: 0
+              contentcolumn2: 0
+            radix_webb:
+              header: 0
+              sidebar: 0
+              contentheader: 0
+              contentcolumn1: 0
+              contentcolumn2: 0
+            radix_whelan:
+              column1: 0
+              column2: 0
+              contentmain: 0
+            layout_builder_blank: {  }
+          skip_processing: ''
+          skip_text:
+            value: ''
+            format: basic_html
+          callback: ''
       row:
         type: fields
         options:
@@ -86,6 +293,56 @@ display:
           hide_empty: false
           default_field_elements: true
       fields:
+        entity_browser_select:
+          id: entity_browser_select
+          table: media
+          field: entity_browser_select
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          entity_type: media
+          plugin_id: entity_browser_select
         thumbnail__target_id:
           id: thumbnail__target_id
           table: media_field_revision
@@ -335,56 +592,6 @@ display:
           selected_actions: {  }
           entity_type: media
           plugin_id: media_bulk_form
-        entity_browser_select:
-          id: entity_browser_select
-          table: media
-          field: entity_browser_select
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          entity_type: media
-          plugin_id: entity_browser_select
       filters:
         status:
           id: status
@@ -409,6 +616,8 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: true
           group_info:
             label: 'Publishing status'
@@ -457,6 +666,8 @@ display:
               authenticated: authenticated
               anonymous: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -497,6 +708,8 @@ display:
               authenticated: authenticated
               anonymous: '0'
             placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -537,6 +750,8 @@ display:
               authenticated: authenticated
               anonymous: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -651,6 +866,8 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -688,6 +905,8 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: true
           group_info:
             label: 'Publishing status'
@@ -736,6 +955,8 @@ display:
               authenticated: authenticated
               anonymous: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -776,6 +997,8 @@ display:
               authenticated: authenticated
               anonymous: '0'
             placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -816,6 +1039,8 @@ display:
               authenticated: authenticated
               anonymous: '0'
             reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''

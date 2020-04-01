@@ -1,0 +1,11 @@
+uuid: 066eaca2-0754-4daa-a56c-efe4d8bd0845
+langcode: en
+status: true
+dependencies: {  }
+id: 1_gs_ewb_layouts_and_editing_mode
+label: '1 GS - EWB - Layouts and Editing Mode'
+code: "#drupal-off-canvas ul,  #drupal-off-canvas ol {\r\n   display: block;\r\n}\r\n#drupal-off-canvas ul li, #drupal-off-canvas ol li {\r\n   display: block;\r\n}\r\n#drupal-off-canvas a, #drupal-off-canvas ol li a {\r\n   display: block;\r\n}\r\n"
+media: all
+preprocess: true
+conditions: {  }
+conditions_require_all: true

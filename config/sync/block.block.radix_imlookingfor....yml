@@ -1,0 +1,33 @@
+uuid: 37f75b4d-d68c-4c04-9fb8-90af3e27e07d
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.i-m-looking-for-
+  module:
+    - menu_block
+    - system
+  theme:
+    - radix
+id: radix_imlookingfor...
+theme: radix
+region: navbar_branding
+weight: -3
+provider: null
+plugin: 'menu_block:i-m-looking-for-'
+settings:
+  id: 'menu_block:i-m-looking-for-'
+  label: 'I''m looking for...'
+  provider: menu_block
+  label_display: visible
+  level: 1
+  depth: 0
+  expand: 0
+  parent: 'i-m-looking-for-:'
+  suggestion: i_m_looking_for_
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

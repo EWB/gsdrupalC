@@ -1,0 +1,31 @@
+uuid: 606031b7-a87b-40a6-8cb6-276470ba4c48
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:939d7c4f-7954-4cb1-9c16-ff838fa472cb'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: donate
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:939d7c4f-7954-4cb1-9c16-ff838fa472cb'
+settings:
+  id: 'block_content:939d7c4f-7954-4cb1-9c16-ff838fa472cb'
+  label: 'Support GardenShare'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/279
+    negate: false
+    context_mapping: {  }

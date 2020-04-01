@@ -1,0 +1,25 @@
+uuid: 77c0d71a-7c9b-40b5-bff9-bd0612c3eebe
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:feature_block:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+  module:
+    - block_content
+  theme:
+    - radix
+id: radix_stayinformed
+theme: radix
+region: navbar_branding
+weight: 0
+provider: null
+plugin: 'block_content:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+settings:
+  id: 'block_content:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+  label: 'Sign up for mailing lists'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

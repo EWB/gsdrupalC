@@ -1,0 +1,20 @@
+uuid: 9119af9a-45a7-418e-abc1-760b86f913a0
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+id: 1_gs_ewb_entities
+label: '1 GS EWB Entities'
+code: ".image__field-image {\r\n  display:flex;\r\n}\r\n.image__field-image img {\r\n  width:45%;\r\n}"
+media: all
+preprocess: true
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      entity: entity
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+conditions_require_all: true

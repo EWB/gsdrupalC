@@ -1,0 +1,17 @@
+uuid: 55d01693-b292-4f1d-af95-0fcdf74b166c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_ewb_farmers_market_guide
+label: '1 GS EWB Farmers Market Guide'
+code: "\r\n\r\np, .layout span {\r\n    font-family: \"Helvetica Neue\",helvetica,arial,sans-serif;\r\n    font-weight: 300;\r\n    font-size: 1.3rem;\r\n    line-height: 1.4;\r\n    color: #333333;\r\n}\r\n\r\n.text-with-image-block__field-image {\r\n  display: -ms-flexbox;\r\n  display: -webkit-flex;\r\n  display: flex;\r\n  -ms-flex-align: center;\r\n  -webkit-align-items: center;\r\n  -webkit-box-align: center;\r\n  align-items: center;\r\n  height: 50vh;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /guide
+    negate: false
+conditions_require_all: true

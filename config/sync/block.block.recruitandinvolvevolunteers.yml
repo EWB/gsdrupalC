@@ -1,0 +1,31 @@
+uuid: 254c0342-b9f2-45c5-8289-ac38aaec9c29
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:038cf96e-09c7-4d67-8a51-6f02962dda34'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: recruitandinvolvevolunteers
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:038cf96e-09c7-4d67-8a51-6f02962dda34'
+settings:
+  id: 'block_content:038cf96e-09c7-4d67-8a51-6f02962dda34'
+  label: Volunteer
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/254
+    negate: false
+    context_mapping: {  }

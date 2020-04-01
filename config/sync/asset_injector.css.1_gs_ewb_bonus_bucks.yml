@@ -1,0 +1,17 @@
+uuid: b56ba70a-1825-4f3d-9902-73f24a5acd08
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_ewb_bonus_bucks
+label: '1 - GS -EWB Bonus Bucks'
+code: ".layout__region.layout__region--content {\r\n    max-width: 450px;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /node/264
+    negate: false
+conditions_require_all: true

@@ -1,0 +1,22 @@
+uuid: 9d51d84b-868e-49e2-8005-a01249f5a151
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - gs_theme
+_core:
+  default_config_hash: fNNLN48MSGSLiqwIFywCuxH2Dk_IxDbaP0kYhg_IPrg
+id: gs_theme_content
+theme: gs_theme
+region: content
+weight: -14
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

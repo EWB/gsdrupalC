@@ -1,0 +1,25 @@
+uuid: 81ac62e7-1dc0-4004-a76b-3eae0d7670ad
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:fa1ab03a-b7ef-4684-a6a2-6ae0e814f407'
+  module:
+    - block_content
+  theme:
+    - bootstrap_barrio
+id: bootstrap_barrio_gsaddress_2
+theme: bootstrap_barrio
+region: footer_second
+weight: 0
+provider: null
+plugin: 'block_content:fa1ab03a-b7ef-4684-a6a2-6ae0e814f407'
+settings:
+  id: 'block_content:fa1ab03a-b7ef-4684-a6a2-6ae0e814f407'
+  label: 'GS address'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

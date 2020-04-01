@@ -1,0 +1,39 @@
+uuid: 8be542e5-b71b-4cd0-8061-3a81faba8f19
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.account
+  module:
+    - system
+    - user
+  theme:
+    - gs8_theme
+_core:
+  default_config_hash: R2K_qX0ZUMbUL6ie_-S9tZVjvqmlWKlscikgeRv9vhw
+id: gs8_theme_account_menu
+theme: gs8_theme
+region: navbar_branding
+weight: -12
+provider: null
+plugin: 'system_menu_block:account'
+settings:
+  id: 'system_menu_block:account'
+  label: 'User account menu'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 2
+  expand_all_items: false
+visibility:
+  user_role:
+    id: user_role
+    roles:
+      authenticated: authenticated
+      administrator: administrator
+      contributor: contributor
+      editor: editor
+      p: p
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

@@ -1,0 +1,28 @@
+uuid: b6d9ae1c-4f5b-4732-830f-ed36fcd22c14
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.jumbotron_block
+    - field.storage.block_content.field_full_width_image
+    - media.type.image
+id: block_content.jumbotron_block.field_full_width_image
+field_name: field_full_width_image
+entity_type: block_content
+bundle: jumbotron_block
+label: 'Full-width Image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

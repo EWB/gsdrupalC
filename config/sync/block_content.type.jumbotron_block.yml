@@ -1,0 +1,8 @@
+uuid: 74790a2a-3e8c-469e-83f9-a1e41bf1b6f7
+langcode: en
+status: true
+dependencies: {  }
+id: jumbotron_block
+label: 'Jumbotron Block'
+revision: 1
+description: 'Creates a full-width feature block - usually for the top of a page.'

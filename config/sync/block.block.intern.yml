@@ -1,0 +1,31 @@
+uuid: 8d7c0b08-adad-49f0-a70e-867fdcb9c474
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:9bfcf98f-6941-4182-99fa-195e33cf6c38'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: intern
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:9bfcf98f-6941-4182-99fa-195e33cf6c38'
+settings:
+  id: 'block_content:9bfcf98f-6941-4182-99fa-195e33cf6c38'
+  label: Intern
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/307
+    negate: false
+    context_mapping: {  }

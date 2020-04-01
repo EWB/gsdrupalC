@@ -1,0 +1,25 @@
+uuid: 331d807e-ecf7-4751-b805-65fa9ead1819
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:e6e566c1-9fbb-444e-a1c6-7a8142583d02'
+  module:
+    - block_content
+  theme:
+    - gs8_theme
+id: socialbuttons
+theme: gs8_theme
+region: footer
+weight: 0
+provider: null
+plugin: 'block_content:e6e566c1-9fbb-444e-a1c6-7a8142583d02'
+settings:
+  id: 'block_content:e6e566c1-9fbb-444e-a1c6-7a8142583d02'
+  label: 'Social Buttons'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

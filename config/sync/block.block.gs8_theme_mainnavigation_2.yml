@@ -1,0 +1,27 @@
+uuid: d681af4c-c54d-4244-afee-5c6b1c3e332e
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - menu_block
+  theme:
+    - gs8_theme
+id: gs8_theme_mainnavigation_2
+theme: gs8_theme
+region: navbar_branding
+weight: -17
+provider: null
+plugin: 'menu_block:main'
+settings:
+  id: 'menu_block:main'
+  label: 'Main navigation'
+  provider: menu_block
+  label_display: '0'
+  level: 1
+  depth: 2
+  expand: 1
+  parent: 'main:'
+  suggestion: side
+visibility: {  }

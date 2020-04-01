@@ -7,4 +7,6 @@ label: 'Publish Own'
 weight: 5
 is_admin: null
 permissions:
+  - 'create terms in tags'
+  - 'edit terms in tags'
   - 'use editorial transition publish'

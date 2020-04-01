@@ -1,0 +1,37 @@
+uuid: 2f07dcdb-3e52-46af-9578-2d14ee247066
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.login
+  module:
+    - block_class
+    - system
+    - user
+  theme:
+    - gs_theme
+third_party_settings:
+  block_class:
+    classes: 'navbar-right navbar-nav'
+id: gs_theme_login
+theme: gs_theme
+region: top_header
+weight: 0
+provider: null
+plugin: 'system_menu_block:login'
+settings:
+  id: 'system_menu_block:login'
+  label: Login
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility:
+  user_role:
+    id: user_role
+    roles:
+      anonymous: anonymous
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

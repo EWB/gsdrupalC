@@ -1,0 +1,31 @@
+uuid: f4620fe7-6317-4243-bc9a-a844feb691e6
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:405d138b-6af9-4d15-a3c7-637b35b45082'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: becomeasustainer
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:405d138b-6af9-4d15-a3c7-637b35b45082'
+settings:
+  id: 'block_content:405d138b-6af9-4d15-a3c7-637b35b45082'
+  label: 'Become a Sustainer'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/293
+    negate: false
+    context_mapping: {  }

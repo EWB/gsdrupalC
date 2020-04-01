@@ -1,0 +1,23 @@
+uuid: 8da78c3d-c67f-45e3-be65-2ac3efc749fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_container_fluid
+    - node.type.narrative
+id: node.narrative.field_container_fluid
+field_name: field_container_fluid
+entity_type: node
+bundle: narrative
+label: 'Edge-to-edge Mode'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

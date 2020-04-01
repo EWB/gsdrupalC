@@ -1,0 +1,35 @@
+uuid: 12c296c5-72c1-4e27-9fe4-7dd671562eaf
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:8901d99d-6167-4608-8980-af804bf51637'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - bootstrap_barrio
+third_party_settings:
+  block_class:
+    classes: front-video
+id: bootstrap_barrio_gardensharevideo
+theme: bootstrap_barrio
+region: content
+weight: -8
+provider: null
+plugin: 'block_content:8901d99d-6167-4608-8980-af804bf51637'
+settings:
+  id: 'block_content:8901d99d-6167-4608-8980-af804bf51637'
+  label: 'GardenShare video'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

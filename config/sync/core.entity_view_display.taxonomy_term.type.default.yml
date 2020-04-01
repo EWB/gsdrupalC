@@ -1,0 +1,14 @@
+uuid: aeaab148-5580-4656-860d-d269f8ecd481
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.type
+id: taxonomy_term.type.default
+targetEntityType: taxonomy_term
+bundle: type
+mode: default
+content: {  }
+hidden:
+  description: true
+  search_api_excerpt: true

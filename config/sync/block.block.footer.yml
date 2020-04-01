@@ -1,0 +1,29 @@
+uuid: 85f5d797-1640-4bcb-9c22-593411c81902
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:163acec1-1615-4e61-bb03-3a023c9b3f92'
+  module:
+    - block_class
+    - block_content
+  theme:
+    - gs8_theme
+third_party_settings:
+  block_class:
+    classes: footer-block
+id: footer
+theme: gs8_theme
+region: footer
+weight: 0
+provider: null
+plugin: 'block_content:163acec1-1615-4e61-bb03-3a023c9b3f92'
+settings:
+  id: 'block_content:163acec1-1615-4e61-bb03-3a023c9b3f92'
+  label: Footer
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

@@ -1,0 +1,35 @@
+uuid: 4b644037-e0f1-4543-a0d6-37f37737a085
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:3df8d339-5c16-4742-b221-3cf99cb789de'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+third_party_settings:
+  block_class:
+    classes: front-hero
+id: gs8_theme_frontfeature
+theme: gs8_theme
+region: featured
+weight: -17
+provider: null
+plugin: 'block_content:3df8d339-5c16-4742-b221-3cf99cb789de'
+settings:
+  id: 'block_content:3df8d339-5c16-4742-b221-3cf99cb789de'
+  label: 'Front Feature'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,18 @@
+uuid: 5b8417e7-50dd-49e1-86f8-5dc7834d8622
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: claro_css_overrides
+label: 'Claro CSS Overrides'
+code: ".button--primary {\r\n    color: #fff;\r\n    background-color: #0579b8;\r\n}\r\na {\r\n  color: #0579b8;\r\n}\r\n.form-boolean--type-checkbox:checked {\r\n    border-color: #0579b8;\r\n    background-color: #0579b8;\r\n}\r\n.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {\r\n    color: #0579b8;\r\n}\r\n.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {\r\n\r\n    border-left: 4px solid #0579b8;\r\n}\r\na, .link {\r\n    color: #0579b8;\r\n}\r\na:hover {\r\n  color: #0579b8;\r\n}"
+media: all
+preprocess: true
+conditions:
+  current_theme:
+    id: current_theme
+    theme:
+      claro: claro
+    negate: false
+conditions_require_all: true

@@ -1,0 +1,8 @@
+uuid: 5248dafd-26af-4067-b080-b116dd8c18ac
+langcode: en
+status: true
+dependencies: {  }
+id: text_with_image_block
+label: 'Text with Image Block'
+revision: 1
+description: ''

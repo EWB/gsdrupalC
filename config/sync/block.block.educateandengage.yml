@@ -1,0 +1,31 @@
+uuid: 48612e57-7c80-4993-a67c-11ecff575207
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:9a49ced6-7ac0-4607-afb3-5d420dac7acc'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: educateandengage
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:9a49ced6-7ac0-4607-afb3-5d420dac7acc'
+settings:
+  id: 'block_content:9a49ced6-7ac0-4607-afb3-5d420dac7acc'
+  label: 'Educate & Engage'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/255
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,22 @@
+uuid: ebd8ba94-7003-47ff-9e7d-0e4cf86ec4af
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - gs_theme
+_core:
+  default_config_hash: iggZSiUKz4mYP1YPJ8SsUfFu79HIgOTt6IDy3Up59aM
+id: gs_theme_powered
+theme: gs_theme
+region: top_header
+weight: -8
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }

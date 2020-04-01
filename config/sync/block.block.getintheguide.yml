@@ -1,0 +1,31 @@
+uuid: 7edf3bbc-0919-4abe-8f24-69593f83621d
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:b7f2d027-3ced-41f6-8927-18693395fd31'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: getintheguide
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:b7f2d027-3ced-41f6-8927-18693395fd31'
+settings:
+  id: 'block_content:b7f2d027-3ced-41f6-8927-18693395fd31'
+  label: 'Get in the Guide'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/271
+    negate: false
+    context_mapping: {  }

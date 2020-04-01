@@ -1,0 +1,17 @@
+uuid: 50e1e4e8-1a54-43f3-a13c-d6f7624ef6e9
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_ewb_staff_page
+label: '1 GS - EWB - Staff Page'
+code: "h3.field-content  {\r\n  margin-top: 1rem;\r\n  margin-bottom: 0;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /node/283
+    negate: false
+conditions_require_all: true

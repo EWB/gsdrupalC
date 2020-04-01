@@ -1,0 +1,35 @@
+uuid: 79e13bdb-a56b-4f42-8e7b-55c788cd97c7
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:234d0e8d-a13b-4fe3-af87-241ee13d018b'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+third_party_settings:
+  block_class:
+    classes: 'col-sm-6 col-md-4 col-md-offset-2 col-lg-3 col-lg-offset-3 front-intro-text'
+id: gs8_theme_frontintrotext
+theme: gs8_theme
+region: content
+weight: -20
+provider: null
+plugin: 'block_content:234d0e8d-a13b-4fe3-af87-241ee13d018b'
+settings:
+  id: 'block_content:234d0e8d-a13b-4fe3-af87-241ee13d018b'
+  label: 'Front Intro Text'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

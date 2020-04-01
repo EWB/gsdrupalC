@@ -29,10 +29,10 @@ third_party_settings:
       weight: 10
       format_type: fieldset
       format_settings:
+        description: ''
         id: date-info-group
         classes: ''
-        description: ''
-        required_fields: true
+        required_fields: false
       label: 'Date Info'
       region: content
 id: node.event.default
@@ -47,6 +47,7 @@ content:
       rows: 9
       summary_rows: 3
       placeholder: ''
+      show_summary: false
     third_party_settings: {  }
     region: content
   created:
@@ -148,6 +149,7 @@ content:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
+      match_limit: 10
     region: content
     third_party_settings: {  }
 hidden: {  }

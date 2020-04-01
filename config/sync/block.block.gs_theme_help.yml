@@ -1,0 +1,22 @@
+uuid: a86e20e1-6dfa-41c4-8645-42c4a6f3c32e
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - gs_theme
+_core:
+  default_config_hash: MhtNdV__HKRTab0ZPjkPNfYL4Ng4UPBucDLoC7Rg5Eo
+id: gs_theme_help
+theme: gs_theme
+region: top_header
+weight: -15
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

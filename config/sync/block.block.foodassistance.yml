@@ -1,0 +1,31 @@
+uuid: ccff254f-050e-4f08-af51-7260dcc392ea
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:61860a0e-fb71-44aa-8022-f35c4e9cc819'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: foodassistance
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:61860a0e-fb71-44aa-8022-f35c4e9cc819'
+settings:
+  id: 'block_content:61860a0e-fb71-44aa-8022-f35c4e9cc819'
+  label: 'Food Assistance'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/261
+    negate: false
+    context_mapping: {  }

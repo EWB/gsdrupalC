@@ -1,6 +1,6 @@
 uuid: ceae04ce-2327-4597-9500-cc6d58f1f2ee
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: ewb_gs_in_action
 label: 'EWB - GS in Action'

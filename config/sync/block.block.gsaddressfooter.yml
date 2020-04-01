@@ -1,0 +1,25 @@
+uuid: 07ba66cd-2f5a-4dbd-b695-e60cfc38e96f
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:605363d4-2f16-4318-9c5c-97c25c15a135'
+  module:
+    - block_content
+  theme:
+    - gs8_theme
+id: gsaddressfooter
+theme: gs8_theme
+region: footer
+weight: 0
+provider: null
+plugin: 'block_content:605363d4-2f16-4318-9c5c-97c25c15a135'
+settings:
+  id: 'block_content:605363d4-2f16-4318-9c5c-97c25c15a135'
+  label: 'GS Address Footer'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

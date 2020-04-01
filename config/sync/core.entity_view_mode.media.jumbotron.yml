@@ -1,0 +1,10 @@
+uuid: ae27dcbf-5dad-4254-8298-8d3331bbe090
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.jumbotron
+label: Jumbotron
+targetEntityType: media
+cache: true

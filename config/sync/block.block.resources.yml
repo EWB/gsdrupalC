@@ -1,0 +1,31 @@
+uuid: 67a49c3a-16a8-41f6-bc03-14855b806b56
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:a9de08f5-9b55-4d34-ae77-64a1795a4bba'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: resources
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:a9de08f5-9b55-4d34-ae77-64a1795a4bba'
+settings:
+  id: 'block_content:a9de08f5-9b55-4d34-ae77-64a1795a4bba'
+  label: Resources
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/303
+    negate: false
+    context_mapping: {  }

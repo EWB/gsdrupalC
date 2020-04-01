@@ -1,0 +1,31 @@
+uuid: ca733ca2-f3f2-45b7-a596-503b1d80fcfc
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:7fea6705-5dba-4beb-8d96-b3534578d8b9'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: whoweare
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:7fea6705-5dba-4beb-8d96-b3534578d8b9'
+settings:
+  id: 'block_content:7fea6705-5dba-4beb-8d96-b3534578d8b9'
+  label: 'Who We Are '
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/301
+    negate: false
+    context_mapping: {  }

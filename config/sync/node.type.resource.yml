@@ -1,0 +1,18 @@
+uuid: 116929ff-146e-4aa4-89ba-c4f681821a0f
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Resource
+type: resource
+description: 'Use this to upload PDFs of reports and studies. '
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

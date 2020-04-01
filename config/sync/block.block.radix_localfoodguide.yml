@@ -1,0 +1,31 @@
+uuid: 2949e096-86dd-43ee-a23b-98d0ad7f9362
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:feature_block:bf2703b7-74ca-4c9d-b2ef-3a485f634214'
+  module:
+    - block_content
+    - system
+  theme:
+    - radix
+id: radix_localfoodguide
+theme: radix
+region: content
+weight: -6
+provider: null
+plugin: 'block_content:bf2703b7-74ca-4c9d-b2ef-3a485f634214'
+settings:
+  id: 'block_content:bf2703b7-74ca-4c9d-b2ef-3a485f634214'
+  label: 'Local Food Guide'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

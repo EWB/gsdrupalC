@@ -1,0 +1,17 @@
+uuid: bcc0cf6c-ad1f-44b3-8ab9-9888fcd49a7e
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_ewb_who_we_are
+label: '1 GS EWB - Who We Are'
+code: ".layout--threecol-section p {\r\n    max-width:300px;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /node/301
+    negate: false
+conditions_require_all: true

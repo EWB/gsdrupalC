@@ -1,0 +1,20 @@
+uuid: c44e7ff3-136d-4a00-b278-74cd179e8232
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - gs8_theme
+id: poweredbydrupal_2
+theme: gs8_theme
+region: sidebar_second
+weight: 0
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }

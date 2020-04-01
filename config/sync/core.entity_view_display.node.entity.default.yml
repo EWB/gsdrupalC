@@ -67,7 +67,7 @@ third_party_settings:
       region: content
     group_column_two:
       children:
-        - field_media
+        - entity_media_gallery_entity_view_1
         - entity_food_guide_preview_entity_view_1
         - field_csa_pickup_locations
       parent_name: group_row
@@ -128,6 +128,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  entity_media_gallery_entity_view_1:
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_accepts:
     weight: 17
     label: above
@@ -141,7 +146,7 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: address_plain
+    type: address_default
     region: content
   field_certifications:
     weight: 19
@@ -211,7 +216,7 @@ content:
     region: content
   field_email:
     weight: 14
-    label: above
+    label: inline
     settings: {  }
     third_party_settings: {  }
     type: email_mailto
@@ -222,15 +227,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: text_default
-    region: content
-  field_media:
-    weight: 10
-    label: visually_hidden
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_entity_view
     region: content
   field_phone:
     weight: 15
@@ -258,7 +254,7 @@ content:
     region: content
   field_website:
     weight: 13
-    label: above
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
@@ -277,4 +273,5 @@ hidden:
   content_moderation_control: true
   field_geolocation_entity: true
   field_image: true
+  field_media: true
   search_api_excerpt: true

@@ -1,0 +1,8 @@
+uuid: 95e8ec77-c25b-4237-bc23-39c1860418e2
+langcode: en
+status: true
+dependencies: {  }
+id: hero
+label: Hero
+revision: 1
+description: 'Large banner with a background image, title, text area, and button.'

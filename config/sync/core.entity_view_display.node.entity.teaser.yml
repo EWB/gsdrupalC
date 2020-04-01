@@ -22,8 +22,69 @@ dependencies:
     - field.field.node.entity.field_website
     - node.type.entity
   module:
+    - layout_builder
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: layout_twocol_section
+        layout_settings:
+          label: ''
+          column_widths: 33-67
+        components:
+          6cc64fcb-f323-4abf-b5d9-b4959eb833fc:
+            uuid: 6cc64fcb-f323-4abf-b5d9-b4959eb833fc
+            region: second
+            configuration:
+              id: 'field_block:node:entity:body'
+              label: Description
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_summary_or_trimmed
+                settings:
+                  trim_length: 600
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+          4cbb8df3-8b07-4ff9-be5a-00e2f82fcfca:
+            uuid: 4cbb8df3-8b07-4ff9-be5a-00e2f82fcfca
+            region: second
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'extra_field_block:node:entity:links'
+            additional: {  }
+            weight: 1
+          73ecc2ce-2b7d-4ee7-8ec6-f0ec28cfe926:
+            uuid: 73ecc2ce-2b7d-4ee7-8ec6-f0ec28cfe926
+            region: first
+            configuration:
+              id: 'field_block:node:entity:field_media'
+              label: Photograph
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_entity_view
+                settings:
+                  view_mode: square_medium
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 1
+        third_party_settings: {  }
 id: node.entity.teaser
 targetEntityType: node
 bundle: entity
@@ -45,6 +106,7 @@ content:
 hidden:
   content_moderation_control: true
   entity_food_guide_preview_entity_view_1: true
+  entity_media_gallery_entity_view_1: true
   field_accepts: true
   field_address: true
   field_certifications: true

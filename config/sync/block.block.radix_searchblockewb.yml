@@ -1,0 +1,25 @@
+uuid: ea6f162e-22f7-4dab-a4cd-ace911184bfc
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:c9f7a2e7-d38e-4382-bd26-73855d096b34'
+  module:
+    - block_content
+  theme:
+    - radix
+id: radix_searchblockewb
+theme: radix
+region: navbar_branding
+weight: -10
+provider: null
+plugin: 'block_content:c9f7a2e7-d38e-4382-bd26-73855d096b34'
+settings:
+  id: 'block_content:c9f7a2e7-d38e-4382-bd26-73855d096b34'
+  label: 'Search Block EWB'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

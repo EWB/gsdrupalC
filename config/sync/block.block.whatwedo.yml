@@ -1,0 +1,31 @@
+uuid: db522800-9773-4630-91d5-e4e25198661c
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:413a9964-cdd5-491a-9534-d56d5cc0b3d1'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: whatwedo
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:413a9964-cdd5-491a-9534-d56d5cc0b3d1'
+settings:
+  id: 'block_content:413a9964-cdd5-491a-9534-d56d5cc0b3d1'
+  label: 'What We Do'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/300
+    negate: false
+    context_mapping: {  }

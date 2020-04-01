@@ -7,8 +7,11 @@ dependencies:
     - field.field.node.narrative.field_authorship
     - field.field.node.narrative.field_banner_color
     - field.field.node.narrative.field_banner_media_element
+    - field.field.node.narrative.field_category
+    - field.field.node.narrative.field_container_fluid
     - field.field.node.narrative.field_paragraph_elements
     - field.field.node.narrative.field_subtitle
+    - field.field.node.narrative.field_teaser
     - node.type.narrative
   module:
     - entity_reference_revisions
@@ -46,5 +49,9 @@ content:
 hidden:
   content_moderation_control: true
   field_banner_color: true
+  field_category: true
+  field_container_fluid: true
   field_paragraph_elements: true
+  field_teaser: true
   links: true
+  search_api_excerpt: true

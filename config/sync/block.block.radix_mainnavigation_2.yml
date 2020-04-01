@@ -1,0 +1,27 @@
+uuid: 93022946-8988-42f9-bde0-dae00164feb8
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - menu_block
+  theme:
+    - radix
+id: radix_mainnavigation_2
+theme: radix
+region: navbar_branding
+weight: -13
+provider: null
+plugin: 'menu_block:main'
+settings:
+  id: 'menu_block:main'
+  label: 'Main navigation'
+  provider: menu_block
+  label_display: '0'
+  level: 1
+  depth: 2
+  expand: 1
+  parent: 'main:'
+  suggestion: side
+visibility: {  }

@@ -1,0 +1,31 @@
+uuid: d93248c4-6a03-4130-912d-ab2fd78715e6
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:588c796f-1bc4-4631-9dfe-f7a16e619346'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: staffpage
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:588c796f-1bc4-4631-9dfe-f7a16e619346'
+settings:
+  id: 'block_content:588c796f-1bc4-4631-9dfe-f7a16e619346'
+  label: 'Meet the Staff'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/304
+    negate: false
+    context_mapping: {  }

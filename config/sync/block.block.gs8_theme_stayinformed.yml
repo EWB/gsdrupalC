@@ -1,0 +1,25 @@
+uuid: 12828af3-4117-4055-bad5-d70225dddec9
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:feature_block:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+  module:
+    - block_content
+  theme:
+    - gs8_theme
+id: gs8_theme_stayinformed
+theme: gs8_theme
+region: navbar_branding
+weight: -7
+provider: null
+plugin: 'block_content:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+settings:
+  id: 'block_content:6d0fd7c5-4feb-4829-9d27-dc1ecb3daf98'
+  label: 'Sign up for mailing lists'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

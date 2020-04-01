@@ -1,0 +1,20 @@
+uuid: 82e05e38-4cf0-4f8a-a0e0-df254bba12bc
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+id: 1_gs_ewb_person_ct
+label: '1 GS EWB - Person CT'
+code: ".person__field-position {\r\n  font-weight:bold;\r\n  font-size:1.4rem;\r\n  padding-bottom:1.4rem;\r\n}"
+media: all
+preprocess: true
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      person: person
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+conditions_require_all: true

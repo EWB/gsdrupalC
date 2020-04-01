@@ -1,0 +1,22 @@
+uuid: e788a6f0-7ff9-4537-9dae-a9cf9d0cb47f
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - gs8_theme
+_core:
+  default_config_hash: iggZSiUKz4mYP1YPJ8SsUfFu79HIgOTt6IDy3Up59aM
+id: gs8_theme_powered
+theme: gs8_theme
+region: navbar_branding
+weight: -14
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }

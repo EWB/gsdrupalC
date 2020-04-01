@@ -1,0 +1,22 @@
+uuid: 24ecdd02-105b-47e0-91a1-a676324c92fa
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - gs8_theme
+_core:
+  default_config_hash: MhtNdV__HKRTab0ZPjkPNfYL4Ng4UPBucDLoC7Rg5Eo
+id: gs8_theme_help
+theme: gs8_theme
+region: content
+weight: -25
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,8 @@
+uuid: e5b9fdcc-6fc4-41d2-a768-e7e9e759361b
+langcode: en
+status: true
+dependencies: {  }
+name: 'Study Author'
+vid: study_author
+description: ''
+weight: 0

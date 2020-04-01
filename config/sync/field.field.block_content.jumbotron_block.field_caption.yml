@@ -1,0 +1,21 @@
+uuid: f71c48ae-fce8-4846-a57c-8aff3b94eabe
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.jumbotron_block
+    - field.storage.block_content.field_caption
+  module:
+    - text
+id: block_content.jumbotron_block.field_caption
+field_name: field_caption
+entity_type: block_content
+bundle: jumbotron_block
+label: Caption
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

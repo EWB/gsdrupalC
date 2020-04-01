@@ -1,0 +1,17 @@
+uuid: 8c9aa1d5-f11d-4b2e-8bc7-b6feddc6dd08
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_ewb_donate_paypal
+label: '1 GS - EWB Donate Paypal'
+code: ".paypal-button {\r\n    margin: auto;\r\n    width: 50%;\r\n}  "
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: "/node/279\r\n/node/293"
+    negate: false
+conditions_require_all: true

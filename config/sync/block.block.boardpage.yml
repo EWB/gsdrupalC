@@ -1,0 +1,31 @@
+uuid: a6ef9677-fe5d-429e-a181-bf8dfebe94c8
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:25bab669-b5d2-493c-ba7a-3a79350646d1'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: boardpage
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:25bab669-b5d2-493c-ba7a-3a79350646d1'
+settings:
+  id: 'block_content:25bab669-b5d2-493c-ba7a-3a79350646d1'
+  label: 'Meet the Board'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/305
+    negate: false
+    context_mapping: {  }

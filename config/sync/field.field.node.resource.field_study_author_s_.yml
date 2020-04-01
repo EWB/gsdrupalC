@@ -1,0 +1,29 @@
+uuid: cbe6c0d7-0b5b-4e98-9c08-db35fd6f72cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_study_author_s_
+    - node.type.resource
+    - taxonomy.vocabulary.study_author
+id: node.resource.field_study_author_s_
+field_name: field_study_author_s_
+entity_type: node
+bundle: resource
+label: 'Study Author'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      study_author: study_author
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

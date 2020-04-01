@@ -1,4 +1,4 @@
-uuid: 11230238-805f-4d20-915e-a5f88ece9205
+uuid: 93dbe544-14ea-4701-8826-0e18529e1d60
 langcode: en
 status: true
 dependencies:
@@ -12,9 +12,9 @@ name: 'Distribution Method'
 url_alias: distribution_method
 weight: 0
 min_count: 1
-show_only_one_result: true
+show_only_one_result: false
 field_identifier: field_distribution_metjh
-facet_source_id: 'search_api:views_page__entities__page_1'
+facet_source_id: 'search_api:views_page__entities__fluid_page_1'
 widget:
   type: dropdown
   config:
@@ -26,8 +26,20 @@ expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
 hard_limit: 0
 exclude: false
-only_visible_when_facet_source_is_visible: false
+only_visible_when_facet_source_is_visible: true
 processor_configs:
+  active_widget_order:
+    processor_id: active_widget_order
+    weights:
+      sort: 20
+    settings:
+      sort: DESC
+  count_widget_order:
+    processor_id: count_widget_order
+    weights:
+      sort: 30
+    settings:
+      sort: DESC
   display_value_widget_order:
     processor_id: display_value_widget_order
     weights:

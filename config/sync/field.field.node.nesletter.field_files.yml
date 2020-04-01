@@ -1,0 +1,27 @@
+uuid: a1d6be99-6d25-488c-add4-920bf9693824
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_files
+    - node.type.nesletter
+  module:
+    - file
+id: node.nesletter.field_files
+field_name: field_files
+entity_type: node
+bundle: nesletter
+label: 'Newsletter PDF'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt pdf'
+  max_filesize: '8 MB'
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

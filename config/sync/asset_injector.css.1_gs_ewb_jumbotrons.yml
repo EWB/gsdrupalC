@@ -1,0 +1,11 @@
+uuid: 5f6e7ca9-7569-44fd-92d1-4ef0a0f6c67e
+langcode: en
+status: true
+dependencies: {  }
+id: 1_gs_ewb_jumbotrons
+label: '1 GS EWB Jumbotrons-Hero Blocks'
+code: ".jumbotron  {\r\n   background-attachment: fixed;\r\n   margin-bottom:0;\r\n   min-height: 30vh;\r\n}\r\n.jumbotron H2, .lead { \r\n  color:#FFFFFF;\r\n  text-align: center;\r\n text-shadow: 2px 2px 2px #353534;\r\n}\r\n.jumbotron H2  { \r\n  color:#FFFFFF;\r\n  text-align: center;\r\n text-shadow: 2px 2px 2px #353534;\r\n}\r\n.block--jumbotron-block img {\r\n    background-size: cover;\r\n    background-position: center bottom;\r\n    max-height: 330px;\r\n}\r\n.block--jumbotron-block h2{\r\n  position: absolute;\r\n  top: 20%;\r\n  left: 50%;\r\n  transform: translate(-50%, -50%);\r\n  color:white;\r\n}\r\n\r\n\r\n.caption p {\r\n    margin-top: .5rem;\r\n    margin-right: 4rem;\r\n    margin-bottom: 0;\r\n    font-size:.91rem;\r\n    float: right;\r\n}\r\n.credit p {\r\n  font-size:.8rem;\r\n  float:right;\r\n  font-style: italic;\r\n  clear:both;\r\n  margin-right:4rem;\r\n  \r\n}\r\n\r\n/* Portrait and Landscape */\r\n@media only screen \r\n  and (min-device-width: 320px) \r\n  and (max-device-width: 480px) {\r\n    .jumbotron {\r\n       background-attachment:scroll;\r\n    }\r\n  }"
+media: all
+preprocess: true
+conditions: {  }
+conditions_require_all: true

@@ -20,11 +20,11 @@ dependencies:
     - field.field.node.entity.field_products
     - field.field.node.entity.field_type
     - field.field.node.entity.field_website
-    - image.style.medium_
+    - image.style.max_650x650
     - node.type.entity
   module:
     - field_group
-    - media
+    - slick
     - user
 third_party_settings:
   field_group:
@@ -33,7 +33,7 @@ third_party_settings:
         - group_column_one
         - group_column_two
       parent_name: ''
-      weight: 7
+      weight: 8
       format_type: html_element
       format_settings:
         id: ''
@@ -114,18 +114,89 @@ bundle: entity
 mode: card
 content:
   field_media:
-    type: media_thumbnail
+    type: slick_media
     weight: 0
     region: content
     label: visually_hidden
     settings:
-      image_style: medium_
-      image_link: content
+      style: ''
+      optionset: default
+      optionset_thumbnail: ''
+      skin: ''
+      skin_thumbnail: ''
+      image_style: max_650x650
+      responsive_image_style: ''
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      media_switch: ''
+      box_style: ''
+      thumbnail_style: ''
+      box_media_style: ''
+      ratio: ''
+      box_caption: ''
+      view_mode: default
+      box_caption_custom: ''
+      grid: null
+      grid_medium: null
+      grid_small: null
+      visible_items: null
+      image: field_image
+      title: field_caption
+      link: ''
+      layout: ''
+      thumbnail_caption: ''
+      class: ''
+      cache: 0
+      sizes: ''
+      breakpoints:
+        xs:
+          image_style: ''
+          width: ''
+        sm:
+          image_style: ''
+          width: ''
+        md:
+          image_style: ''
+          width: ''
+        lg:
+          image_style: ''
+          width: ''
+        xl:
+          image_style: ''
+          width: ''
+      current_view_mode: card
+      vanilla: false
+      background: false
+      caption:
+        field_caption: '0'
+        field_citation: '0'
+        field_height: '0'
+        field_image: '0'
+        field_width: '0'
+      preserve_keys: false
+      override: false
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      thumbnail: ''
+      skin_arrows: ''
+      skin_dots: ''
+      icon: ''
+      grid_header: ''
+      id: ''
+      overlay: ''
     third_party_settings: {  }
 hidden:
   body: true
   content_moderation_control: true
   entity_food_guide_preview_entity_view_1: true
+  entity_media_gallery_entity_view_1: true
   field_accepts: true
   field_address: true
   field_certifications: true

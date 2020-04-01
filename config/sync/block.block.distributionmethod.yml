@@ -1,4 +1,4 @@
-uuid: 5ba2ca0e-474d-4668-8e5c-6153c142b18a
+uuid: 80b581ab-2527-42c6-b0da-bde8948757a1
 langcode: en
 status: true
 dependencies:
@@ -8,11 +8,11 @@ dependencies:
     - facets
     - system
   theme:
-    - university_bootstrap
+    - gs8_theme
 id: distributionmethod
-theme: university_bootstrap
+theme: gs8_theme
 region: sidebar_first
-weight: -17
+weight: -19
 provider: null
 plugin: 'facet_block:distribution_method'
 settings:
@@ -24,6 +24,6 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: "/entities*\r\n/guide*"
+    pages: /guide
     negate: false
     context_mapping: {  }

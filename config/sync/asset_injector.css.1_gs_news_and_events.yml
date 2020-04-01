@@ -1,0 +1,17 @@
+uuid: 81c9c316-6edc-48fd-8842-3fba4de2edb2
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_news_and_events
+label: '1 GS - News and Events'
+code: "li {\r\n  list-style:none;\r\n}\r\n.field-content h4 {\r\n  margin-top:.5rem;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /node/306
+    negate: false
+conditions_require_all: true

@@ -1,0 +1,31 @@
+uuid: 22573bd7-7785-400f-ad02-f91be3ae5315
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:66a2d8c3-547c-4fc4-bb30-115147f2705b'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: localfoodsystem
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:66a2d8c3-547c-4fc4-bb30-115147f2705b'
+settings:
+  id: 'block_content:66a2d8c3-547c-4fc4-bb30-115147f2705b'
+  label: 'Local Food'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/251
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,21 @@
+uuid: 3e64708f-a2d5-4898-8b18-85aac7aa0c25
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.hero
+    - field.storage.block_content.field_caption
+  module:
+    - text
+id: block_content.hero.field_caption
+field_name: field_caption
+entity_type: block_content
+bundle: hero
+label: Caption
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

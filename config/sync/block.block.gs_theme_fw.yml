@@ -1,0 +1,35 @@
+uuid: 84aaeec1-9b26-46d3-a438-c87145745052
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:eb66afe6-685b-41d4-8cc5-8ce7d3144c8c'
+  module:
+    - block_class
+    - block_content
+    - system
+  theme:
+    - gs_theme
+third_party_settings:
+  block_class:
+    classes: 'farmer-week row'
+id: gs_theme_fw
+theme: gs_theme
+region: content
+weight: -5
+provider: null
+plugin: 'block_content:eb66afe6-685b-41d4-8cc5-8ce7d3144c8c'
+settings:
+  id: 'block_content:eb66afe6-685b-41d4-8cc5-8ce7d3144c8c'
+  label: FW
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

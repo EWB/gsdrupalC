@@ -1,0 +1,34 @@
+uuid: fb0b87fb-4aa9-4553-9f6d-375515bbfdc3
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.gs_in_action
+  module:
+    - block_class
+    - system
+    - views
+  theme:
+    - radix
+third_party_settings:
+  block_class:
+    classes: 'row layout-content gs-in-action'
+id: radix_views_block__gs_in_action_block_1
+theme: radix
+region: content
+weight: -11
+provider: null
+plugin: 'views_block:gs_in_action-block_1'
+settings:
+  id: 'views_block:gs_in_action-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

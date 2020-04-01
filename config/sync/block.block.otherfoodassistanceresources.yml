@@ -1,0 +1,31 @@
+uuid: 5d28a438-6b18-48c7-97f6-b3724e5ea7ea
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:54d53d0f-6993-469a-b5ea-e0b7da4f91dc'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: otherfoodassistanceresources
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:54d53d0f-6993-469a-b5ea-e0b7da4f91dc'
+settings:
+  id: 'block_content:54d53d0f-6993-469a-b5ea-e0b7da4f91dc'
+  label: 'Other Food Assistance Resources'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /content/other-food-assistance-resources
+    negate: false
+    context_mapping: {  }

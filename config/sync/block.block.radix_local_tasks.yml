@@ -1,0 +1,29 @@
+uuid: 7f5524b5-b59b-41e6-8ea6-e534ff02b95d
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - radix
+_core:
+  default_config_hash: qHdtze2DZ2mFfaJadxjZz6epm92_SN9SAFY4yJGl8Fo
+id: radix_local_tasks
+theme: radix
+region: content
+weight: -15
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  provider: core
+  label_display: visible
+  primary: true
+  secondary: true
+visibility:
+  request_path:
+    id: request_path
+    pages: what-people-are-saying
+    negate: false
+    context_mapping: {  }

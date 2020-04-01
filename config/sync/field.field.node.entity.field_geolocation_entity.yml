@@ -13,10 +13,12 @@ third_party_settings:
     method: source
     weight: 0
     geocode_field: field_address
-    reverse_geocode_field: {  }
-    hidden: false
+    reverse_geocode_field: ''
+    skip_not_empty_value: 0
     disabled: false
+    hidden: false
     plugins:
+      - googlemaps
       - openstreetmap
     dumper: geolocation
     delta_handling: default

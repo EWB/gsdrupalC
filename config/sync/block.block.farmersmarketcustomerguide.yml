@@ -1,0 +1,31 @@
+uuid: 59592cba-5c36-48f8-bafc-e879d6bf7f4c
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:64b9c1b6-900a-4c33-bec7-6f1e00fc00bd'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: farmersmarketcustomerguide
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:64b9c1b6-900a-4c33-bec7-6f1e00fc00bd'
+settings:
+  id: 'block_content:64b9c1b6-900a-4c33-bec7-6f1e00fc00bd'
+  label: 'Farmers Market Customer Guide '
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/268
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,50 @@
+uuid: 7b27f270-5d8b-45df-bb42-170e5ae8fd43
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.nesletter.body
+    - field.field.node.nesletter.field_date
+    - field.field.node.nesletter.field_files
+    - node.type.nesletter
+  module:
+    - datetime
+    - file
+    - text
+    - user
+id: node.nesletter.default
+targetEntityType: node
+bundle: nesletter
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_date:
+    weight: 102
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_files:
+    weight: 103
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  search_api_excerpt: true
