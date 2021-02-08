@@ -1,0 +1,12 @@
+'live':
+  host: gardenshare.org
+  root: '/home/gardens1/drupal/www.gardenshare.org/docroot'
+  paths:
+    files: web/sites/default/files
+    drush-script: /home/gardens1/drupal/www.gardenshare.org/docroot/vendor/drush/drush/drush
+  uri: gardenshare.org
+  user: gardens1
+  ssh:
+    options: ''
+    tty: false
+
