@@ -1,0 +1,19 @@
+uuid: 03988bcc-31a2-4fbe-a002-0d4939844c47
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.local_food_community_calendar_su
+    - field.storage.contact_message.field_phone
+id: contact_message.local_food_community_calendar_su.field_phone
+field_name: field_phone
+entity_type: contact_message
+bundle: local_food_community_calendar_su
+label: 'Contact Phone'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

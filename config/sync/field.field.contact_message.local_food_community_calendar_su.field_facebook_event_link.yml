@@ -1,0 +1,19 @@
+uuid: 520a456f-1d21-4d28-81ee-5fde6a3e04a7
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.local_food_community_calendar_su
+    - field.storage.contact_message.field_facebook_event_link
+id: contact_message.local_food_community_calendar_su.field_facebook_event_link
+field_name: field_facebook_event_link
+entity_type: contact_message
+bundle: local_food_community_calendar_su
+label: 'FaceBook Event Link'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

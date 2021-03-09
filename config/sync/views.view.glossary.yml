@@ -352,7 +352,9 @@ display:
           plugin_id: language
           entity_type: node
           entity_field: langcode
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
     cache_metadata:
       contexts:
         - 'languages:language_content'
@@ -420,7 +422,9 @@ display:
         default: default
         page_1: page_1
       inherit_arguments: false
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
     cache_metadata:
       contexts:
         - 'languages:language_content'
@@ -447,7 +451,9 @@ display:
         weight: 0
         menu_name: main
         parent: ''
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
     cache_metadata:
       contexts:
         - 'languages:language_content'

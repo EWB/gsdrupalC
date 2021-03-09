@@ -15,7 +15,6 @@ dependencies:
   content:
     - 'taxonomy_term:type:1d8a772d-b1c3-46ce-985f-7c1ed582ea19'
     - 'taxonomy_term:type:2e059888-3f8f-4b37-b9c3-725b4d9ccba5'
-    - 'taxonomy_term:type:3d763276-fadb-4ec8-a2fb-787dc55333a7'
     - 'taxonomy_term:type:76384146-15de-4239-b687-0e2b9f9c5403'
     - 'taxonomy_term:type:79891d81-aaad-4f9b-a2d7-4882e90c81d5'
     - 'taxonomy_term:type:83b1b427-2bea-4de0-8b4e-b683fb752085'
@@ -78,11 +77,6 @@ display:
               autosubmit: false
               autosubmit_exclude_textfield: false
               autosubmit_hide: true
-            combine:
-              bef_format: default
-              more_options:
-                is_secondary: false
-                placeholder_text: Search
             field_geolocation_entity_boundary:
               bef_format: default
               more_options:
@@ -113,6 +107,11 @@ display:
                 is_secondary: false
                 rewrite:
                   filter_rewrite_values: ''
+            title:
+              bef_format: default
+              more_options:
+                is_secondary: false
+                placeholder_text: Search
           text_input_required_format: basic_html
       pager:
         type: none
@@ -1170,10 +1169,10 @@ display:
           expose:
             operator_limit_selection: false
             operator_list: {  }
-        combine:
-          id: combine
-          table: views
-          field: combine
+        title:
+          id: title
+          table: node_field_data
+          field: title
           relationship: none
           group_type: group
           admin_label: ''
@@ -1182,14 +1181,14 @@ display:
           group: 1
           exposed: true
           expose:
-            operator_id: combine_op
+            operator_id: title_op
             label: ''
             description: ''
             use_operator: false
-            operator: combine_op
+            operator: title_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: search
+            identifier: title
             required: false
             remember: false
             multiple: false
@@ -1213,10 +1212,9 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          fields:
-            title: title
-            field_address: field_address
-          plugin_id: combine
+          entity_type: node
+          entity_field: title
+          plugin_id: string
         field_geolocation_entity_boundary:
           id: field_geolocation_entity_boundary
           table: node__field_geolocation_entity
@@ -1492,7 +1490,9 @@ display:
           plugin_id: text
       relationships: {  }
       arguments: {  }
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       css_class: 'map-with-sidebar map-right'
       use_ajax: true
       filter_groups:
@@ -1519,7 +1519,9 @@ display:
     display_title: 'Page with master map'
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       path: food-guide
       display_description: ''
       header:
@@ -1533,7 +1535,7 @@ display:
           empty: false
           tokenize: false
           content:
-            value: "<div class=\"jumbotron-block__body quickedit-field\"><div class=\"jumbotron jumbotron-fluid navbar-expand-lg py-1 mb-1\" style=\"background-image: url(/sites/default/files/media/image/2020-03/never-tire-farm.jpg); background-size: cover; background-position: bottom\">\r\n<div class=\"container\">\r\n<h2 class=\"display-3\">Local Food Guide</h2>\r\n\r\n<p class=\"lead\">Brought to you by <a class=\"food-guide-banner-link bg-white pb-1 rounded\" href=\"http://stlawrence.cce.cornell.edu/\"><img class=\"bg-white rounded px-2\" width=\"400\" alt=\"Cornell Cooperative Extension | St. Lawrence County\" src=\"/themes/custom/university_bootstrap/images/cce-logo.png?adsf\"></a></p>\r\n</div>\r\n</div>\r\n</div>"
+            value: "<div class=\"jumbotron-block__body quickedit-field\"><div class=\"jumbotron jumbotron-fluid navbar-expand-lg py-1 mb-1\" style=\"background-image: url(/sites/default/files/media/image/2020-04/lgf.jpg); background-size: cover; background-position: bottom\">\r\n<div class=\"container\">\r\n<h2 class=\"display-3\">Local Food Guide</h2>\r\n\r\n<p class=\"lead\">Brought to you by <a class=\"food-guide-banner-link bg-white pb-1 rounded\" href=\"http://stlawrence.cce.cornell.edu/\"><img class=\"bg-white rounded px-2\" width=\"400\" alt=\"Cornell Cooperative Extension | St. Lawrence County\" src=\"/themes/custom/university_bootstrap/images/cce-logo.png?adsf\"></a></p>\r\n</div>\r\n</div>\r\n</div>"
             format: full_html
           plugin_id: text
         area:
@@ -1552,6 +1554,8 @@ display:
       defaults:
         header: false
         footer: false
+        filters: false
+        filter_groups: false
       footer:
         area_text_custom:
           id: area_text_custom
@@ -1564,6 +1568,310 @@ display:
           tokenize: false
           content: '<a class="food-guide-banner-link" href="http://stlawrence.cce.cornell.edu/"><img width="400" alt="Cornell Cooperative Extension | St. Lawrence County" src="/themes/custom/university_bootstrap/images/cce-logo.png?adsf"></a>'
           plugin_id: text_custom
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            entity: entity
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: ''
+            description: ''
+            use_operator: false
+            operator: title_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: title
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            placeholder: 'Search by farm name...'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+        field_geolocation_entity_boundary:
+          id: field_geolocation_entity_boundary
+          table: node__field_geolocation_entity
+          field: field_geolocation_entity_boundary
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            lat_north_east: ''
+            lng_north_east: ''
+            lat_south_west: ''
+            lng_south_west: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: Boundary
+            description: ''
+            use_operator: false
+            operator: field_geolocation_entity_boundary_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_geolocation_entity_boundary
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            input_by_geocoding_widget: 1
+            geocoder_plugin_settings:
+              plugin_id: google_geocoding_api
+              settings:
+                label: ''
+                description: 'Find Address on Map'
+                autocomplete_min_length: 1
+                component_restrictions:
+                  route: ''
+                  locality: ''
+                  administrative_area: ''
+                  postal_code: ''
+                  country: ''
+                boundary_restriction:
+                  south: ''
+                  west: ''
+                  north: ''
+                  east: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: geolocation_filter_boundary
+        field_type_target_id:
+          id: field_type_target_id
+          table: node__field_type
+          field: field_type_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value:
+            24: 24
+            49: 49
+            16: 16
+            17: 17
+            18: 18
+            19: 19
+            20: 20
+            21: 21
+            23: 23
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_type_target_id_op
+            label: Legend
+            description: ''
+            use_operator: false
+            operator: field_type_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: true
+          type: select
+          limit: true
+          vid: type
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_distribution_metjh_target_id:
+          id: field_distribution_metjh_target_id
+          table: node__field_distribution_metjh
+          field: field_distribution_metjh_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_distribution_metjh_target_id_op
+            label: 'Filter Farms by Distribution Method'
+            description: ''
+            use_operator: false
+            operator: field_distribution_metjh_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: method
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              anonymous: anonymous
+              authenticated: authenticated
+              administrator: administrator
+              contributor: contributor
+              editor: editor
+              p: p
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: distribution_method
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_products_target_id:
+          id: field_products_target_id
+          table: node__field_products
+          field: field_products_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: products_op
+            label: 'Filter Farms by Products'
+            description: ''
+            use_operator: false
+            operator: field_products_target_id_op
+            operator_limit_selection: true
+            operator_list:
+              or: or
+              and: and
+              not: not
+            identifier: products
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              anonymous: anonymous
+              authenticated: authenticated
+              administrator: administrator
+              contributor: contributor
+              editor: editor
+              p: p
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: products
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
     cache_metadata:
       max-age: -1
       contexts:
@@ -1584,7 +1892,9 @@ display:
     display_title: 'Farm Page with master map'
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       path: food-guide/farms
       display_description: ''
       header:
@@ -1798,6 +2108,55 @@ display:
           hierarchy: false
           error_message: true
           plugin_id: taxonomy_index_tid
+        combine:
+          id: combine
+          table: views
+          field: combine
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: combine_op
+            label: ''
+            description: ''
+            use_operator: false
+            operator: combine_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: search
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          fields:
+            nid: nid
+            title: title
+            field_address: field_address
+            nothing: nothing
+          plugin_id: combine
       filter_groups:
         operator: AND
         groups:
@@ -1864,7 +2223,9 @@ display:
     display_title: 'List - Attachment'
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       display_description: ''
       defaults:
         style: false
@@ -1872,6 +2233,8 @@ display:
         css_class: false
         fields: false
         header: false
+        filters: false
+        filter_groups: false
       css_class: 'map-sidebar-left map-list'
       pager:
         type: none
@@ -2567,6 +2930,310 @@ display:
           empty: false
           content: '@total results found'
           plugin_id: result
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            entity: entity
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: ''
+            description: ''
+            use_operator: false
+            operator: title_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: title
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            placeholder: 'Search by Farm'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+        field_geolocation_entity_boundary:
+          id: field_geolocation_entity_boundary
+          table: node__field_geolocation_entity
+          field: field_geolocation_entity_boundary
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            lat_north_east: ''
+            lng_north_east: ''
+            lat_south_west: ''
+            lng_south_west: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: Boundary
+            description: ''
+            use_operator: false
+            operator: field_geolocation_entity_boundary_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_geolocation_entity_boundary
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            input_by_geocoding_widget: 1
+            geocoder_plugin_settings:
+              plugin_id: google_geocoding_api
+              settings:
+                label: ''
+                description: 'Find Address on Map'
+                autocomplete_min_length: 1
+                component_restrictions:
+                  route: ''
+                  locality: ''
+                  administrative_area: ''
+                  postal_code: ''
+                  country: ''
+                boundary_restriction:
+                  south: ''
+                  west: ''
+                  north: ''
+                  east: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: geolocation_filter_boundary
+        field_type_target_id:
+          id: field_type_target_id
+          table: node__field_type
+          field: field_type_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value:
+            24: 24
+            49: 49
+            16: 16
+            17: 17
+            18: 18
+            19: 19
+            20: 20
+            21: 21
+            23: 23
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_type_target_id_op
+            label: Legend
+            description: ''
+            use_operator: false
+            operator: field_type_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              editor: '0'
+              p: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: true
+          type: select
+          limit: true
+          vid: type
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_distribution_metjh_target_id:
+          id: field_distribution_metjh_target_id
+          table: node__field_distribution_metjh
+          field: field_distribution_metjh_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_distribution_metjh_target_id_op
+            label: 'Filter Farms by Distribution Method'
+            description: ''
+            use_operator: false
+            operator: field_distribution_metjh_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: method
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              anonymous: anonymous
+              authenticated: authenticated
+              administrator: administrator
+              contributor: contributor
+              editor: editor
+              p: p
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: distribution_method
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_products_target_id:
+          id: field_products_target_id
+          table: node__field_products
+          field: field_products_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: products_op
+            label: 'Filter Farms by Products'
+            description: ''
+            use_operator: false
+            operator: field_products_target_id_op
+            operator_limit_selection: true
+            operator_list:
+              or: or
+              and: and
+              not: not
+            identifier: products
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              anonymous: anonymous
+              authenticated: authenticated
+              administrator: administrator
+              contributor: contributor
+              editor: editor
+              p: p
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: products
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
     cache_metadata:
       max-age: -1
       contexts:

@@ -1,0 +1,12 @@
+uuid: 65ebcaf1-c281-4aa6-b548-42c24ebc982b
+langcode: en
+status: true
+dependencies: {  }
+id: local_food_community_calendar_su
+label: 'Local Food Community Calendar Submission Form'
+recipients:
+  - ana.williams.bergen@gmail.com
+reply: ''
+weight: 0
+message: 'Thank you for submitting an event! The GardenShare staff will review the event information and, if approved, the event will appear on the online calendar. '
+redirect: ''

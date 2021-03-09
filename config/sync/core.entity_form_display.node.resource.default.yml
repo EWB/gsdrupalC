@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.resource.body
     - field.field.node.resource.field_files
+    - field.field.node.resource.field_media
     - field.field.node.resource.field_study_author_s_
     - field.field.node.resource.field_teaser_text
     - node.type.resource
@@ -40,6 +41,16 @@ content:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
+    region: content
+  field_media:
+    weight: 125
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_study_author_s_:
     weight: 124

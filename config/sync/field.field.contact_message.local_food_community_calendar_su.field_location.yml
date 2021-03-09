@@ -1,0 +1,19 @@
+uuid: a57d1ff0-5341-4a7b-8875-b5cbcb28a0de
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.local_food_community_calendar_su
+    - field.storage.contact_message.field_location
+id: contact_message.local_food_community_calendar_su.field_location
+field_name: field_location
+entity_type: contact_message
+bundle: local_food_community_calendar_su
+label: Location
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

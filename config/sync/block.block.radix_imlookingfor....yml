@@ -20,6 +20,8 @@ settings:
   label: 'I''m looking for...'
   provider: menu_block
   label_display: visible
+  follow: false
+  follow_parent: child
   level: 1
   depth: 0
   expand: 0

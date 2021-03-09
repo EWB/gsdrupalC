@@ -507,7 +507,9 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       use_ajax: true
     cache_metadata:
       max-age: -1
@@ -527,7 +529,9 @@ display:
     display_title: 'Entity browser'
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
     cache_metadata:
       max-age: -1
       contexts:

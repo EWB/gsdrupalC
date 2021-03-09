@@ -1,0 +1,17 @@
+uuid: 2081ae9d-57bd-4fdb-a45a-cd62ca91f2cf
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: ewb_calendar_submission_form
+label: 'EWB Calendar Submission Form'
+code: ".field__label.font-weight-bold {\r\n    display: none;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /node/352
+    negate: false
+conditions_require_all: true

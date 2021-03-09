@@ -1,0 +1,19 @@
+uuid: 85325e7f-3712-49b7-bf47-90b8a5c4b84e
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.local_food_community_calendar_su
+    - field.storage.contact_message.field_cost
+id: contact_message.local_food_community_calendar_su.field_cost
+field_name: field_cost
+entity_type: contact_message
+bundle: local_food_community_calendar_su
+label: 'Cost to attend'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

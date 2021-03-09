@@ -1265,7 +1265,9 @@ display:
           entity_type: node
           entity_field: nid
           plugin_id: node_nid
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       css_class: 'map-with-sidebar map-right'
       use_ajax: true
       filter_groups:
@@ -1291,7 +1293,9 @@ display:
     display_title: EVA
     position: 3
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       entity_type: node
       bundles:
         - entity
@@ -1314,7 +1318,9 @@ display:
     display_title: 'Page with master map'
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       path: food-guide
       display_description: ''
       header:
@@ -1353,7 +1359,9 @@ display:
     display_title: 'List - Attachment'
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       display_description: ''
       defaults:
         style: false

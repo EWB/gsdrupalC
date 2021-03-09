@@ -7,6 +7,7 @@ dependencies:
     - core.entity_view_mode.node.search_index
     - field.field.node.article.body
     - field.field.node.article.comment
+    - field.field.node.article.field_files
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
     - field.field.node.article.layout_builder__layout
@@ -51,6 +52,8 @@ content:
     label: hidden
     region: content
 hidden:
+  addtoany: true
+  field_files: true
   field_image: true
   layout_builder__layout: true
   links: true

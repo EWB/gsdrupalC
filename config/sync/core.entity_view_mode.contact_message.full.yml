@@ -1,0 +1,10 @@
+uuid: 1c7964e4-9f5e-48fa-a74e-151e0de4b31a
+langcode: en
+status: true
+dependencies:
+  module:
+    - contact
+id: contact_message.full
+label: Full
+targetEntityType: contact_message
+cache: true

@@ -1,0 +1,31 @@
+uuid: a6215719-9a1e-43c8-9ba7-b381ce279398
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:bebb5e3e-63ee-48cd-b290-18c4eacb377f'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: celebratecommunityfoodheroes
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:bebb5e3e-63ee-48cd-b290-18c4eacb377f'
+settings:
+  id: 'block_content:bebb5e3e-63ee-48cd-b290-18c4eacb377f'
+  label: 'Celebrate Community Food Heroes'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /heroes
+    negate: false
+    context_mapping: {  }

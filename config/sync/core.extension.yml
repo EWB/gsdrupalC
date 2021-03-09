@@ -26,6 +26,7 @@ module:
   components: 0
   config: 0
   contact: 0
+  contact_storage: 0
   content_moderation: 0
   contextual: 0
   crop: 0
@@ -67,7 +68,6 @@ module:
   libraries: 0
   link: 0
   masonry: 0
-  masonry_views: 0
   media: 0
   media_entity_generic: 0
   media_library: 0
@@ -110,6 +110,7 @@ module:
   workflows: 0
   menu_link_content: 1
   pathauto: 1
+  masonry_views: 2
   views: 10
   paragraphs: 11
   standard: 1000

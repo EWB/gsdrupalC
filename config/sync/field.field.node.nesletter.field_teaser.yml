@@ -1,0 +1,21 @@
+uuid: 6422d620-e23a-4d5b-a663-2329b7e5fa3e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_teaser
+    - node.type.nesletter
+  module:
+    - text
+id: node.nesletter.field_teaser
+field_name: field_teaser
+entity_type: node
+bundle: nesletter
+label: Summary
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

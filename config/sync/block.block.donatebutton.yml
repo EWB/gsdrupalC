@@ -1,0 +1,25 @@
+uuid: 62b54736-581b-4108-9d65-5bfa217dc403
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:fc9df01f-1da9-49de-ba2f-11cd07eaa996'
+  module:
+    - block_content
+  theme:
+    - gs8_theme
+id: donatebutton
+theme: gs8_theme
+region: navbar_right
+weight: -37
+provider: null
+plugin: 'block_content:fc9df01f-1da9-49de-ba2f-11cd07eaa996'
+settings:
+  id: 'block_content:fc9df01f-1da9-49de-ba2f-11cd07eaa996'
+  label: 'Donate Button'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

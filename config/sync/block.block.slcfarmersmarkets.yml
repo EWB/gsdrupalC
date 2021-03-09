@@ -1,0 +1,31 @@
+uuid: a3b86ff1-411b-4765-8ffd-e319d12b8fd8
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:2de52411-82e9-4433-8e9e-4ba343485368'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: slcfarmersmarkets
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:2de52411-82e9-4433-8e9e-4ba343485368'
+settings:
+  id: 'block_content:2de52411-82e9-4433-8e9e-4ba343485368'
+  label: 'SLC Farmers Markets'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/328
+    negate: false
+    context_mapping: {  }

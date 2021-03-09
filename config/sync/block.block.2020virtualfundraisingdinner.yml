@@ -1,0 +1,31 @@
+uuid: 062e60ef-1a9d-4ecb-9af6-21f2d01e59d0
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:964a88d9-1767-47cb-9613-56f7c227976e'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: 2020virtualfundraisingdinner
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:964a88d9-1767-47cb-9613-56f7c227976e'
+settings:
+  id: 'block_content:964a88d9-1767-47cb-9613-56f7c227976e'
+  label: '2020 Virtual Fundraising Dinner'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /2020dinner
+    negate: false
+    context_mapping: {  }

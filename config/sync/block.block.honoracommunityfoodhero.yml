@@ -1,0 +1,31 @@
+uuid: 42b341ec-7959-453f-af5f-f24cba38be96
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:8b7f7684-f163-4a09-ad76-a1319c8c7d61'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: honoracommunityfoodhero
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:8b7f7684-f163-4a09-ad76-a1319c8c7d61'
+settings:
+  id: 'block_content:8b7f7684-f163-4a09-ad76-a1319c8c7d61'
+  label: 'Honor a Community Food Hero'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /submit-a-hero
+    negate: false
+    context_mapping: {  }

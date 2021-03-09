@@ -1,0 +1,19 @@
+uuid: fa5bf112-b6e7-4051-a0d2-7a8fe7a52a4c
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.local_food_community_calendar_su
+    - field.storage.contact_message.field_website
+id: contact_message.local_food_community_calendar_su.field_website
+field_name: field_website
+entity_type: contact_message
+bundle: local_food_community_calendar_su
+label: 'Website for more information'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

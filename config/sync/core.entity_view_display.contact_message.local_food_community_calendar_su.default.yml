@@ -1,0 +1,300 @@
+uuid: d5dfeb58-6165-4917-acb5-78f0e4fc7e4f
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.local_food_community_calendar_su
+    - field.field.contact_message.local_food_community_calendar_su.field_contact
+    - field.field.contact_message.local_food_community_calendar_su.field_cost
+    - field.field.contact_message.local_food_community_calendar_su.field_event_description
+    - field.field.contact_message.local_food_community_calendar_su.field_facebook_event_link
+    - field.field.contact_message.local_food_community_calendar_su.field_frequency
+    - field.field.contact_message.local_food_community_calendar_su.field_location
+    - field.field.contact_message.local_food_community_calendar_su.field_name
+    - field.field.contact_message.local_food_community_calendar_su.field_phone
+    - field.field.contact_message.local_food_community_calendar_su.field_start_date
+    - field.field.contact_message.local_food_community_calendar_su.field_website
+  module:
+    - datetime
+    - layout_builder
+    - options
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          7584ef14-fc16-40a5-ae26-2096d5460125:
+            uuid: 7584ef14-fc16-40a5-ae26-2096d5460125
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:message'
+              formatter:
+                type: string
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+            additional: {  }
+            weight: 0
+          e5079f7b-90cb-479f-8f48-1df9f4c6fb46:
+            uuid: e5079f7b-90cb-479f-8f48-1df9f4c6fb46
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_frequency'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: list_default
+            additional: {  }
+            weight: 1
+          cf1411a5-6095-4d74-86ac-018bfc7cef04:
+            uuid: cf1411a5-6095-4d74-86ac-018bfc7cef04
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_start_date'
+              formatter:
+                label: above
+                settings:
+                  format_type: medium
+                  timezone_override: ''
+                third_party_settings: {  }
+                type: datetime_default
+            additional: {  }
+            weight: 2
+          dc423f18-f3d7-4549-839f-b25cf0572337:
+            uuid: dc423f18-f3d7-4549-839f-b25cf0572337
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_cost'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 3
+          e41bcb7e-8bd3-4069-b597-b269aa705247:
+            uuid: e41bcb7e-8bd3-4069-b597-b269aa705247
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_event_description'
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: basic_string
+            additional: {  }
+            weight: 4
+          5d299ce9-19f8-447a-b1ce-59112f22e279:
+            uuid: 5d299ce9-19f8-447a-b1ce-59112f22e279
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_name'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 5
+          4de30237-2996-46e4-88a1-2a054dfd36f9:
+            uuid: 4de30237-2996-46e4-88a1-2a054dfd36f9
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_location'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 6
+          4da526ac-5194-40f8-8870-871a036d35ea:
+            uuid: 4da526ac-5194-40f8-8870-871a036d35ea
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_website'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 7
+          9bb31c5c-8f33-4138-be63-5cb5a0bfb09c:
+            uuid: 9bb31c5c-8f33-4138-be63-5cb5a0bfb09c
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_facebook_event_link'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 8
+          3afacca0-59be-47cb-9640-5ea01cfb52de:
+            uuid: 3afacca0-59be-47cb-9640-5ea01cfb52de
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_contact'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 9
+          e0b323c7-e749-4159-93a7-56f68cc17c3f:
+            uuid: e0b323c7-e749-4159-93a7-56f68cc17c3f
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:contact_message:local_food_community_calendar_su:field_phone'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 10
+        third_party_settings: {  }
+id: contact_message.local_food_community_calendar_su.default
+targetEntityType: contact_message
+bundle: local_food_community_calendar_su
+mode: default
+content:
+  field_contact:
+    weight: 13
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_cost:
+    weight: 6
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_event_description:
+    weight: 8
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_facebook_event_link:
+    weight: 12
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_frequency:
+    weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_location:
+    weight: 10
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_name:
+    weight: 9
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_phone:
+    weight: 14
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_start_date:
+    weight: 3
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_website:
+    weight: 11
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  message:
+    type: string
+    weight: 0
+    label: above
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,11 @@
+uuid: beee1388-83ec-4c52-b12c-e0e8685a7a8d
+langcode: en
+status: true
+dependencies: {  }
+id: donate_button
+label: 'Ana Donate Button'
+code: ".donate-button {\r\n  margin-right: .5rem;\r\n  margin-top: 1rem;\r\n}"
+media: all
+preprocess: true
+conditions: {  }
+conditions_require_all: true

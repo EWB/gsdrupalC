@@ -6,7 +6,7 @@ dependencies:
     - system
 id: 1_gs_ewb_bonus_bucks
 label: '1 - GS -EWB Bonus Bucks'
-code: ".layout__region.layout__region--content {\r\n    max-width: 450px;\r\n}"
+code: ".layout--twocol-section .layout__region.layout__region--content {\r\n  max-width:450px;\r\n}\r\n.layout--twocol-section .layout__region.layout__region--first {\r\n  padding-right: 1rem;\r\n}"
 media: all
 preprocess: true
 conditions:

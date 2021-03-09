@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_display.comment.comment.default
     - field.field.node.article.body
     - field.field.node.article.comment
+    - field.field.node.article.field_files
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
     - field.field.node.article.layout_builder__layout
@@ -13,6 +14,7 @@ dependencies:
     - node.type.article
   module:
     - comment
+    - file
     - image
     - layout_builder
     - layout_discovery
@@ -103,6 +105,22 @@ third_party_settings:
                 third_party_settings: {  }
             additional: {  }
             weight: 4
+          de4792e4-310a-483c-b6a5-ff7b65efb72c:
+            uuid: de4792e4-310a-483c-b6a5-ff7b65efb72c
+            region: content
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:article:field_files'
+              formatter:
+                label: above
+                settings:
+                  use_description_as_link_text: true
+                third_party_settings: {  }
+                type: file_default
+            additional: {  }
+            weight: 5
         third_party_settings: {  }
 _core:
   default_config_hash: qVtHNxqdXB9w369AO5JB5SVhflquWqFm5xfyvYLAIlM
@@ -132,6 +150,14 @@ content:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
+  field_files:
+    weight: 6
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
   field_image:
     type: image
     weight: 0

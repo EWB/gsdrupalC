@@ -481,7 +481,9 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       use_ajax: true
       css_class: ''
     cache_metadata:
@@ -501,7 +503,9 @@ display:
     display_title: Map
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       style:
         type: maps_common
         options:
@@ -1031,7 +1035,9 @@ display:
     display_title: Page
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       path: map
     cache_metadata:
       max-age: -1

@@ -1,0 +1,24 @@
+uuid: 1f74adf0-08be-4e43-b36a-347d181d32a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.forms
+    - field.field.block_content.forms.field_form
+id: block_content.forms.default
+targetEntityType: block_content
+bundle: forms
+mode: default
+content:
+  field_form:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden:
+  info: true

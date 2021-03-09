@@ -2,20 +2,20 @@ uuid: 086aef32-8b4f-4b7f-87a8-02eb809c7750
 langcode: en
 status: true
 dependencies:
-  config:
-    - field.storage.node.field_accepts
-    - field.storage.node.field_distribution_metjh
-    - field.storage.node.field_geolocation_entity
-    - field.storage.node.field_products
-    - field.storage.node.field_tags
-    - field.storage.node.field_type
-    - search_api.server.default_server
-    - core.entity_view_mode.node.search_index
   module:
+    - node
     - user
     - taxonomy
     - search_api
-    - node
+  config:
+    - field.storage.node.field_accepts
+    - field.storage.node.field_distribution_metjh
+    - field.storage.node.field_products
+    - field.storage.node.field_tags
+    - field.storage.node.field_type
+    - field.storage.node.field_geolocation_entity
+    - search_api.server.default_server
+    - core.entity_view_mode.node.search_index
 _core:
   default_config_hash: ZZOzsPDzemFXt9PsEqqVv44_AuKbg1LEqkr0WFzom1I
 id: default_index
@@ -30,17 +30,24 @@ field_settings:
     type: string
     dependencies:
       module:
+        - node
         - user
   changed:
     label: Changed
     datasource_id: 'entity:node'
     property_path: changed
     type: date
+    dependencies:
+      module:
+        - node
   created:
     label: 'Authored on'
     datasource_id: 'entity:node'
     property_path: created
     type: date
+    dependencies:
+      module:
+        - node
   field_accepts:
     label: Accepts
     datasource_id: 'entity:node'
@@ -141,22 +148,34 @@ field_settings:
     type: boolean
     indexed_locked: true
     type_locked: true
+    dependencies:
+      module:
+        - node
   sticky:
     label: 'Sticky at top of lists'
     datasource_id: 'entity:node'
     property_path: sticky
     type: boolean
+    dependencies:
+      module:
+        - node
   title:
     label: Title
     datasource_id: 'entity:node'
     property_path: title
     type: text
     boost: !!float 8
+    dependencies:
+      module:
+        - node
   type:
     label: 'Content type'
     datasource_id: 'entity:node'
     property_path: type
     type: string
+    dependencies:
+      module:
+        - node
   uid:
     label: 'Author ID'
     datasource_id: 'entity:node'
@@ -164,6 +183,9 @@ field_settings:
     type: integer
     indexed_locked: true
     type_locked: true
+    dependencies:
+      module:
+        - node
 datasource_settings:
   'entity:node':
     bundles:
@@ -173,6 +195,11 @@ datasource_settings:
       default: true
       selected: {  }
 processor_settings:
+  hierarchy:
+    fields:
+      field_products: taxonomy_term-parent
+    weights:
+      preprocess_index: -45
   add_url:
     weights:
       preprocess_index: -30
@@ -186,11 +213,6 @@ processor_settings:
   entity_status:
     weights:
       preprocess_index: -10
-  hierarchy:
-    fields:
-      field_products: taxonomy_term-parent
-    weights:
-      preprocess_index: -45
   highlight:
     highlight: always
     highlight_partial: false
@@ -216,6 +238,14 @@ processor_settings:
     weights:
       preprocess_index: -3
       preprocess_query: -6
+  ignorecase:
+    all_fields: false
+    fields:
+      - rendered_item
+      - title
+    weights:
+      preprocess_index: -5
+      preprocess_query: -8
   ignore_character:
     all_fields: false
     fields:
@@ -235,14 +265,7 @@ processor_settings:
       - Pi
       - Po
       - Ps
-  ignorecase:
-    all_fields: false
-    fields:
-      - rendered_item
-      - title
-    weights:
-      preprocess_index: -5
-      preprocess_query: -8
+  language_with_fallback: {  }
   rendered_item:
     weights:
       add_properties: 0
@@ -313,6 +336,7 @@ processor_settings:
     weights:
       preprocess_index: -2
       preprocess_query: -5
+    ignored: ._-
   transliteration:
     all_fields: false
     fields:

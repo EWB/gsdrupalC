@@ -1,0 +1,17 @@
+uuid: c4bb0a5b-f3b9-45da-8538-db0b65bedc8d
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: 1_gs_ana_your_way_button_color
+label: '1 GS Ana - Your Way Button Color'
+code: " .btn-primary {\r\n  color: #fff;\r\n  background-color: #FF4500\t;\r\n  border-color: #FF0000;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: /node/344
+    negate: false
+conditions_require_all: true

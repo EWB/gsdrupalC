@@ -6,7 +6,7 @@ dependencies:
     - system
 id: 1_gs_news_and_events
 label: '1 GS - News and Events'
-code: "li {\r\n  list-style:none;\r\n}\r\n.field-content h4 {\r\n  margin-top:.5rem;\r\n}"
+code: "li {\r\n  list-style:none;\r\n}\r\n/*goofy hack to make title bold*/\r\n.page--page-teaser a {\r\n  color: #0579b8;\r\n  font-weight: 500;\r\n  font-size: 1.5rem;\r\n  font-family: \"Sans Serif\";\r\n}  \r\n.field-content h4 {\r\n  margin-top:.5rem;\r\n}\r\n.image-block__field-image {\r\n    padding: 1rem;\r\n}"
 media: all
 preprocess: true
 conditions:

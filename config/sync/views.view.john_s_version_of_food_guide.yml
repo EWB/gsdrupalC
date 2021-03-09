@@ -865,7 +865,9 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       css_class: 'map-with-sidebar map-right'
       use_ajax: true
       filter_groups:
@@ -892,7 +894,9 @@ display:
     display_title: List
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       path: food-guide-john
       display_description: ''
     cache_metadata:
@@ -915,7 +919,9 @@ display:
     display_title: Map
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       display_description: ''
       defaults:
         style: false

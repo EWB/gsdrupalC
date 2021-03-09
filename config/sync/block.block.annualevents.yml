@@ -1,0 +1,31 @@
+uuid: 2ba3b0df-bf77-438d-95ef-89e0e1379d24
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:2aa86672-7627-4a67-8219-796795cf6544'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: annualevents
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:2aa86672-7627-4a67-8219-796795cf6544'
+settings:
+  id: 'block_content:2aa86672-7627-4a67-8219-796795cf6544'
+  label: 'Annual Events'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: "/node/336\r\n/node/337\r\n/node/338\r\n/node/339"
+    negate: false
+    context_mapping: {  }

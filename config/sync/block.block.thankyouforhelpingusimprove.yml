@@ -1,0 +1,31 @@
+uuid: 41f859d5-cadb-40f6-81b8-0a57aac49e15
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:2708802e-e43f-46c2-a613-1c33d71267ba'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: thankyouforhelpingusimprove
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:2708802e-e43f-46c2-a613-1c33d71267ba'
+settings:
+  id: 'block_content:2708802e-e43f-46c2-a613-1c33d71267ba'
+  label: '2021 eNewsletter Feedback'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /content/test-1
+    negate: false
+    context_mapping: {  }

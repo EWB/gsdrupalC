@@ -1,0 +1,30 @@
+uuid: 3e184619-8ec3-4656-b328-21aa341a06bc
+langcode: en
+status: true
+dependencies:
+  module:
+    - contact
+    - options
+id: contact_message.field_frequency
+field_name: field_frequency
+entity_type: contact_message
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: 'One day'
+      label: 'One day'
+    -
+      value: 'Multi-day event'
+      label: 'Multi-day event'
+    -
+      value: Recurring
+      label: Recurring
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

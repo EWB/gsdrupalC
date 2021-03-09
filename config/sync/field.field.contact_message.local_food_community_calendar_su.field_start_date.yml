@@ -1,0 +1,24 @@
+uuid: 3aed84c0-9453-4eec-99e0-6ac99189ab76
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.local_food_community_calendar_su
+    - field.storage.contact_message.field_start_date
+  module:
+    - datetime
+id: contact_message.local_food_community_calendar_su.field_start_date
+field_name: field_start_date
+entity_type: contact_message
+bundle: local_food_community_calendar_su
+label: 'Start Date'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

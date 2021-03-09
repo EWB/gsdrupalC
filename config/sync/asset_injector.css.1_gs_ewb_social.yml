@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: 1_gs_ewb_social
 label: '1 GS - EWB - Social'
-code: "#social-footer #left {\r\n  float: left;\r\n  /*width: 65%;*/\r\n  margin-right:1rem;\r\n  overflow: hidden;\r\n}\r\n\r\n#social-footer #right {\r\n  overflow: hidden;\r\n}"
+code: "#social-footer #left {\r\n  float: left;\r\n  /*width: 65%;*/\r\n  margin-right:.5rem;\r\n  overflow: hidden;\r\n}\r\n/*.block--socialbuttons {*/\r\n/*    width: 150px;*/\r\n/*}*/\r\n\r\n#social-footer #right {\r\n  overflow: hidden;\r\n}"
 media: all
 preprocess: true
 conditions: {  }

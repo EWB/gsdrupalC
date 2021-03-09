@@ -1,0 +1,31 @@
+uuid: 025dfc3f-3a5a-44ff-b399-9a48d51d856e
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:forms:59b53c7e-bd5d-482d-b8a0-fdbdee54ff73'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: lfcsubmission
+theme: gs8_theme
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:59b53c7e-bd5d-482d-b8a0-fdbdee54ff73'
+settings:
+  id: 'block_content:59b53c7e-bd5d-482d-b8a0-fdbdee54ff73'
+  label: 'LFC Submission'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/352
+    negate: false
+    context_mapping: {  }

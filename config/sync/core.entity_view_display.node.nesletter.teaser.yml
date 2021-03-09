@@ -4,32 +4,27 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.nesletter.body
     - field.field.node.nesletter.field_date
     - field.field.node.nesletter.field_files
+    - field.field.node.nesletter.field_image
+    - field.field.node.nesletter.field_teaser
     - node.type.nesletter
   module:
-    - text
     - user
 id: node.nesletter.teaser
 targetEntityType: node
 bundle: nesletter
 mode: teaser
 content:
-  body:
-    label: hidden
-    type: text_summary_or_trimmed
-    weight: 101
-    settings:
-      trim_length: 600
-    third_party_settings: {  }
-    region: content
   links:
     weight: 100
     settings: {  }
     third_party_settings: {  }
     region: content
 hidden:
+  addtoany: true
   field_date: true
   field_files: true
+  field_image: true
+  field_teaser: true
   search_api_excerpt: true

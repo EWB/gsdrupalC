@@ -788,7 +788,9 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       filter_groups:
         operator: AND
         groups:
@@ -809,7 +811,9 @@ display:
     display_title: 'Entity browser'
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
     cache_metadata:
       max-age: 0
       contexts:
@@ -825,7 +829,9 @@ display:
     display_title: 'Entity browser 2'
     position: 2
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        ajax_history:
+          enable_history: true
       relationships:
         uid:
           id: uid

@@ -1,0 +1,10 @@
+uuid: d5dfc27a-c073-43ce-a42c-516d40d3e987
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.page_teaser
+label: 'Page teaser'
+targetEntityType: node
+cache: true

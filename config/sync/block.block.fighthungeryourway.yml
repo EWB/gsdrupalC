@@ -1,0 +1,31 @@
+uuid: c85ab116-d5c4-473c-b7eb-5d460b301e18
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:hero:c14b7d9c-76a1-4210-9955-0410af7df972'
+  module:
+    - block_content
+    - system
+  theme:
+    - gs8_theme
+id: fighthungeryourway
+theme: gs8_theme
+region: featured
+weight: 0
+provider: null
+plugin: 'block_content:c14b7d9c-76a1-4210-9955-0410af7df972'
+settings:
+  id: 'block_content:c14b7d9c-76a1-4210-9955-0410af7df972'
+  label: 'Fight Hunger Your Way'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/344
+    negate: false
+    context_mapping: {  }
