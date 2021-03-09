@@ -34,7 +34,7 @@ class GeolocationGeometryDataManager extends DefaultPluginManager {
    * @param string $id
    *   GeolocationGeometryData ID.
    *
-   * @return mixed
+   * @return array|false
    *   GeolocationGeometryData or FALSE.
    */
   public function getGemeotryDataBatch($id) {
@@ -52,6 +52,28 @@ class GeolocationGeometryDataManager extends DefaultPluginManager {
       return FALSE;
     }
     return FALSE;
+  }
+
+  /**
+   * Start executing batch process.
+   *
+   * @param array $batch_settings
+   *   Batch settings.
+   *
+   * @return mixed
+   *   Batch process.
+   */
+  public function executeGemeotryDataBatch(array $batch_settings) {
+    batch_set($batch_settings);
+    $batch =& batch_get();
+    $batch['progressive'] = FALSE;
+
+    if (PHP_SAPI === 'cli' && function_exists('drush_backend_batch_process')) {
+      return drush_backend_batch_process();
+    }
+    else {
+      return batch_process();
+    }
   }
 
 }

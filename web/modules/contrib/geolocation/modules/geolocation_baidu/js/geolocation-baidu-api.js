@@ -23,6 +23,7 @@
    * @inheritDoc
    *
    * @prop {Object} settings.baidu_settings - Baidu Maps specific settings.
+   * @prop {BMap.Map} baiduMap
    */
   function GeolocationBaiduMap(mapSettings) {
     if (typeof BMap === 'undefined') {
@@ -95,6 +96,45 @@
   GeolocationBaiduMap.prototype.removeMapMarker = function (marker) {
     Drupal.geolocation.GeolocationMapBase.prototype.removeMapMarker.call(this, marker);
     this.baiduMap.removeOverlay(marker);
+  };
+  GeolocationBaiduMap.prototype.addShape = function (shapeSettings) {
+    if (typeof shapeSettings === 'undefined') {
+      return;
+    }
+
+    var shape;
+
+    switch (shapeSettings.shape) {
+      case 'line':
+        shape = new BMap.Polyline(shapeSettings.coordinates, {
+          strokeColor: shapeSettings.strokeColor,
+          strokeOpacity: shapeSettings.strokeOpacity,
+          strokeWeight: shapeSettings.strokeWidth
+        });
+        break;
+
+      case 'polygon':
+        shape = new BMap.Polygon(shapeSettings.coordinates, {
+          strokeOpacity: shapeSettings.strokeOpacity,
+          strokeWeight: shapeSettings.strokeWidth,
+          fillColor: shapeSettings.fillColor,
+          fillOpacity: shapeSettings.fillOpacity
+        });
+        break;
+    }
+
+    this.baiduMap.addOverlay(shape);
+    Drupal.geolocation.GeolocationMapBase.prototype.addShape.call(this, shape);
+
+    return shape;
+
+  };
+  GeolocationBaiduMap.prototype.removeShape = function (shape) {
+    if (typeof shape === 'undefined') {
+      return;
+    }
+    Drupal.geolocation.GeolocationMapBase.prototype.removeShape.call(this, shape);
+    this.baiduMap.removeOverlay(shape);
   };
   GeolocationBaiduMap.prototype.fitBoundaries = function (boundaries, identifier) {
     boundaries = this.denormalizeBoundaries(boundaries);

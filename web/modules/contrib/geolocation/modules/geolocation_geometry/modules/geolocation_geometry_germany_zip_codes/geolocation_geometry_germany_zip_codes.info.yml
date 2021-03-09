@@ -1,0 +1,7 @@
+name: Geolocation - Geometry Data - Germany Postal Codes
+type: module
+description: Import data from http://www.naturalearthdata.com/
+core_version_requirement: ^8.7.7 || ^9
+package: Geolocation
+dependencies:
+  - geolocation_geometry_data

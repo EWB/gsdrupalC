@@ -11,12 +11,7 @@
 function geolocation_geometry_natural_earth_countries_install() {
   /** @var \Drupal\geolocation_geometry_data\GeolocationGeometryDataManager $geometry_data_manager */
   $geometry_data_manager = \Drupal::service('plugin.manager.geolocation.geometrydata');
-  $countries_batch = $geometry_data_manager->getGemeotryDataBatch('natural_earth_countries');
-
-  batch_set($countries_batch);
-  $batch =& batch_get();
-  $batch['progressive'] = FALSE;
-  return batch_process();
+  return $geometry_data_manager->executeGemeotryDataBatch($geometry_data_manager->getGemeotryDataBatch('natural_earth_countries'));
 }
 
 /**

@@ -67,7 +67,7 @@ class Geocoder extends LocationInputBase implements LocationInputInterface, Cont
     $settings['plugin_id'] = '';
     $settings['settings'] = [];
 
-    return [];
+    return $settings;
   }
 
   /**

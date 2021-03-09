@@ -13,11 +13,6 @@ trait SlickFormatterViewTrait {
    * Returns similar view elements.
    */
   public function commonViewElements(FieldItemListInterface $items, $langcode, array $entities = [], array $settings = []) {
-    // Early opt-out if the field is empty.
-    if ($items->isEmpty()) {
-      return [];
-    }
-
     // Collects specific settings to this formatter.
     $settings = array_merge($this->buildSettings(), $settings);
     $settings['langcode'] = $langcode;

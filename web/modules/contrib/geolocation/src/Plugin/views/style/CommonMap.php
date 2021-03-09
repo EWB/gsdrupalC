@@ -50,7 +50,6 @@ class CommonMap extends GeolocationStyleBase {
 
     $this->mapProviderManager = $map_provider_manager;
     $this->mapCenterManager = $map_center_manager;
-    $this->dataProviderManager = $data_provider_manager;
   }
 
   /**
@@ -81,20 +80,17 @@ class CommonMap extends GeolocationStyleBase {
     $options = [];
 
     foreach ($this->displayHandler->getOption('filters') as $filter_id => $filter) {
-      if (
-        !empty($filter['plugin_id'])
-        && in_array($filter['plugin_id'], [
-          'geolocation_filter_boundary',
-          'geolocation_search_api_filter_boundary',
-        ])
-      ) {
-        /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter_handler */
-        $filter_handler = $this->displayHandler->getHandler('filter', $filter_id);
+      /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter_handler */
+      $filter_handler = $this->displayHandler->getHandler('filter', $filter_id);
 
-        if ($filter_handler->isExposed()) {
-          $options['boundary_filter_' . $filter_id] = $this->t('Boundary Filter') . ' - ' . $filter_handler->adminLabel();
-        }
+      if (!$filter_handler->isExposed()) {
+        continue;
       }
+
+      if (!empty($filter_handler->isGeolocationCommonMapOption)) {
+        $options['boundary_filter_' . $filter_id] = $this->t('Boundary Filter') . ' - ' . $filter_handler->adminLabel();
+      }
+
     }
 
     return $options;

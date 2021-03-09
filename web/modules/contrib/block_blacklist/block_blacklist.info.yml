@@ -1,13 +1,12 @@
 name: "Block Blacklist"
 description: Remove unnecessary blocks from the block list for better system performance.
 type: module
-# core: 8.x
+core_version_requirement: ^8.8 || ^9
 dependencies:
   - drupal:block
 configure: block_blacklist.settings
 
-# Information added by Drupal.org packaging script on 2019-03-14
-version: '8.x-1.0'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2020-05-24
+version: '8.x-1.1'
 project: 'block_blacklist'
-datestamp: 1552606686
+datestamp: 1590309218

@@ -24,7 +24,7 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Attaches common map style functionality to relevant elements.
    */
-  Drupal.behaviors.geolocationStreetViewControl = {
+  Drupal.behaviors.geolocationFullScreenControl = {
     attach: function (context, drupalSettings) {
       Drupal.geolocation.executeFeatureOnAllMaps(
         'control_fullscreen',

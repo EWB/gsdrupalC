@@ -49,7 +49,6 @@
                 [south, west],
                 [north, east]
             ]);
-            map.leafletMap.fitBounds(bounds);
             map.leafletMap.setMaxBounds(bounds);
             map.leafletMap.setMinZoom(map.leafletMap.getBoundsZoom(bounds));
           });

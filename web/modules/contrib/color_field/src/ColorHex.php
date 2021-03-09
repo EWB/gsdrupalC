@@ -63,7 +63,7 @@ class ColorHex extends ColorBase {
     if ($opacity) {
       $hex .= ' ' . $this->getOpacity();
     }
-    return strtoupper($hex);
+    return strtolower($hex);
   }
 
   /**

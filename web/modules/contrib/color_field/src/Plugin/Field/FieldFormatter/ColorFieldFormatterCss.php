@@ -83,6 +83,8 @@ class ColorFieldFormatterCss extends FormatterBase implements ContainerFactoryPl
       'property' => 'background-color',
       'important' => TRUE,
       'opacity' => TRUE,
+      'advanced' => FALSE,
+      'css' => '',
     ] + parent::defaultSettings();
   }
 
@@ -94,16 +96,17 @@ class ColorFieldFormatterCss extends FormatterBase implements ContainerFactoryPl
 
     $elements['selector'] = [
       '#title' => $this->t('Selector'),
-      '#description' => $this->t('A valid CSS selector such as <code>.links > li > a, #logo</code>.'),
+      '#description' => $this->t('A valid CSS selector such as <code>.links > li > a, #logo</code>. You can use tokens as shown below.'),
       '#type' => 'textarea',
       '#rows' => '1',
       '#default_value' => $this->getSetting('selector'),
       '#required' => TRUE,
       '#placeholder' => 'body > div > a',
-    ];
-    $elements['token_help'] = [
-      '#theme' => 'token_tree_link',
-      '#token_types' => [$this->fieldDefinition->getTargetEntityTypeId()],
+      '#states' => [
+        'visible' => [
+          ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][advanced]"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
     $elements['property'] = [
       '#title' => $this->t('Property'),
@@ -114,12 +117,22 @@ class ColorFieldFormatterCss extends FormatterBase implements ContainerFactoryPl
         'background-color' => $this->t('Background color'),
         'color' => $this->t('Text color'),
       ],
+      '#states' => [
+        'visible' => [
+          ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][advanced]"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
     $elements['important'] = [
       '#title' => $this->t('Important'),
       '#description' => $this->t('Whenever this declaration is more important than others.'),
       '#type' => 'checkbox',
       '#default_value' => $this->getSetting('important'),
+      '#states' => [
+        'visible' => [
+          ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][advanced]"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
 
     if ($this->getFieldSetting('opacity')) {
@@ -127,8 +140,43 @@ class ColorFieldFormatterCss extends FormatterBase implements ContainerFactoryPl
         '#type' => 'checkbox',
         '#title' => $this->t('Display opacity'),
         '#default_value' => $this->getSetting('opacity'),
+        '#states' => [
+          'visible' => [
+            ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][advanced]"]' => ['checked' => FALSE],
+          ],
+        ],
       ];
     }
+    $elements['advanced'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Advanced Mode'),
+      '#default_value' => $this->getSetting('advanced'),
+      '#description' => t('Switch to advanced mode and build the css yourself.'),
+    ];
+
+    $elements['css'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('CSS'),
+      '#default_value' => $this->getSetting('css'),
+      '#description' => t('Create the css statement yourself. This lets you for example, control multiple element aspects at once. You can use tokens as shown below.'),
+      '#states' => [
+        'visible' => [
+          ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][advanced]"]' => ['checked' => TRUE],
+        ],
+      ],
+      '#element_validate' => ['token_element_validate'],
+      '#token_types' => [
+        $this->fieldDefinition->getTargetEntityTypeId(),
+        'color_field',
+      ],
+    ];
+    $elements['token_help'] = [
+      '#theme' => 'token_tree_link',
+      '#token_types' => [
+        $this->fieldDefinition->getTargetEntityTypeId(),
+        'color_field',
+      ],
+    ];
 
     return $elements;
   }
@@ -141,19 +189,24 @@ class ColorFieldFormatterCss extends FormatterBase implements ContainerFactoryPl
     $settings = $this->getSettings();
 
     $summary = [];
+    if ($settings['advanced']) {
+      $summary[] = $this->t('Using advanced mode');
+      $summary[] = $this->t("CSS statement:\n@css", ['@css' => $settings['css']]);
+    }
+    else {
+      $summary[] = $this->t('CSS selector : @css_selector', [
+        '@css_selector' => $settings['selector'],
+      ]);
+      $summary[] = $this->t('CSS property : @css_property', [
+        '@css_property' => $settings['property'],
+      ]);
+      $summary[] = $this->t('!important declaration : @important_declaration', [
+        '@important_declaration' => (($settings['important']) ? $this->t('Yes') : $this->t('No')),
+      ]);
 
-    $summary[] = $this->t('CSS selector : @css_selector', [
-      '@css_selector' => $settings['selector'],
-    ]);
-    $summary[] = $this->t('CSS property : @css_property', [
-      '@css_property' => $settings['property'],
-    ]);
-    $summary[] = $this->t('!important declaration : @important_declaration', [
-      '@important_declaration' => (($settings['important']) ? $this->t('Yes') : $this->t('No')),
-    ]);
-
-    if ($opacity && $settings['opacity']) {
-      $summary[] = $this->t('Display with opacity.');
+      if ($opacity && $settings['opacity']) {
+        $summary[] = $this->t('Display with opacity.');
+      }
     }
 
     return $summary;
@@ -173,18 +226,23 @@ class ColorFieldFormatterCss extends FormatterBase implements ContainerFactoryPl
     ];
     foreach ($items as $item) {
       $value = $this->viewValue($item);
-      $selector = $this->tokenService->replace(
-        $settings['selector'],
-        $tokens
-      );
-      $important = ($settings['important']) ? ' !important' : '';
-      $property = $settings['property'];
+      $tokens['color_field'] = $item;
+      if ($settings['advanced']) {
+        $inline_css = $this->tokenService->replace(
+          $settings['css'],
+          $tokens
+        );
+      }
+      else {
+        $selector = $this->tokenService->replace(
+          $settings['selector'],
+          $tokens
+        );
+        $important = ($settings['important']) ? ' !important' : '';
+        $property = $settings['property'];
 
-      $inline_css = $selector . ' { ' . $property . ': ' . $value . $important . '; }';
-
-      // @todo: Not sure this is the best way.
-      // https://www.drupal.org/node/2391025
-      // https://www.drupal.org/node/2274843
+        $inline_css = $selector . ' { ' . $property . ': ' . $value . $important . '; }';
+      }
       $elements['#attached']['html_head'][] = [[
         '#tag' => 'style',
         '#value' => $inline_css,

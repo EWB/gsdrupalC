@@ -2,7 +2,8 @@ name: Media Entity Browser
 type: module
 description: 'This module provides an Entity Browser for Media.'
 package: Media
-# core: '8.x'
+core: '8.x'
+core_version_requirement: ^8 || ^9
 
 dependencies:
   - inline_entity_form:inline_entity_form
@@ -27,8 +28,7 @@ config_devel:
   - entity_browser.browser.media_entity_browser
   - embed.button.media_entity_embed
 
-# Information added by Drupal.org packaging script on 2019-05-20
-version: '8.x-2.0-alpha2'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2020-07-03
+version: '8.x-2.0-alpha3'
 project: 'media_entity_browser'
-datestamp: 1558337596
+datestamp: 1593747597

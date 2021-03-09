@@ -260,8 +260,8 @@ class BlazyDefault {
   /**
    * Returns blazy theme properties, its image and container attributes.
    *
-   * The reserved attributes mentioned here might be instantiated as an
-   * instanceof \Drupal\Core\Template\Attribute before entering Blazy.
+   * The reserved attributes is defined before entering Blazy as bonus variable.
+   * Consider other bonuses: title and content attributes at a later stage.
    */
   public static function themeProperties() {
     return [
@@ -270,9 +270,12 @@ class BlazyDefault {
       'content',
       'iframe',
       'image',
+      'icon',
       'item',
       'item_attributes',
       'noscript',
+      'overlay',
+      'preface',
       'postscript',
       'settings',
       'url',

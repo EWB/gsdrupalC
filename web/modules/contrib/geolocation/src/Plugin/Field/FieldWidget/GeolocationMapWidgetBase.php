@@ -334,17 +334,32 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
     );
 
     if ($settings['hide_textfield_form']) {
-      if (empty($element['widget']['#attributes'])) {
-        $element['widget']['#attributes'] = [];
+      if ($element['widget']['#cardinality_multiple']) {
+        if (empty($element['widget']['#attributes'])) {
+          $element['widget']['#attributes'] = [];
+        }
+
+        $element['widget']['#attributes'] = array_merge_recursive(
+          $element['widget']['#attributes'],
+          [
+            'class' => [
+              'visually-hidden',
+            ],
+          ]
+        );
       }
-      $element['widget']['#attributes'] = array_merge_recursive(
-        $element['widget']['#attributes'],
-        [
-          'class' => [
-            'visually-hidden',
-          ],
-        ]
-      );
+      else {
+        if (!empty($element['widget'][0])) {
+          $element['widget'][0]['#attributes'] = array_merge_recursive(
+            $element['widget'][0]['#attributes'],
+            [
+              'class' => [
+                'visually-hidden',
+              ],
+            ]
+          );
+        }
+      }
     }
 
     $element['map'] = [

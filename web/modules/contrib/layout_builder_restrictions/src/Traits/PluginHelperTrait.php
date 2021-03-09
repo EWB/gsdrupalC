@@ -7,6 +7,8 @@ use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Methods to help Layout Builder Restrictions plugins.
@@ -14,6 +16,7 @@ use Drupal\layout_builder\OverridesSectionStorageInterface;
 trait PluginHelperTrait {
 
   use LayoutBuilderContextTrait;
+  use StringTranslationTrait;
 
   /**
    * Gets block definitions appropriate for an entity display.
@@ -48,38 +51,167 @@ trait PluginHelperTrait {
 
     // Allow filtering of available blocks by other parts of the system.
     $definitions = $this->contextHandler()->filterPluginDefinitionsByContexts($this->getAvailableContexts($section_storage), $definitions);
-    $grouped_definitions = $this->blockManager()->getGroupedDefinitions($definitions);
-
+    $grouped_definitions = $this->getDefinitionsByUntranslatedCategory($definitions);
     // Create a new category of block_content blocks that meet the context.
-    foreach ($grouped_definitions as $category => $definitions) {
-      foreach ($definitions as $key => $definition) {
+    foreach ($grouped_definitions as $category => $data) {
+      if (empty($data['definitions'])) {
+        unset($grouped_definitions[$category]);
+      }
+      // Ensure all block_content definitions are included in the
+      // 'Custom blocks' category.
+      foreach ($data['definitions'] as $key => $definition) {
         if (in_array($key, $custom_blocks)) {
-          $grouped_definitions['Custom blocks'][$key] = $definition;
+          if (!isset($grouped_definitions['Custom blocks'])) {
+            $grouped_definitions['Custom blocks'] = [
+              'label' => 'Custom blocks',
+              'data' => [],
+            ];
+          }
           // Remove this block_content from its previous category so
           // that it is defined only in one place.
-          unset($grouped_definitions[$category][$key]);
+          unset($grouped_definitions[$category]['definitions'][$key]);
+          $grouped_definitions['Custom blocks']['definitions'][$key] = $definition;
         }
       }
     }
-    // Do not use the 'Custom' group category: it is now redundant, and
-    // it is less accurate than relying on block_content.
-    unset($grouped_definitions['Custom']);
 
     // Generate a list of custom block types under the
     // 'Custom block types' namespace.
     $custom_block_bundles = $this->entityTypeBundleInfo()->getBundleInfo('block_content');
     if ($custom_block_bundles) {
-      $grouped_definitions['Custom block types'] = [];
+      $grouped_definitions['Custom block types'] = [
+        'label' => 'Custom block types',
+        'definitions' => [],
+      ];
       foreach ($custom_block_bundles as $machine_name => $value) {
-        $grouped_definitions['Custom block types'][$machine_name] = [
+        $grouped_definitions['Custom block types']['definitions'][$machine_name] = [
           'admin_label' => $value['label'],
-          'category' => t('Custom block types'),
+          'category' => $this->t('Custom block types'),
         ];
       }
     }
     ksort($grouped_definitions);
 
     return $grouped_definitions;
+  }
+
+  /**
+   * Generate a categorized list of blocks, based on the untranslated category.
+   *
+   * @param array $definitions
+   *   The uncategorized definitions.
+   *
+   * @return array
+   *   The categorized definitions.
+   */
+  protected function getDefinitionsByUntranslatedCategory(array $definitions) {
+    $definitions = $this->GetGroupedDefinitions($definitions, 'admin_label');
+    // Do not display the 'broken' plugin in the UI.
+    unset($definitions[$this->t('Block')->render()]['definitions']['broken']);
+    return $definitions;
+  }
+
+  /**
+   * Method to categorize blocks in a multilingual-friendly way.
+   *
+   * This is based on CategorizingPluginManagerTrait::getGroupedDefinitions.
+   *
+   * @param array $definitions
+   *   The definitions as provided by the Block Plugin Manager.
+   * @param string $label_key
+   *   The key to use if a block does not have a category defined.
+   *
+   * @return array
+   *   Definitions grouped by untranslated category.
+   */
+  public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label') {
+    $definitions = $this->getSortedDefinitions($definitions, $label_key);
+    $grouped_definitions = [];
+    foreach ($definitions as $id => $definition) {
+      // If the block category is a translated string, get the
+      // untranslated equivalent to create an unchanging category ID, not
+      // affected by multilingual translations.
+      $category = $this->getUntranslatedCategory($definition['category']);
+      if (!isset($grouped_definitions[$category])) {
+        $grouped_definitions[$category]['label'] = $category;
+        // Also add the translated string in there, to use for the display of
+        // the categories.
+        $grouped_definitions[$category]['translated_label'] = (string) $definition['category'];
+      }
+      $grouped_definitions[$category]['definitions'][$id] = $definition;
+    }
+    return $grouped_definitions;
+  }
+
+  /**
+   * Helper function to check the default block category whitelist.
+   *
+   * @param string $category
+   *   The identifier of the category.
+   * @param array $allowed_block_categories
+   *   The entity view mode's allowed block categories.
+   *
+   * @return bool
+   *   Whether or not the category is restricted.
+   */
+  public function categoryIsRestricted($category, array $allowed_block_categories) {
+    if (!empty($allowed_block_categories)) {
+      // There is no explicit indication whether the blocks from
+      // this category should be restricted. Check the default whitelist.
+      if (!in_array($category, $allowed_block_categories)) {
+        // This block's category has not been whitelisted.
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Helper function to return an untranslated block Category.
+   *
+   * @param mixed $category
+   *   The block category name or object.
+   *
+   * @return string
+   *   A string representing the untranslated block category.
+   */
+  public function getUntranslatedCategory($category) {
+    if ($category instanceof TranslatableMarkup) {
+      $output = $category->getUntranslatedString();
+      // Rename to match Layout Builder Restrictions naming.
+      if ($output == '@entity fields') {
+        $output = 'Content fields';
+      }
+      if ($output == "Custom") {
+        $output = "Custom blocks";
+      }
+    }
+    else {
+      $output = (string) $category;
+    }
+
+    return $output;
+  }
+
+  /**
+   * Sort block categories alphabetically.
+   *
+   * @param array $definitions
+   *   The block definitions, with category values.
+   * @param string $label_key
+   *   The module name, if no category value is present on the block.
+   *
+   * @return array
+   *   The alphabetically sorted categories with definitions.
+   */
+  protected function getSortedDefinitions(array $definitions = NULL, $label_key = 'label') {
+    uasort($definitions, function ($a, $b) use ($label_key) {
+      if ($a['category'] != $b['category']) {
+        return strnatcasecmp($a['category'], $b['category']);
+      }
+      return strnatcasecmp($a[$label_key], $b[$label_key]);
+    });
+    return $definitions;
   }
 
   /**
@@ -105,6 +237,10 @@ trait PluginHelperTrait {
   public function getValuefromSectionStorage(array $section_storage, $requested_value) {
     $section_storage = array_shift($section_storage);
     $contexts = $section_storage->getContexts();
+    // Provide a fallback view mode; this will be overridden by specific
+    // contexts, below. We need a fallback since some entity types (such as
+    // Layout entities) do not implement a view mode.
+    $view_mode = 'default';
     if ($requested_value == 'contexts') {
       return $contexts;
     }
@@ -130,8 +266,6 @@ trait PluginHelperTrait {
     }
     elseif (isset($contexts['layout'])) {
       $entity = $contexts['layout']->getContextValue();
-      // Layout entities do not define view_modes.
-      $view_mode = 'default';
       $bundle = $entity->getTargetBundle();
       $entity_type = $entity->getTargetEntityType();
     }

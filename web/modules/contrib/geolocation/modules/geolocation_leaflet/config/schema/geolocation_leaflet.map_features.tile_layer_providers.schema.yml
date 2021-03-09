@@ -1,111 +1,51 @@
+geolocation.leaflet.tile_layer_provider:
+  type: config_object
+  label: 'Leaflet Tile Layer Provider'
+  sequence:
+    type: geolocation.leaflet.tile_layer
+    label: 'Tile layer'
+
 geolocation.leaflet.tile_layer:
   type: config_object
   label: 'Leaflet Tile Layer'
+  mapping:
+    checkbox:
+      type: boolean
+      label: 'Enabled'
 
 # OpenStreetMap
-geolocation.leaflet.tile_layer.OpenStreetMap:
-  type: geolocation.leaflet.tile_layer
+geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenStreetMap:
+  type: geolocation.leaflet.tile_layer_provider
   label: 'OpenStreetMap'
 
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenStreetMap Mapnik:
-  type: geolocation.leaflet.tile_layer.OpenStreetMap
-  label: 'OpenStreetMap Mapnik'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenStreetMap BlackAndWhite:
-  type: geolocation.leaflet.tile_layer.OpenStreetMap
-  label: 'OpenStreetMap BlackAndWhite'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenStreetMap DE:
-  type: geolocation.leaflet.tile_layer.OpenStreetMap
-  label: 'OpenStreetMap DE'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenStreetMap CH:
-  type: geolocation.leaflet.tile_layer.OpenStreetMap
-  label: 'OpenStreetMap CH'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenStreetMap France:
-  type: geolocation.leaflet.tile_layer.OpenStreetMap
-  label: 'OpenStreetMap France'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenStreetMap HOT:
-  type: geolocation.leaflet.tile_layer.OpenStreetMap
-  label: 'OpenStreetMap HOT'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenStreetMap BZH:
-  type: geolocation.leaflet.tile_layer.OpenStreetMap
-  label: 'OpenStreetMap BZH'
 
 #OpenTopoMap
 geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenTopoMap:
-  type: geolocation.leaflet.tile_layer
+  type: geolocation.leaflet.tile_layer_provider
   label: 'OpenTopoMap'
 
 #Thunderforest
-geolocation.leaflet.tile_layer.Thunderforest:
-  type: geolocation.leaflet.tile_layer
+geolocation.map_feature_settings.leaflet.tile_layer_provider.Thunderforest:
+  type: geolocation.leaflet.tile_layer_provider
   label: 'Thunderforest'
   mapping:
     apikey:
       type: string
       label: 'API key'
 
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Thunderforest OpenCycleMap:
-  type: geolocation.leaflet.tile_layer.Thunderforest
-  label: 'Thunderforest OpenCycleMap'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Thunderforest Transport:
-  type: geolocation.leaflet.tile_layer.Thunderforest
-  label: 'Thunderforest Transport'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Thunderforest TransportDark:
-  type: geolocation.leaflet.tile_layer.Thunderforest
-  label: 'Thunderforest TransportDark'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Thunderforest SpinalMap:
-  type: geolocation.leaflet.tile_layer.Thunderforest
-  label: 'Thunderforest SpinalMap'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Thunderforest Landscape:
-  type: geolocation.leaflet.tile_layer.Thunderforest
-  label: 'Thunderforest Landscape'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Thunderforest Outdoors:
-  type: geolocation.leaflet.tile_layer.Thunderforest
-  label: 'Thunderforest Outdoors'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Thunderforest Pioneer:
-  type: geolocation.leaflet.tile_layer.Thunderforest
-  label: 'Thunderforest Pioneer'
-
 #OpenMapSurfer
-geolocation.leaflet.tile_layer.OpenMapSurfer:
-  type: geolocation.leaflet.tile_layer
+geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenMapSurfer:
+  type: geolocation.leaflet.tile_layer_provider
   label: 'OpenMapSurfer'
 
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenMapSurfer Roads:
-  type: geolocation.leaflet.tile_layer.OpenMapSurfer
-  label: 'OpenMapSurfer Roads'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.OpenMapSurfer Grayscale:
-  type: geolocation.leaflet.tile_layer.OpenMapSurfer
-  label: 'OpenMapSurfer Grayscale'
-
 #Hydda
-geolocation.leaflet.tile_layer.Hydda:
-  type: geolocation.leaflet.tile_layer
+geolocation.map_feature_settings.leaflet.tile_layer_provider.Hydda:
+  type: geolocation.leaflet.tile_layer_provider
   label: 'Hydda'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Hydda Full:
-  type: geolocation.leaflet.tile_layer.Hydda
-  label: 'Hydda Full'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Hydda Base:
-  type: geolocation.leaflet.tile_layer.Hydda
-  label: 'Hydda Base'
 
 #MapBox
 geolocation.map_feature_settings.leaflet.tile_layer_provider.MapBox:
-  type: geolocation.leaflet.tile_layer
+  type: geolocation.leaflet.tile_layer_provider
   label: 'MapBox'
   mapping:
     accessToken:
@@ -114,26 +54,26 @@ geolocation.map_feature_settings.leaflet.tile_layer_provider.MapBox:
 
 #MtbMap
 geolocation.map_feature_settings.leaflet.tile_layer_provider.MtbMap:
-  type: geolocation.leaflet.tile_layer
+  type: geolocation.leaflet.tile_layer_provider
   label: 'MtbMap'
 
 #FreeMapSK
 geolocation.map_feature_settings.leaflet.tile_layer_provider.FreeMapSK:
-  type: geolocation.leaflet.tile_layer
+  type: geolocation.leaflet.tile_layer_provider
   label: 'FreeMapSK'
 
 #NLS
 geolocation.map_feature_settings.leaflet.tile_layer_provider.NLS:
-  type: geolocation.leaflet.tile_layer
+  type: geolocation.leaflet.tile_layer_provider
   label: 'NLS'
 
 #Wikimedia
 geolocation.map_feature_settings.leaflet.tile_layer_provider.Wikimedia:
-  type: geolocation.leaflet.tile_layer
+  type: geolocation.leaflet.tile_layer_provider
   label: 'Wikimedia'
 
 #HERE
-geolocation.leaflet.tile_layer.HERE:
+geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE:
   type: geolocation.leaflet.tile_layer
   label: 'HERE'
   mapping:
@@ -144,280 +84,36 @@ geolocation.leaflet.tile_layer.HERE:
       type: string
       label: 'app code'
 
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalDay:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalDay'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalDayCustom:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalDayCustom'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalDayGrey:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalDayGrey'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalDayMobile:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalDayMobile'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normanormalDayGreyMobilelDay:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalDayGreyMobile'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalDayTransit:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalDayTransit'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalDayTransitMobile:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalDayTransitMobile'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalNightGrey:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalNightGrey'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalNightGreyMobile:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalNightGreyMobile'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalNightTransit:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalNightTransit'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE normalNightTransitMobile:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE normalNightTransitMobile'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE redcuedDay:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE redcuedDay'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE redcuedNight:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE redcuedNight'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE basicMap:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE basicMap'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE trafficFlow:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE trafficFlow'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE mapLabels:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE mapLabels'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE carnavDayGrey:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE carnavDayGrey'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE hybridDayMobile:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE hybridDayMobile'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE hybridDayTransit:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE hybridDayTransit'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE hybridDayGrey:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE hybridDayGrey'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE pedestrianDay:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE pedestrianDay'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE pedestrianNight:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE pedestrianNight'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE satelliteDay:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE satelliteDay'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE terrainDay:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE terrainDay'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HERE terrainDayMobile:
-  type: geolocation.leaflet.tile_layer.HERE
-  label: 'HERE terrainDayMobile'
-
 #GeoportailFrance
-geolocation.leaflet.tile_layer.GeoportailFrance:
+geolocation.map_feature_settings.leaflet.tile_layer_provider.GeoportailFrance:
   type: geolocation.leaflet.tile_layer
-  label: 'HERE'
+  label: 'GeoportailFrance'
   mapping:
     apikey:
       type: string
-      label: 'api key'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.GeoportailFrance parcels:
-  type: geolocation.leaflet.tile_layer.GeoportailFrance
-  label: 'GeoportailFrance parcels'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.GeoportailFrance ignMaps:
-  type: geolocation.leaflet.tile_layer.GeoportailFrance
-  label: 'GeoportailFrance ignMaps'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.GeoportailFrance maps:
-  type: geolocation.leaflet.tile_layer.GeoportailFrance
-  label: 'GeoportailFrance maps'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.GeoportailFrance orthos:
-  type: geolocation.leaflet.tile_layer.GeoportailFrance
-  label: 'GeoportailFrance orthos'
+      label: 'API key'
 
 #Stamen
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Stamen Toner:
+geolocation.map_feature_settings.leaflet.tile_layer_provider.Stamen:
   type: geolocation.leaflet.tile_layer
-  label: 'Stamen Toner'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Stamen TonerBackground:
-  type: geolocation.leaflet.tile_layer
-  label: 'Stamen TonerBackground'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Stamen TonerLite:
-  type: geolocation.leaflet.tile_layer
-  label: 'Stamen TonerLite'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Stamen Watercolor:
-  type: geolocation.leaflet.tile_layer
-  label: 'Stamen Watercolor'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Stamen Terrain:
-  type: geolocation.leaflet.tile_layer
-  label: 'Stamen Terrain'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Stamen TerrainBackground:
-  type: geolocation.leaflet.tile_layer
-  label: 'Stamen TerrainBackground'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Stamen TopOSMRelief:
-  type: geolocation.leaflet.tile_layer
-  label: 'Stamen TopOSMRelief'
+  label: 'Stamen'
 
 #HikeBike
 geolocation.map_feature_settings.leaflet.tile_layer_provider.HikeBike:
   type: geolocation.leaflet.tile_layer
   label: 'HikeBike'
 
-geolocation.map_feature_settings.leaflet.tile_layer_provider.HikeBike HillShading:
-  type: geolocation.leaflet.tile_layer
-  label: 'HikeBike HillShading'
-
 #Esri
-geolocation.leaflet.tile_layer.Esri:
+geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri:
   type: geolocation.leaflet.tile_layer
   label: 'Esri'
 
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri WorldStreetMap:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri WorldStreetMap'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri DeLorme:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri DeLorme'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri WorldTopoMap:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri WorldTopoMap'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri WorldImagery:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri WorldImagery'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri WorldTerrain:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri WorldTerrain'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri WorldShadedRelief:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri WorldShadedRelief'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri WorldPhysical:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri WorldPhysical'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri OceanBasemap:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri OceanBasemap'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri NatGeoWorldMap:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri NatGeoWorldMap'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.Esri WorldGrayCanvas:
-  type: geolocation.leaflet.tile_layer.Esri
-  label: 'Esri WorldGrayCanvas'
-
 #BasemapAT
-geolocation.leaflet.tile_layer.BasemapAT:
+geolocation.map_feature_settings.leaflet.tile_layer_provider.BasemapAT:
   type: geolocation.leaflet.tile_layer
   label: 'BasemapAT'
 
-geolocation.map_feature_settings.leaflet.tile_layer_provider.BasemapAT basemap:
-  type: geolocation.leaflet.tile_layer.BasemapAT
-  label: 'BasemapAT basemap'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.BasemapAT grau:
-  type: geolocation.leaflet.tile_layer.BasemapAT
-  label: 'BasemapAT grau'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.BasemapAT overlay:
-  type: geolocation.leaflet.tile_layer.BasemapAT
-  label: 'BasemapAT overlay'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.BasemapAT highdpi:
-  type: geolocation.leaflet.tile_layer.BasemapAT
-  label: 'BasemapAT highdpi'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.BasemapAT orthofoto:
-  type: geolocation.leaflet.tile_layer.BasemapAT
-  label: 'BasemapAT orthofoto'
-
 #CartoDB
-geolocation.leaflet.tile_layer.CartoDB:
+geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB:
   type: geolocation.leaflet.tile_layer
   label: 'CartoDB'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB Positron:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB Positron'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB PositronNoLabels:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB PositronNoLabels'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB PositronOnlyLabels:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB PositronOnlyLabels'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB DarkMatter:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB DarkMatter'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB DarkMatterNoLabels:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB DarkMatterNoLabels'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB DarkMatterOnlyLabels:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB DarkMatterOnlyLabels'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB Voyager:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB Voyager'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB VoyagerNoLabels:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB VoyagerNoLabels'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB VoyagerOnlyLabels:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB VoyagerOnlyLabels'
-
-geolocation.map_feature_settings.leaflet.tile_layer_provider.CartoDB VoyagerLabelsUnder:
-  type: geolocation.leaflet.tile_layer.CartoDB
-  label: 'CartoDB VoyagerLabelsUnder'

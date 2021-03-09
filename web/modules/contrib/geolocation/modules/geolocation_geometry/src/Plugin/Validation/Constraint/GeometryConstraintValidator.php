@@ -33,20 +33,20 @@ class GeometryConstraintValidator extends ConstraintValidator {
         ];
 
         if ($constraint->type === 'WKT') {
-          $query = \Drupal::database()->query("SELECT ST_GeometryType(ST_GeomFromText('" . $value . "')) as type");
+          $query = \Drupal::database()->query("SELECT ST_GeometryType(ST_GeomFromText('" . $value . "', 4326)) as type");
         }
         elseif ($constraint->type === 'GeoJSON') {
-          $query = \Drupal::database()->query("SELECT ST_GeometryType(ST_GeomFromGeoJSON(':json')) as type", [':json' => $value]);
+          $query = \Drupal::database()->query("SELECT ST_GeometryType(ST_GeomFromGeoJSON(:json)) as type", [':json' => $value]);
         }
 
         $result_ = $query->fetchAll();
         $result = str_replace("st_", "", strtolower($result_[0]->type));
 
-        if ($constraint->geomType != 'geometry' && $result != $constraint->geomType) {
-          $this->context->addViolation($constraint->messageGeom, ['@value' => $value, '@geom_type' => $constraint->geomType]);
+        if ($constraint->geometryType != 'geometry' && $result != $constraint->geometryType) {
+          $this->context->addViolation($constraint->messageGeom, ['@value' => $value, '@geom_type' => $constraint->geometryType]);
         }
-        elseif ($constraint->geomType === 'geometry' && !in_array($result, $allowed_types_for_geometry)) {
-          $this->context->addViolation($constraint->messageGeom, ['@value' => $value, '@geom_type' => $constraint->geomType]);
+        elseif ($constraint->geometryType === 'geometry' && !in_array($result, $allowed_types_for_geometry)) {
+          $this->context->addViolation($constraint->messageGeom, ['@value' => $value, '@geom_type' => $constraint->geometryType]);
         }
       }
       catch (DatabaseExceptionWrapper $e) {

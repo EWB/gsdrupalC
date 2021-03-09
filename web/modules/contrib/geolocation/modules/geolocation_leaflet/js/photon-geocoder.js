@@ -18,6 +18,7 @@
  * @property {String} drupalSettings.geolocation.geocoder.photon.locationPriority
  * @property {float} drupalSettings.geolocation.geocoder.photon.locationPriority.lat
  * @property {float} drupalSettings.geolocation.geocoder.photon.locationPriority.lon
+ * @property {Boolean} drupalSettings.geolocation.geocoder.photon.removeDuplicates
  */
 
 (function ($, Drupal) {
@@ -115,10 +116,27 @@
                     if (typeof result.properties.country !== 'undefined') {
                       formatted_address.push(result.properties.country);
                     }
-                    autocompleteResults.push({
-                      value: result.properties.name + ' - ' + formatted_address.join(', '),
-                      result: result
-                    });
+
+                    var formatted_value = result.properties.name + ' - ' + formatted_address.join(', ');
+
+                    if (drupalSettings.geolocation.geocoder.photon.removeDuplicates) {
+                      var existingResults = $.grep(autocompleteResults, function (resultItem) {
+                        return resultItem.value === formatted_value;
+                      });
+
+                      if (existingResults.length === 0) {
+                        autocompleteResults.push({
+                          value: formatted_value,
+                          result: result
+                        });
+                      }
+                    }
+                    else {
+                      autocompleteResults.push({
+                        value: formatted_value,
+                        result: result
+                      });
+                    }
                   });
                   response(autocompleteResults);
                 }

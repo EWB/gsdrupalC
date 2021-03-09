@@ -106,7 +106,7 @@ class ColorRGB extends ColorBase {
     else {
       $output = 'rgb(' . $this->getRed() . ',' . $this->getGreen() . ',' . $this->getBlue() . ')';
     }
-    return strtoupper($output);
+    return strtolower($output);
   }
 
   /**

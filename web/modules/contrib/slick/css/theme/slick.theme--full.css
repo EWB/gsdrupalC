@@ -4,6 +4,7 @@
  */
 
 .slide__constrained {
+  box-sizing: border-box; /* dups due to csslint ignoring inheritance */
   height: 100%;
   min-height: 210px;
   padding-top: 10%;

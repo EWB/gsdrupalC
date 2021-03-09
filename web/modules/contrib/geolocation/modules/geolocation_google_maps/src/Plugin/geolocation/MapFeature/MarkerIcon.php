@@ -171,12 +171,7 @@ class MarkerIcon extends MapFeatureBase {
     );
 
     if (!empty($feature_settings['marker_icon_path'])) {
-      $data = [];
-      if (!empty($context['view'])) {
-        $data['view'] = $context['view'];
-      }
-
-      $path = \Drupal::token()->replace($feature_settings['marker_icon_path'], $data);
+      $path = \Drupal::token()->replace($feature_settings['marker_icon_path'], $context);
       $path = file_create_url($path);
       $render_array['#attached']['drupalSettings']['geolocation']['maps'][$render_array['#id']][$this->getPluginId()]['markerIconPath'] = $path;
 

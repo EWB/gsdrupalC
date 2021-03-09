@@ -66,7 +66,7 @@ class ColorFieldFormatterTest extends ColorFieldFunctionalTestBase {
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
     $this->assertSession()->responseContains('#FF8C00</div>');
 
-    // Test RGBA Render mode.
+    // Test rgba Render mode.
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
       'field_color[0][color]' => "#FFEF00",
@@ -82,7 +82,7 @@ class ColorFieldFormatterTest extends ColorFieldFunctionalTestBase {
     ])->save();
 
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
-    $this->assertSession()->responseContains('RGBA(255,239,0,0.9)');
+    $this->assertSession()->responseContains('rgba(255,239,0,0.9)');
 
     // Test RGB render mode.
     $edit = [
@@ -100,7 +100,7 @@ class ColorFieldFormatterTest extends ColorFieldFunctionalTestBase {
     ])->save();
 
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
-    $this->assertSession()->responseContains('RGB(0,129,31)');
+    $this->assertSession()->responseContains('rgb(0,129,31)');
   }
 
   /**
@@ -176,7 +176,7 @@ class ColorFieldFormatterTest extends ColorFieldFunctionalTestBase {
     ];
 
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
-    $this->assertSession()->responseContains('body { background-color: RGBA(255,244,48,0.9) !important; }');
+    $this->assertSession()->responseContains('body { background-color: rgba(255,244,48,0.9) !important; }');
 
     // Test without opacity and not important.
     $edit = [
@@ -197,7 +197,7 @@ class ColorFieldFormatterTest extends ColorFieldFunctionalTestBase {
     ])->save();
 
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
-    $this->assertSession()->responseContains('body { background-color: RGB(255,255,255); }');
+    $this->assertSession()->responseContains('body { background-color: rgb(255,255,255); }');
   }
 
 }

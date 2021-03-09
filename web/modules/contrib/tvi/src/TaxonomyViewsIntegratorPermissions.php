@@ -7,6 +7,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Permissions generator for TVI.
+ */
 class TaxonomyViewsIntegratorPermissions implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
@@ -48,16 +51,17 @@ class TaxonomyViewsIntegratorPermissions implements ContainerInjectionInterface 
       $permissions += [
         'define view for vocabulary ' . $vocabulary->id() => [
           'title' => $this->t('Define the view override for the vocabulary %vocabulary', ['%vocabulary' => $vocabulary->label()]),
-        ]
+        ],
       ];
 
       $permissions += [
         'define view for terms in ' . $vocabulary->id() => [
           'title' => $this->t('Define the view override for terms in %vocabulary', ['%vocabulary' => $vocabulary->label()]),
-        ]
+        ],
       ];
     }
 
     return $permissions;
   }
+
 }

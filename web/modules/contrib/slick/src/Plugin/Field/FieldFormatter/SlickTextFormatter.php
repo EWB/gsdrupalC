@@ -67,6 +67,10 @@ class SlickTextFormatter extends FormatterBase implements ContainerFactoryPlugin
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $key => $item) {
+      if (empty($item->value)) {
+        continue;
+      }
+
       $element = [
         '#type'     => 'processed_text',
         '#text'     => $item->value,

@@ -138,7 +138,7 @@ abstract class BlazyEntityMediaBase extends BlazyEntityBase {
       $caption_items = $weights = [];
       foreach ($settings['caption'] as $name => $field_caption) {
         /** @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */
-        if ($item = $element['item']) {
+        if (isset($element['item']) && $item = $element['item']) {
           // Provides basic captions based on image attributes (Alt, Title).
           foreach (['title', 'alt'] as $key => $attribute) {
             if ($name == $attribute && $caption = trim($item->get($attribute)->getString())) {
@@ -180,7 +180,7 @@ abstract class BlazyEntityMediaBase extends BlazyEntityBase {
 
     if (isset($element['media_switch'])) {
       $element['media_switch']['#options']['rendered'] = $this->t('Image rendered by its formatter');
-      $element['media_switch']['#description'] .= ' ' . $this->t('Be sure the enabled fields here are not hidden/disabled at its view mode.');
+      $element['media_switch']['#description'] .= ' ' . $this->t('<b>Image rendered</b> requires <b>Image</b> option filled out and is useful if the formmater offers awesomeness that Blazy does not have but still wants Blazy for a Grid, etc. Be sure the enabled fields here are not hidden/ disabled at its view mode.');
     }
 
     if (isset($element['caption'])) {
@@ -188,7 +188,7 @@ abstract class BlazyEntityMediaBase extends BlazyEntityBase {
     }
 
     if (isset($element['image']['#description'])) {
-      $element['image']['#description'] .= ' ' . $this->t('For (remote|local) video, this allows separate high-res or poster image, be sure this exact same field is also used for bundle <b>Image</b> to have a mix of videos and images. Leaving it empty will fallback to the video provider thumbnails, or no poster for local video. The formatter/renderer is managed by <strong>@plugin_id</strong> formatter. Meaning original formatter ignored.', ['@plugin_id' => $this->getPluginId()]);
+      $element['image']['#description'] .= ' ' . $this->t('For (remote|local) video, this allows separate high-res or poster image,. Be sure this exact same field is also used for bundle <b>Image</b> to have a mix of videos and images. Leaving it empty will fallback to the video provider thumbnails, or no poster for local video. The formatter/renderer is managed by <strong>@plugin_id</strong> formatter. Meaning original formatter ignored.', ['@plugin_id' => $this->getPluginId()]);
     }
 
     return $element;

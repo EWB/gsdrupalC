@@ -62,8 +62,13 @@ class RestrictionPluginConfigForm extends FormBase {
 
     $form['plugin-table'] = [
       '#type' => 'table',
-      '#header' => [t('Plugin'), t('ID'), t('Enabled'), t('Weight')],
-      '#empty' => t('There are no restriction plugins defined.'),
+      '#header' => [
+        $this->t('Plugin'),
+        $this->t('ID'),
+        $this->t('Enabled'),
+        $this->t('Weight'),
+      ],
+      '#empty' => $this->t('There are no restriction plugins defined.'),
       // TableDrag: Each array value is a list of callback arguments for
       // drupal_add_tabledrag().
       '#tabledrag' => [
@@ -98,7 +103,7 @@ class RestrictionPluginConfigForm extends FormBase {
       ];
       $form['plugin-table'][$id]['enabled'] = [
         '#type' => 'checkbox',
-        '#title' => t('Enabled'),
+        '#title' => $this->t('Enabled'),
         '#title_display' => 'invisible',
         '#default_value' => $data['enabled'],
         // Classify the weight element for #tabledrag.
@@ -107,7 +112,7 @@ class RestrictionPluginConfigForm extends FormBase {
       // TableDrag: Weight column element.
       $form['plugin-table'][$id]['weight'] = [
         '#type' => 'weight',
-        '#title' => t('Weight for @title', ['@title' => $id]),
+        '#title' => $this->t('Weight for @title', ['@title' => $id]),
         '#title_display' => 'invisible',
         '#default_value' => $data['weight'],
         // Classify the weight element for #tabledrag.

@@ -6,6 +6,7 @@ use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\layout_builder_styles\LayoutBuilderStyleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,6 +24,13 @@ class LayoutBuilderStyleForm extends EntityForm implements ContainerInjectionInt
   protected $blockManager;
 
   /**
+   * The layout manager.
+   *
+   * @var \Drupal\Core\Layout\LayoutPluginManagerInterface
+   */
+  protected $layoutManager;
+
+  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -34,11 +42,14 @@ class LayoutBuilderStyleForm extends EntityForm implements ContainerInjectionInt
    *
    * @param \Drupal\Core\Block\BlockManagerInterface $blockManager
    *   The block manager.
+   * @param \Drupal\Core\Block\LayoutPluginManagerInterface $layout_manager
+   *   The layout plugin manager.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(BlockManagerInterface $blockManager, MessengerInterface $messenger) {
+  public function __construct(BlockManagerInterface $blockManager, LayoutPluginManagerInterface $layout_manager, MessengerInterface $messenger) {
     $this->blockManager = $blockManager;
+    $this->layoutManager = $layout_manager;
     $this->messenger = $messenger;
   }
 
@@ -46,7 +57,11 @@ class LayoutBuilderStyleForm extends EntityForm implements ContainerInjectionInt
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('plugin.manager.block'), $container->get('messenger'));
+    return new static(
+      $container->get('plugin.manager.block'),
+      $container->get('plugin.manager.core.layout'),
+      $container->get('messenger')
+    );
   }
 
   /**
@@ -58,30 +73,30 @@ class LayoutBuilderStyleForm extends EntityForm implements ContainerInjectionInt
     /** @var \Drupal\layout_builder_styles\LayoutBuilderStyleInterface $style */
     $style = $this->entity;
 
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $style->label(),
       '#required' => TRUE,
-    );
+    ];
 
-    $form['id'] = array(
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $style->id(),
-      '#machine_name' => array(
+      '#machine_name' => [
         'exists' => '\Drupal\layout_builder_styles\Entity\LayoutBuilderStyle::load',
-      ),
+      ],
       '#disabled' => !$style->isNew(),
-    );
+    ];
 
-    $form['classes'] = array(
-      '#title' => t('CSS classes'),
+    $form['classes'] = [
+      '#title' => $this->t('CSS classes'),
       '#type' => 'textarea',
       '#default_value' => $style->getClasses(),
       '#description' => $this->t('Enter one per line.'),
       '#required' => TRUE,
-    );
+    ];
 
     // For now we only support block styles.
     $form['type'] = [
@@ -99,16 +114,21 @@ class LayoutBuilderStyleForm extends EntityForm implements ContainerInjectionInt
     $blockDefinitions = $this->blockManager->getDefinitions();
     $blockDefinitions = $this->blockManager->getGroupedDefinitions($blockDefinitions);
 
-    // Relabel the inline block type listing as generic "Custom block types".
-    // This category will apply to inline blocks & reusable blocks.
-    $blockDefinitions['Custom block types'] = $blockDefinitions['Inline blocks'];
-    unset($blockDefinitions['Inline blocks']);
-    ksort($blockDefinitions);
+    // Remove individual reusable blocks from list.
+    unset($blockDefinitions['Custom']);
+
+    if (isset($blockDefinitions['Inline blocks'])) {
+      // Relabel the inline block type listing as generic "Custom block types".
+      // This category will apply to inline blocks & reusable blocks.
+      $blockDefinitions['Custom block types'] = $blockDefinitions['Inline blocks'];
+      unset($blockDefinitions['Inline blocks']);
+      ksort($blockDefinitions);
+    }
 
     $form['block_restrictions'] = [
       '#type' => 'details',
       '#title' => $this->t('Block restrictions'),
-      '#description' => $this->t('Optionally limit this style to the following blocks.'),
+      '#description' => $this->t('Optionally limit this style to the following block(s).'),
       '#states' => [
         'visible' => [
           'input[name="type"]' => ['value' => LayoutBuilderStyleInterface::TYPE_COMPONENT],
@@ -118,8 +138,10 @@ class LayoutBuilderStyleForm extends EntityForm implements ContainerInjectionInt
 
     foreach ($blockDefinitions as $category => $blocks) {
       $category_form = [
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => $category,
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
       ];
       foreach ($blocks as $blockId => $block) {
         $machine_name = $blockId;
@@ -141,6 +163,36 @@ class LayoutBuilderStyleForm extends EntityForm implements ContainerInjectionInt
       $form['block_restrictions'][$category] = $category_form;
     }
 
+    $form['layout_restrictions'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Layout restrictions'),
+      '#description' => $this->t('Optionally limit this style to the following layout(s).'),
+      '#states' => [
+        'visible' => [
+          'input[name="type"]' => ['value' => LayoutBuilderStyleInterface::TYPE_SECTION],
+        ],
+      ],
+    ];
+    $section_definitions = $this->layoutManager->getFilteredDefinitions('layout_builder', []);
+    foreach ($section_definitions as $section_id => $definition) {
+      $form['layout_restrictions'][$section_id] = [
+        '#type' => 'checkbox',
+        '#title' => $definition->getLabel(),
+        '#default_value' => in_array($section_id, $style->getLayoutRestrictions()),
+        '#parents' => [
+          'layout_restrictions',
+          $section_id,
+        ],
+        '#description' => [
+          $definition->getIcon(60, 80, 1, 3),
+          [
+            '#type' => 'container',
+            '#children' => $definition->getLabel() . ' (' . $section_id . ')',
+          ],
+        ],
+      ];
+    }
+
     return $form;
   }
 
@@ -156,6 +208,10 @@ class LayoutBuilderStyleForm extends EntityForm implements ContainerInjectionInt
     $blockRestrictions = $form_state->getValue('block_restrictions');
     $blockRestrictions = array_keys(array_filter($blockRestrictions));
     $entity->set('block_restrictions', $blockRestrictions);
+
+    $layoutRestrictions = $form_state->getValue('layout_restrictions');
+    $layoutRestrictions = array_keys(array_filter($layoutRestrictions));
+    $entity->set('layout_restrictions', $layoutRestrictions);
 
     return $entity;
   }

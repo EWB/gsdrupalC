@@ -23,6 +23,7 @@
    * @inheritDoc
    *
    * @prop {Object} settings.here_settings - HERE Maps specific settings.
+   * @prop {H.Map} hereMap
    */
   function GeolocationHereMap(mapSettings) {
     if (typeof H === 'undefined') {
@@ -131,6 +132,52 @@
   GeolocationHereMap.prototype.removeMapMarker = function (marker) {
     Drupal.geolocation.GeolocationMapBase.prototype.removeMapMarker.call(this, marker);
     this.hereMap.removeObject(marker);
+  };
+  GeolocationHereMap.prototype.addShape = function (shapeSettings) {
+    if (typeof shapeSettings === 'undefined') {
+      return;
+    }
+
+    var shape;
+
+    var lineString = new H.geo.LineString();
+    $.each(shapeSettings.coordinates, function (index, item) {
+      lineString.pushPoint(item);
+    });
+
+    switch (shapeSettings.shape) {
+      case 'line':
+        shape = new H.map.Polyline(lineString, {
+          style: {
+            strokeColor: 'rgba(' + parseInt(shapeSettings.strokeColor.substring(1,3), 16) + ', ' + parseInt(shapeSettings.strokeColor.substring(3,5), 16) + ', ' + parseInt(shapeSettings.strokeColor.substring(5,7), 16) + ', ' + shapeSettings.strokeOpacity + ')',
+            lineWidth: shapeSettings.strokeWidth
+          }
+        });
+        break;
+
+      case 'polygon':
+        shape = new H.map.Polygon(lineString, {
+          style: {
+            strokeColor: 'rgba(' + parseInt(shapeSettings.strokeColor.substring(1,3), 16) + ', ' + parseInt(shapeSettings.strokeColor.substring(3,5), 16) + ', ' + parseInt(shapeSettings.strokeColor.substring(5,7), 16) + ', ' + shapeSettings.strokeOpacity + ')',
+            lineWidth: shapeSettings.strokeWidth,
+            fillColor: 'rgba(' + parseInt(shapeSettings.fillColor.substring(1,3), 16) + ', ' + parseInt(shapeSettings.fillColor.substring(3,5), 16) + ', ' + parseInt(shapeSettings.fillColor.substring(5,7), 16) + ', ' + shapeSettings.fillOpacity + ')'
+          }
+        });
+        break;
+    }
+
+    this.hereMap.addObject(shape);
+    Drupal.geolocation.GeolocationMapBase.prototype.addShape.call(this, shape);
+
+    return shape;
+
+  };
+  GeolocationHereMap.prototype.removeShape = function (shape) {
+    if (typeof shape === 'undefined') {
+      return;
+    }
+    Drupal.geolocation.GeolocationMapBase.prototype.removeShape.call(this, shape);
+    this.hereMap.removeObject(shape);
   };
   GeolocationHereMap.prototype.fitBoundaries = function (boundaries, identifier) {
     boundaries = this.denormalizeBoundaries(boundaries);

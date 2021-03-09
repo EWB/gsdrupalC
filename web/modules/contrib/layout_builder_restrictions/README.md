@@ -53,7 +53,7 @@ the entity type's defaults, and individual content item overrides (note: you
 must check "Allow each content item to have its layout customized" to support
 overrides).
 
-Depending on the use case, Layout Builder Restrictions can be used in conjunction with [Block Blacklist](https://drupal.org/project/block_blacklist), and/or with block type permissions (introduced in Drupal 8.8; see https://www.drupal.org/node/3041203).
+Depending on the use case, Layout Builder Restrictions can be used in conjunction with [Block List Override](https://www.drupal.org/project/block_list_override), and/or with block type permissions (introduced in Drupal 8.8; see https://www.drupal.org/node/3041203).
 
 CHOOSE WHICH RESTRICTIONS ARE ACTIVE
 ------------------------------------

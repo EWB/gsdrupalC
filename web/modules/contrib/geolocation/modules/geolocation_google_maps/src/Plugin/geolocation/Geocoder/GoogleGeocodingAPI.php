@@ -193,13 +193,14 @@ class GoogleGeocodingAPI extends GoogleGeocoderBase {
         'type' => 'locality',
       ],
       'county' => [
-        'type' => 'administrative_area_level_2 ',
+        'type' => 'administrative_area_level_2',
       ],
       'postalCode' => [
         'type' => 'postal_code',
       ],
-      'adninistrativeArea' => [
-        'type' => 'administrative_area_level_1 ',
+      'administrativeArea' => [
+        'type' => 'administrative_area_level_1',
+        'short' => TRUE,
       ],
       'country' => [
         'type' => 'country',

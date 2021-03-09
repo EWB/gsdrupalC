@@ -246,7 +246,7 @@ class BlazyOEmbed implements BlazyOEmbedInterface {
   }
 
   /**
-   * Returns external image item from resource.
+   * Returns external image item from resource relevant to BlazyFilter.
    */
   public function getExternalImageItem(array &$settings) {
     // Iframe URL may be valid, but not stored as a Media entity.

@@ -25,11 +25,11 @@ class ColorFieldWidgetBox extends ColorFieldWidgetBase {
   public static function defaultSettings() {
     return [
       'default_colors' => '
-#AC725E,#D06B64,#F83A22,#FA573C,#FF7537,#FFAD46
-#42D692,#16A765,#7BD148,#B3DC6C,#FBE983
-#92E1C0,#9FE1E7,#9FC6E7,#4986E7,#9A9CFF
-#B99AFF,#C2C2C2,#CABDBF,#CCA6AC,#F691B2
-#CD74E6,#A47AE2',
+#ac725e,#d06b64,#f83a22,#fa573c,#ff7537,#ffad46
+#42d692,#16a765,#7bd148,#b3dc6c,#fbe983
+#92e1c0,#9fe1e7,#9fc6e7,#4986e7,#9a9cff
+#b99aff,#c2c2c2,#cabdbf,#cca6ac,#f691b2
+#cd74e6,#a47ae2',
     ] + parent::defaultSettings();
   }
 
@@ -62,12 +62,12 @@ class ColorFieldWidgetBox extends ColorFieldWidgetBase {
     $default_colors = $form_state->getValue($element['#parents']);
     $colors = '';
     if (!empty($default_colors)) {
-      preg_match_all("/#[0-9a-fA-F]{6}/", $default_colors, $default_colors, PREG_SET_ORDER);
+      preg_match_all("/#[0-9a-f]{6}/i", $default_colors, $default_colors, PREG_SET_ORDER);
       foreach ($default_colors as $color) {
         if (!empty($colors)) {
           $colors .= ',';
         }
-        $colors .= strtoupper($color[0]);
+        $colors .= strtolower($color[0]);
       }
     }
     $form_state->setValue($element['#parents'], $colors);
@@ -82,7 +82,7 @@ class ColorFieldWidgetBox extends ColorFieldWidgetBase {
     $default_colors = $this->getSetting('default_colors');
 
     if (!empty($default_colors)) {
-      preg_match_all("/#[0-9A-F]{6}/", $default_colors, $default_colors, PREG_SET_ORDER);
+      preg_match_all("/#[0-9A-F]{6}/i", $default_colors, $default_colors, PREG_SET_ORDER);
       foreach ($default_colors as $color) {
         $colors = $color[0];
         $summary[] = $colors;
@@ -121,7 +121,7 @@ class ColorFieldWidgetBox extends ColorFieldWidgetBase {
       'required' => $this->fieldDefinition->isRequired(),
     ];
     $default_colors = $this->getSetting('default_colors');
-    preg_match_all("/#[0-9A-F]{6}/", $default_colors, $default_colors, PREG_SET_ORDER);
+    preg_match_all("/#[0-9A-F]{6}/i", $default_colors, $default_colors, PREG_SET_ORDER);
     foreach ($default_colors as $color) {
       $settings[$element['#uid']]['palette'][] = $color[0];
     }

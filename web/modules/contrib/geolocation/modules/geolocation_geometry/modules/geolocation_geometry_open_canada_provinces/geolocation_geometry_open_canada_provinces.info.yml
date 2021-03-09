@@ -1,7 +1,7 @@
-name: Geolocation Geometry Data - Open Canada - Provinces
+name: Geolocation - Geometry Data - Open Canada - Provinces
 type: module
 description: Provinces of Canada - Import data from http://maps.canada.ca/
-core: 8.x
+core_version_requirement: ^8.7.7 || ^9
 package: Geolocation
 dependencies:
   - geolocation_geometry_data

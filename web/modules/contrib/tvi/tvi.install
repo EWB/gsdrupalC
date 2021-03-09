@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Install, update, and uninstall functions for the tvi module.
@@ -8,25 +9,11 @@
  * Implements hook_install().
  */
 function tvi_install() {
-//  // Ensure weights are ok.
-//  $view_info = db_select('system', 's')
-//    ->fields('s', array('weight'))
-//    ->condition('s.name', 'views')
-//    ->range(NULL, 1)
-//    ->execute()
-//    ->fetchObject();
-//
-//  db_update('system')
-//    ->fields(array('weight' => $view_info->weight + 5))
-//    ->condition('name', 'tvi')
-//    ->execute();
-}
+  $extension_config = \Drupal::configFactory()
+    ->getEditable('core.extension');
+  if (($views_weight = $extension_config
+    ->get("module.views")) !== NULL) {
 
-/**
- * Implements hook_uninstall().
- */
-function tvi_uninstall() {
-//  db_delete('variable')
-//    ->condition('name', 'tvi_%', 'LIKE')
-//    ->execute();
+    module_set_weight('tvi', $views_weight + 5);
+  }
 }

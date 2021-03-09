@@ -158,11 +158,6 @@ class SlickGrouping extends SlickViewsBase {
 
     $build = $this->buildElements($settings, $rows);
 
-    // Extracts Blazy formatter settings if available.
-    if (empty($settings['vanilla']) && isset($build['items'][0])) {
-      $this->blazyManager()->isBlazy($settings, $build['items'][0]);
-    }
-
     // Supports Blazy multi-breakpoint images if using Blazy formatter.
     $settings['first_image'] = isset($rows[0]) ? $this->getFirstImage($rows[0]) : [];
 

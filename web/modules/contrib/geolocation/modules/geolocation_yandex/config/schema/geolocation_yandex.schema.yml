@@ -5,6 +5,12 @@ geolocation_yandex.settings:
     api_key:
       type: string
       label: 'Yandex Maps API Key'
+    packages:
+      type: sequence
+      label: 'Yandex Maps API Packages'
+      sequence:
+        type: label
+        label: 'Package'
 
 geolocation.map_provider.yandex:
   type: geolocation_map_provider

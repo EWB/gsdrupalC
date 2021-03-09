@@ -4,8 +4,14 @@
 
 ### Formatters
 
-  Plain text HEX code (#FFFFFF)
-  Css Declaration (color/background-color)
+- *Plain text*: Renders a simple HEX Code (#fffff) or an RGB decimal - with
+or without opacity.
+- *CSS Declaration*: Provides simple options to automatically build a CSS
+declaration affecting color or background-color. New in 2.4, also "advanced
+mode" which lets you build your own css declaration - for example to target
+multiple aspects (such as border color and background color) of elements or
+multiple elements.
+- *Swatches*: Provides simple swatch of color in various shapes.
 
 ### Widgets
 

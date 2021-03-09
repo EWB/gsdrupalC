@@ -24,7 +24,7 @@ abstract class AssetInjectorBase extends ConfigEntityBase implements AssetInject
   public $id;
 
   /**
-   * The Js Injector label.
+   * The Injector label.
    *
    * @var string
    */

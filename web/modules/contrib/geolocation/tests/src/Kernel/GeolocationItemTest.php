@@ -66,8 +66,8 @@ class GeolocationItemTest extends FieldKernelTestBase {
     $id = $entity->id();
     /** @var \Drupal\entity_test\Entity\EntityTest $entity */
     $entity = $entityTestStorage->load($id);
-    $this->assertTrue($entity->get('field_test') instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->get('field_test')[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->get('field_test'), 'Field implements interface.');
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->get('field_test')[0], 'Field item implements interface.');
     $this->assertEquals($entity->get('field_test')->lat, $lat, "Lat {$entity->get('field_test')->lat} is equal to lat {$lat}.");
     $this->assertEquals($entity->get('field_test')[0]->lat, $lat, "Lat {$entity->get('field_test')[0]->lat} is equal to lat {$lat}.");
     $this->assertEquals($entity->get('field_test')->lng, $lng, "Lng {$entity->get('field_test')->lng} is equal to lng {$lng}.");

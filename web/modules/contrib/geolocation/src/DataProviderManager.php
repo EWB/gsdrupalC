@@ -105,7 +105,7 @@ class DataProviderManager extends DefaultPluginManager {
    * @return array|false
    *   Settings form.
    */
-  public function addDataProviderSettingsFormAjax(array $form, FormStateInterface $form_state) {
+  public static function addDataProviderSettingsFormAjax(array $form, FormStateInterface $form_state) {
     $triggering_element_parents = $form_state->getTriggeringElement()['#array_parents'];
 
     $settings_element_parents = $triggering_element_parents;

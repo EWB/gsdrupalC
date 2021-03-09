@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block_class\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests the custom CSS classes for blocks.
@@ -10,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * @group block_class
  */
 class BlockClassTest extends BrowserTestBase {
+  use StringTranslationTrait;
 
   /**
    * Modules to enable.
@@ -17,6 +19,11 @@ class BlockClassTest extends BrowserTestBase {
    * @var array
    */
   public static $modules = ['block', 'block_class'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * Tests the custom CSS classes for blocks.
@@ -35,7 +42,7 @@ class BlockClassTest extends BrowserTestBase {
       'region' => 'content',
       'third_party_settings[block_class][classes]' => 'TestClass_content',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save block'));
+    $this->submitForm($edit, 'Save block');
 
     // Add a user account menu with a custom CSS class.
     $this->drupalGet('admin/structure/block/add/system_menu_block:account/classy', ['query' => ['region' => 'content']]);
@@ -43,7 +50,7 @@ class BlockClassTest extends BrowserTestBase {
       'region' => 'secondary_menu',
       'third_party_settings[block_class][classes]' => 'TestClass_menu',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save block'));
+    $this->submitForm($edit, 'Save block');
 
     // Go to the front page of the user.
     $this->drupalGet('<front>');

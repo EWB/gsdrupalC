@@ -82,7 +82,7 @@ class BlazyAlter {
     if (function_exists('views_get_current_view') && $view = views_get_current_view()) {
       $settings['view_name'] = $view->storage->id();
       $settings['current_view_mode'] = $view->current_display;
-      $settings['view_plugin_id'] = $view->style_plugin->getPluginId();
+      $settings['view_plugin_id'] = empty($settings['view_plugin_id']) ? $view->style_plugin->getPluginId() : $settings['view_plugin_id'];
     }
   }
 
@@ -91,7 +91,11 @@ class BlazyAlter {
    */
   public static function isCkeditorApplicable(Editor $editor) {
     foreach (['entity_embed', 'media_embed'] as $filter) {
-      if ($editor->getFilterFormat()->filters()->has($filter) && $editor->getFilterFormat()->filters($filter)->getConfiguration()['status']) {
+      if (!$editor->isNew()
+        && $editor->getFilterFormat()->filters()->has($filter)
+        && $editor->getFilterFormat()
+          ->filters($filter)
+          ->getConfiguration()['status']) {
         return TRUE;
       }
     }

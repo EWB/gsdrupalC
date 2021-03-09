@@ -2,7 +2,6 @@
 
 namespace Drupal\slick;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\slick\Entity\Slick;
 use Drupal\blazy\Blazy;
@@ -28,6 +27,13 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     $instance = parent::create($container);
     $instance->setSkinManager($container->get('slick.skin_manager'));
     return $instance;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['preRenderSlick', 'preRenderSlickWrapper'];
   }
 
   /**
@@ -79,36 +85,10 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   protected function prepareAttributes(array $build = []) {
     $settings = $build['settings'];
     $attributes = isset($build['attributes']) ? $build['attributes'] : [];
-    $classes = [];
 
     if ($settings['display'] == 'main') {
-      // Sniffs for Views to allow block__no_wrapper, views__no_wrapper, etc.
-      if ($settings['view_name'] && $settings['current_view_mode']) {
-        $classes[] = 'view--' . str_replace('_', '-', $settings['view_name']);
-        $classes[] = 'view--' . str_replace('_', '-', $settings['view_name'] . '--' . $settings['current_view_mode']);
-      }
-
-      // Blazy can still lazyload an unslick.
-      // @todo use Blazy::containerAttributes($attributes, $settings);
-      // Note .blazy class is set at slick.html.twig which can be removed later.
-      if ($settings['lazy'] == 'blazy' || !empty($settings['blazy'])) {
-        $attributes['data-blazy'] = empty($settings['blazy_data']) ? '' : Json::encode($settings['blazy_data']);
-      }
-
-      // Provide a context for lightbox, or multimedia galleries, save for grid.
-      // @todo reenabled if any issue  && empty($settings['grid']).
-      if (!empty($settings['media_switch'])) {
-        $switch = str_replace('_', '-', $settings['media_switch']);
-        $attributes['data-' . $switch . '-gallery'] = TRUE;
-      }
+      Blazy::containerAttributes($attributes, $settings);
     }
-
-    if ($classes) {
-      foreach ($classes as $class) {
-        $attributes['class'][] = 'slick--' . $class;
-      }
-    }
-
     return $attributes;
   }
 
@@ -241,9 +221,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     $options  = $build['options'];
 
     // Disable draggable for Layout Builder UI to not conflict with UI sortable.
-    // @todo remove service call for settings post blazy:2.x.
-    $route = empty($settings['route_name']) ? \Drupal::routeMatch()->getRouteName() : $settings['route_name'];
-    if (strpos($route, 'layout_builder.') === 0 || !empty($settings['is_preview'])) {
+    if (strpos($settings['route_name'], 'layout_builder.') === 0 || !empty($settings['is_preview'])) {
       $options['draggable'] = FALSE;
     }
 
@@ -259,7 +237,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     // Additional settings.
     $build['optionset']   = $build['optionset'] ?: Slick::loadWithFallback($settings['optionset']);
     $settings['count']    = empty($settings['count']) ? count($build['items']) : $settings['count'];
-    $settings['nav']      = $settings['nav'] ?: (!empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
+    $settings['nav']      = $settings['nav'] ?: (empty($settings['vanilla']) && !empty($settings['optionset_thumbnail']) && isset($build['items'][1]));
     $settings['navpos']   = $settings['nav'] && !empty($settings['thumbnail_position']);
     $settings['vertical'] = $build['optionset']->getSetting('vertical');
     $mousewheel           = $build['optionset']->getSetting('mouseWheel');
@@ -285,6 +263,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     }
 
     // Formatters might have checked this, but not views, nor custom works.
+    // Why the formatters should check it first? It is so known to children.
     if (empty($settings['_lazy'])) {
       $build['optionset']->whichLazy($settings);
     }
@@ -296,6 +275,28 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
     $attachments            = $this->attach($settings);
     $element['#settings']   = $settings;
     $element['#attached']   = empty($build['attached']) ? $attachments : NestedArray::mergeDeep($build['attached'], $attachments);
+  }
+
+  /**
+   * Returns slick navigation with the structured array similar to main display.
+   */
+  protected function buildNavigation(array &$build, array $thumbs) {
+    $settings = $build['settings'];
+    foreach (['items', 'options', 'settings'] as $key) {
+      $build[$key] = isset($thumbs[$key]) ? $thumbs[$key] : [];
+    }
+
+    $settings                     = array_merge($settings, $build['settings']);
+    $settings['optionset']        = $settings['optionset_thumbnail'];
+    $settings['skin']             = $settings['skin_thumbnail'];
+    $settings['display']          = 'thumbnail';
+    $build['optionset']           = $build['optionset_tn'];
+    $build['settings']            = $settings;
+    $build['options']['asNavFor'] = "#" . $settings['id'] . '-slider';
+
+    // The slick thumbnail navigation has the same structure as the main one.
+    unset($build['optionset_tn']);
+    return $this->slick($build);
   }
 
   /**
@@ -320,21 +321,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
 
     // Build the thumbnail Slick.
     if ($settings['nav'] && $thumbs) {
-      foreach (['items', 'options', 'settings'] as $key) {
-        $build[$key] = isset($thumbs[$key]) ? $thumbs[$key] : [];
-      }
-
-      $settings                     = array_merge($settings, $build['settings']);
-      $settings['optionset']        = $settings['optionset_thumbnail'];
-      $settings['skin']             = isset($settings['skin_thumbnail']) ? $settings['skin_thumbnail'] : '';
-      $settings['display']          = 'thumbnail';
-      $build['optionset']           = $build['optionset_tn'];
-      $build['settings']            = $settings;
-      $build['options']['asNavFor'] = "#" . $settings['id'] . '-slider';
-
-      // The slick thumbnail navigation has the same structure as the main one.
-      unset($build['optionset_tn']);
-      $slick[1] = $this->slick($build);
+      $slick[1] = $this->buildNavigation($build, $thumbs);
     }
 
     // Reverse slicks if thumbnail position is provided to get CSS float work.
@@ -351,9 +338,7 @@ class SlickManager extends BlazyManagerBase implements SlickManagerInterface {
   }
 
   /**
-   * Provides skins only if required.
-   *
-   * @todo TBD; deprecate this at slick:8.x-3.0 for slick:9.x-1.0.
+   * Provides a shortcut to attach skins only if required.
    */
   public function attachSkin(array &$load, $attach = []) {
     $this->skinManager->attachSkin($load, $attach);

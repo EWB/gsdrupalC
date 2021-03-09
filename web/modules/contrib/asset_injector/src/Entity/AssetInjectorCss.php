@@ -35,6 +35,16 @@ namespace Drupal\asset_injector\Entity;
  *     "enable" = "/admin/config/development/asset-injector/css/{asset_injector_css}/enable",
  *     "disable" = "/admin/config/development/asset-injector/css/{asset_injector_css}/disable",
  *     "collection" = "/admin/structure/conditions_group"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "code",
+ *     "conditions_require_all",
+ *     "conditions",
+ *     "contexts",
+ *     "media",
+ *     "preprocess"
  *   }
  * )
  */

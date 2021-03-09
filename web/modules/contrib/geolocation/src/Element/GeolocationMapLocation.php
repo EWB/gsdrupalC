@@ -11,12 +11,12 @@ use Drupal\Core\Template\Attribute;
  *
  * Usage example:
  * @code
- * $form['map'] = [
+ * $form['location'] = [
  *   '#type' => 'geolocation_map_location',
  *   '#prefix' => $this->t('Geolocation Map Render Element'),
  *   '#description' => $this->t('Render element type "geolocation_map"'),
  *   '#title' => NULL,
- *   '#position' => NULL,
+ *   '#coordinates' => NULL,
  *   '#id' => NULL,
  *   '#hidden' => NULL,
  *   '#icon' => NULL,
@@ -34,7 +34,7 @@ class GeolocationMapLocation extends RenderElement {
   public function getInfo() {
     $class = get_class($this);
 
-    $info = [
+    return [
       '#process' => [
         [$class, 'processGroup'],
       ],
@@ -43,18 +43,16 @@ class GeolocationMapLocation extends RenderElement {
         [$this, 'preRenderLocation'],
       ],
       '#title' => NULL,
-      '#position' => NULL,
+      '#coordinates' => NULL,
       '#id' => NULL,
       '#hidden' => NULL,
       '#icon' => NULL,
       '#label' => NULL,
     ];
-
-    return $info;
   }
 
   /**
-   * Map element.
+   * Location element.
    *
    * @param array $render_array
    *   Element.
@@ -85,8 +83,8 @@ class GeolocationMapLocation extends RenderElement {
       $render_array['#attributes']->setAttribute('id', $render_array['#id']);
     }
 
-    $render_array['#attributes']->setAttribute('data-lat', $render_array['#position']['lat']);
-    $render_array['#attributes']->setAttribute('data-lng', $render_array['#position']['lng']);
+    $render_array['#attributes']->setAttribute('data-lat', $render_array['#coordinates']['lat']);
+    $render_array['#attributes']->setAttribute('data-lng', $render_array['#coordinates']['lng']);
 
     if (empty($render_array['#hidden'])) {
       $render_array['#attributes']->setAttribute('data-set-marker', 'true');

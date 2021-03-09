@@ -16,4 +16,8 @@
  */
 #}
 
-<div class='color_field__swatch color_field__swatch--{{ shape }}' style="background-color: {{ color }}; width: {{ width }}px; height: {{ height }}px;"></div>
+{% if shape == 'triangle' %}
+<div {{ attributes }} style="border-top: {{ width }} solid {{ color }}; border-right: {{ height }} solid transparent;"></div>
+{% else %}
+<div  {{ attributes }} style="background-color: {{ color }}; width: {{ width }}; height: {{ height }};"></div>
+{% endif %}

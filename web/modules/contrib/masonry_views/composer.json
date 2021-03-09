@@ -1,0 +1,22 @@
+{
+    "name": "drupal/masonry_views",
+    "description": "Provides a Views plugin for displaying content in a Masonry layout.",
+    "homepage": "https://www.drupal.org/project/masonry_views",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "type": "drupal-module",
+    "require": {
+        "drupal/masonry": "^1.0"
+    },
+    "authors": [
+        {
+            "name": "Dominique Clause (Dom.)",
+            "homepage": "https://www.drupal.org/u/dom",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/masonry_views?version=8.x",
+        "source": "https://git.drupalcode.org/project/masonry_views"
+    }
+}

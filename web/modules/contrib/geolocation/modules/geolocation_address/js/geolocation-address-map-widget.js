@@ -182,7 +182,7 @@
               );
             },
             getAllAddressInputs: function () {
-              return addressWidgetWrapper.find("[data-drupal-selector^='edit-" + this.settings.address_field.replace(/_/g, '-') + "'] [data-drupal-selector$='-address']");
+              return addressWidgetWrapper.find("[data-drupal-selector^='edit-'][data-drupal-selector*='" + this.settings.address_field.replace(/_/g, '-') + "'] [data-drupal-selector$='-address']");
             },
             addNewAddressInput: function () {
               if (this.addressAddMoreCalled) {

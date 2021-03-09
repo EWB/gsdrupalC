@@ -49,15 +49,63 @@ interface DataProviderInterface extends PluginInspectionInterface {
   public function getPositionsFromViewsRow(ResultRow $row, FieldPluginBase $views_field = NULL);
 
   /**
+   * Get locations from views row.
+   *
+   * @param \Drupal\views\ResultRow $row
+   *   Row.
+   * @param \Drupal\views\Plugin\views\field\FieldPluginBase $views_field
+   *   Views field definition.
+   *
+   * @return array
+   *   Renderable locations.
+   */
+  public function getLocationsFromViewsRow(ResultRow $row, FieldPluginBase $views_field = NULL);
+
+  /**
+   * Get shapes from views row.
+   *
+   * @param \Drupal\views\ResultRow $row
+   *   Row.
+   * @param \Drupal\views\Plugin\views\field\FieldPluginBase $views_field
+   *   Views field definition.
+   *
+   * @return array
+   *   Renderable shapes.
+   */
+  public function getShapesFromViewsRow(ResultRow $row, FieldPluginBase $views_field = NULL);
+
+  /**
    * Get positions from field item list.
    *
    * @param \Drupal\Core\Field\FieldItemInterface $fieldItem
    *   Views field definition.
    *
    * @return array
-   *   Retrieved locations.
+   *   Retrieved coordinates.
    */
   public function getPositionsFromItem(FieldItemInterface $fieldItem);
+
+  /**
+   * Get locations from field item list.
+   *
+   * @param \Drupal\Core\Field\FieldItemInterface $fieldItem
+   *   Views field definition.
+   *
+   * @return array
+   *   Renderable locations.
+   */
+  public function getLocationsFromItem(FieldItemInterface $fieldItem);
+
+  /**
+   * Get shapes from field item list.
+   *
+   * @param \Drupal\Core\Field\FieldItemInterface $fieldItem
+   *   Views field definition.
+   *
+   * @return array
+   *   Renderable shapes.
+   */
+  public function getShapesFromItem(FieldItemInterface $fieldItem);
 
   /**
    * Replace field item tokens.

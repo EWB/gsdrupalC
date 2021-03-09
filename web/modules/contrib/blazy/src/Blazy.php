@@ -59,9 +59,15 @@ class Blazy implements BlazyInterface {
 
     // Aspect ratio to fix layout reflow with lazyloaded images responsively.
     // This is outside 'lazy' to allow non-lazyloaded iframe/content use it too.
+    $settings['ratio'] = empty($settings['width']) ? '' : $settings['ratio'];
     if ($settings['ratio']) {
       self::aspectRatioAttributes($variables['attributes'], $settings);
     }
+
+    // Makes a little order here due to twig ignoring the preset priority.
+    $attributes = &$variables['attributes'];
+    $classes = empty($attributes['class']) ? [] : $attributes['class'];
+    $attributes['class'] = array_merge(['media'], $classes);
   }
 
   /**
@@ -184,7 +190,6 @@ class Blazy implements BlazyInterface {
    * {@inheritdoc}
    */
   public static function iframeAttributes(array &$settings) {
-    $settings['player'] = empty($settings['lightbox']) && $settings['media_switch'] == 'media';
     if (empty($settings['is_preview'])) {
       $attributes['data-src'] = $settings['embed_url'];
       $attributes['src'] = 'about:blank';
@@ -206,17 +211,21 @@ class Blazy implements BlazyInterface {
    */
   public static function buildIframe(array &$variables) {
     $settings = &$variables['settings'];
-    $variables['image'] = empty($settings['media_switch']) ? [] : $variables['image'];
+    $settings['player'] = empty($settings['lightbox']) && $settings['media_switch'] == 'media';
 
-    // Pass iframe attributes to template.
-    $variables['iframe'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'iframe',
-      '#attributes' => self::iframeAttributes($settings),
-    ];
+    if (empty($variables['url'])) {
+      $variables['image'] = empty($settings['media_switch']) ? [] : $variables['image'];
 
-    // Iframe is removed on lazyloaded, puts data at non-removable storage.
-    $variables['attributes']['data-media'] = Json::encode(['type' => $settings['type']]);
+      // Pass iframe attributes to template.
+      $variables['iframe'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'iframe',
+        '#attributes' => self::iframeAttributes($settings),
+      ];
+
+      // Iframe is removed on lazyloaded, puts data at non-removable storage.
+      $variables['attributes']['data-media'] = Json::encode(['type' => $settings['type']]);
+    }
   }
 
   /**
@@ -268,7 +277,7 @@ class Blazy implements BlazyInterface {
   public static function aspectRatioAttributes(array &$attributes, array &$settings) {
     $settings['ratio'] = empty($settings['ratio']) ? '' : str_replace(':', '', $settings['ratio']);
 
-    if ($settings['width'] && $settings['ratio'] == 'fluid') {
+    if ($settings['height'] && $settings['ratio'] == 'fluid') {
       // If "lucky", Blazy/ Slick Views galleries may already set this once.
       // Lucky when you don't flatten out the Views output earlier.
       $padding = $settings['padding_bottom'] ?: round((($settings['height'] / $settings['width']) * 100), 2);
@@ -468,7 +477,7 @@ class Blazy implements BlazyInterface {
   }
 
   /**
-   * Checks if Blazy is in CKEditor preview mode where no JS aasets are loaded.
+   * Checks if Blazy is in CKEditor preview mode where no JS assets are loaded.
    */
   public static function isPreview() {
     return in_array(self::routeMatch()->getRouteName(), ['entity_embed.preview', 'media.filter.preview']);

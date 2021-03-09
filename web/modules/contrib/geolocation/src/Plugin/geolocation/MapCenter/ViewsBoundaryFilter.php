@@ -28,8 +28,7 @@ class ViewsBoundaryFilter extends MapCenterBase implements MapCenterInterface {
     if ($displayHandler = self::getViewsDisplayHandler($context)) {
       /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter */
       foreach ($displayHandler->getHandlers('filter') as $filter_id => $filter) {
-        if ($filter->getPluginId() == 'geolocation_filter_boundary') {
-
+        if ($filter->getPluginId() === 'geolocation_filter_boundary') {
           // Preserve compatibility to v1.
           $options['boundary_filter_' . $filter_id] = $this->t('Boundary filter') . ' - ' . $filter->adminLabel();
         }

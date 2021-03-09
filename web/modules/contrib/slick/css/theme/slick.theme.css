@@ -86,7 +86,8 @@
 
 /* Fix for Chrome blue outline */
 .slick__slide:focus {
-  outline: 0;
+  border: 1px solid transparent;
+  outline: 0; /* csslint allow: outline-none */
 }
 
 /* Prevents collapsing slick when unslick like one item. */

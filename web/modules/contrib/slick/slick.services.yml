@@ -7,7 +7,7 @@ services:
 
   slick.formatter:
     class: Drupal\slick\SlickFormatter
-    parent: blazy.formatter.manager
+    parent: blazy.formatter
 
   slick.admin:
     class: Drupal\slick\Form\SlickAdmin

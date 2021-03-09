@@ -20,12 +20,12 @@ function masonry_views_preprocess_views_view_masonry(&$variables) {
   $style = $view->style_plugin;
   $options = $style->options;
 
-  // Build the view container
-  $container = '.view-' . Html::cleanCssIdentifier($view->storage->id()) . '.view-display-id-' . $view->current_display . ' > .view-content';
+  // Build the view container.
+  $container = '.masonry-layout-' . Html::cleanCssIdentifier($view->storage->id());
 
   // If grouping enabled, style it.
   if (!empty($options['grouping'])) {
-    $variables['grouping'] = true;
+    $variables['grouping'] = TRUE;
     static $groupid;
     $container .= ' .masonry-group-' . ++$groupid;
     $variables['grouping_class'] = "masonry-group masonry-group-$groupid";
@@ -34,7 +34,7 @@ function masonry_views_preprocess_views_view_masonry(&$variables) {
   // Add rows default and custom CSS classes.
   $variables['default_row_class'] = !empty($options['default_row_class']);
   foreach ($rows as $id => $row) {
-    $variables['rows'][$id] = array();
+    $variables['rows'][$id] = [];
     $variables['rows'][$id]['content'] = $row;
     $variables['rows'][$id]['attributes'] = new Attribute();
     $variables['rows'][$id]['attributes']->addClass("masonry-item");
@@ -43,7 +43,25 @@ function masonry_views_preprocess_views_view_masonry(&$variables) {
     }
   }
 
-  // Display content in a Masonry layout
+  // Display content in a Masonry layout.
   $item_selector = '.masonry-item';
-  \Drupal::service('masonry.service')->applyMasonryDisplay($variables, $container, $item_selector, $options);
+  \Drupal::service('masonry.service')
+    ->applyMasonryDisplay($variables, $container, $item_selector, $options, [
+      'masonry_view',
+      'masonry_view_' . $view->storage->id(),
+      'masonry_view_display_' . $view->current_display
+    ]);
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function masonry_views_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+  $style = $view->style_plugin;
+
+  if ($style->getPluginId() === 'masonry' && !empty($variables['rows'])) {
+    $variables['rows']['#theme_wrappers']['container']['#attributes']['data-drupal-masonry-layout'] = TRUE;
+    $variables['rows']['#theme_wrappers']['container']['#attributes']['class'][] = 'masonry-layout-' . Html::cleanCssIdentifier($view->storage->id());
+  }
 }

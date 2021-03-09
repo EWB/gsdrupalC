@@ -64,29 +64,36 @@ class BlockComponentRenderArraySubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $selected = $event->getComponent()->get('layout_builder_styles_style');
-    if ($selected) {
+    $selectedStyles = $event->getComponent()->get('layout_builder_styles_style');
+    if ($selectedStyles) {
       // Convert single selection to an array for consistent processing.
-      if (!is_array($selected)) {
-        $selected = [$selected];
+      if (!is_array($selectedStyles)) {
+        $selectedStyles = [$selectedStyles];
       }
+
+      // Pass the selected style(s) to the render array so we can use the data
+      // when adding block theme suggestions.
+      // See layout_builder_styles_theme_suggestions_block_alter().
+      $build['#layout_builder_style'] = $selectedStyles;
 
       // Retrieve all styles from selection(s).
       $grouped_classes = [];
       if (!isset($build['#attributes']['class']) || !is_array($build['#attributes']['class'])) {
         $build['#attributes']['class'] = [];
       }
-      $build['#layout_builder_style'] = [];
-      foreach ($selected as $stylename) {
+      foreach ($selectedStyles as $styleId) {
+        // Account for incorrectly configured component configuration which may
+        // have a NULL style ID. We cannot pass NULL to the storage handler or
+        // it will throw an exception.
+        if (empty($styleId)) {
+          continue;
+        }
         /** @var \Drupal\layout_builder_styles\LayoutBuilderStyleInterface $style */
-        $style = $this->entityTypeManager->getStorage('layout_builder_style')->load($stylename);
+        $style = $this->entityTypeManager->getStorage('layout_builder_style')->load($styleId);
         if ($style) {
           $classes = \preg_split('(\r\n|\r|\n)', $style->getClasses());
           $grouped_classes = array_merge($grouped_classes, $classes);
           $build['#attributes']['class'] = array_merge($build['#attributes']['class'], $grouped_classes);
-          // Add the chosen styles to the render array so we can use it in our
-          // theme suggestions alter hook.
-          $build['#layout_builder_style'] = $grouped_classes;
           $build['#cache']['tags'][] = 'config:layout_builder_styles.style.' . $style->id();
         }
       }

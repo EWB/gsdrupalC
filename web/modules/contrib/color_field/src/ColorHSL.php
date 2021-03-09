@@ -108,7 +108,7 @@ class ColorHSL extends ColorBase {
     else {
       $output = 'hsl(' . $this->hue . ',' . $this->sat . ',' . $this->lum . ')';
     }
-    return strtoupper($output);
+    return strtolower($output);
   }
 
   /**

@@ -2,12 +2,12 @@
 
 namespace Drupal\slick;
 
+use Drupal\blazy\BlazyFormatterInterface;
+
 /**
  * Defines re-usable services and functions for slick field plugins.
- *
- * @todo extends BlazyFormatterInterface post blazy:2.x release.
  */
-interface SlickFormatterInterface {
+interface SlickFormatterInterface extends BlazyFormatterInterface {
 
   /**
    * Gets the thumbnail image using theme_image_style().

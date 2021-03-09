@@ -18,6 +18,10 @@
   position: relative;
 }
 
+.grid .media-wrapper--blazy {
+  width: 100%;
+}
+
 /** Blazy is placed after filter Align/ Caption will be collapsed. Adjust it. */
 .caption .media-wrapper--blazy,
 .align-left .media-wrapper--blazy,
@@ -29,4 +33,10 @@
 .blazy--filter .media-wrapper--blazy {
   min-width: 0;
   overflow: hidden;
+}
+
+.media-wrapper--blazy.align-center img {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
 }

@@ -1,4 +1,33 @@
 
+Slick 8.x-2.0-dev, 2020-05-02
+-----------------------------
+- Issue #3132905 by hunterbuchanan: Remove Libraries API dependency from project
+  page for Slick 8.x-2.0+.
+- Issue #3132875 by lolandese: License "GPL-2.0+" is a deprecated SPDX license
+  identifier.
+
+Slick 8.x-2.0-dev, 2020-03-16
+-----------------------------
+- Issue #3116234 by sasanikolic: Width recalculation issue after closing
+  colorbox modal.
+
+Slick 8.x-2.0-dev, 2020-02-23
+-----------------------------
+- Updated blazy.formatter.manager to blazy.formatter for blazy:rc7+.
+- Updated to the latest Blazy to re-use method Blazy::containerAttributes, etc.
+- Added SlickManager::buildNavigation for code readability.
+- Added SlickSkinManager::getSlickPath for re-use, and prioritized composer.
+- Re-enabled BC for slick_hook_info() till slick:3.x, or 9.x.
+- Ported BC BlazyManager::buildSkins so that Blazy can remove it safely.
+- Fixed for Vanilla leak with optionset thumbnail.
+- Fixed for default value regression.
+
+Slick 8.x-2.0-dev, 2020-02-17
+-----------------------------
+- Removed and cleaned up deprecated custom breakpoints, wish me luck.
+- Issue #3079155 by nashkrammer: Fix deprecation reported by drupal-check and
+  deprecation errors from test results.
+
 Slick 8.x-2.0-dev, 2020-02-14
 -----------------------------
 - Issue #3112913 by thalles, gausarts: Fix subclassing and stop overriding

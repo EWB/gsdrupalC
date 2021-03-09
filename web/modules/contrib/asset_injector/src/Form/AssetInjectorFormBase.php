@@ -322,6 +322,12 @@ class AssetInjectorFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // Convert \r\n to \n so that multiline strings are properly formatted.
+    // @see \Symfony\Component\Yaml\Dumper::dump
+    $code = $form_state->getValue('code');
+    $code = preg_replace('~\r\n?~', "\n", $code);
+    $form_state->setValue('code', $code);
+
     parent::submitForm($form, $form_state);
 
     foreach ($form_state->getValue('conditions') as $condition_id => $values) {

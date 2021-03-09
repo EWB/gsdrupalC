@@ -95,6 +95,10 @@
    */
   Drupal.behaviors.blazyColorbox = {
     attach: function (context) {
+      if (typeof drupalSettings.colorbox === 'undefined') {
+        return;
+      }
+
       if (drupalSettings.colorbox.mobiledetect && window.matchMedia) {
         // Disable Colorbox for small screens.
         var mq = window.matchMedia('(max-device-width: ' + drupalSettings.colorbox.mobiledevicewidth + ')');

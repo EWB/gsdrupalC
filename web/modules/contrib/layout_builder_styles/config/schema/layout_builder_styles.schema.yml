@@ -19,6 +19,14 @@ layout_builder_styles.style.*:
       label: 'Block restrictions'
       sequence:
         type: string
+    layout_restrictions:
+      type: sequence
+      label: 'Layout restrictions'
+      sequence:
+        type: string
+    weight:
+      type: integer
+      label: 'Weight'
     uuid:
       type: string
 layout_builder_styles.settings:
@@ -27,3 +35,6 @@ layout_builder_styles.settings:
     multiselect:
       type: string
       label: "Multiple styles selectable"
+    form_type:
+      type: string
+      label: "How the styles selector should be displayed"

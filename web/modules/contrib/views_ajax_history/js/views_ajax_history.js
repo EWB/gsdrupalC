@@ -295,7 +295,8 @@
 
     if (data.view_name && options.type !== 'GET') {
       // Override the URL to not contain any fields that were submitted.
-      options.url = drupalSettings.views.ajax_path + '?' + Drupal.ajax.WRAPPER_FORMAT + '=drupal_ajax';
+      var delimiter = drupalSettings.views.ajax_path.indexOf('?') === -1 ? '?' : '&';
+      options.url = drupalSettings.views.ajax_path + delimiter + Drupal.ajax.WRAPPER_FORMAT + '=drupal_ajax';
     }
     // Call the original Drupal method with the right context.
     beforeSend.apply(this, arguments);

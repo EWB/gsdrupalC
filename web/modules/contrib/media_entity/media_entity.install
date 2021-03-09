@@ -113,32 +113,6 @@ function _media_entity_fix_dependencies($dependency_type, $dependency_id, callab
 }
 
 /**
- * Helper function to determine the name of a source field.
- *
- * @return string
- *   The source field name. If one is already stored in configuration, it is
- *   returned. Otherwise, a new, unused one is generated.
- */
-function _media_get_source_field_name($plugin_id) {
-  $base_id = 'field_media_' . $plugin_id;
-  $tries = 0;
-  $storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
-
-  // Iterate at least once, until no field with the generated ID is found.
-  do {
-    $id = $base_id;
-    // If we've tried before, increment and append the suffix.
-    if ($tries) {
-      $id .= '_' . $tries;
-    }
-    $field = $storage->load('media.' . $id);
-    $tries++;
-  } while ($field);
-
-  return $id;
-}
-
-/**
  * Gets the names of all media bundles that use a particular type plugin.
  *
  * @param string $plugin_id
@@ -261,15 +235,6 @@ function media_entity_requirements($phase) {
   }
 
   return $requirements;
-}
-
-/**
- * Implements hook_install().
- */
-function media_entity_install() {
-  $source = drupal_get_path('module', 'media_entity') . '/images/icons';
-  $destination = \Drupal::config('media_entity.settings')->get('icon_base');
-  media_entity_copy_icons($source, $destination);
 }
 
 /**
@@ -647,9 +612,16 @@ function media_entity_update_dependencies() {
     }
   }
 
-  // Ensure that system_update_8501() before the media update, so that the
-  // new revision_default field is installed in the correct table.
-  $dependencies['media_entity'][8201]['system'] = 8501;
+  if (version_compare(\Drupal::VERSION, '8.8', '>=')) {
+    // Ensure that system_update_8803() run before the media update, so that the
+    // new path_alias module is installed.
+    $dependencies['media_entity'][8201]['system'] = 8803;
+  }
+  else {
+    // Ensure that system_update_8501() before the media update, so that the
+    // new revision_default field is installed in the correct table.
+    $dependencies['media_entity'][8201]['system'] = 8501;
+  }
 
   return $dependencies;
 }

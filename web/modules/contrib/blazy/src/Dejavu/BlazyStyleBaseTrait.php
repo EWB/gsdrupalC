@@ -4,7 +4,6 @@ namespace Drupal\blazy\Dejavu;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Render\Markup;
-use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\blazy\Blazy;
 use Drupal\blazy\BlazyDefault;
 
@@ -77,7 +76,7 @@ trait BlazyStyleBaseTrait {
     $settings['current_view_mode'] = $view_mode;
     $settings['instance_id']       = $instance;
     $settings['multiple']          = TRUE;
-    $settings['plugin_id']         = $plugin_id;
+    $settings['plugin_id']         = $settings['view_plugin_id'] = $plugin_id;
     $settings['use_ajax']          = $view->ajaxEnabled();
     $settings['view_name']         = $view_name;
     $settings['view_display']      = $view->style_plugin->displayHandler->getPluginId();
@@ -111,21 +110,23 @@ trait BlazyStyleBaseTrait {
   public function getFirstImage($row) {
     if (!isset($this->firstImage)) {
       $rendered = [];
-      if ($row && isset($row->_entity) && $fields = $row->_entity->getFields(FALSE)) {
-        foreach ($fields as $field) {
-          if ($field->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type') == 'media') {
-            $name = $field->getName();
-            break;
-          }
-          if ($field->first() instanceof ImageItem) {
-            $name = $field->getName();
-            break;
-          }
-        }
+      if ($row && $render = $this->view->rowPlugin->render($row)) {
+        if (isset($render['#view']->field) && $fields = $render['#view']->field) {
+          foreach ($fields as $field) {
+            $options = isset($field->options) ? $field->options : [];
+            if (!isset($options['type'])) {
+              continue;
+            }
 
-        if (isset($name) && $rendered = $this->getFieldRenderable($row, 0, $name)) {
-          if (is_array($rendered) && isset($rendered['rendered']) && !($rendered['rendered'] instanceof Markup)) {
-            $rendered = isset($rendered['rendered']['#build']) ? $rendered['rendered']['#build'] : [];
+            if (!empty($options['field']) && isset($options['settings']['media_switch']) && strpos($options['type'], 'blazy') !== FALSE) {
+              $name = $options['field'];
+            }
+          }
+
+          if (isset($name) && $rendered = $this->getFieldRenderable($row, 0, $name)) {
+            if (is_array($rendered) && isset($rendered['rendered']) && !($rendered['rendered'] instanceof Markup)) {
+              $rendered = isset($rendered['rendered']['#build']) ? $rendered['rendered']['#build'] : [];
+            }
           }
         }
       }

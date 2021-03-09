@@ -15,7 +15,7 @@ class LayoutBuilderStyleDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete %name?', array('%name' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete %name?', ['%name' => $this->entity->label()]);
   }
 
   /**
@@ -38,7 +38,7 @@ class LayoutBuilderStyleDeleteForm extends EntityConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
 
-    drupal_set_message(
+    $this->messenger()->addMessage(
       $this->t('Deleted the %label style.',
         [
           '@type' => $this->entity->bundle(),

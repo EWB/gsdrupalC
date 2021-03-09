@@ -163,8 +163,21 @@ class AnimateEditForm extends FormBase {
     $data->condition('aid', $aid);
     $valid = $data->execute();
     if ($valid) {
+      $this->setConfigValue($parent, $identifiers);
       $this->messenger()->addMessage($this->t('Animation settings updated.'));
     }
+  }
+
+  /**
+   * Set animation values in configuration.
+   * @param $parent
+   * @param $identifiers
+   */
+  public function setConfigValue($parent, $identifiers) {
+    $parent_key = str_replace('.', '::', $parent);
+    $animate_data = ['parent' => $parent, 'identifier' => $identifiers];
+    \Drupal::service('config.factory')->getEditable('animate_any.settings')
+      ->set($parent_key, $animate_data)->save();
   }
 
 }

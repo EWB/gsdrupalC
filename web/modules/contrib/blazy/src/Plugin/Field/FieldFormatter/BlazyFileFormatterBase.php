@@ -5,7 +5,6 @@ namespace Drupal\blazy\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\blazy\BlazyDefault;
@@ -24,9 +23,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see Drupal\slick\Plugin\Field\FieldFormatter\SlickFileFormatter.
  *
  * @todo remove no longer in use: ImageFactory at blazy:3.x.
- * @todo remove ContainerFactoryPluginInterface since D8.8 has it by default.
  */
-abstract class BlazyFileFormatterBase extends FileFormatterBase implements ContainerFactoryPluginInterface {
+abstract class BlazyFileFormatterBase extends FileFormatterBase {
 
   use BlazyFormatterTrait;
   use BlazyFormatterViewTrait;
@@ -62,17 +60,6 @@ abstract class BlazyFileFormatterBase extends FileFormatterBase implements Conta
     $definition = $this->getScopedFormElements();
 
     $definition['_views'] = isset($form['field_api_classes']);
-    if (!empty($definition['_views'])) {
-      $view = $form_state->get('view');
-      // Disables problematic options for GridStack plugin since GridStack
-      // will not work with Responsive image, and has its own breakpoints.
-      if ($view->getExecutable()->getStyle()->getPluginId() == 'gridstack') {
-        $definition['ratio'] = FALSE;
-        $definition['responsive_image'] = FALSE;
-        $definition['no_ratio'] = TRUE;
-      }
-    }
-
     $this->admin()->buildSettingsForm($element, $definition);
 
     return $element;

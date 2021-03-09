@@ -1,4 +1,4 @@
-name: Geolocation - Geometry (Experimental)
+name: Geolocation - Geometry
 type: module
 description: Provide geometry based fields and integration
 core_version_requirement: ^8.7.7 || ^9

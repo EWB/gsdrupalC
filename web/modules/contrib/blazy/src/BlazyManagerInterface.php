@@ -74,15 +74,4 @@ interface BlazyManagerInterface {
    */
   public function isBlazy(array &$settings, array $item = []);
 
-  /**
-   * Checks if an image style contains crop effect.
-   *
-   * @param string $style
-   *   The image style to check for.
-   *
-   * @return object|bool
-   *   Returns the image style instance if it contains crop effect, else FALSE.
-   */
-  public function isCrop($style);
-
 }

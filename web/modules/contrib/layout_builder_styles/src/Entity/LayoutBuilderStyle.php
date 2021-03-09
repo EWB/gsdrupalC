@@ -25,10 +25,11 @@ use Drupal\layout_builder_styles\LayoutBuilderStyleInterface;
  *     }
  *   },
  *   config_prefix = "style",
- *   admin_permission = "administer site configuration",
+ *   admin_permission = "manage layout builder styles",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
+ *     "weight" = "weight",
  *     "uuid" = "uuid"
  *   },
  *   config_export = {
@@ -36,7 +37,9 @@ use Drupal\layout_builder_styles\LayoutBuilderStyleInterface;
  *     "label" = "label",
  *     "classes" = "classes",
  *     "type" = "type",
+ *     "weight" = "weight",
  *     "block_restrictions" = "block_restrictions",
+ *     "layout_restrictions" = "layout_restrictions",
  *     "uuid" = "uuid"
  *   },
  *   links = {
@@ -78,11 +81,25 @@ class LayoutBuilderStyle extends ConfigEntityBase implements LayoutBuilderStyleI
   protected $type;
 
   /**
+   * Order of style on the config page & in Layout Builder add/update forms.
+   *
+   * @var int
+   */
+  protected $weight = 0;
+
+  /**
    * A list of blocks to limit this style to.
    *
    * @var array
    */
-  protected $block_restrictions;
+  protected $block_restrictions = [];
+
+  /**
+   * A list of layouts to limit this style to.
+   *
+   * @var array
+   */
+  protected $layout_restrictions = [];
 
   /**
    * {@inheritdoc}
@@ -103,6 +120,13 @@ class LayoutBuilderStyle extends ConfigEntityBase implements LayoutBuilderStyleI
    */
   public function getBlockRestrictions() {
     return isset($this->block_restrictions) ? $this->block_restrictions : [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLayoutRestrictions() {
+    return isset($this->layout_restrictions) ? $this->layout_restrictions : [];
   }
 
 }

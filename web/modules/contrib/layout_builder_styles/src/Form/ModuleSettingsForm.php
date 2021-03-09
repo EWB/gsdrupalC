@@ -46,26 +46,21 @@ class ModuleSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-
     $config = $this->configFactory()->get('layout_builder_styles.settings');
-    if ($config) {
-      $multiselect = $config->get('multiselect');
-      $form_type = $config->get('form_type');
-    }
     $form['multiselect'] = [
       '#type' => 'radios',
       '#title' => $this->t('Multiple styles'),
-      '#default_value' => $multiselect ?? 'single',
+      '#default_value' => $config->get('multiselect'),
       '#options' => [
         'single' => $this->t('Limit one style per given section or block.'),
         'multiple' => $this->t('Allow multiple styles to be selected on a given section or block.'),
       ],
-      '#description' => $this->t('Limiting to one style per section or block is useful for sites which need each style choice to dictate the markup of the template. When this option is chosen, a corresponding block theme hook suggestion is provided. Allowing multiple styles is useful for sites whose style declarations correspond wholly to CSS modifications, and whose styles are designed to be used in conjunction.'),
+      '#description' => $this->t('Limiting to one style per section or block is useful for sites which need each style choice to dictate the markup of the template. When this option is chosen, a corresponding block theme hook suggestion is provided. Allowing multiple styles is useful for sites whose style declarations correspond wholly to CSS modifications, and whose styles are designed to be used in conjunction. <strong>Note</strong>: if you switch this setting from "multiple" to "single" after Layout Builder Styles is already in use, any blocks that had been assigned multiple styles will initially continue to render with multiple styles until the block form is revisted; at that point, the Layout Builder Style options will be reset to no selections, and content editors should take care to reapply the single style they want to use.'),
     ];
     $form['form_type'] = [
       '#type' => 'radios',
       '#title' => $this->t('Form element for multiple styles'),
-      '#default_value' => $form_type ?? 'checkboxes',
+      '#default_value' => $config->get('form_type'),
       '#options' => [
         'checkboxes' => $this->t('Checkboxes'),
         'multiple-select' => $this->t('Select (multiple) box'),

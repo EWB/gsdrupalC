@@ -7,3 +7,4 @@ dependencies:
   - geolocation:geolocation
   - search_api:search_api
   - search_api_location:search_api_location
+  - search_api_location:search_api_location_views

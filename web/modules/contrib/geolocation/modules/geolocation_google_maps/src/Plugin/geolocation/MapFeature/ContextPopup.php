@@ -60,16 +60,11 @@ class ContextPopup extends MapFeatureBase {
 
     $feature_settings = $this->getSettings($feature_settings);
 
-    $token_context = [];
-    if (!empty($context['view'])) {
-      $token_context['view'] = $context['view'];
-    }
-
     if (
       !empty($settings['content']['value'])
       && !empty($settings['content']['format'])
     ) {
-      $content = check_markup(\Drupal::token()->replace($feature_settings['content']['value'], $token_context), $feature_settings['content']['format']);
+      $content = check_markup(\Drupal::token()->replace($feature_settings['content']['value'], $context), $feature_settings['content']['format']);
     }
     else {
       return $render_array;

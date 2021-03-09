@@ -7,22 +7,34 @@
 
   'use strict';
 
+  var _dataAnimation = 'data-animation';
+  var _dataDimensions = 'data-dimensions';
+  var _dataBg = 'data-backgrounds';
+  var _dataRatio = 'data-ratio';
+  var _firstBlazy = 'blazy--first';
+  var _isNativeExecuted = false;
+  var _isPictureExecuted = false;
+  var _resizeTick = 0;
+
   /**
    * Blazy public methods.
    *
    * @namespace
    */
   Drupal.blazy = Drupal.blazy || {
+    context: null,
     init: null,
+    items: [],
+    ratioItems: [],
     windowWidth: 0,
     blazySettings: drupalSettings.blazy || {},
     ioSettings: drupalSettings.blazyIo || {},
-    isForced: false,
     revalidate: false,
     options: {},
     globals: function () {
       var me = this;
       var commons = {
+        isUniform: false,
         success: me.clearing.bind(me),
         error: me.clearing.bind(me),
         selector: '.b-lazy',
@@ -35,9 +47,35 @@
 
     clearing: function (el) {
       var me = this;
-      var ie = el.classList.contains('b-responsive') && el.hasAttribute('data-pfsrc');
       var cn = _db.closest(el, '.media');
+      var an = _db.closest(el, '[' + _dataAnimation + ']');
 
+      // Clear loading classes.
+      me.clearLoading(el);
+
+      // Reevaluate the element.
+      me.reevaluate(el);
+
+      // Container might be the el itself for BG, do not NULL check here.
+      me.updateContainer(el, cn);
+
+      // Supports blur, animate.css for CSS background, picture, image, media.
+      if (an !== null || me.has(el, _dataAnimation)) {
+        _db.animate(an !== null ? an : el);
+      }
+
+      // Provides event listeners for easy overrides without full overrides.
+      _db.trigger(el, 'blazy.done', {options: me.options});
+
+      // Initializes the native lazy loading once the first found is loaded.
+      if (!_isNativeExecuted) {
+        _db.trigger(me.context, 'blazy.native', {options: me.options});
+
+        _isNativeExecuted = true;
+      }
+    },
+
+    clearLoading: function (el) {
       // The .b-lazy element can be attached to IMG, or DIV as CSS background.
       // The .(*)loading can be .media, .grid, .slide__content, .box, etc.
       var loaders = [
@@ -51,6 +89,25 @@
           loader.className = loader.className.replace(/(\S+)loading/, '');
         }
       });
+    },
+
+    isLoaded: function (el) {
+      return el !== null && el.classList.contains(this.options.successClass);
+    },
+
+    reevaluate: function (el) {
+      var me = this;
+      var ie = el.classList.contains('b-responsive') && el.hasAttribute('data-pfsrc');
+
+      // In case an error, try forcing it.
+      if (me.init !== null && _db.hasClass(el, me.options.errorClass)) {
+        el.classList.remove(me.options.errorClass);
+
+        // This is a rare case, hardly called, just nice to have for errors.
+        window.setTimeout(function () {
+          me.init.load(el);
+        }, 10);
+      }
 
       // @see http://scottjehl.github.io/picturefill/
       if (window.picturefill && ie) {
@@ -59,42 +116,48 @@
           elements: [el]
         });
       }
-
-      // Container might be the el itself for BG, do not NULL check here.
-      me.updateContainer(el, cn);
-      // Supports animate.css for CSS background, picture, image, media.
-      if (me.isLoaded(el) && (me.has(cn, 'data-animation') || me.has(el, 'data-animation'))) {
-        _db.animate(me.has(cn, 'data-animation') ? cn : el);
-      }
-
-      // Provides event listeners for easy overrides without full overrides.
-      _db.trigger(el, 'blazy.done', {options: me.options});
-    },
-
-    isLoaded: function (el) {
-      return el !== null && el.classList.contains(this.options.successClass);
     },
 
     has: function (el, attribute) {
       return el !== null && el.hasAttribute(attribute);
     },
 
+    contains: function (el, name) {
+      return el !== null && el.classList.contains(name);
+    },
+
     updateContainer: function (el, cn) {
       var me = this;
+      var isPicture = _db.equal(el.parentNode, 'picture') && me.has(cn, _dataDimensions);
 
-      if (me.isLoaded(el)) {
-        if (_db.equal(el.parentNode, 'picture') && me.has(cn, 'data-dimensions')) {
-          me.updatePicture(el, cn);
-        }
+      // Fixed for effect Blur messes up Aspect ratio Fluid calculation.
+      window.setTimeout(function () {
+        if (me.isLoaded(el)) {
+          // Adds context for effetcs: blur, etc. considering BG, or just media.
+          (me.contains(cn, 'media') ? cn : el).classList.add('is-b-loaded');
 
-        if (me.has(el, 'data-backgrounds')) {
-          _db.updateBg(el, me.options.mobileFirst);
+          if (isPicture) {
+            me.updatePicture(el, cn);
+          }
+
+          if (me.has(el, _dataBg)) {
+            _db.updateBg(el, me.options.mobileFirst);
+          }
         }
-      }
+      });
     },
 
     updatePicture: function (el, cn) {
-      cn.style.paddingBottom = Math.round(((el.naturalHeight / el.naturalWidth) * 100), 2) + '%';
+      var me = this;
+      var pad = Math.round(((el.naturalHeight / el.naturalWidth) * 100), 2);
+
+      cn.style.paddingBottom = pad + '%';
+
+      // Swap all aspect ratio once to reduce abrupt ratio changes for the rest.
+      if (!_isPictureExecuted) {
+        _db.trigger(me.context, 'blazy.uniform', {pad: pad});
+        _isPictureExecuted = true;
+      }
     },
 
     /**
@@ -108,7 +171,7 @@
      */
     updateRatio: function (cn) {
       var me = this;
-      var dimensions = _db.parse(cn.getAttribute('data-dimensions')) || ('dimensions' in me.options ? me.options.dimensions : false);
+      var dimensions = _db.parse(cn.getAttribute(_dataDimensions)) || ('dimensions' in me.options ? me.options.dimensions : false);
 
       if (!dimensions) {
         me.updateFallbackRatio(cn);
@@ -116,36 +179,45 @@
       }
 
       // For picture, this is more a dummy space till the image is downloaded.
-      var isPicture = cn.querySelector('picture') !== null;
+      var isPicture = cn.querySelector('picture') !== null && _resizeTick > 0;
       var pad = _db.activeWidth(dimensions, isPicture);
+
       if (pad !== 'undefined') {
         cn.style.paddingBottom = pad + '%';
       }
 
       // Fix for picture or bg element with resizing.
-      if (isPicture || me.has(cn, 'data-backgrounds')) {
+      if (_resizeTick > 0 && (isPicture || me.has(cn, _dataBg))) {
         me.updateContainer((isPicture ? cn.querySelector('img') : cn), cn);
       }
     },
 
     updateFallbackRatio: function (cn) {
       // Only rewrites if the style is indeed stripped out by Twig, and not set.
-      if (!cn.hasAttribute('style') && cn.hasAttribute('data-ratio')) {
-        cn.style.paddingBottom = cn.getAttribute('data-ratio') + '%';
+      if (!cn.hasAttribute('style') && cn.hasAttribute(_dataRatio)) {
+        cn.style.paddingBottom = cn.getAttribute(_dataRatio) + '%';
       }
     },
 
-    doNativeLazy: function (el) {
+    doNativeLazy: function () {
       var me = this;
-      // Reset attributes, and let supportive browsers lazy load them natively.
-      _db.setAttrs(el, ['srcset', 'src'], true);
+      var doNative = function (el) {
+        // Reset attributes, and let supportive browsers lazy load natively.
+        _db.setAttrs(el, ['srcset', 'src'], true);
 
-      // Also supports PICTURE or (future) VIDEO element which contains SOURCEs.
-      _db.setAttrsWithSources(el, false, true);
+        // Also supports PICTURE or (future) VIDEO which contains SOURCEs.
+        _db.setAttrsWithSources(el, false, true);
 
-      // Mark it loaded to prevent Blazy/IO to do any further work.
-      el.classList.add(me.options.successClass);
-      me.clearing(el);
+        // Mark it loaded to prevent Blazy/IO to do any further work.
+        el.classList.add(me.options.successClass);
+        me.clearing(el);
+      };
+
+      var onNative = function () {
+        _db.forEach(me.items, doNative);
+      };
+
+      _db.bindEvent(me.context, 'blazy.native', onNative, {once: true});
     },
 
     isNativeLazy: function () {
@@ -183,13 +255,24 @@
 
     afterInit: function (context) {
       var me = this;
-      var elms = context.querySelector('.media--ratio') === null ? [] : context.querySelectorAll('.media--ratio');
+      me.ratioItems = context.querySelector('.media--ratio') === null ? [] : context.querySelectorAll('.media--ratio');
+      var shouldLoop = me.ratioItems.length > 0;
+
+      var swapRatio = function (e) {
+        var pad = e.detail.pad;
+
+        if (pad > 10) {
+          _db.forEach(me.ratioItems, function (cn) {
+            cn.style.paddingBottom = pad + '%';
+          }, context);
+        }
+      };
 
       var checkRatio = function () {
         me.windowWidth = _db.windowWidth();
 
-        if (elms.length > 0) {
-          _db.forEach(elms, me.updateRatio.bind(me), context);
+        if (shouldLoop) {
+          _db.forEach(me.ratioItems, me.updateRatio.bind(me), context);
         }
 
         // BC with bLazy, native/IO doesn't need to revalidate, bLazy does.
@@ -198,11 +281,27 @@
         if (!me.isNativeLazy() && (me.isBlazy() || me.revalidate)) {
           me.init.revalidate(true);
         }
+
+        // Provides event listeners for easy overrides without full overrides.
+        // Checks for weird contexts, in case spit out during AJAX, etc.
+        if (context.classList && context.classList.contains(_firstBlazy)) {
+          _db.trigger(context, 'blazy.afterInit', {
+            items: me.items || me.ratioItems,
+            windowWidth: me.windowWidth
+          });
+        }
+        _resizeTick++;
       };
 
-      // Checks for aspect ratio.
+      // Checks for aspect ratio, onload event is a bit later.
+      // @todo use Drupal.debounce if it makes any difference.
       checkRatio();
-      window.addEventListener('resize', _db.throttle(checkRatio, 200, me), false);
+      _db.bindEvent(window, 'resize', Drupal.debounce(checkRatio, 200, true));
+
+      // Reduces abrupt ratio changes for the rest after the first loaded.
+      if (me.options.isUniform && shouldLoop) {
+        _db.bindEvent(context, 'blazy.uniform', swapRatio, {once: true});
+      }
     }
 
   };
@@ -211,7 +310,7 @@
    * Initialize the blazy instance, either basic, advanced, or native.
    *
    * The initialization may take once for basic (not using module formatters),
-   * or per .blazy/[data-blazy] formatter when they are one or many on a page.
+   * or per .blazy/[data-blazy] formatter when there are one or many on a page.
    *
    * @param {HTMLElement} context
    *   This can be document, or .blazy container w/o [data-blazy].
@@ -225,16 +324,18 @@
 
     opts = opts || {};
     opts.mobileFirst = opts.mobileFirst || false;
+    documentElement = documentElement || document;
     if (!document.documentElement.isSameNode(documentElement)) {
       opts.root = documentElement;
     }
 
     me.options = _db.extend({}, me.globals(), opts);
+    me.context = context;
 
     // Old bLazy, not IO, might need scrolling CSS selector like Modal library.
     // A scrolling modal with an iframe like Entity Browser has no issue since
-    // the scrolling container is the entire DOM.
-    var scrollElms = '#drupal-modal';
+    // the scrolling container is the entire DOM. Another use case is parallax.
+    var scrollElms = '#drupal-modal, .is-b-scroll';
     if (me.options.container) {
       scrollElms += ', ' + me.options.container.trim();
     }
@@ -244,11 +345,12 @@
     // This means Blazy and even IO should not lazy-load them any more.
     // Ensures to not touch lazy-loaded AJAX, or likely non-supported elements:
     // Video, DIV, etc. Only IMG and IFRAME are supported for now.
-    // Enforced if required. Native lazy loading` must be enabled for now.
-    if (me.isNativeLazy() || me.isForced) {
-      var elms = context.querySelectorAll(me.options.selector + '[loading]:not(.' + me.options.successClass + ')');
-      if (elms.length > 0) {
-        _db.forEach(elms, me.doNativeLazy.bind(me));
+    var nativeSelector = me.options.selector + '[loading]:not(.' + me.options.successClass + ')';
+    me.items = documentElement.querySelector(nativeSelector) === null ? [] : documentElement.querySelectorAll(nativeSelector);
+    if (me.isNativeLazy()) {
+      // Intentionally on the second line to not hit it till verified.
+      if (me.items.length > 0) {
+        me.doNativeLazy();
       }
     }
 
@@ -275,7 +377,12 @@
     elm.classList.add('blazy--on');
 
     // Initializes native, IntersectionObserver, or Blazy instance.
-    initBlazy(elm, opts);
+    // @todo attempts to optimize nested blazies, remove check if any issue.
+    if (_db.closest(elm, '.blazy') === null) {
+      elm.classList.add(_firstBlazy);
+      opts.isUniform = me.contains(elm, 'blazy--field') || me.contains(elm, 'blazy--grid') || me.contains(elm, 'blazy--uniform');
+      initBlazy(elm, opts);
+    }
   }
 
   /**

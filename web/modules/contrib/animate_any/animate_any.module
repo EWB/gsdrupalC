@@ -104,7 +104,8 @@ function animate_any_page_attachments(&$page) {
 function animate_on_event() {
   return [
     'none' => t('-- No event --'),
-    'scroll' => t('Scroll'),
+    'onload' => t('On page load'),
+    'scroll' => t('On page scroll'),
     'click' => t('Click'),
     'mouseover' => t('Hover'),
     'mouseout' => t('Mouse Out'),

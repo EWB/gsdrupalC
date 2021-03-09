@@ -74,6 +74,7 @@ class SlickDefault extends BlazyDefault {
       'nav'           => FALSE,
       'navpos'        => FALSE,
       'thumbnail_uri' => '',
+      'route_name'    => '',
       'unslick'       => FALSE,
       'vanilla'       => FALSE,
       'vertical'      => FALSE,

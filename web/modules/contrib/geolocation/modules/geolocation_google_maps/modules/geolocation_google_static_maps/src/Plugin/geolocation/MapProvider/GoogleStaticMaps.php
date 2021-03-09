@@ -139,7 +139,7 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
       if (!empty($location['#icon'])) {
         $marker_string .= 'icon:' . Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString() . $location['#icon'] . urlencode('|');
       }
-      $marker_string .= $location['#position']['lat'] . ',' . $location['#position']['lng'];
+      $marker_string .= $location['#coordinates']['lat'] . ',' . $location['#coordinates']['lng'];
       $static_map_url .= $marker_string;
     }
 

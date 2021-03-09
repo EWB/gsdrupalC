@@ -26,6 +26,13 @@ class LayoutLibraryIntegrationTest extends WebDriverTestBase {
   ];
 
   /**
+   * Specify the theme to be used in testing.
+   *
+   * @var string
+   */
+  protected $defaultTheme = 'stable';
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {

@@ -2,13 +2,12 @@ name: Views TimelineJS
 type: module
 description: Provides a View style that displays rows in a Timeline.
 package: Views
-# core: 8.x
+core_version_requirement: ^8.7.7 || ^9.0
 dependencies:
   - drupal:views
 configure: views_timelinejs.admin
 
-# Information added by Drupal.org packaging script on 2017-10-10
-version: '8.x-3.1'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2020-03-08
+version: '8.x-3.2'
 project: 'views_timelinejs'
-datestamp: 1507646648
+datestamp: 1583652201

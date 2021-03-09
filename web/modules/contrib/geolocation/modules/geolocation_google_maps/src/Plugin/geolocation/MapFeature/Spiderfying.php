@@ -168,12 +168,7 @@ class Spiderfying extends MapFeatureBase {
     );
 
     if (!empty($feature_settings['spiderfiable_marker_path'])) {
-      $data = [];
-      if (!empty($context['view'])) {
-        $data['view'] = $context['view'];
-      }
-
-      $path = \Drupal::token()->replace($feature_settings['spiderfiable_marker_path'], $data);
+      $path = \Drupal::token()->replace($feature_settings['spiderfiable_marker_path'], $context);
       $render_array['#attached']['drupalSettings']['geolocation']['maps'][$render_array['#id']]['spiderfying']['spiderfiable_marker_path'] = $path;
     }
 

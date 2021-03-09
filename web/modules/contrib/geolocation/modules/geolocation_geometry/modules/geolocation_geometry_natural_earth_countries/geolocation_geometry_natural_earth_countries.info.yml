@@ -1,7 +1,7 @@
-name: Geolocation Geometry Data - Natural Earth - Countries
+name: Geolocation - Geometry Data - Natural Earth - Countries
 type: module
 description: Import data from http://www.naturalearthdata.com/
-core: 8.x
+core_version_requirement: ^8.7.7 || ^9
 package: Geolocation
 dependencies:
   - geolocation_geometry_data

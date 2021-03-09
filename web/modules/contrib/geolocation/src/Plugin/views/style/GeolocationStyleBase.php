@@ -95,6 +95,11 @@ abstract class GeolocationStyleBase extends StylePluginBase {
       return FALSE;
     }
 
+    if (empty($this->view->field[$this->options['geolocation_field']])) {
+      \Drupal::messenger()->addMessage('The geolocation based view ' . $this->view->id() . ' views style was called with a non-available geolocation field defined in the views style settings.', 'error');
+      return FALSE;
+    }
+
     if (
       !empty($this->options['title_field'])
       && $this->options['title_field'] != 'none'
@@ -183,7 +188,13 @@ abstract class GeolocationStyleBase extends StylePluginBase {
       $icon_url = file_url_transform_relative(file_create_url($icon_token_uri));
     }
 
-    $data_provider = $this->dataProviderManager->createInstance($this->options['data_provider_id'], $this->options['data_provider_settings']);
+    try {
+      $data_provider = $this->dataProviderManager->createInstance($this->options['data_provider_id'], $this->options['data_provider_settings']);
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('geolocation')->critical('View with non-existing data provider called.');
+      return [];
+    }
 
     foreach ($data_provider->getPositionsFromViewsRow($row, $this->view->field[$this->options['geolocation_field']]) as $position) {
       $location = [
@@ -191,7 +202,7 @@ abstract class GeolocationStyleBase extends StylePluginBase {
         'content' => $this->view->rowPlugin->render($row),
         '#title' => empty($title_build) ? '' : $title_build,
         '#label' => empty($label_build) ? '' : $label_build,
-        '#position' => $position,
+        '#coordinates' => $position,
         '#weight' => $row->index,
         '#attributes' => ['data-views-row-index' => $row->index],
       ];
@@ -217,6 +228,9 @@ abstract class GeolocationStyleBase extends StylePluginBase {
 
       $locations[] = $location;
     }
+
+    $locations = array_merge($data_provider->getLocationsFromViewsRow($row, $this->view->field[$this->options['geolocation_field']]), $locations);
+    $locations = array_merge($data_provider->getShapesFromViewsRow($row, $this->view->field[$this->options['geolocation_field']]), $locations);
 
     return $locations;
   }
@@ -266,7 +280,7 @@ abstract class GeolocationStyleBase extends StylePluginBase {
         $data_provider_settings = $this->options['data_provider_settings'];
       }
       if ($data_provider = $this->dataProviderManager->getDataProviderByViewsField($field, $data_provider_settings)) {
-        $geo_options[$field_name] = $field->adminLabel();
+        $geo_options[$field_name] = $field->adminLabel() . ' (' . $data_provider->getPluginDefinition()['name'] . ')';
         $data_providers[$field_name] = $data_provider;
       }
 
@@ -306,7 +320,7 @@ abstract class GeolocationStyleBase extends StylePluginBase {
     elseif (!empty($data_providers[$this->options['geolocation_field']])) {
       $data_provider = $data_providers[$this->options['geolocation_field']];
     }
-    elseif ($data_providers[reset($geo_options)]) {
+    elseif (!empty($data_providers[reset($geo_options)])) {
       $data_provider = $data_providers[reset($geo_options)];
     }
     else {

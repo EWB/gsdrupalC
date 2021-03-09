@@ -55,11 +55,18 @@ class SlickSkinManager extends DefaultPluginManager implements SlickSkinManagerI
   protected $libraryInfoBuild;
 
   /**
-   * The easing libray path.
+   * The easing library path.
    *
    * @var string|bool
    */
   protected $easingPath;
+
+  /**
+   * The slick library path.
+   *
+   * @var string|bool
+   */
+  protected $slickPath;
 
   /**
    * {@inheritdoc}
@@ -152,12 +159,8 @@ class SlickSkinManager extends DefaultPluginManager implements SlickSkinManagerI
         // @todo remove for the new plugin system at slick:8.x-3.0.
         $disabled = $this->config('disable_old_skins');
         if (empty($disabled)) {
-          $slick = slick();
-          if (method_exists($slick, 'buildSkins')) {
-            // See \Drupal\blazy\BlazyManagerBase::buildSkins().
-            if ($old_skins = $slick->buildSkins('slick', '\Drupal\slick\SlickSkin', $methods)) {
-              $skins = NestedArray::mergeDeep($old_skins, $skins);
-            }
+          if ($old_skins = $this->buildSkins($methods)) {
+            $skins = NestedArray::mergeDeep($old_skins, $skins);
           }
         }
 
@@ -320,11 +323,30 @@ class SlickSkinManager extends DefaultPluginManager implements SlickSkinManagerI
   }
 
   /**
+   * Returns slick library path if available, else FALSE.
+   */
+  public function getSlickPath() {
+    if (!isset($this->slickPath)) {
+      $library_path = slick_libraries_get_path('slick-carousel') ?: slick_libraries_get_path('slick');
+      if (!$library_path) {
+        $path = 'libraries/slick-carousel';
+        if (!is_file($this->root . '/' . $path . '/slick/slick.min.js')) {
+          $path = 'libraries/slick';
+        }
+        if (is_file($this->root . '/' . $path . '/slick/slick.min.js')) {
+          $library_path = $path;
+        }
+      }
+      $this->slickPath = $library_path;
+    }
+    return $this->slickPath;
+  }
+
+  /**
    * Implements hook_library_info_alter().
    */
   public function libraryInfoAlter(&$libraries, $extension) {
-    $library_path = slick_libraries_get_path('slick') ?: slick_libraries_get_path('slick-carousel');
-    if ($library_path) {
+    if ($library_path = $this->getSlickPath()) {
       $libraries['slick']['js'] = ['/' . $library_path . '/slick/slick.min.js' => ['weight' => -3]];
       $libraries['slick']['css']['base'] = ['/' . $library_path . '/slick/slick.css' => []];
       $libraries['slick.css']['css']['theme'] = ['/' . $library_path . '/slick/slick-theme.css' => ['weight' => -2]];
@@ -338,6 +360,35 @@ class SlickSkinManager extends DefaultPluginManager implements SlickSkinManagerI
     if ($library_mousewheel) {
       $libraries['slick.mousewheel']['js'] = ['/' . $library_mousewheel . '/jquery.mousewheel.min.js' => ['weight' => -4]];
     }
+  }
+
+  /**
+   * Collects defined skins as registered via hook_MODULE_NAME_skins_info().
+   *
+   * This deprecated is adopted from BlazyManager to allow its removal anytime.
+   *
+   * @todo deprecate and remove at slick:3.x+.
+   * @see https://www.drupal.org/node/2233261
+   * @see https://www.drupal.org/node/3105670
+   */
+  private function buildSkins(array $methods = []) {
+    $skin_class = '\Drupal\slick\SlickSkin';
+    $classes    = $this->moduleHandler->invokeAll('slick_skins_info');
+    $classes    = array_merge([$skin_class], $classes);
+    $items      = $skins = [];
+    foreach ($classes as $class) {
+      if (class_exists($class)) {
+        $reflection = new \ReflectionClass($class);
+        if ($reflection->implementsInterface($skin_class . 'Interface')) {
+          $skin = new $class();
+          foreach ($methods as $method) {
+            $items[$method] = method_exists($skin, $method) ? $skin->{$method}() : [];
+          }
+        }
+      }
+      $skins = NestedArray::mergeDeep($skins, $items);
+    }
+    return $skins;
   }
 
 }

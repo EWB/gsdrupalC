@@ -11,12 +11,7 @@
 function geolocation_geometry_open_canada_provinces_install() {
   /** @var \Drupal\geolocation_geometry_data\GeolocationGeometryDataManager $geometry_data_manager */
   $geometry_data_manager = \Drupal::service('plugin.manager.geolocation.geometrydata');
-  $provinces_batch = $geometry_data_manager->getGemeotryDataBatch('open_canada_provinces');
-
-  batch_set($provinces_batch);
-  $batch =& batch_get();
-  $batch['progressive'] = FALSE;
-  return batch_process();
+  return $geometry_data_manager->executeGemeotryDataBatch($geometry_data_manager->getGemeotryDataBatch('open_canada_provinces'));
 }
 
 /**

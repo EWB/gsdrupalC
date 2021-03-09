@@ -20,9 +20,9 @@ this is where TVI shines.
 In Drupal 8, taxonomy_term_page was replaced by a View display provided by core.
 
 However, if you wanted to display different Views for different terms or vocabs,
-you still need Taxonomy Views Integrator. That way, you can create a couple of view
-displays without configuring tricky attachments or endless context argument filter
-validation rules.
+you still need Taxonomy Views Integrator. That way, you can create a couple of
+view displays without configuring tricky attachments or endless context argument
+filter validation rules.
 
 --------------------------------------------------------------------------------
 
@@ -37,15 +37,16 @@ Installing Taxonomy Views Integrator
    the view that you wish to use using the drop-down select list, select the
    view plugin, and save your changes.
 
-   For vocabulary, be sure to tick off "Child terms will use these settings" so terms
-   will be overridden immediately.
+   For vocabulary, be sure to tick off "Child terms will use these settings" so
+   terms will be overridden immediately.
 
 --------------------------------------------------------------------------------
 
 Theming
 
-Since TVI leverages Views to inject into term pages, you can override output from
-that level. Check your View display options for theme suggestions and other settings.
+Since TVI leverages Views to inject into term pages, you can override output
+from that level. Check your View display options for theme suggestions and other
+settings.
 
 --------------------------------------------------------------------------------
 
@@ -69,12 +70,13 @@ that level. Check your View display options for theme suggestions and other sett
    4: view path: taxonomy/term/* +
    5: taxonomy: taxonomy/term/tid(s) ++
 
-4: You may clone the default taxonomy/term/* view to create your TVI views as
-	 their arguments are identical. However, it is a good idea to give all TVI
-	 views that provide page displays a path other than the default
-	 taxonomy/term/*. Alternatively, you may remove the page displays and simply
-	 use a block view for TVI views: this is recommended. Although, with a page display,
-	 you can change the page title in the View to be something other than the term name itself.
+4: You may clone the default `taxonomy/term/*` view to create your TVI views as
+   their arguments are identical. However, it is a good idea to give all TVI
+   views that provide page displays a path other than the default
+   `taxonomy/term/*`. Alternatively, you may remove the page displays and simply
+   use a block view for TVI views: this is recommended. Although, with a page,
+   you can change the page title in the View to be something other than the term
+   name itself.
 
 --------------------------------------------------------------------------------
 
@@ -83,5 +85,3 @@ that level. Check your View display options for theme suggestions and other sett
 
 ++ In the case that TVI finds no views (TVI active or otherwise) for this term
    display, TVI will pass the buck to taxonomy for the regular display.
-
-   

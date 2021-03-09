@@ -54,6 +54,7 @@
         "drupal/components": "^1.1",
         "drupal/config_installer": "^1.8",
         "drupal/console": "^1.0.2",
+        "drupal/contact_storage": "^1.1",
         "drupal/core-recommended": "^8.8",
         "drupal/crop": "^1.5",
         "drupal/ctools": "^3.0",

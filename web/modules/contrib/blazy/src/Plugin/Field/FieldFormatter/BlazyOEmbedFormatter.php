@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\blazy\BlazyDefault;
@@ -28,10 +27,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\blazy\Plugin\Field\FieldFormatter\BlazyMediaFormatterBase
  * @see \Drupal\media\Plugin\Field\FieldFormatter\OEmbedFormatter
- *
- * @todo remove ContainerFactoryPluginInterface since D8.8 has it by default.
  */
-class BlazyOEmbedFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+class BlazyOEmbedFormatter extends FormatterBase {
 
   use BlazyDependenciesTrait;
   use BlazyFormatterTrait;

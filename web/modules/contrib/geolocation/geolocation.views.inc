@@ -14,13 +14,27 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
   // Make sure views.views.inc is loaded.
   module_load_include('inc', 'views', 'views.views');
 
+  $entity_storage = \Drupal::entityTypeManager()->getStorage($field_storage->getTargetEntityTypeId());
+  $entity_definition = \Drupal::entityTypeManager()->getDefinition($field_storage->getTargetEntityTypeId());
+
   // Get the default data from the views module.
   $data = views_field_default_views_data($field_storage);
+
+  $title_short = $help = '';
+
+  if ($table_mapping = $entity_storage->getTableMapping()) {
+    $field_table_name = $table_mapping->getFieldTableName($field_storage->getName());
+    if (!empty($data[$field_table_name][$field_storage->getName()])) {
+      $title_short = $data[$field_table_name][$field_storage->getName()]['title short'];
+      $help = $data[$field_table_name][$field_storage->getName()]['help'];
+    }
+  }
 
   $args = ['@field_name' => $field_storage->getName()];
 
   // Loop through all of the results and set our overrides.
   foreach ($data as $table_name => $table_data) {
+    $data[$table_name]['table']['entity type'] = $field_storage->getTargetEntityTypeId();
     foreach ($table_data as $field_name => $field_data) {
       // Only modify fields.
       if ($field_name != 'delta') {
@@ -52,29 +66,16 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
       }
     }
 
-    $field_coordinates_table_data = [];
-    $entity_type_id = $field_storage->getTargetEntityTypeId();
-    $target_entity_type = \Drupal::entityTypeManager()->getDefinition($field_storage->getTargetEntityTypeId());
-
-    if (array_key_exists($target_entity_type->getBaseTable() . '__' . $field_storage->getName(), $data)) {
-      $field_coordinates_table_data = $data[$target_entity_type->getBaseTable() . '__' . $field_storage->getName()][$field_storage->getName()];
-    }
-    elseif (array_key_exists($entity_type_id . '__' . $field_storage->getName(), $data)) {
-      // Fall back to using the key format as defined in,
-      // views_field_default_views_data().
-      $field_coordinates_table_data = $data[$entity_type_id . '__' . $field_storage->getName()][$field_storage->getName()];
-    }
-
     // Add proximity handlers.
     $data[$table_name][$args['@field_name'] . '_proximity'] = [
-      'group' => $target_entity_type->getLabel(),
+      'group' => $entity_definition->getLabel(),
       'title' => t('Proximity (@field_name)', $args),
-      'title short' => isset($field_coordinates_table_data['title short']) ? $field_coordinates_table_data['title short'] . ' - ' . t("Proximity") : '',
-      'help' => isset($field_coordinates_table_data['help']) ? $field_coordinates_table_data['help'] : '',
+      'title short' => $title_short . ' - ' . t("Proximity"),
+      'help' => $help,
       'argument' => [
         'id' => 'geolocation_argument_proximity',
         'table' => $table_name,
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'field_name' => $args['@field_name'] . '_proximity',
         'real field' => $args['@field_name'],
         'label' => t('Distance to !field_name', $args),
@@ -90,7 +91,7 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
       'filter' => [
         'id' => 'geolocation_filter_proximity',
         'table' => $table_name,
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'field_name' => $args['@field_name'] . '_proximity',
         'real field' => $args['@field_name'],
         'label' => t('Distance to !field_name', $args),
@@ -107,7 +108,7 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
         'table' => $table_name,
         'id' => 'geolocation_field_proximity',
         'field_name' => $args['@field_name'] . '_proximity',
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'real field' => $args['@field_name'],
         'float' => TRUE,
         'additional fields' => [
@@ -125,21 +126,21 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
         'table' => $table_name,
         'id' => 'geolocation_sort_proximity',
         'field_name' => $args['@field_name'] . '_proximity',
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'real field' => $args['@field_name'],
       ],
     ];
 
     $data[$table_name][$args['@field_name'] . '_proximity_form'] = [
-      'group' => $target_entity_type->getLabel(),
+      'group' => $entity_definition->getLabel(),
       'title' => t('Proximity Form Field (@field_name)', $args),
-      'title short' => isset($field_coordinates_table_data['title short']) ? $field_coordinates_table_data['title short'] . ' - ' . t("Proximity Form") : '',
-      'help' => isset($field_coordinates_table_data['help']) ? $field_coordinates_table_data['help'] : '',
+      'title short' => $title_short . ' - ' . t("Proximity Form"),
+      'help' => $help,
       'field' => [
         'table' => $table_name,
         'id' => 'geolocation_field_proximity_form',
         'field_name' => $args['@field_name'] . '_proximity',
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'real field' => $args['@field_name'],
         'float' => TRUE,
         'additional fields' => [
@@ -157,20 +158,20 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
         'table' => $table_name,
         'id' => 'geolocation_sort_proximity',
         'field_name' => $args['@field_name'] . '_proximity',
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'real field' => $args['@field_name'],
       ],
     ];
 
     $data[$table_name][$args['@field_name'] . '_entity_argument'] = [
-      'group' => $target_entity_type->getLabel(),
+      'group' => $entity_definition->getLabel(),
       'title' => t('Proximity Entity Argument (@field_name)', $args),
-      'title short' => isset($field_coordinates_table_data['title short']) ? $field_coordinates_table_data['title short'] . ' - ' . t("Entity Argument") : '',
-      'help' => isset($field_coordinates_table_data['help']) ? $field_coordinates_table_data['help'] : '',
+      'title short' => $title_short . ' - ' . t("Entity Argument"),
+      'help' => $help,
       'argument' => [
         'id' => 'geolocation_entity_argument',
         'table' => $table_name,
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'field_name' => $args['@field_name'] . '_entity_argument',
         'real field' => $args['@field_name'],
         'label' => t('Distance to !field_name', $args),
@@ -186,14 +187,14 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
     ];
 
     $data[$table_name][$args['@field_name'] . '_geocoder_argument'] = [
-      'group' => $target_entity_type->getLabel(),
+      'group' => $entity_definition->getLabel(),
       'title' => t('Proximity Geocoder Address Argument (@field_name)', $args),
-      'title short' => isset($field_coordinates_table_data['title short']) ? $field_coordinates_table_data['title short'] . ' - ' . t("Geocoder Address Argument") : '',
-      'help' => isset($field_coordinates_table_data['help']) ? $field_coordinates_table_data['help'] : '',
+      'title short' => $title_short . ' - ' . t("Geocoder Address Argument"),
+      'help' => $help,
       'argument' => [
         'id' => 'geolocation_geocoder_argument',
         'table' => $table_name,
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'field_name' => $args['@field_name'] . '_geocoder_argument',
         'real field' => $args['@field_name'],
         'label' => t('Distance to !field_name', $args),
@@ -210,14 +211,14 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
 
     // Add boundary handlers.
     $data[$table_name][$args['@field_name'] . '_boundary'] = [
-      'group' => $target_entity_type->getLabel(),
+      'group' => $entity_definition->getLabel(),
       'title' => t('Boundary (@field_name)', $args),
-      'title short' => isset($field_coordinates_table_data['title short']) ? $field_coordinates_table_data['title short'] . ' - ' . t("Boundary") : '',
-      'help' => isset($field_coordinates_table_data['help']) ? $field_coordinates_table_data['help'] : '',
+      'title short' => $title_short . ' - ' . t("Boundary"),
+      'help' => $help,
       'argument' => [
         'id' => 'geolocation_argument_boundary',
         'table' => $table_name,
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'field_name' => $args['@field_name'] . '_boundary',
         'real field' => $args['@field_name'],
         'label' => t('Boundaries around !field_name', $args),
@@ -230,7 +231,7 @@ function geolocation_field_views_data(FieldStorageConfigInterface $field_storage
       'filter' => [
         'id' => 'geolocation_filter_boundary',
         'table' => $table_name,
-        'entity_type' => $entity_type_id,
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
         'field_name' => $args['@field_name'] . '_boundary',
         'real field' => $args['@field_name'],
         'label' => t('Boundaries around !field_name', $args),

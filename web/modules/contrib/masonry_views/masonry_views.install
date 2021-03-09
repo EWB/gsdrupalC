@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function masonry_views_install($is_syncing) {
+  // Run this module after the views_infinite_scroll.
+  module_set_weight('masonry_views', 2);
+}
+
+/**
+ * Ensures masonry_views runs after views_infinite_scroll.
+ */
+function masonry_views_update_8100(&$sandbox) {
+  module_set_weight('masonry_views', 2);
+}

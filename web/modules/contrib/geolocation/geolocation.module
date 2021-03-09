@@ -60,6 +60,30 @@ function geolocation_theme() {
         'label' => NULL,
       ],
     ],
+    'geolocation_map_polyline' => [
+      'variables' => [
+        'attributes' => NULL,
+        'children' => NULL,
+        'title' => NULL,
+        'coordinates' => NULL,
+        'stroke_color' => NULL,
+        'stroke_width' => NULL,
+        'stroke_opacity' => NULL,
+      ],
+    ],
+    'geolocation_map_polygon' => [
+      'variables' => [
+        'attributes' => NULL,
+        'children' => NULL,
+        'title' => NULL,
+        'coordinates' => NULL,
+        'stroke_color' => NULL,
+        'stroke_width' => NULL,
+        'stroke_opacity' => NULL,
+        'fill_color' => NULL,
+        'fill_opacity' => NULL,
+      ],
+    ],
     'geolocation_latlng_formatter' => [
       'variables' => [
         'lat' => NULL,

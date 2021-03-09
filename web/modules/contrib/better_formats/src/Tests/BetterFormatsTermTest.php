@@ -2,7 +2,7 @@
 
 namespace Drupal\better_formats\Tests;
 
-use Drupal\taxonomy\Tests\TermTest;
+use Drupal\Tests\taxonomy\Functional\TermTest;
 
 /**
  * Copy of TermTest.

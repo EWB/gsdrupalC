@@ -7,6 +7,7 @@
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder_styles\LayoutBuilderStyleInterface;
 
 /**
  * Migrate away from using section component TPS to the old additional property.
@@ -76,7 +77,14 @@ function layout_builder_styles_update_8001() {
         $updatedComponents = $migrateSectionComponents($layoutFieldData->getSections());
         if ($updatedComponents > 0) {
           $entity->save();
-          \Drupal::logger('layout_builder_styles')->info('Migrated TPS on %count section component(s) on overridden layout on entity id %entity_id for entity view display %display_id', ['%count' => $updatedComponents, '%display_id' => $display->id(), '%entity_id' => $entity->id()]);
+          \Drupal::logger('layout_builder_styles')
+            ->info('Migrated TPS on %count section component(s) on overridden layout on entity id %entity_id for entity view display %display_id',
+            [
+              '%count' => $updatedComponents,
+              '%display_id' => $display->id(),
+              '%entity_id' => $entity->id(),
+            ]
+          );
         }
       }
     }
@@ -92,4 +100,57 @@ function layout_builder_styles_update_8002() {
   $config->set('multiselect', 'single');
   $config->set('form_type', 'checkboxes');
   $config->save();
+}
+
+/**
+ * Allow block styles per block type for any defined reusable block instances.
+ */
+function layout_builder_styles_update_8003() {
+  // Per #3068722, block restrictions/allowances will no longer be supported
+  // for individual block instances. Find any defined instance allowances
+  // and re-save that allowance as a block type whitelist.
+  // This will effectively maintain allowances for those block instances, while
+  // theoretically adding allowances for other block instances which had
+  // been restricted.
+  $styles = \Drupal::entityTypeManager()
+    ->getStorage('layout_builder_style')
+    ->loadByProperties([
+      'type' => LayoutBuilderStyleInterface::TYPE_COMPONENT,
+    ]);
+  foreach ($styles as $style) {
+    $restrictions = $style->getBlockRestrictions();
+    foreach ($restrictions as $key => $allowed) {
+      // If this is a reusable block, retrieve the block bundle.
+      if (strpos($allowed, "block_content:") === 0) {
+        $uuid = str_replace('block_content:', '', $allowed);
+        $bundle = \Drupal::service('entity.repository')->loadEntityByUuid('block_content', $uuid)
+          ->bundle();
+        if ($bundle && !in_array('inline_block:' . $bundle, $restrictions)) {
+          // Add a block type allowance if it doesn't exist.
+          array_push($restrictions, 'inline_block:' . $bundle);
+        }
+        // Remove the now defunct block instance allowance.
+        unset($restrictions[$key]);
+      }
+    }
+    // Re-save style restrictions.
+    $style->set('block_restrictions', $restrictions);
+    $style->save();
+  }
+}
+
+/**
+ * Add newly-available weight value to existing style entities.
+ */
+function layout_builder_styles_update_8004() {
+  $styles = \Drupal::entityTypeManager()
+    ->getStorage('layout_builder_style')
+    ->loadByProperties();
+  $weight = 0;
+  foreach ($styles as $style) {
+    // Re-save styles with weight value.
+    $style->set('weight', $weight);
+    $style->save();
+    $weight++;
+  }
 }

@@ -10,7 +10,7 @@ proxy:
     - pma-gardenshare.lndo.site
 services:
   phpmyadmin:
-    type: phpmyadmin
+    type: phpmyadmin 
 tooling:
   drupal:
     cmd: /app/vendor/bin/drupal --root=/app/web

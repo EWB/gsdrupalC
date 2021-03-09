@@ -29,7 +29,7 @@ class MiniLayoutsIntegrationTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stable';
 
   /**
    * {@inheritdoc}

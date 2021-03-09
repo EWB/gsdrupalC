@@ -1,7 +1,7 @@
 name: Geolocation - Google Static Maps
 type: module
 description: This implements <a href="https://developers.google.com/maps/documentation/static-maps/">Google Static Maps</a>.
-core: 8.x
+core_version_requirement: ^8.7.7 || ^9
 package: Geolocation
 dependencies:
   - geolocation:geolocation_google_maps

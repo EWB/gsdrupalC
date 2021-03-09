@@ -8,7 +8,7 @@ use Drupal\geolocation\Plugin\Field\FieldWidget\GeolocationMapWidgetBase;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
- * Plugin implementation of the 'geolocation_googlegeocoder' widget.
+ * Plugin implementation of the 'geolocation_yandex' widget.
  *
  * @FieldWidget(
  *   id = "geolocation_yandex",

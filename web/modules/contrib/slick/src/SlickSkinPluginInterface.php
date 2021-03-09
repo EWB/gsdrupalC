@@ -29,7 +29,7 @@ interface SlickSkinPluginInterface {
    * A skin can specify CSS and JS files to include when Slick is displayed,
    * except for a thumbnail skin which accepts CSS only.
    *
-   * Each skin supports 5 keys:
+   * Each skin supports a few keys:
    * - name: The human readable name of the skin.
    * - description: The description about the skin, for help and manage pages.
    * - css: An array of CSS files to attach.

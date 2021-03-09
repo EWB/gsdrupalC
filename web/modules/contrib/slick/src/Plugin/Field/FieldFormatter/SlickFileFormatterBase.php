@@ -33,8 +33,6 @@ abstract class SlickFileFormatterBase extends BlazyFileFormatterBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo use $this->commonViewElements() post blazy:2.x release.
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $entities = $this->getEntitiesToView($items, $langcode);

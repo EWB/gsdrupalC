@@ -22,6 +22,9 @@ geolocation.geocoder.photon:
     location_priority:
       type: geolocation.element.input
       label: 'Location Priority'
+    remove_duplicates:
+      type: boolean
+      label: 'Remove Duplicates'
 
 geolocation_leaflet.nominatim_settings:
   type: config_object

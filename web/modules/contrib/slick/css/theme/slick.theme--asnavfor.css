@@ -36,6 +36,7 @@
 }
 
 .slick--thumbnail.slick--skin--asnavfor .slick__slide img {
+  box-sizing: border-box; /* dups due to csslint ignoring inheritance */
   border: 6px solid transparent;
   cursor: pointer;
   position: relative;

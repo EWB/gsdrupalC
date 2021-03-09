@@ -127,9 +127,9 @@
           // Create a new session token.
           Drupal.geolocation.geocoder.googlePlacesAPI.sessionToken = new google.maps.places.AutocompleteSessionToken();
           Drupal.geolocation.geocoder.googlePlacesAPI.autocompleteService = new google.maps.places.AutocompleteService();
-
-          Drupal.geolocation.geocoder.googlePlacesAPI.attach(context);
         }
+
+        Drupal.geolocation.geocoder.googlePlacesAPI.attach(context);
       });
 
       // Load Google Maps API and execute all callbacks.

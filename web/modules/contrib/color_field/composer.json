@@ -1,7 +1,7 @@
 {
   "name": "drupal/color_field",
   "require": {
-    "drupal/core": "*"
+    "drupal/core": "^8 || ^9"
   },
   "require-dev": {
     "drupal/token": "~1.3",

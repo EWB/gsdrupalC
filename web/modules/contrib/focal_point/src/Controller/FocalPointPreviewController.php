@@ -4,9 +4,9 @@ namespace Drupal\focal_point\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\focal_point\Plugin\Field\FieldWidget\FocalPointImageWidget;
-use Drupal\image\Entity\ImageStyle;
 use Drupal\file\Entity\File;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\image\ImageStyleInterface;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -141,15 +141,13 @@ class FocalPointPreviewController extends ControllerBase {
       '#derivative_image_note' => $derivative_image_note,
     ];
 
-    $html = render($output);
-
     $options = [
       'dialogClass' => 'popup-dialog-class',
       'width' => '80%',
     ];
     $response = new AjaxResponse();
     $response->addCommand(
-      new OpenModalDialogCommand($this->t('Images preview'), $html, $options)
+      new OpenModalDialogCommand($this->t('Images preview'), $output, $options)
     );
 
     return $response;
@@ -234,7 +232,7 @@ class FocalPointPreviewController extends ControllerBase {
   /**
    * Create the URL for a preview image including a query parameter.
    *
-   * @param \Drupal\image\Entity\ImageStyle $style
+   * @param \Drupal\image\ImageStyleInterface $style
    *   The image style being previewed.
    * @param \Drupal\file\Entity\File $image
    *   The image being previewed.
@@ -245,7 +243,7 @@ class FocalPointPreviewController extends ControllerBase {
    * @return \Drupal\Core\GeneratedUrl|string
    *   The URL of the preview image.
    */
-  protected function buildUrl(ImageStyle $style, File $image, $focal_point_value) {
+  protected function buildUrl(ImageStyleInterface $style, File $image, $focal_point_value) {
     $url = $style->buildUrl($image->getFileUri());
     $url .= (strpos($url, '?') !== FALSE ? '&' : '?') . 'focal_point_preview_value=' . $focal_point_value;
 

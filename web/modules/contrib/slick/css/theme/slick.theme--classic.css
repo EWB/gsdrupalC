@@ -10,6 +10,7 @@
 }
 
 .slick--skin--classic .slide__caption {
+  box-sizing: border-box; /* dups due to csslint ignoring inheritance */
   background-color: #000;
   background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
@@ -47,6 +48,7 @@
 
 @media (min-width: 64em) {
   .slick--skin--classic .slide__caption {
+    box-sizing: border-box; /* dups due to csslint ignoring inheritance */
     height: 100%;
     min-height: 100%;
     padding: 60px 30px;
@@ -55,7 +57,8 @@
   }
 
   .slick--skin--classic .slide__caption .slide__data {
-    margin: 0 !important;
+    box-sizing: border-box; /* dups due to csslint ignoring inheritance */
+    margin: 0 !important; /* csslint allow: known-properties, important */
     padding: 15px;
     width: 100%;
   }
@@ -73,6 +76,7 @@
   .slick--skin--classic .slide--caption--center-top .slide__caption,
   .slick--skin--classic .slide--caption--bottom .slide__caption,
   .slick--skin--classic .slide--caption--below .slide__caption {
+    box-sizing: border-box; /* dups due to csslint ignoring inheritance */
     height: auto;
     min-height: 80px;
     padding: 30px;

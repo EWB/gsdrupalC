@@ -14,12 +14,18 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 class MediaEntityBrowserTest extends WebDriverTestBase {
 
   use MediaTypeCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stable';
+
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'media',
     'inline_entity_form',
     'entity_browser',
@@ -32,17 +38,17 @@ class MediaEntityBrowserTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(array_keys($this->container->get('user.permissions')->getPermissions())));
     $this->createMediaType('video_embed_field', [
       'label' => 'Video',
-      'bundle' => 'video',
+      'id' => 'video',
     ]);
 
     Media::create([
       'bundle' => 'video',
-      'field_media_video_embed_field' => [['value' => 'https://www.youtube.com/watch?v=XgYu7-DQjDQ']],
+      'field_media_video_embed_field' => [['value' => 'https://www.youtube.com/watch?v=JQFKVbfqz7w']],
     ])->save();
   }
 
@@ -55,7 +61,8 @@ class MediaEntityBrowserTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertSession()->elementExists('css', '.view-media-entity-browser-view');
-    $this->assertSession()->elementExists('css', '.image-style-media-entity-browser-thumbnail');
+    $thumbnail = $this->assertSession()->elementExists('css', '.views-row img');
+    $this->assertStringContainsString('media_entity_browser_thumbnail', $thumbnail->getAttribute('src'));
 
     $this->assertSession()->elementNotExists('css', '.views-row.checked');
     $this->getSession()->getPage()->find('css', '.views-row')->press();

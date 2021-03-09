@@ -89,7 +89,7 @@ class PluginAlter implements ContainerInjectionInterface {
    * @see hook_plugin_filter_TYPE__CONSUMER_alter()
    */
   public function alterBlocks(&$definitions) {
-    if (!$this->blacklistService->hasSettings) {
+    if (!$this->blacklistService->hasSettings()) {
       return;
     }
     $callback = [$this->blacklistService, 'blockIsAllowed'];

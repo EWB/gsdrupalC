@@ -41,6 +41,8 @@ class AnimateAnyForm extends FormBase {
    * Build Animate Any Setting Form.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+//    $page_cache = \Drupal::config('animate_any.settings')->get('animate.data');
+//    kint($page_cache);
     // Fetch animate.css from library.
     $animate_css = DRUPAL_ROOT . '/libraries/animate_any/animate.css';
     // Check animate.css file exists.
@@ -51,8 +53,8 @@ class AnimateAnyForm extends FormBase {
     $form['#attached']['library'][] = 'animate_any/animate';
 
     $form['parent_class'] = [
-      '#title' => $this->t('Add Parent Class / ID'),
-      '#description' => $this->t('You can add body class like <em>body.front (for front page)</em> OR class with dot(.) prefix and Id with hash(#) prefix.'),
+      '#title' => $this->t('Add Parent Class/ID'),
+      '#description' => $this->t('You can add parent class like <em>body.classname OR div.classname</em>, for class with dot(.) prefix and for Id with hash(#) prefix.'),
       '#type' => 'textfield',
     ];
 
@@ -189,12 +191,28 @@ class AnimateAnyForm extends FormBase {
     $op = (string)$form_state->getValue('op');
     if ($op == $this->t('Save Settings')) {
       $parent = $form_state->getValue('parent_class');
-      $identifiers = json_encode($form_state->getValue('animate_fieldset'));
-      $this->database->insert('animate_any_settings')
+      $identifiers = $form_state->getValue('animate_fieldset');
+      // Fetch existing parent name to merge the identifiers.
+      $fetch = $this->database->select("animate_any_settings", "a");
+      $fetch->fields('a', ['identifier']);
+      $fetch->condition('a.parent', $parent);
+      $fetch_results = $fetch->execute()->fetchAssoc();
+      if ($fetch_results) {
+        $existing_identifiers = json_decode($fetch_results['identifier'], true);
+        $all_identifiers = array_merge($identifiers, $existing_identifiers);
+        $all_identifiers = json_encode($all_identifiers);
+      }
+      else {
+        $all_identifiers = json_encode($identifiers);
+      }
+      // Merge the identifiers which have common parent.
+      $this->database->merge('animate_any_settings')
+        ->key('parent', $parent)
         ->fields([
-          'parent' => $parent,
-          'identifier' => $identifiers,
+          'identifier' => $all_identifiers,
         ])->execute();
+      // Set values to configuration.
+      $this->setConfigValue($parent, $all_identifiers);
       $this->messenger()->addMessage($this->t('Animation added for @parent.', ['@parent' => $parent]));
     }
   }
@@ -232,6 +250,18 @@ class AnimateAnyForm extends FormBase {
       $form_state->set('field_deltas', $remove_one);
     }
     $form_state->setRebuild();
+  }
+
+  /**
+   * Set animation values in configuration.
+   * @param $parent
+   * @param $identifiers
+   */
+  public function setConfigValue($parent, $identifiers) {
+    $parent_key = str_replace('.', '::', $parent);
+    $animate_data = ['parent' => $parent, 'identifier' => $identifiers];
+    \Drupal::service('config.factory')->getEditable('animate_any.settings')
+      ->set($parent_key, $animate_data)->save();
   }
 
 }

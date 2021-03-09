@@ -234,7 +234,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
 
       // Skip the Geocode/Reverse Geocode operation is so requested for not
       // empty coordinates.
-      if (isset($geocoder['skip_not_empty_value']) && $geocoder['skip_not_empty_value'] && !$default_values->isEmpty()) {
+      if (isset($geocoder['skip_not_empty_value']) && $geocoder['skip_not_empty_value'] && isset($default_values) && !$default_values->isEmpty()) {
         return;
       }
 

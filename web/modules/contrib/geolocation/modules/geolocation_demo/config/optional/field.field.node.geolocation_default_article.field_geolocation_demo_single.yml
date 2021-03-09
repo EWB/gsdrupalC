@@ -22,7 +22,7 @@ default_value:
     lat_sin: null
     lat_cos: null
     lng_rad: null
-    data: null
+    data: []
 default_value_callback: ''
 settings: {  }
 field_type: geolocation

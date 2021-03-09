@@ -82,39 +82,54 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
       $default = $context['section_storage'] instanceof OverridesSectionStorageInterface ? $context['section_storage']->getDefaultSectionStorage() : $context['section_storage'];
       if ($default instanceof ThirdPartySettingsInterface) {
         $third_party_settings = $default->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction', []);
-        $allowed_blocks = (isset($third_party_settings['allowed_blocks'])) ? $third_party_settings['allowed_blocks'] : [];
+        $allowed_block_categories = $default->getThirdPartySetting('layout_builder_restrictions', 'allowed_block_categories', []);
+        $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
+        $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
       }
       else {
-        $allowed_blocks = [];
+        $whitelisted_blocks = [];
+        $blacklisted_blocks = [];
       }
+
+      if (empty($third_party_settings)) {
+        // This entity has no restrictions. Look no further.
+        return $definitions;
+      }
+
       // Filter blocks from entity-specific SectionStorage (i.e., UI).
       $content_block_types_by_uuid = $this->getBlockTypeByUuid();
-      if (!empty($allowed_blocks)) {
-        foreach ($definitions as $delta => $definition) {
-          $original_delta = $delta;
-          $category = (string) $definition['category'];
-          // Custom blocks get special treatment.
-          if ($definition['provider'] == 'block_content') {
-            // 'Custom block types' are disregarded if 'Custom blocks'
-            // restrictions are enabled.
-            if (isset($allowed_blocks['Custom blocks'])) {
-              $category = 'Custom blocks';
-            }
-            else {
-              $category = 'Custom block types';
-              $delta_exploded = explode(':', $delta);
-              $uuid = $delta_exploded[1];
-              $delta = $content_block_types_by_uuid[$uuid];
-            }
-          }
 
-          if (in_array($category, array_keys($allowed_blocks))) {
-            // This category has restrictions.
-            if (!in_array($delta, $allowed_blocks[$category])) {
-              // The current block is not in the allowed list for this category.
-              unset($definitions[$original_delta]);
-            }
+      foreach ($definitions as $delta => $definition) {
+        $original_delta = $delta;
+        $category = $this->getUntranslatedCategory($definition['category']);
+        // Custom blocks get special treatment.
+        if ($definition['provider'] == 'block_content') {
+          // 'Custom block types' are disregarded if 'Custom blocks'
+          // restrictions are enabled.
+          if (isset($whitelisted_blocks['Custom blocks']) || isset($blacklisted_blocks['Custom blocks'])) {
+            $category = 'Custom blocks';
           }
+          else {
+            $category = 'Custom block types';
+            $delta_exploded = explode(':', $delta);
+            $uuid = $delta_exploded[1];
+            $delta = $content_block_types_by_uuid[$uuid];
+          }
+        }
+        if (in_array($category, array_keys($whitelisted_blocks))) {
+          if (!in_array($delta, $whitelisted_blocks[$category])) {
+            // The current block is not whitelisted. Remove it.
+            unset($definitions[$original_delta]);
+          }
+        }
+        elseif (in_array($category, array_keys($blacklisted_blocks))) {
+          if (in_array($delta, $blacklisted_blocks[$category])) {
+            // The current block is blacklisted. Remove it.
+            unset($definitions[$original_delta]);
+          }
+        }
+        elseif ($this->categoryIsRestricted($category, $allowed_block_categories)) {
+          unset($definitions[$original_delta]);
         }
       }
     }
@@ -144,16 +159,21 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
    * {@inheritdoc}
    */
   public function blockAllowedinContext(SectionStorageInterface $section_storage, $delta_from, $delta_to, $region_to, $block_uuid, $preceding_block_uuid = NULL) {
-    $has_restrictions = FALSE;
-
     $view_display = $this->getValuefromSectionStorage([$section_storage], 'view_display');
     $third_party_settings = $view_display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction', []);
-    $allowed_blocks = (isset($third_party_settings['allowed_blocks'])) ? $third_party_settings['allowed_blocks'] : [];
+    if (empty($third_party_settings)) {
+      // This entity has no restrictions. Look no further.
+      return TRUE;
+    }
+    // There ARE restrictions. Start by assuming *this* block is not restricted.
+    $has_restrictions = FALSE;
+
+    $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
+    $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
     $bundle = $this->getValuefromSectionStorage([$section_storage], 'bundle');
 
     // Get "from" section and layout id. (not needed?)
     $section_from = $section_storage->getSection($delta_from);
-    $layout_id_from = $section_from->getLayoutId();
 
     // Get "to" section and layout id.
     $section_to = $section_storage->getSection($delta_to);
@@ -166,57 +186,74 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
 
     // Load the plugin definition.
     if ($definition = $this->blockManager()->getDefinition($block_id)) {
-      if (is_string($definition['category'])) {
-        $category = $definition['category'];
-      }
-      else {
-        $category = $definition['category']->__tostring();
-      }
-      if ($category == "Custom") {
-        // Rename to match Layout Builder Restrictions naming.
-        $category = "Custom blocks";
+      $category = $this->getUntranslatedCategory($definition['category']);
+
+      if (isset($whitelisted_blocks[$category]) || isset($blacklisted_blocks[$category])) {
+        // If there is a restriction, assume this block is restricted.
+        // If the block is whitelisted or NOT blacklisted,
+        // the restriction will be removed, below.
+        $has_restrictions = TRUE;
       }
 
-      // If the block category isn't present, there aren't restrictions.
-      if (!isset($allowed_blocks[$category])) {
+      if (!isset($whitelisted_blocks[$category]) && !isset($blacklisted_blocks[$category]) && $category != "Custom blocks") {
+        // No restrictions have been placed on this category.
         $has_restrictions = FALSE;
       }
-
-      if (!empty($allowed_blocks)) {
-        // There ARE restrictions. Start as restricted.
-        $has_restrictions = TRUE;
-        if (!isset($allowed_blocks[$category]) && $category != "Custom blocks") {
-          // No restrictions have been placed on this category.
-          $has_restrictions = FALSE;
-        }
-        else {
-          // Some type of restriction has been placed.
-          foreach ($allowed_blocks[$category] as $item) {
-            if ($item == $block_id) {
-              $has_restrictions = FALSE;
-              break;
-            }
+      else {
+        // Some type of restriction has been placed.
+        if (isset($whitelisted_blocks[$category])) {
+          // An explicitly whitelisted block means it's allowed.
+          if (in_array($block_id, $whitelisted_blocks[$category])) {
+            $has_restrictions = FALSE;
           }
         }
-        // Edge case: Restrict by block type if no custom block restrictions.
-        if ($category == 'Custom blocks' && !isset($allowed_blocks['Custom blocks'])) {
-          $has_restrictions = FALSE;
-          $content_block_types_by_uuid = $this->getBlockTypeByUuid();
+        elseif (isset($blacklisted_blocks[$category])) {
+          // If absent from the blacklist, it's allowed.
+          if (!in_array($block_id, $blacklisted_blocks[$category])) {
+            $has_restrictions = FALSE;
+          }
+        }
+      }
+
+      // Edge case: if block *type* restrictions are present...
+      if (!empty($whitelisted_blocks['Custom block types'])) {
+        $content_block_types_by_uuid = $this->getBlockTypeByUuid();
+        // If no specific custom block restrictions are set
+        // check block type restrict by block type.
+        if ($category == 'Custom blocks' && !isset($whitelisted_blocks['Custom blocks'])) {
           $block_bundle = $content_block_types_by_uuid[end($block_id_parts)];
-          if (!empty($allowed_blocks['Custom block types']) && in_array($block_bundle, $allowed_blocks['Custom block types'])) {
+          if (in_array($block_bundle, $whitelisted_blocks['Custom block types'])) {
             // There are block type restrictions AND
             // this block type has been whitelisted.
             $has_restrictions = FALSE;
           }
-          elseif (isset($allowed_blocks['Custom block types'])) {
+          else {
             // There are block type restrictions BUT
             // this block type has NOT been whitelisted.
             $has_restrictions = TRUE;
           }
         }
       }
+      elseif (!empty($blacklisted_blocks['Custom block types'])) {
+        $content_block_types_by_uuid = $this->getBlockTypeByUuid();
+        // If no specific custom block restrictions are set
+        // check block type restrict by block type.
+        if ($category == 'Custom blocks' && !isset($blacklisted_blocks['Custom blocks'])) {
+          $block_bundle = $content_block_types_by_uuid[end($block_id_parts)];
+          if (in_array($block_bundle, $blacklisted_blocks['Custom block types'])) {
+            // There are block type restrictions AND
+            // this block type has been blacklostlisted.
+            $has_restrictions = TRUE;
+          }
+          else {
+            // There are block type restrictions BUT
+            // this block type has NOT been blacklisted.
+            $has_restrictions = FALSE;
+          }
+        }
+      }
       if ($has_restrictions) {
-        return t("There is a restriction on %block placement in the %layout %region region for %type content.", [
+        return $this->t("There is a restriction on %block placement in the %layout %region region for %type content.", [
           "%block" => $definition['admin_label'],
           "%layout" => $layout_id_to,
           "%region" => $region_to,
@@ -235,15 +272,25 @@ class EntityViewModeRestriction extends LayoutBuilderRestrictionBase {
   public function inlineBlocksAllowedinContext(SectionStorageInterface $section_storage, $delta, $region) {
     $view_display = $this->getValuefromSectionStorage([$section_storage], 'view_display');
     $third_party_settings = $view_display->getThirdPartySetting('layout_builder_restrictions', 'entity_view_mode_restriction', []);
-    $allowed_blocks = (isset($third_party_settings['allowed_blocks'])) ? $third_party_settings['allowed_blocks'] : [];
+    $whitelisted_blocks = (isset($third_party_settings['whitelisted_blocks'])) ? $third_party_settings['whitelisted_blocks'] : [];
+    $blacklisted_blocks = (isset($third_party_settings['blacklisted_blocks'])) ? $third_party_settings['blacklisted_blocks'] : [];
 
     // Check if allowed inline blocks are defined in config.
-    if (isset($allowed_blocks['Inline blocks'])) {
-      return $allowed_blocks['Inline blocks'];
+    if (isset($whitelisted_blocks['Inline blocks'])) {
+      return $whitelisted_blocks['Inline blocks'];
     }
     // If not, then allow all inline blocks.
     else {
-      return $this->getInlineBlockPlugins();
+      $inline_blocks = $this->getInlineBlockPlugins();
+      if (isset($blacklisted_blocks['Inline blocks'])) {
+        foreach ($inline_blocks as $key => $block) {
+          // Unset explicitly blacklisted inline blocks.
+          if (in_array($block, $blacklisted_blocks['Inline blocks'])) {
+            unset($inline_blocks[$key]);
+          }
+        }
+      }
+      return $inline_blocks;
     }
   }
 

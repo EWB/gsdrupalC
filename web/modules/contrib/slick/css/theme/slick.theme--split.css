@@ -9,6 +9,7 @@
 @media (min-width: 64em) {
   .slide--caption--split-left .slide__caption,
   .slide--caption--split-right .slide__caption {
+    box-sizing: border-box; /* dups due to csslint ignoring inheritance */
     left: 0;
     padding: 20px;
     position: relative;

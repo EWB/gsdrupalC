@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\blazy\BlazyDefault;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,10 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   },
  *   quickedit = {"editor" = "disabled"}
  * )
- *
- * @todo remove ContainerFactoryPluginInterface since D8.8 has it by default.
  */
-class BlazyTextFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+class BlazyTextFormatter extends FormatterBase {
 
   use BlazyFormatterTrait;
 

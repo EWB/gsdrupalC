@@ -55,7 +55,14 @@ abstract class ColorFieldWidgetBase extends WidgetBase {
     }
     else {
       $element['color'] = $element + $input;
-      $element['#type'] = 'fieldset';
+      $element['#type'] = 'container';
+
+      // Add a null field for opacity. Ths is required to accurately/detect
+      // changes in translations under some circumstances.
+      $element['opacity'] = [
+        '#type' => 'value',
+        '#value' => NULL,
+      ];
     }
 
     return $element;

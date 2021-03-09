@@ -32,7 +32,7 @@ field.formatter.settings.color_field_formatter_text:
       type: label
       label: 'Format'
     opacity:
-      type: label
+      type: boolean
       label: 'Display opacity'
 
 field.formatter.settings.color_field_formatter_swatch:
@@ -49,8 +49,14 @@ field.formatter.settings.color_field_formatter_swatch:
       type: label
       label: 'Height'
     opacity:
-      type: label
+      type: boolean
       label: 'Display opacity'
+    data_attribute:
+      type: boolean
+      label: 'Use data attribute'
+
+field.formatter.settings.color_field_formatter_swatch_options:
+  type: field.formatter.settings.color_field_formatter_swatch
 
 field.formatter.settings.color_field_formatter_css:
   type: mapping
@@ -66,8 +72,14 @@ field.formatter.settings.color_field_formatter_css:
       type: label
       label: 'Important'
     opacity:
-      type: label
+      type: boolean
       label: 'Display opacity'
+    advanced:
+      type: boolean
+      label: 'Advanced'
+    css:
+      type: text
+      label: 'Custom CSS Declaration'
 
 field.widget.settings.color_field_widget_default:
   type: mapping

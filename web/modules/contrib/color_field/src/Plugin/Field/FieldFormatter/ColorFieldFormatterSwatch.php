@@ -7,6 +7,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\color_field\ColorHex;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Plugin implementation of the color_field swatch formatter.
@@ -31,6 +32,7 @@ class ColorFieldFormatterSwatch extends FormatterBase {
       'width' => 50,
       'height' => 50,
       'opacity' => TRUE,
+      'data_attribute' => FALSE,
     ] + parent::defaultSettings();
   }
 
@@ -50,18 +52,18 @@ class ColorFieldFormatterSwatch extends FormatterBase {
       '#description' => '',
     ];
     $elements['width'] = [
-      '#type' => 'number',
+      '#type' => 'textfield',
       '#title' => $this->t('Width'),
       '#default_value' => $this->getSetting('width'),
       '#min' => 1,
-      '#description' => '',
+      '#description' => $this->t('Defaults to pixels (px) if a number is entered, otherwise, you can enter any unit (ie %, em, vw)'),
     ];
     $elements['height'] = [
-      '#type' => 'number',
+      '#type' => 'textfield',
       '#title' => $this->t('Height'),
       '#default_value' => $this->getSetting('height'),
       '#min' => 1,
-      '#description' => '',
+      '#description' => $this->t('Defaults to pixels (px) if a number is entered, otherwise, you can enter any unit (ie %, em, vh)'),
     ];
 
     if ($opacity) {
@@ -71,6 +73,13 @@ class ColorFieldFormatterSwatch extends FormatterBase {
         '#default_value' => $this->getSetting('opacity'),
       ];
     }
+
+    $elements['data_attribute'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Use HTML5 data attribute'),
+      '#description' => $this->t('Render a data-color HTML 5 data attribute to allow css selectors based on color'),
+      '#default_value' => $this->getSetting('data_attribute'),
+    ];
 
     return $elements;
   }
@@ -89,6 +98,7 @@ class ColorFieldFormatterSwatch extends FormatterBase {
     $formats['square'] = $this->t('Square');
     $formats['circle'] = $this->t('Circle');
     $formats['parallelogram'] = $this->t('Parallelogram');
+    $formats['triangle'] = $this->t('Triangle');
 
     if ($shape) {
       return $formats[$shape];
@@ -118,6 +128,10 @@ class ColorFieldFormatterSwatch extends FormatterBase {
       $summary[] = $this->t('Display with opacity.');
     }
 
+    if ($settings['data_attribute']) {
+      $summary[] = $this->t('Use HTML5 data attribute.');
+    }
+
     return $summary;
   }
 
@@ -136,9 +150,19 @@ class ColorFieldFormatterSwatch extends FormatterBase {
         '#theme' => 'color_field_formatter_swatch',
         '#color' => $this->viewValue($item),
         '#shape' => $settings['shape'],
-        '#width' => $settings['width'],
-        '#height' => $settings['height'],
+        '#width' => is_numeric($settings['width']) ? "{$settings['width']}px" : $settings['width'],
+        '#height' => is_numeric($settings['height']) ? "{$settings['height']}px" : $settings['height'],
+        '#attributes' => new Attribute([
+          'class' => [
+            'color_field__swatch',
+            "color_field__swatch--{$settings['shape']}",
+          ],
+        ]),
       ];
+      if ($settings['data_attribute']) {
+        $color = new ColorHex($item->color, $item->opacity);
+        $elements[$delta]['#attributes']['data-color'] = $color->toString(FALSE);
+      }
     }
 
     return $elements;

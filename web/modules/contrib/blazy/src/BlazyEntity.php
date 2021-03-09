@@ -72,6 +72,11 @@ class BlazyEntity implements BlazyEntityInterface {
     $this->oembed->getMediaItem($data, $entity);
     $settings = &$data['settings'];
 
+    // Made Responsive image also available outside formatters here.
+    if (!empty($settings['resimage']) && $settings['ratio'] == 'fluid') {
+      $this->blazyManager->setResponsiveImageDimensions($settings, FALSE);
+    }
+
     // Only pass to Blazy for known entities related to File or Media.
     if (in_array($entity->getEntityTypeId(), ['file', 'media'])) {
       /** @var Drupal\image\Plugin\Field\FieldType\ImageItem $item */

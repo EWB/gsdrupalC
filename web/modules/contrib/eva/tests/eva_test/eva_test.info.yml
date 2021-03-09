@@ -3,6 +3,7 @@ type: module
 description: Support module for testing.
 package: Testing
 core: 8.x
+core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:eva
   - drupal:node
@@ -10,7 +11,7 @@ dependencies:
   - drupal:user
   - drupal:text
 
-# Information added by Drupal.org packaging script on 2019-11-05
-version: '8.x-2.0'
+# Information added by Drupal.org packaging script on 2020-06-09
+version: '8.x-2.1'
 project: 'eva'
-datestamp: 1572917287
+datestamp: 1591701898

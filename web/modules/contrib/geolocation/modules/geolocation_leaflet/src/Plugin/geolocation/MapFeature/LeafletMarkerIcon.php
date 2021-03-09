@@ -198,23 +198,13 @@ class LeafletMarkerIcon extends MapFeatureBase {
     );
 
     if (!empty($feature_settings['marker_icon_path'])) {
-      $data = [];
-      if (!empty($context['view'])) {
-        $data['view'] = $context['view'];
-      }
-
-      $iconPath = \Drupal::token()->replace($feature_settings['marker_icon_path'], $data);
+      $iconPath = \Drupal::token()->replace($feature_settings['marker_icon_path'], $context);
       $iconUrl = file_url_transform_relative(file_create_url($iconPath));
       $render_array['#attached']['drupalSettings']['geolocation']['maps'][$render_array['#id']][$this->getPluginId()]['markerIconPath'] = $iconUrl;
     }
 
     if (!empty($feature_settings['marker_shadow_path'])) {
-      $data = [];
-      if (!empty($context['view'])) {
-        $data['view'] = $context['view'];
-      }
-
-      $shadowPath = \Drupal::token()->replace($feature_settings['marker_shadow_path'], $data);
+      $shadowPath = \Drupal::token()->replace($feature_settings['marker_shadow_path'], $context);
       $shadowUrl = file_url_transform_relative(file_create_url($shadowPath));
       $render_array['#attached']['drupalSettings']['geolocation']['maps'][$render_array['#id']][$this->getPluginId()]['markerShadowPath'] = $shadowUrl;
     }

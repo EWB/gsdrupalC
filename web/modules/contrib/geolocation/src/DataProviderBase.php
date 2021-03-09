@@ -72,6 +72,33 @@ abstract class DataProviderBase extends PluginBase implements DataProviderInterf
   }
 
   /**
+   * Default settings.
+   *
+   * @return array
+   *   Default settings.
+   */
+  protected function defaultSettings() {
+    return [];
+  }
+
+  /**
+   * Add default settings.
+   *
+   * @param array $settings
+   *   Unaltered settings.
+   *
+   * @return array
+   *   Altered settings.
+   */
+  protected function getSettings(array $settings = NULL) {
+    if (is_null($settings)) {
+      $settings = $this->configuration;
+    }
+
+    return $settings + $this->defaultSettings();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getTokenHelp(FieldDefinitionInterface $fieldDefinition = NULL) {
@@ -188,25 +215,59 @@ abstract class DataProviderBase extends PluginBase implements DataProviderInterf
    * {@inheritdoc}
    */
   public function getPositionsFromViewsRow(ResultRow $row, FieldPluginBase $viewsField = NULL) {
-    if (empty($viewsField)) {
-      $viewsField = $this->viewsField;
-    }
-
     $positions = [];
 
-    $entity = $viewsField->getEntity($row);
-
-    if (isset($entity->{$viewsField->definition['field_name']})) {
-
-      /** @var \Drupal\Core\Field\FieldItemListInterface $geo_items */
-      $geo_items = $entity->{$viewsField->definition['field_name']};
-
-      foreach ($geo_items as $item) {
-        $positions[] = $this->getPositionsFromItem($item);
-      }
+    foreach ($this->getFieldItemsFromViewsRow($row, $viewsField) as $item) {
+      $positions = array_merge($this->getPositionsFromItem($item), $positions);
     }
 
     return $positions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLocationsFromViewsRow(ResultRow $row, FieldPluginBase $viewsField = NULL) {
+    $positions = [];
+
+    foreach ($this->getFieldItemsFromViewsRow($row, $viewsField) as $item) {
+      $positions = array_merge($this->getLocationsFromItem($item), $positions);
+    }
+
+    return $positions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getShapesFromViewsRow(ResultRow $row, FieldPluginBase $viewsField = NULL) {
+    $positions = [];
+
+    foreach ($this->getFieldItemsFromViewsRow($row, $viewsField) as $item) {
+      $positions = array_merge($this->getShapesFromItem($item), $positions);
+    }
+
+    return $positions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getFieldItemsFromViewsRow(ResultRow $row, FieldPluginBase $viewsField = NULL) {
+    if (empty($viewsField)) {
+      if (empty($this->viewsField)) {
+        return [];
+      }
+      $viewsField = $this->viewsField;
+    }
+
+    $entity = $viewsField->getEntity($row);
+
+    if (empty($entity->{$viewsField->definition['field_name']})) {
+      return [];
+    }
+
+    return $entity->{$viewsField->definition['field_name']};
   }
 
   /**
@@ -227,6 +288,20 @@ abstract class DataProviderBase extends PluginBase implements DataProviderInterf
    * {@inheritdoc}
    */
   public function getPositionsFromItem(FieldItemInterface $fieldItem) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLocationsFromItem(FieldItemInterface $fieldItem) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getShapesFromItem(FieldItemInterface $fieldItem) {
     return [];
   }
 

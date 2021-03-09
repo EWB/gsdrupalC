@@ -85,6 +85,8 @@
           if (slick && slick.options.autoPlay) {
             $slider.slick(method);
           }
+          // Fixes Firefox and IE width recalculation after closing the colorbox modal.
+          $slider.slick('refresh');
         }
         else {
           $slider.slick(method);

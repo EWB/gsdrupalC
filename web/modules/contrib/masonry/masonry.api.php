@@ -1,8 +1,9 @@
 <?php
+
 /**
  * @file
  * Hooks provided by Masonry.
- * 
+ *
  * Sponsored by: www.freelance-drupal.com
  */
 
@@ -18,7 +19,9 @@ function hook_masonry_default_options_alter(&$options) {
 }
 
 /**
- * Alter the form that Masonry options are added to.
+ * Alter the Masonry options form.
+ * This allows you to define UI configuration for a custom configuration.
+ * @see hook_masonry_default_options_alter().
  *
  * @param $form
  *   A form array.
@@ -27,22 +30,22 @@ function hook_masonry_default_options_alter(&$options) {
  */
 function hook_masonry_options_form_alter(&$form, $default_values) {
   // Add form item for easing option
-  $form['layoutAnimationEasing'] = array(
+  $form['layoutAnimationEasing'] = [
     '#type' => 'select',
     '#title' => t('Animation easing'),
     '#description' => t("The easing function to use for animations."),
-    '#options' => array(
+    '#options' => [
       'linear' => t('Linear'),
       'swing' => t('Swing'),
-    ),
-    '#default_value' => $default_values['layoutAnimationEasing'],
-    '#states' => array(
-      'visible' => array(
-        'input.form-checkbox[name*="isLayoutResizable"]' => array('checked' => TRUE),
-        'input.form-checkbox[name*="isLayoutAnimated"]' => array('checked' => TRUE),
-      ),
-    ),
-  );
+    ],
+    '#default_value' => $default_values['masonry_animation_easing'],
+    '#states' => [
+      'visible' => [
+        'input.form-checkbox[name*="isLayoutResizable"]' => ['checked' => TRUE],
+        'input.form-checkbox[name*="isLayoutAnimated"]' => ['checked' => TRUE],
+      ],
+    ],
+  ];
 }
 
 /**
@@ -50,8 +53,6 @@ function hook_masonry_options_form_alter(&$form, $default_values) {
  *
  * @param $masonry
  *   An array of Masonry options to send to the script file.
- * @param $script_file
- *   A path to the javascript file that triggers Masonry.
  * @param $context
  *   An associative array of additional variables.
  *   Contains:
@@ -63,6 +64,13 @@ function hook_masonry_script_alter(&$masonry, $context) {
   $options = $context['options'];
 
   // Send easing option to the script file
+  // Note: this new option has to be introduce via hook_masonry_options_form_alter()
+  // otherwise use extra_options.
   $masonry['masonry'][$container]['animation_easing'] = $options['layoutAnimationEasing'];
+
+  // Set the option "horizontalOrder" to true.
+  // Note that this option is not included into the predefined options
+  // @see MasonryService::getMasonryDefaultOptions
+  $masonry['masonry'][$container]['extra_options']['horizontalOrder'] = TRUE;
 }
 

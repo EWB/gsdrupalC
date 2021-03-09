@@ -55,8 +55,10 @@ class Geofield extends DataProviderBase implements DataProviderInterface {
   public function getPositionsFromItem(FieldItemInterface $fieldItem) {
     if ($fieldItem instanceof GeofieldItem) {
       return [
-        'lat' => $fieldItem->get('lat')->getValue(),
-        'lng' => $fieldItem->get('lon')->getValue(),
+        [
+          'lat' => $fieldItem->get('lat')->getValue(),
+          'lng' => $fieldItem->get('lon')->getValue(),
+        ],
       ];
     }
 

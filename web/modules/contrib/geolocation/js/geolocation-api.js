@@ -25,6 +25,7 @@
  * @property {Object[]} map_center
  * @property {jQuery} wrapper
  * @property {GeolocationMapMarker[]} mapMarkers
+ * @property {GeolocationShape[]} mapShapes
  */
 
 /**
@@ -102,6 +103,20 @@
  */
 
 /**
+ * @typedef {Object} GeolocationShape
+ *
+ * @property {GeolocationCoordinates[]} coordinates
+ * @property {jQuery} shapeWrapper
+ * @property {string} shape
+ * @property {string} [title]
+ * @property {string} [strokeColor]
+ * @property {int} [strokeWidth]
+ * @property {number} [strokeOpacity]
+ * @property {string} [fillColor]
+ * @property {number} [fillOpacity]
+ */
+
+/**
  * Interface for classes that represent a color.
  *
  * @interface GeolocationMapInterface
@@ -130,6 +145,10 @@
  * @property {function({GeolocationMapMarker}):{GeolocationMapMarker}} setMapMarker - Set marker on map.
  * @property {function({GeolocationMapMarker})} removeMapMarker - Remove single marker.
  * @property {function()} removeMapMarkers - Remove all markers from map.
+ *
+ * @property {function({GeolocationShape})} addShape - Add shape to map.
+ * @property {function({GeolocationShape})} removeShape - Remove shape from map.
+ * @property {function()} removeShapes - Remove all shapes from map.
  *
  * @property {function():{Promise}} getZoom - Get zoom.
  * @property {function({string}?, {Boolean}?)} setZoom - Set zoom.
@@ -211,6 +230,7 @@
 
     this.mapCenter = mapSettings.map_center;
     this.mapMarkers = this.mapMarkers || [];
+    this.mapShapes = this.mapShapes || [];
 
     return this;
   }
@@ -304,6 +324,43 @@
           }
           that.removeMapMarker(item);
         }
+      );
+    },
+    addShape: function (shape) {
+      this.mapShapes.push(shape);
+    },
+    removeShape: function (shape) {
+      var that = this;
+      $.each(
+          this.mapShapes,
+
+          /**
+           * @param {integer} index - Current index.
+           * @param {GeolocationShape} item - Current shape.
+           */
+          function (index, item) {
+            if (item === shape) {
+              that.mapShapes.splice(Number(index), 1);
+            }
+          }
+      );
+    },
+    removeShapes: function () {
+      var that = this;
+      var shallowCopy = $.extend({}, this.mapShapes);
+      $.each(
+          shallowCopy,
+
+          /**
+           * @param {integer} index - Current index.
+           * @param {GeolocationShape} item - Current shape.
+           */
+          function (index, item) {
+            if (typeof item === 'undefined') {
+              return;
+            }
+            that.removeShape(item);
+          }
       );
     },
     fitMapToMarkers: function (markers, identifier) {
@@ -464,6 +521,72 @@
       });
 
       return locations;
+    },
+    loadShapesFromContainer: function () {
+      var shapes = [];
+      this.wrapper.find('.geolocation-shape').each(function (index, shapeWrapperElement) {
+
+        var shapeWrapper = $(shapeWrapperElement);
+        var meta = shapeWrapper.find('span[typeof="GeoShape"] meta').first();
+        if (meta.length === 0) {
+          return;
+        }
+
+        var type = meta.attr('property').toString();
+
+        var coordinates = [];
+        $.each(meta.attr('content').toString().split(' '), function (index, rawCoordinate) {
+          var coordinate = rawCoordinate.split(',');
+          if (
+            coordinate[0].length === 0
+            || coordinate[1].length === 0
+          ) {
+            return;
+          }
+          coordinates.push({
+            lat: parseFloat(coordinate[0]),
+            lng: parseFloat(coordinate[1])
+          });
+        });
+
+        /** @type {GeolocationShape} */
+        var shape = {
+          coordinates: coordinates,
+          shape: type,
+          shapeWrapper: shapeWrapper
+        };
+
+        switch (type) {
+          case 'line':
+            shape.title = shapeWrapper.find('.polyline-title').text().trim();
+            break;
+
+          case 'polygon':
+            shape.title = shapeWrapper.find('.polygon-title').text().trim();
+
+            if (typeof shapeWrapper.data('fillColor') !== 'undefined') {
+              shape.fillColor = shapeWrapper.data('fillColor').toString();
+            }
+            if (typeof shapeWrapper.data('fillOpacity') !== 'undefined') {
+              shape.fillOpacity = parseFloat(shapeWrapper.data('fillOpacity').toString());
+            }
+            break;
+        }
+
+        if (typeof shapeWrapper.data('strokeColor') !== 'undefined') {
+          shape.strokeColor = shapeWrapper.data('strokeColor').toString();
+        }
+        if (typeof shapeWrapper.data('strokeWidth') !== 'undefined') {
+          shape.strokeWidth = parseInt(shapeWrapper.data('strokeWidth').toString());
+        }
+        if (typeof shapeWrapper.data('strokeOpacity') !== 'undefined') {
+          shape.strokeOpacity = parseFloat(shapeWrapper.data('strokeOpacity').toString());
+        }
+
+        shapes.push(shape);
+      });
+
+      return shapes;
     },
     boundariesNormalized: function (boundaries) {
       if (typeof boundaries.north === 'number'

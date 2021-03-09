@@ -9,6 +9,14 @@ plugin.plugin_configuration.geolocation.location.freeogeoip:
 plugin.plugin_configuration.geolocation.location.ipstack:
   type: geolocation.location_settings
   label: 'IpStack'
+  mapping:
+    settings:
+      type: mapping
+      label: 'IPStack settings'
+      mapping:
+        access_key:
+          type: string
+          label: 'Access key'
 
 plugin.plugin_configuration.geolocation.location.views_boundary_argument:
   type: geolocation.location_settings

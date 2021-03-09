@@ -4,4 +4,4 @@ layout_builder_styles.settings:
     _form: '\Drupal\layout_builder_styles\Form\ModuleSettingsForm'
     _title: 'Settings'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer layout builder styles configuration'

@@ -46,6 +46,7 @@ MAINTAINERS
 Current maintainers:
  * Todd Nienkerk - https://www.drupal.org/user/92096
  * Renato Gonçalves (RenatoG) - https://www.drupal.org/user/3326031
+ * Neslee Canil Pinto - https://www.drupal.org/u/neslee-canil-pinto
  * Aaron Stanush - https://www.drupal.org/user/89718
  * David Suissa (DYdave) - https://www.drupal.org/user/467284
  * Four Kitchens - https://www.drupal.org/user/358502

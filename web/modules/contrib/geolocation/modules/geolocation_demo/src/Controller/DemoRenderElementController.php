@@ -56,7 +56,7 @@ class DemoRenderElementController extends ControllerBase {
       '#type' => 'geolocation_map',
       'location_1' => [
         '#type' => 'geolocation_map_location',
-        '#position' => [
+        '#coordinates' => [
           'lat' => 13,
           'lng' => 32,
         ],
@@ -65,7 +65,7 @@ class DemoRenderElementController extends ControllerBase {
         '#type' => 'geolocation_map_location',
         '#title' => 'I am the title',
         'content' => ['#markup' => 'I am the content'],
-        '#position' => [
+        '#coordinates' => [
           'lat' => -11,
           'lng' => -12,
         ],
@@ -80,7 +80,7 @@ class DemoRenderElementController extends ControllerBase {
             \'#type\' => \'geolocation_map\',
             \'location_1\' => [
               \'#theme\' => \'geolocation_map_location\',
-              \'#position\' => [
+              \'#coordinates\' => [
                 \'lat\' => 13,
                 \'lng\' => 32,
               ],
@@ -89,7 +89,7 @@ class DemoRenderElementController extends ControllerBase {
               \'#theme\' => \'geolocation_map_location\',
               \'#title\' => \'I am the title\',
               \'content\' => [\'#markup\' => \'I am the content\'],
-              \'#position\' => [
+              \'#coordinates\' => [
                 \'lat\' => -11,
                 \'lng\' => -12,
               ],

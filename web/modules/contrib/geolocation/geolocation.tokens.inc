@@ -12,6 +12,10 @@ use Drupal\Core\Entity\ContentEntityInterface;
  * Implements hook_token_info().
  */
 function geolocation_token_info() {
+  if (!\Drupal::hasService('token.entity_mapper')) {
+    return;
+  }
+
   $types = [];
   $tokens = [];
 

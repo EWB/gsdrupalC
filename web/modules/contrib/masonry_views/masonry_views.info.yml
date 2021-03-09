@@ -1,13 +1,14 @@
 name: Masonry Views
 type: module
 description: "Provides a Views plugin for displaying content in a Masonry layout."
-# core: 8.x
 package: Masonry
+core: 8.x
+core_version_requirement: ^8 || ^9
 dependencies:
-  - masonry
-  - views
-# Information added by Drupal.org packaging script on 2016-02-22
-version: '8.x-1.0-rc1'
-core: '8.x'
+  - masonry:masonry
+  - drupal:views
+
+# Information added by Drupal.org packaging script on 2020-07-23
+version: '8.x-1.1'
 project: 'masonry_views'
-datestamp: 1456138157
+datestamp: 1595509412

@@ -41,8 +41,8 @@ class FocalPointEffectsTest extends FocalPointUnitTestCase {
     $request = $this->prophesize(Request::class);
 
     $effect = new FocalPointCropImageEffect([], 'plugin_id', [], $logger->reveal(), $this->focalPointManager, $crop_storage->reveal(), $focal_point_config->reveal(), $request->reveal());
-    $this->assertAttributeEquals($crop_storage->reveal(), 'cropStorage', $effect);
-    $this->assertAttributeEquals($focal_point_config->reveal(), 'focalPointConfig', $effect);
+    $this->assertEquals($focal_point_config->reveal(), $effect->getFocalPointConfig());
+    $this->assertEquals($crop_storage->reveal(), $effect->getCropStorage());
   }
 
   /**

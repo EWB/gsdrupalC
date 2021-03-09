@@ -79,8 +79,8 @@ class ColorFieldTypeTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->field_test instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_test[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_test, 'Field implements interface.');
+    $this->assertInstanceOf(FieldItemInterface::class, $entity->field_test[0], 'Field item implements interface.');
     $this->assertEquals($color, $entity->field_test->color);
     $this->assertEquals($opacity, $entity->field_test->opacity);
     $this->assertEquals($color, $entity->field_test[0]->color);

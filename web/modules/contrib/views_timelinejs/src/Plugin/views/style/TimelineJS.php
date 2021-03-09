@@ -369,7 +369,7 @@ class TimelineJS extends StylePluginBase {
   public function render() {
     // Return if the start date field mapping is not configured.
     if (empty($this->options['timeline_fields']['start_date'])) {
-      drupal_set_message(t('The Start date field mapping must be configured in the TimelineJS format settings before any slides or eras can be rendered.'), 'warning');
+      $this->messenger()->addWarning(t('The Start date field mapping must be configured in the TimelineJS format settings before any slides or eras can be rendered.'));
       return;
     }
     $timeline = new Timeline();
@@ -538,7 +538,7 @@ class TimelineJS extends StylePluginBase {
     catch (Exception $e) {
       // Return NULL if the field didn't contain a parseable date string.
       // @todo: Implement a logger.
-      drupal_set_message($this->t('The date "@date" does not conform to a <a href="@php-manual">PHP supported date and time format</a>.', ['@date' => $date_string, '@php-manual' => 'http://php.net/manual/en/datetime.formats.php']));
+      $this->messenger()->addMessage($this->t('The date "@date" does not conform to a <a href="@php-manual">PHP supported date and time format</a>.', ['@date' => $date_string, '@php-manual' => 'http://php.net/manual/en/datetime.formats.php']));
       $date = NULL;
     }
     return $date;
@@ -777,7 +777,7 @@ class TimelineJS extends StylePluginBase {
    */
   protected function handleXmlErrors(\LibXMLError $error, $html) {
     $message = $this->t('A media field has an error in its HTML.<br>Error message: @message<br>Views result row: @row<br>HTML: <pre>@html</pre>', ['@message' => $error->message, '@row' => $this->view->row_index, '@html' => $html]);
-    drupal_set_message($message, 'warning');
+    $this->messenger()->addWarning($message);
   }
 
   /**

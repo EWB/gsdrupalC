@@ -3,15 +3,13 @@
 namespace Drupal\slick;
 
 use Drupal\slick\Entity\Slick;
-use Drupal\blazy\BlazyFormatterManager;
+use Drupal\blazy\BlazyFormatter;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 
 /**
  * Implements SlickFormatterInterface.
- *
- * @todo use BlazyFormatter post release Blazy 2.x.
  */
-class SlickFormatter extends BlazyFormatterManager implements SlickFormatterInterface {
+class SlickFormatter extends BlazyFormatter implements SlickFormatterInterface {
 
   /**
    * {@inheritdoc}

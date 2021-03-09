@@ -102,7 +102,12 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
       ],
     ];
 
-    for ($i = 0; $i < count($this->configuration['locations']); $i++) {
+    if (!$form_state->has('locations')) {
+      $form_state->set('locations', $this->configuration['locations']);
+    }
+    $locations = $form_state->get('locations');
+
+    for ($i = 0; $i < count($locations); $i++) {
 
       $form['locations'][$i] = [
         '#type' => 'fieldset',
@@ -111,7 +116,7 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
           '#type' => 'textfield',
           '#title' => $this->t('Marker title'),
           '#description' => $this->t('When the cursor hovers on the marker, this title will be shown as description.'),
-          '#default_value' => empty($this->configuration['locations'][$i]['marker_title']) ? '' : $this->configuration['locations'][$i]['marker_title'],
+          '#default_value' => empty($locations[$i]['marker_title']) ? '' : $locations[$i]['marker_title'],
         ],
         'marker_content' => [
           '#type' => 'text_format',
@@ -121,24 +126,35 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
         'marker_coordinates' => [
           '#type' => 'geolocation_input',
           '#title' => t('Marker Coordinates'),
-          '#default_value' => empty($this->configuration['locations'][$i]['marker_coordinates']) ? '' : $this->configuration['locations'][$i]['marker_coordinates'],
+          '#default_value' => empty($locations[$i]['marker_coordinates']) ? [] : $locations[$i]['marker_coordinates'],
         ],
       ];
 
-      if (!empty($this->configuration['locations'][$i]['marker_content']['value'])) {
-        $form['locations'][$i]['marker_content']['#default_value'] = $this->configuration['locations'][$i]['marker_content']['value'];
+      if (!empty($locations[$i]['marker_content']['value'])) {
+        $form['locations'][$i]['marker_content']['#default_value'] = $locations[$i]['marker_content']['value'];
       }
 
-      if (!empty($this->configuration['locations'][$i]['marker_content']['format'])) {
-        $form['locations'][$i]['marker_content']['#format'] = $this->configuration['locations'][$i]['marker_content']['format'];
+      if (!empty($locations[$i]['marker_content']['format'])) {
+        $form['locations'][$i]['marker_content']['#format'] = $locations[$i]['marker_content']['format'];
       }
+
+      $form['locations'][$i]['remove_item'] = [
+        '#type' => 'submit',
+        '#value' => t('Remove one'),
+        '#submit' => [[$this, 'removeCallback']],
+        '#ajax' => [
+          'callback' => [$this, 'addLocation'],
+          'wrapper'  => 'block-locations',
+          'effect' => 'fade',
+        ],
+      ];
     }
 
     $form['locations']['add_item'] = [
-      '#type'   => 'submit',
-      '#value'  => $this->t('Add location'),
-      '#submit' => [[$this, 'addLocationSubmit']],
-      '#ajax'   => [
+      '#type' => 'submit',
+      '#value' => t('Add one more'),
+      '#submit' => [[$this, 'addCallback']],
+      '#ajax' => [
         'callback' => [$this, 'addLocation'],
         'wrapper'  => 'block-locations',
         'effect' => 'fade',
@@ -220,8 +236,9 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Current form state.
    */
-  public function addLocationSubmit(array &$form, FormStateInterface &$form_state) {
-    $this->configuration['locations'][] = [
+  public function addCallback(array &$form, FormStateInterface &$form_state) {
+    $locations = $form_state->get('locations');
+    $locations[] = [
       'marker_title' => '',
       'marker_content' => [
         'value' => '',
@@ -229,6 +246,25 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
       ],
       'marker_coordinates' => [],
     ];
+    $form_state->set('locations', $locations);
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Add location.
+   *
+   * @param array $form
+   *   Current form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Current form state.
+   */
+  public function removeCallback(array &$form, FormStateInterface &$form_state) {
+    $parents = $form_state->getTriggeringElement()['#parents'];
+    end($parents);
+    $key = prev($parents);
+    $locations = $form_state->get('locations');
+    unset($locations[$key]);
+    $form_state->set('locations', $locations);
     $form_state->setRebuild();
   }
 
@@ -256,17 +292,28 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
     $this->configuration['centre'] = $form_state->getValue('centre');
 
     $this->configuration['locations'] = [];
-    foreach ($form_state->getValue('locations') as $index => $location) {
-      if (
-        !empty($location['marker_title'])
-        && !empty($location['marker_content'])
-        && !empty($location['marker_coordinates'])
-      ) {
-        $this->configuration['locations'][] = [
-          'marker_title' => $location['marker_title'],
-          'marker_content' => $location['marker_content'],
+    $locations = $form_state->getValue('locations');
+    foreach ($locations as $index => $location) {
+      if ($index === 'add_item') {
+        continue;
+      }
+
+      if (!empty($location['marker_coordinates'])) {
+        $location_item = [
+          'marker_title' => '',
+          'marker_content' => '',
           'marker_coordinates' => $location['marker_coordinates'],
         ];
+
+        if (!empty($location['marker_title'])) {
+          $location_item['marker_title'] = $location['marker_title'];
+        }
+
+        if (!empty($location['marker_content'])) {
+          $location_item['marker_content'] = $location['marker_content'];
+        }
+
+        $this->configuration['locations'][] = $location_item;
       }
     }
   }
@@ -288,7 +335,7 @@ class GeolocationBlock extends BlockBase implements ContainerFactoryPluginInterf
       $build[$index] = [
         '#type' => 'geolocation_map_location',
         '#title' => $location['marker_title'],
-        '#position' => $location['marker_coordinates'],
+        '#coordinates' => $location['marker_coordinates'],
         'content' => [
           '#type' => 'processed_text',
           '#text' => $location['marker_content']['value'],

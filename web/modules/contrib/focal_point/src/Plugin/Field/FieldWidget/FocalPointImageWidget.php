@@ -96,7 +96,6 @@ class FocalPointImageWidget extends ImageWidget {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
-    $element['#process'][] = [static::class, 'process'];
     $element['#focal_point'] = [
       'preview_link' => $this->getSetting('preview_link'),
       'offsets' => $this->getSetting('offsets'),

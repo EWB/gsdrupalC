@@ -1,8 +1,7 @@
 name: Slick
 type: module
 description: "Slick carousel, the last carousel you'll ever need."
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8.8 || ^9
 package: Slick
 dependencies:
   - blazy:blazy (>= 2.x)
@@ -10,7 +9,7 @@ dependencies:
 # Add a fake version so local drush and Git checkouts do not fail dependencies.
 # version: 8.x-2.x
 
-# Information added by Drupal.org packaging script on 2020-02-15
-version: '8.x-2.1'
+# Information added by Drupal.org packaging script on 2020-05-07
+version: '8.x-2.2'
 project: 'slick'
-datestamp: 1581756262
+datestamp: 1588861106

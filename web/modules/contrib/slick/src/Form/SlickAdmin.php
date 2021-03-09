@@ -107,10 +107,6 @@ class SlickAdmin implements SlickAdminInterface {
       $this->fieldableForm($form, $definition);
     }
 
-    if (!empty($definition['breakpoints']) && !$this->manager()->configLoad('unbreakpoints', 'blazy.settings')) {
-      $this->blazyAdmin->breakpointsForm($form, $definition);
-    }
-
     if (!empty($definition['style']) && isset($form['style']['#description'])) {
       $form['style']['#description'] .= ' ' . $this->t('CSS3 Columns is best with adaptiveHeight, non-vertical. Will use regular carousel as default style if left empty. Yet, both CSS3 Columns and Grid Foundation are respected as Grid displays when <strong>Grid large</strong> option is provided.');
     }

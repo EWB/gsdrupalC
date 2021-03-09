@@ -44,7 +44,7 @@ officially supported now, Jan 2020.
      + **/libraries/slick/slick/slick.css**
      + **/libraries/slick/slick/slick-theme.css** (optional)
      + **/libraries/slick/slick/slick.min.js**
-     + Or any path supported by libraries.module.
+     + Or any path supported by core library finder as per Drupal 8.9+.
 
 2. [Download jqeasing](https://github.com/gdsmith/jquery.easing), so available:
 
@@ -90,12 +90,11 @@ Slick to avoid headaches for just ~15-minute read.
    As we have alternatives, it is not covered here.
    Please find more info on the above-mentioned issues.
 
-   Specific to Slick libraries, be sure to install Libraries module! Slick has
-   different namespace: `slick` as in github, and `slick-carousel` at bower/
-   npm.
+   Slick has different namespace: `slick` as in github, and `slick-carousel` at
+   bower/ npm.
 
    If using Composer with https://github.com/fxpio/composer-asset-plugin and via
-   bower-asset, [Libraries[(https://drupal.org/project/libraries) is required.
+   bower-asset.
    Watch out dots and dashes:
 
    ```

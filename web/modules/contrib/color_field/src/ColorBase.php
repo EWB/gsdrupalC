@@ -31,6 +31,11 @@ abstract class ColorBase implements ColorInterface {
     $this->opacity = $opacity;
   }
 
+  /**
+   * Regexes to match various color formats.
+   *
+   * @var array
+   */
   public static $patterns = [
     'cmyk'  => '/^(?:device-)?cmyk\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
     'rgba'  => '/^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d+(?:\.\d+)?|\.\d+)\s*\)/',
@@ -43,6 +48,11 @@ abstract class ColorBase implements ColorInterface {
     'hex3'  => '/^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/',
   ];
 
+  /**
+   * Named HTML colors.
+   *
+   * @var array
+   */
   public static $namedColors = [
     "aliceblue" => "f0f8ff",
     "antiquewhite" => "faebd7",

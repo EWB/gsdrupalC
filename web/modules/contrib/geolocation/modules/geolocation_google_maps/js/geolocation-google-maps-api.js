@@ -174,6 +174,64 @@
     Drupal.geolocation.GeolocationMapBase.prototype.removeMapMarker.call(this, marker);
     marker.setMap(null);
   };
+  GeolocationGoogleMap.prototype.addShape = function (shapeSettings) {
+    if (typeof shapeSettings === 'undefined') {
+      return;
+    }
+
+    var shape;
+
+    switch (shapeSettings.shape) {
+      case 'line':
+        shape = new google.maps.Polyline({
+          path: shapeSettings.coordinates,
+          strokeColor: shapeSettings.strokeColor,
+          strokeOpacity: shapeSettings.strokeOpacity,
+          strokeWeight: shapeSettings.strokeWidth
+        });
+        break;
+
+      case 'polygon':
+        shape = new google.maps.Polygon({
+          paths: shapeSettings.coordinates,
+          strokeColor: shapeSettings.strokeColor,
+          strokeOpacity: shapeSettings.strokeOpacity,
+          strokeWeight: shapeSettings.strokeWidth,
+          fillColor: shapeSettings.fillColor,
+          fillOpacity: shapeSettings.fillOpacity
+        });
+        break;
+    }
+
+    if (
+      typeof shapeSettings.title !== "undefined"
+      && shapeSettings.title.length
+    ) {
+      var infoWindow = new google.maps.InfoWindow();
+      var that = this;
+      google.maps.event.addListener(shape, 'mouseover', function (e) {
+        infoWindow.setPosition(e.latLng);
+        infoWindow.setContent(shapeSettings.title);
+        infoWindow.open(that.googleMap);
+      });
+      google.maps.event.addListener(shape, 'mouseout', function () {
+        infoWindow.close();
+      });
+    }
+
+    shape.setMap(this.googleMap);
+    Drupal.geolocation.GeolocationMapBase.prototype.addShape.call(this, shape);
+
+    return shape;
+
+  };
+  GeolocationGoogleMap.prototype.removeShape = function (shape) {
+    if (typeof shape === 'undefined') {
+      return;
+    }
+    Drupal.geolocation.GeolocationMapBase.prototype.removeShape.call(this, shape);
+    shape.setMap(null);
+  };
   GeolocationGoogleMap.prototype.getMarkerBoundaries = function (locations) {
 
     locations = locations || this.mapMarkers;

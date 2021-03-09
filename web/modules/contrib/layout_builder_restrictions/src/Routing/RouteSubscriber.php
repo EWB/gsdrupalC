@@ -23,7 +23,8 @@ class RouteSubscriber extends RouteSubscriberBase {
       // Provide validation to the Layout Builder MoveBlock form.
       $route->setDefault('_form', '\Drupal\layout_builder_restrictions\Form\MoveBlockForm');
     }
-    // Add inline block filtering to parent class Drupal\layout_builder\Controller\ChooseBlockController.
+    // Add inline block filtering to parent class
+    // Drupal\layout_builder\Controller\ChooseBlockController.
     if ($route = $collection->get('layout_builder.choose_block')) {
       $defaults = $route->getDefaults();
       $defaults['_controller'] = '\Drupal\layout_builder_restrictions\Controller\ChooseBlockController::build';

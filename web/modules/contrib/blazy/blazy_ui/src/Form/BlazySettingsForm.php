@@ -85,7 +85,7 @@ class BlazySettingsForm extends ConfigFormBase {
       '#type'          => 'checkbox',
       '#title'         => $this->t('Responsive image 1px placeholder'),
       '#default_value' => $config->get('one_pixel'),
-      '#description'   => $this->t('By default a 1px Data URI image is the placeholder for lazyloaded Responsive image. Useful to perform a lot better. Uncheck to disable, and use Drupal-managed smallest/fallback image style instead. Be sure to add proper dimensions or at least min-height/min-width via CSS accordingly to avoid layout reflow, or choose an Aspect ratio via Blazy formatters. Disabling this will result in downloading fallback image as well for non-PICTURE element (double downloads).'),
+      '#description'   => $this->t('By default a 1px Data URI image is the placeholder for lazyloaded Responsive image. Useful to perform a lot better. Uncheck to disable, and use Drupal-managed smallest/fallback image style instead. Or keep it checked, and override it per <b>Image style</b> option at blazy-related formatters instead. Be sure to add proper dimensions or at least min-height/min-width via CSS accordingly to avoid layout reflow, or choose an Aspect ratio via Blazy formatters. Disabling this will result in downloading fallback image as well for non-PICTURE element (double downloads).'),
     ];
 
     $form['placeholder'] = [
@@ -153,7 +153,7 @@ class BlazySettingsForm extends ConfigFormBase {
       '#type'          => 'textfield',
       '#title'         => $this->t('Scrolling container'),
       '#default_value' => $config->get('blazy.container'),
-      '#description'   => $this->t('If you put Blazy within a scrolling container, provide valid comma separated CSS selectors, except <code>#drupal-modal</code>, e.g.: <code>#my-scrolling-container, .another-scrolling-container</code>. A known scrolling container is <code>#drupal-modal</code> like seen at Media library. A scrolling modal with an iframe like Entity Browser has no issue since the scrolling container is the entire DOM. Must know <code>.blazy</code> parent container which has CSS rules containing <code>overflow</code> with values anything but <code>hidden</code> such as <code>auto or scroll</code>. Press <code>F12</code> at any browser to inspect elements. IO does not need it, old bLazy does. Default to known <code>#drupal-modal</code>.'),
+      '#description'   => $this->t('If you put Blazy within a scrolling container, provide valid comma separated CSS selectors, except <code>#drupal-modal, .is-b-scroll</code>, e.g.: <code>#my-scrolling-container, .another-scrolling-container</code>. Known scrolling containers are <code>#drupal-modal</code> like seen at Media library, parallax containers with fixed height replacing default browser scrollbar. A scrolling modal with an iframe like Entity Browser has no issue since the scrolling container is the entire DOM. Must know <code>.blazy</code> parent container, or itself, which has CSS rules containing <code>overflow</code> with values anything but <code>hidden</code> such as <code>auto or scroll</code>. Press <code>F12</code> at any browser to inspect elements. IO does not need it, old bLazy does. Default to known <code>#drupal-modal, .is-b-scroll</code>. The <code>.is-b-scroll</code> is for modules which cannot reach this UI without extra legs. Symptons: eternal blue loader while should be loaded.'),
     ];
 
     $form['io'] = [

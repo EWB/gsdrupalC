@@ -179,29 +179,24 @@ class SlickFormatterTest extends BlazyKernelTestBase {
    *   An array of tested data.
    */
   public function providerTestBuildSettings() {
-    $breakpoints = $this->getDataBreakpoints(TRUE);
-
     $data[] = [
       [
-        'vanilla'     => TRUE,
-        'breakpoints' => [],
+        'vanilla' => TRUE,
       ],
       FALSE,
     ];
     $data[] = [
       [
-        'vanilla'     => FALSE,
-        'breakpoints' => [],
-        'blazy'       => FALSE,
-        'ratio'       => 'fluid',
+        'vanilla' => FALSE,
+        'blazy' => FALSE,
+        'ratio' => 'fluid',
       ],
       TRUE,
     ];
     $data[] = [
       [
-        'vanilla'     => FALSE,
-        'breakpoints' => $breakpoints,
-        'blazy'       => TRUE,
+        'vanilla' => FALSE,
+        'blazy' => TRUE,
       ],
       TRUE,
     ];

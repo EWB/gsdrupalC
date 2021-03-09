@@ -14,12 +14,18 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 class MediaEntityBrowserMediaLibraryTest extends WebDriverTestBase {
 
   use MediaTypeCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stable';
+
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'media',
     'inline_entity_form',
     'entity_browser',
@@ -34,17 +40,17 @@ class MediaEntityBrowserMediaLibraryTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(array_keys($this->container->get('user.permissions')->getPermissions())));
     $this->createMediaType('video_embed_field', [
       'label' => 'Video',
-      'bundle' => 'video',
+      'id' => 'video',
     ]);
 
     Media::create([
       'bundle' => 'video',
-      'field_media_video_embed_field' => [['value' => 'https://www.youtube.com/watch?v=XgYu7-DQjDQ']],
+      'field_media_video_embed_field' => [['value' => 'https://www.youtube.com/watch?v=JQFKVbfqz7w']],
     ])->save();
   }
 
@@ -57,11 +63,11 @@ class MediaEntityBrowserMediaLibraryTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertSession()->elementExists('css', '.media-library-view');
-    $this->assertSession()->elementExists('css', '.media-library-item__preview');
+    $this->assertSession()->elementExists('css', '.media-library-item');
 
     $this->assertSession()->elementNotExists('css', '.js-click-to-select.checked');
-    $this->getSession()->getPage()->find('css', '.js-click-to-select')->press();
-    $this->assertSession()->elementExists('css', '.js-click-to-select.checked');
+    $this->getSession()->getPage()->find('css', '.js-click-to-select input[type=checkbox]')->press();
+    $this->assertNotNull($this->assertSession()->waitForElement('css', '.js-click-to-select.checked'));
   }
 
 }

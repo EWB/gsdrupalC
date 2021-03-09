@@ -1,10 +1,11 @@
-type: module
 name: Geocoder
 description: An API to geocode and reverse geocode data into other GIS data types.
 core: 8.x
+type: module
+package: Geocoding
 configure: geocoder.settings
 
-# Information added by Drupal.org packaging script on 2020-02-20
-version: '8.x-2.9'
+# Information added by Drupal.org packaging script on 2020-07-28
+version: '8.x-2.22'
 project: 'geocoder'
-datestamp: 1582227069
+datestamp: 1595975046

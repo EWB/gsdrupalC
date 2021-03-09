@@ -119,8 +119,10 @@ class GeolocationFieldProvider extends DataProviderBase implements DataProviderI
   public function getPositionsFromItem(FieldItemInterface $fieldItem) {
     if ($fieldItem instanceof GeolocationItem) {
       return [
-        'lat' => $fieldItem->get('lat')->getValue(),
-        'lng' => $fieldItem->get('lng')->getValue(),
+        [
+          'lat' => $fieldItem->get('lat')->getValue(),
+          'lng' => $fieldItem->get('lng')->getValue(),
+        ],
       ];
     }
 

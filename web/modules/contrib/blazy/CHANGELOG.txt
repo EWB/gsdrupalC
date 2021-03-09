@@ -1,4 +1,77 @@
 
+Blazy 8.x-2.0-dev, 2020-05-09
+-----------------------------
+- Fixed for rare cases with similar colorbox galleries on a page.
+- Fixed for weird null document after closing colorbox.
+
+Blazy 8.x-2.0-dev, 2020-05-08
+-----------------------------
+- Issue #3123435 by sasanikolic, Berdir: Uncaught TypeError: Cannot read
+  property '\''mobiledetect'\'' of undefined.
+
+Blazy 8.x-2.0-dev, 2020-05-07
+-----------------------------
+- Issue #3134323 by timlie: Undefined index: fx in
+  Drupal\blazy\BlazyManagerBase->getCommonSettings().
+- Issue #3133891 by prudloff: Error when adding a new text format.
+- Fixed for artifacts during loading with different animation than blur.
+
+Blazy 8.x-2.0-dev, 2020-05-04
+-----------------------------
+- Reduced picture abrupt ratio changes for the rest after the first loaded.
+
+Blazy 8.x-2.0-dev, 2020-05-01
+-----------------------------
+- Issue #3132545 by prudloff: Undefined index notices when image file is not
+  available.
+- Issue #3132537 by lolandese: License "GPL-2.0+" is a deprecated SPDX license
+  identifier.
+
+Blazy 8.x-2.0-dev, 2020-04-24
+-----------------------------
+- Issue #3120696 by gausarts, jwilson3, Corn696, bkosborne: Delay native lazy
+  loading till one is hit
+
+Blazy 8.x-2.0-dev, 2020-04-22
+-----------------------------
+- Issue #3119527 by mortona2k: Responsive image fallback uses original image.
+- Issue #3126146 by electrokate: Undefined Item error.
+- Issue #3127586 by YahyaAlHamad: Blur effect messes up Responsive image with
+  fluid ratio.
+- Issue #3125240 by Mykola Veryha: Notice : Undefined variable: content.
+- Changed blur effect approach to be replaceable by animate.css easily with just
+  hook_blazy_image_effects_alter.
+- Made Responsive image utilities available outside formatters such as for
+  BlazyEntity or the new GridStack for Layout Builder with Media Library
+  and Responsive image integration.
+- Added preface and overlay variable for any extra content prefacing and
+  overlaying the image/ video.
+
+Blazy 8.x-2.0-dev, 2020-04-08
+-----------------------------
+- Issue #3124204 by slbrassard: Incorrect entity cache tag causes blazy
+  formatted fields not to be updated.
+- Issue #3120654 by thalles: Replace old "source" property value by new.
+- Fixed for regression with lightboxes and iframes.
+- Added micro-optimization for BlazyStyleBaseTrait::getFirstImage.
+- Opened supports for Responsive image for GridStack since the removal of custom
+  breakpoints at blazy:2.0.
+- Cleaned up few more TODOs.
+- Removed no longer relevant D8.7 traces.
+- Disabled BlazymanagerBase::buildSkins for sub-module own skin implementations.
+- Moved Blazymanager::setAttachments into BlazymanagerBase::setAttachments to
+  re-use for sub-modules.
+- Moved BlazymanagerBase::isCrop into BlazyFormatter::isCrop due to being usable
+  only at formatter level, not Views, etc.
+
+Blazy 8.x-2.0-dev, 2020-03-16
+-----------------------------
+- Issue #3118712 by prudloff: Images are not centered correctly.
+- Issue #3119739 by gausarts, DD 85: Do not apply aspect ratio with empty width.
+- Issue #3117132 by pivica: Media position relative rule is too general.
+- Issue #3118739 by wells: Using an image style in a render array without
+  setting a specific width.
+
 Blazy 8.x-2.0-dev, 2020-02-29
 -----------------------------
 - Added library blazy/base as failsafe when blazy JS library might not be loaded

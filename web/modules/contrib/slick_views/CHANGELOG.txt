@@ -1,4 +1,9 @@
 
+Slick Views 8.x-2.0-dev, 2020-03-01
+-----------------------------------
+- Issue #3114885 by theterencechan: SlickViewsBase throws unexpected error when
+  thumbnail style is empty.
+
 Slick Views 8.x-2.0-dev, 2020-02-15
 -----------------------------------
 - Changed for safer sub-classing.

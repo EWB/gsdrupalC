@@ -1,8 +1,9 @@
 <?php
+
 /**
  * @file
  * Install, update and uninstall functions for the Masonry API module.
- * 
+ *
  * Sponsored by: www.freelance-drupal.com
  */
 
@@ -10,43 +11,55 @@
  * Implements hook_requirements().
  */
 function masonry_requirements($phase) {
-  $requirements = array();
+  $requirements = [];
+  $masonry = NULL;
+  $imagesLoaded = NULL;
 
   if ($phase == 'runtime') {
+    /** @var \Drupal\masonry\Services\MasonryService $masonryService */
+    $masonryService = \Drupal::service('masonry.service');
 
     // Check for Masonry Library.
-    $masonry = libraries_detect('masonry');
-    $requirements['masonry'] = array(
-      'title' => t('jQuery Masonry'),
-    );
+    $requirements['masonry'] = [
+      'title' => t('Masonry library'),
+    ];
 
-    if ($masonry['installed']) {
-      $requirements['masonry']['value'] = $masonry['version'];
+    $masonry = $masonryService->isMasonryInstalled();
+    if ($masonry) {
+      $requirements['masonry']['value'] = t('The library is properly installed.');
+      $requirements['masonry']['description'] = t('File found at %file', ['%file' => $masonry]);
       $requirements['masonry']['severity'] = REQUIREMENT_OK;
     }
     else {
-      $requirements['masonry']['value'] = $masonry['error'];
-      $requirements['masonry']['description'] = $masonry['error message'];
+      $requirements['masonry']['value'] = t('Masonry not found');
+      $requirements['masonry']['description'] = $masonry ? $masonry['error message'] : t('The library is missing. Please check that %file exists', ['%file' => '/libraries/masonry/dist/masonry.pkgd.min.js']);
       $requirements['masonry']['severity'] = REQUIREMENT_ERROR;
     }
 
-    // Check for imagesLoaded Library.
-    $imagesLoaded = libraries_detect('imagesloaded');
-    $requirements['masonry_imagesloaded'] = array(
-      'title' => t('jQuery Images Loaded'),
-    );
+    // Check for ImagesLoaded Library.
+    $requirements['imagesloaded'] = [
+      'title' => t('ImagesLoaded library'),
+    ];
 
-    if ($imagesLoaded['installed']) {
-      $requirements['masonry_imagesloaded']['value'] = $imagesLoaded['version'];
-      $requirements['masonry_imagesloaded']['severity'] = REQUIREMENT_OK;
+    $imagesloaded = $masonryService->isImagesloadedInstalled();
+    if ($imagesloaded) {
+      $requirements['imagesloaded']['value'] = t('The library is properly installed.');
+      $requirements['imagesloaded']['description'] = t('File found at %file', ['%file' => $imagesloaded]);
+      $requirements['imagesloaded']['severity'] = REQUIREMENT_OK;
     }
     else {
-      $requirements['masonry_imagesloaded']['value'] = $imagesLoaded['error'];
-      $requirements['masonry_imagesloaded']['description'] = $imagesLoaded['error message'];
-      $requirements['masonry_imagesloaded']['severity'] = REQUIREMENT_ERROR;
+      $requirements['imagesloaded']['value'] = t('ImagesLoaded not found');
+      $requirements['imagesloaded']['description'] = t('The library is missing. Please check that %file exists', ['%file' => '/libraries/imagesloaded/imagesloaded.pkgd.min.js']);
+      $requirements['imagesloaded']['severity'] = REQUIREMENT_ERROR;
     }
   }
 
   return $requirements;
 }
 
+/**
+ * Cache rebuild for new masonry service new injected dependencies.
+ */
+function masonry_update_8001(&$sandbox) {
+  // Empty update to cause a cache rebuild.
+}

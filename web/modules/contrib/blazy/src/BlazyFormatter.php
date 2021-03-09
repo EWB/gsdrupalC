@@ -22,11 +22,18 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
   private $isImageDimensionSet;
 
   /**
-   * Checks if Responsive image dimensions are set.
+   * Returns available styles with crop in the effect name.
    *
    * @var array
    */
-  private $isResponsiveImageDimensionSet;
+  protected $cropStyles;
+
+  /**
+   * Checks if the image style contains crop in the effect name.
+   *
+   * @var array
+   */
+  protected $isCrop;
 
   /**
    * {@inheritdoc}
@@ -62,7 +69,7 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
 
     $settings['bundle']         = $bundle;
     $settings['cache_metadata'] = ['keys' => [$id, $count]];
-    $settings['cache_tags'][]   = $entity_id . ':' . $entity_id;
+    $settings['cache_tags'][]   = $entity_type_id . ':' . $entity_id;
     $settings['caption']        = empty($settings['caption']) ? [] : array_filter($settings['caption']);
     $settings['content_url']    = $settings['absolute_path'] = $absolute_path;
     $settings['count']          = $count;
@@ -71,8 +78,6 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
     $settings['gallery_id']     = str_replace('_', '-', $gallery_id . '-' . $settings['media_switch']);
     $settings['id']             = $id;
     $settings['internal_path']  = $internal_path;
-    $settings['resimage']       = !empty($settings['responsive_image']) && !empty($settings['responsive_image_style']);
-    $settings['resimage']       = $settings['resimage'] ? $this->entityLoad($settings['responsive_image_style'], 'responsive_image_style') : FALSE;
     $settings['use_field']      = !$settings['lightbox'] && isset($settings['third_party'], $settings['third_party']['linked_field']) && !empty($settings['third_party']['linked_field']['linked']);
 
     // Bail out if Vanilla mode is requested.
@@ -85,11 +90,6 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
     $settings['blazy'] = !empty($settings['blazy']) || !empty($settings['background']) || $settings['resimage'];
     $settings['lazy']  = $settings['blazy'] ? 'blazy' : (isset($settings['lazy']) ? $settings['lazy'] : '');
     $settings['lazy']  = empty($settings['is_preview']) ? $settings['lazy'] : '';
-
-    // @todo remove enforced (BC), since now works for Responsive image too.
-    if (isset($settings['ratio']) && $settings['ratio'] == 'enforced') {
-      $settings['ratio'] = 'fluid';
-    }
   }
 
   /**
@@ -106,8 +106,7 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
 
     // Sets dimensions once, if cropped, to reduce costs with ton of images.
     // This is less expensive than re-defining dimensions per image.
-    // @todo remove first_uri for _uri for consistency.
-    if (!empty($settings['_uri']) || !empty($settings['first_uri'])) {
+    if (!empty($settings['_uri'])) {
       if (empty($settings['resimage'])) {
         $this->setImageDimensions($settings);
       }
@@ -124,23 +123,20 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
    * {@inheritdoc}
    */
   public function postBuildElements(array &$build, $items, array $entities = []) {
-    // Rebuild the first item to build colorbox/zoom-like gallery.
-    $build['settings']['first_item'] = $this->firstItem;
+    $build['settings']['_item'] = $this->firstItem;
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @todo remove first_uri for _uri for consistency.
    */
   public function extractFirstItem(array &$settings, $item, $entity = NULL) {
     if ($settings['field_type'] == 'image') {
       $this->firstItem = $item;
-      $settings['_uri'] = $settings['first_uri'] = ($file = $item->entity) && empty($item->uri) ? $file->getFileUri() : $item->uri;
+      $settings['_uri'] = ($file = $item->entity) && empty($item->uri) ? $file->getFileUri() : $item->uri;
     }
     elseif ($entity && $entity->hasField('thumbnail') && $image = $entity->get('thumbnail')->first()) {
       $this->firstItem = $image;
-      $settings['_uri'] = $settings['first_uri'] = $image->entity->getFileUri();
+      $settings['_uri'] = $image->entity->getFileUri();
     }
 
     // The first image dimensions to differ from individual item dimensions.
@@ -168,30 +164,31 @@ class BlazyFormatter extends BlazyManager implements BlazyFormatterInterface {
   }
 
   /**
-   * Sets dimensions once to reduce method calls for Responsive image.
-   *
-   * @param array $settings
-   *   The settings being modified.
+   * Returns available image styles with crop in the name.
    */
-  protected function setResponsiveImageDimensions(array &$settings = []) {
-    if (!isset($this->isResponsiveImageDimensionSet[md5($settings['id'])])) {
-      $srcset = [];
-      foreach ($this->getResponsiveImageStyles($settings['resimage'])['styles'] as $style) {
-        $settings = array_merge($settings, BlazyUtil::transformDimensions($style, $settings, TRUE));
-
-        // In order to avoid layout reflow, we get dimensions beforehand.
-        $srcset[$settings['width']] = round((($settings['height'] / $settings['width']) * 100), 2);
+  private function cropStyles() {
+    if (!isset($this->cropStyles)) {
+      $this->cropStyles = [];
+      foreach ($this->entityLoadMultiple('image_style') as $style) {
+        foreach ($style->getEffects() as $effect) {
+          if (strpos($effect->getPluginId(), 'crop') !== FALSE) {
+            $this->cropStyles[$style->getName()] = $style;
+            break;
+          }
+        }
       }
-
-      // Sort the srcset from small to large image width or multiplier.
-      ksort($srcset);
-
-      // Informs individual images that dimensions are already set once.
-      $settings['blazy_data']['dimensions'] = $srcset;
-      $settings['_dimensions'] = TRUE;
-
-      $this->isResponsiveImageDimensionSet[md5($settings['id'])] = TRUE;
     }
+    return $this->cropStyles;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCrop($style) {
+    if (!isset($this->isCrop[$style])) {
+      $this->isCrop[$style] = $this->cropStyles() && isset($this->cropStyles()[$style]) ? $this->cropStyles()[$style] : FALSE;
+    }
+    return $this->isCrop[$style];
   }
 
 }

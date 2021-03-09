@@ -28,7 +28,14 @@
           var options = {};
 
           switch (featureSettings["position"]) {
+            case "left":
+            case "top":
+            case "bottom":
+              // Leave the default values.
+              options = {};
+              break;
             case "right":
+              // Size adaptivity will be disabled.
               options = {
                 position: {
                   top: "108px",
@@ -37,23 +44,6 @@
                   left: "auto"
                 }
               };
-              break;
-
-            case "left":
-              options = {
-                position: {
-                  top: "108px",
-                  right: "auto",
-                  bottom: "auto",
-                  left: "10px"
-                }
-              };
-              break;
-
-            case "top":
-            case "bottom":
-              // I don't know. Leave the default values.
-              options = {};
               break;
           }
 

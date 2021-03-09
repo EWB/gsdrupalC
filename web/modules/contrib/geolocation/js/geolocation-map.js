@@ -78,13 +78,19 @@
           $('.geolocation-map-controls > *', map.wrapper).each(function (index, control) {
             map.addControl(control);
           });
+
           map.removeMapMarkers();
-
           var locations = map.loadMarkersFromContainer();
-
           $.each(locations, function (index, location) {
             map.setMapMarker(location);
           });
+
+          map.removeShapes();
+          var shapes = map.loadShapesFromContainer();
+          $.each(shapes, function (index, shape) {
+            map.addShape(shape);
+          });
+
           map.setCenter();
 
           map.wrapper.find('.geolocation-location').hide();

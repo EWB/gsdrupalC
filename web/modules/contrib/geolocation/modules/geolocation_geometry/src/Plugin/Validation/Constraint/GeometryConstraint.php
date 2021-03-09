@@ -44,6 +44,6 @@ class GeometryConstraint extends Constraint {
    * @var string
    *   Geometry type.
    */
-  public $geomType = 'geometry';
+  public $geometryType = 'geometry';
 
 }

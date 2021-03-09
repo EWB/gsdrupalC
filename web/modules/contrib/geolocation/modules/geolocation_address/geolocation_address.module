@@ -135,7 +135,7 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
   $form_parent_name = 'fields[' . $field_definition->getName() . '][settings_edit_form][third_party_settings][geolocation_address]';
 
   $settings = geolocation_address_get_widget_settings($widget);
-  if ($form_state->getTriggeringElement()['#name'] == $form_parent_name . '[geocoder]') {
+  if (!empty($form_state->getTriggeringElement()['#name']) && $form_state->getTriggeringElement()['#name'] == $form_parent_name . '[geocoder]') {
     $settings['geocoder'] = $form_state->getTriggeringElement()['#value'];
   }
 
@@ -304,7 +304,7 @@ function geolocation_address_field_widget_third_party_settings_form(WidgetInterf
   $element['ignore'] = [
     '#type' => 'checkboxes',
     '#title' => t('Ignore address elements'),
-    '#default_value' => $settings['ignore'],
+    '#default_value' => array_keys(array_filter($settings['ignore'])),
     '#options' => [
       'organization' => 'organization',
       'address-line1' => 'address-line1',

@@ -7,7 +7,6 @@ dependencies:
     - taxonomy.vocabulary.geolocation_demo_taxonomy
   module:
     - image
-    - path
     - text
   enforced:
     module:
@@ -40,11 +39,5 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
-  path:
-    type: path
-    weight: 2
-    region: content
-    settings: {  }
     third_party_settings: {  }
 hidden: {  }

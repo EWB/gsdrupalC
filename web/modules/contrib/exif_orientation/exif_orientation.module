@@ -57,7 +57,7 @@ function exif_orientation_validate_image_rotation(FileInterface $file) {
  */
 function _exif_orientation_rotate($file) {
   if (function_exists('exif_read_data') && $file->getMimeType() == 'image/jpeg') {
-    $file_exif = @exif_read_data(drupal_realpath($file->getFileUri()));
+    $file_exif = @exif_read_data(\Drupal::service('file_system')->realpath($file->getFileUri()));
 
     // Ensure that the Orientation key|value exists, otherwise leave.
     if (!is_array($file_exif) || !isset($file_exif['Orientation'])) {

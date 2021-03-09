@@ -98,7 +98,7 @@ plugin.plugin_configuration.geolocation.map_feature.leaflet_control_layer:
       label: 'Settings'
       mapping:
         default_label:
-          type: boolean
+          type: string
           label: 'Label'
         tile_layer_providers:
           type: sequence
@@ -120,7 +120,7 @@ plugin.plugin_configuration.geolocation.map_feature.leaflet_control_layer:
           type: sequence
           label: 'Providers'
           sequence:
-            type: geolocation.map_feature_settings.leaflet.tile_layer_provider.[%parent.tile_layer_provider]
+            type: geolocation.map_feature_settings.leaflet.tile_layer_provider.[%key]
             label: 'Provider Options'
 
 plugin.plugin_configuration.geolocation.map_feature.leaflet_marker_icon:
@@ -254,8 +254,11 @@ plugin.plugin_configuration.geolocation.map_feature.leaflet_tile_layer:
           type: string
           label: 'Overlay'
         tile_provider_options:
-          type: geolocation.map_feature_settings.leaflet.tile_layer_provider.[%parent.tile_layer_provider]
-          label: 'Options'
+          type: sequence
+          label: 'Provider Options'
+          sequence:
+            type: geolocation.map_feature_settings.leaflet.tile_layer_provider.[%key]
+            label: 'Provider Options'
 
 plugin.plugin_configuration.geolocation.map_feature.leaflet_tile_layer_overlay:
   type: geolocation.map_feature_settings

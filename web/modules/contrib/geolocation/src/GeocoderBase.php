@@ -130,7 +130,7 @@ abstract class GeocoderBase extends PluginBase implements GeocoderInterface, Con
             'geocoder' => [
               $this->getPluginId() => [
                 'inputIds' => [
-                  $element_name,
+                  $element_name => $element_name,
                 ],
               ],
             ],

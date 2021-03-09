@@ -10,6 +10,13 @@ use Drupal\Tests\BrowserTestBase;
 abstract class EvaTestBase extends BrowserTestBase {
 
   /**
+   * The default theme.
+   *
+   * @var string
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * {@inheritdoc}
    */
   public static $modules = [

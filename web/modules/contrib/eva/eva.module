@@ -160,7 +160,7 @@ function eva_views_invalidate_cache() {
   $utilities->clearDetached();
   $utilities->invalidateCaches();
   // See https://www.drupal.org/node/2281897
-  \Drupal::entityManager()->clearCachedFieldDefinitions();
+  \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 }
 
 /**

@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\layout_builder_styles\Functional;
 
-use Drupal\block_content\Entity\BlockContent;
-use Drupal\block_content\Entity\BlockContentType;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
@@ -19,6 +17,11 @@ class LayoutBuilderStyleTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = [
     'layout_builder',
     'block',
@@ -30,8 +33,7 @@ class LayoutBuilderStyleTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    $this->strictConfigSchema = NULL;
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('local_tasks_block');
@@ -67,7 +69,8 @@ class LayoutBuilderStyleTest extends BrowserTestBase {
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer site configuration',
+      'manage layout builder styles',
+      'administer layout builder styles configuration',
     ]));
 
     // Create styles for section.
@@ -136,7 +139,8 @@ class LayoutBuilderStyleTest extends BrowserTestBase {
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer site configuration',
+      'manage layout builder styles',
+      'administer layout builder styles configuration',
     ]));
 
     // Create styles for blocks.
@@ -218,159 +222,6 @@ class LayoutBuilderStyleTest extends BrowserTestBase {
     $assert_session->responseNotContains('foo-style-class bar-style-class');
     $assert_session->responseContains('foo2-style-class bar2-style-class');
 
-  }
-
-  /**
-   * Block type restrictions should apply to inline & reusable blocks.
-   */
-  public function testBlockRestrictions() {
-    $assert_session = $this->assertSession();
-    $page = $this->getSession()->getPage();
-
-    $block_node = $this->createNode([
-      'type' => 'bundle_with_section_field',
-      'title' => 'The first node title',
-      'body' => [
-        [
-          'value' => 'The first node body',
-        ],
-      ],
-    ]);
-
-    $this->drupalLogin($this->drupalCreateUser([
-      'configure any layout',
-      'administer site configuration',
-      'create and edit custom blocks',
-    ]));
-
-    // Create 2 custom block types, with block instances.
-    $bundle = BlockContentType::create([
-      'id' => 'basic',
-      'label' => 'Basic',
-    ]);
-    $bundle->save();
-    $bundle = BlockContentType::create([
-      'id' => 'alternate',
-      'label' => 'Alternate',
-    ]);
-    $bundle->save();
-    block_content_add_body_field($bundle->id());
-    $blocks = [
-      'Basic Block 1' => 'basic',
-      'Alternate Block 1' => 'alternate',
-    ];
-    foreach ($blocks as $info => $type) {
-      $block = BlockContent::create([
-        'info' => $info,
-        'type' => $type,
-        'body' => [
-          [
-            'value' => 'This is the block content',
-            'format' => filter_default_format(),
-          ],
-        ],
-      ]);
-      $block->save();
-      $blocks[$info] = $block->uuid();
-    }
-
-    // Create block styles for blocks.
-    LayoutBuilderStyle::create([
-      'id' => 'unrestricted',
-      'label' => 'Unrestricted',
-      'classes' => 'foo-style-class bar-style-class',
-      'type' => 'component',
-    ])->save();
-
-    // Restrict the 2nd block style to 'basic' blocks.
-    LayoutBuilderStyle::create([
-      'id' => 'basic_only',
-      'label' => 'Basic only',
-      'classes' => 'foo2-style-class bar2-style-class',
-      'type' => 'component',
-      'block_restrictions' => ['inline_block:basic'],
-    ])->save();
-
-    // Restrict the 3rd block style to only the 'Promoted to frontpage' block.
-    LayoutBuilderStyle::create([
-      'id' => 'promoted_only',
-      'label' => 'Promoted only',
-      'classes' => 'foo3-style-class bar3-style-class',
-      'type' => 'component',
-      'block_restrictions' => ['field_block:node:bundle_with_section_field:promote'],
-    ])->save();
-
-    // Restrict the 4th block style to 'alternate' or 'promoted'.
-    LayoutBuilderStyle::create([
-      'id' => 'multi_allow',
-      'label' => 'Alternate and promoted',
-      'classes' => 'foo4-style-class bar4-style-class',
-      'type' => 'component',
-      'block_restrictions' => ['inline_block:alternate', 'field_block:node:bundle_with_section_field:promote'],
-    ])->save();
-
-    // Set the configuration to allow multiple styles per block.
-    $this->drupalGet('/admin/config/content/layout_builder_style/config');
-    $page->selectFieldOption('edit-multiselect-multiple', 'multiple');
-    $page->selectFieldOption('edit-form-type-multiple-select', 'multiple-select');
-    $page->pressButton('Save configuration');
-
-    // Examine which styles are allowed on basic block type.
-    $this->drupalGet($block_node->toUrl());
-    $page->clickLink('Layout');
-    $page->clickLink('Add block');
-    $page->clickLink('Basic Block 1');
-    // Basic block can use "Unrestricted" and "Basic only".
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="basic_only"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="unrestricted"]');
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="promoted_only"]');
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="multi_allow"]');
-
-    // Examine which styles are allowed on alternate block type.
-    $this->drupalGet($block_node->toUrl());
-    $page->clickLink('Layout');
-    $page->clickLink('Add block');
-    $page->clickLink('Alternate Block 1');
-    // Alternate block can use "Unrestricted" and "Alternate only".
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="basic_only"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="unrestricted"]');
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="promoted_only"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="multi_allow"]');
-
-    // Examine which styles are allowed on 'Promoted to front page'.
-    $this->drupalGet($block_node->toUrl());
-    $page->clickLink('Layout');
-    $page->clickLink('Add block');
-    $page->clickLink('Promoted to front page');
-    // Promoted gets "Unrestricted", "Alternate and promoted", & "Promoted".
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="basic_only"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="unrestricted"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="promoted_only"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="multi_allow"]');
-
-    // Examine which styles are allowed on inline basic block.
-    $this->drupalGet($block_node->toUrl());
-    $page->clickLink('Layout');
-    $page->clickLink('Add block');
-    $page->clickLink('Create custom block');
-    $page->clickLink('Basic');
-    // Basic block can use "Unrestricted" and "Basic only".
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="basic_only"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="unrestricted"]');
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="promoted_only"]');
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="multi_allow"]');
-
-    // Examine which styles are allowed on inline alternate block.
-    $this->drupalGet($block_node->toUrl());
-    $page->clickLink('Layout');
-    $page->clickLink('Add block');
-    $page->clickLink('Create custom block');
-    $page->clickLink('Alternate');
-    // Alternate block can use "Unrestricted" and "Alternate only".
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="basic_only"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="unrestricted"]');
-    $assert_session->elementNotExists('css', 'select#edit-layout-builder-style option[value="promoted_only"]');
-    $assert_session->elementExists('css', 'select#edit-layout-builder-style option[value="multi_allow"]');
   }
 
 }

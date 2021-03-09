@@ -63,15 +63,33 @@ class AnimateDeleteForm extends ConfirmFormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
     $aid = $this->id;
-
     if (is_numeric($aid)) {
+      // Delete configuration for parent.
+      $this->deleteConfigValue($aid);
+      // Delete database entry.
       $delete = $this->database->delete('animate_any_settings')->condition('aid', $aid)->execute();
       if ($delete) {
         $this->messenger()->addMessage($this->t('Record deleted successfully.'));
       }
     }
+  }
+
+  /**
+   * Helper function to clear the configuration key value.
+   * @param $aid
+   */
+  public function deleteConfigValue($aid) {
+    // Get parent data to delete from configurations.
+    $fetch = $this->database->select("animate_any_settings", "a");
+    $fetch->fields('a', ['parent']);
+    $fetch->condition('a.aid', $aid);
+    $fetch_results = $fetch->execute()->fetchAssoc();
+    $parent = $fetch_results['parent'];
+    $parent_key = str_replace('.', '::', $parent);
+    // Clear configuration.
+    \Drupal::service('config.factory')->getEditable('animate_any.settings')
+      ->clear($parent_key)->save();
   }
 
 }

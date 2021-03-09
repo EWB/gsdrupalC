@@ -3,16 +3,19 @@ geolocation.field.formatter.map.base:
   label: 'Geolocation Map Formatter Base'
   mapping:
     set_marker:
-      type: string
+      type: boolean
       label: 'Set marker at map center'
     data_provider:
       type: geolocation.data_provider.geolocation
       label: 'Data provider'
     common_map:
-      type: string
+      type: boolean
       label: 'Display results on a common map'
+    show_delta_label:
+      type: boolean
+      label: 'Show delta marker label'
     use_overridden_map_settings:
-      type: integer
+      type: boolean
       label: 'Use overridden map settings.'
     title:
       type: string
@@ -92,5 +95,5 @@ field.value.geolocation:
       type: text
       label: 'Support value'
     data:
-      type: text
+      type: sequence
       label: 'Catchall'

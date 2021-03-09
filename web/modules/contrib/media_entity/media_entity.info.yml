@@ -2,7 +2,7 @@ name: Media entity (2.x)
 description: 'Media entity API.'
 type: module
 package: Media
-# core: 8.x
+core: 8.x
 test_dependencies:
   - media_entity_document:media_entity_document
   - media_entity_embeddable_video:media_entity_embeddable_video
@@ -17,8 +17,7 @@ dependencies:
   - entity:entity
   - drupal:system (>=8.6)
 
-# Information added by Drupal.org packaging script on 2019-06-26
-version: '8.x-2.0-beta5'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2020-04-28
+version: '8.x-2.0-beta7'
 project: 'media_entity'
-datestamp: 1561542194
+datestamp: 1588087017

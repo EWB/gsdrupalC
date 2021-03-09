@@ -2,6 +2,7 @@
     "name": "drupal/block_class",
     "description": "Allows assigning classes to Blocks.",
     "type": "drupal-module",
+    "keywords": ["Drupal"],
     "homepage": "https://www.drupal.org/project/block_class",
     "authors": [
         {
@@ -13,6 +14,11 @@
             "name": "Renato Gonçalves (RenatoG)",
             "email": "renatog@ciandt.com",
             "homepage": "https://www.drupal.org/u/RenatoG",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Neslee Canil Pinto",
+            "homepage": "https://www.drupal.org/u/neslee-canil-pinto",
             "role": "Maintainer"
         },
         {
@@ -59,7 +65,11 @@
     "support": {
         "issues": "https://www.drupal.org/project/issues/block_class",
         "irc": "irc://irc.freenode.org/drupal-contribute",
-        "source": "https://cgit.drupalcode.org/block_class"
+        "source": "https://git.drupalcode.org/project/block_class"
     },
-    "license": "GPL-2.0+"
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/core": "^8 || ^9"
+    }
 }

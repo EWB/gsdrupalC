@@ -160,8 +160,7 @@ class BlazyFilter extends FilterBase implements BlazyFilterInterface, ContainerF
           $all[$switch] = $settings[$switch];
         }
 
-        // @todo remove first_uri for _uri for consistency.
-        $settings['_uri'] = $settings['first_uri'] = isset($elements[0]['#build'], $elements[0]['#build']['settings']['uri']) ? $elements[0]['#build']['settings']['uri'] : '';
+        $settings['_uri'] = isset($elements[0]['#build'], $elements[0]['#build']['settings']['uri']) ? $elements[0]['#build']['settings']['uri'] : '';
         $this->buildGrid($dom, $settings, $elements, $grid_nodes);
       }
 
@@ -400,7 +399,9 @@ class BlazyFilter extends FilterBase implements BlazyFilterInterface, ContainerF
     // Uploaded image has UUID with file API.
     if ($uuid && $file = $this->blazyManager->getEntityRepository()->loadEntityByUuid('file', $uuid)) {
       $data = $this->blazyOembed->getImageItem($file);
-      $settings = array_merge($settings, $data['settings']);
+      if (isset($data['settings'])) {
+        $settings = array_merge($settings, $data['settings']);
+      }
     }
     else {
       // Manually hard-coded image has no UUID, nor file API.
@@ -416,7 +417,12 @@ class BlazyFilter extends FilterBase implements BlazyFilterInterface, ContainerF
         $settings['uri_root'] = mb_substr($src, 0, 4) === 'http' ? $src : $this->root . $src;
       }
     }
-    return $data['item'];
+
+    if (isset($data['item'])) {
+      return $data['item'];
+    }
+
+    return NULL;
   }
 
   /**

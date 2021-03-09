@@ -2,13 +2,20 @@
 
 namespace Drupal\layout_builder_styles;
 
-use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
+use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides a listing of layout builder style entities.
  */
-class LayoutBuilderStyleListBuilder extends ConfigEntityListBuilder {
+class LayoutBuilderStyleListBuilder extends DraggableListBuilder {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'layout_builder_styles_admin_overview_form';
+  }
 
   /**
    * {@inheritdoc}
@@ -24,9 +31,10 @@ class LayoutBuilderStyleListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    $row = [];
     $row['label'] = $entity->label();
-    $row['id'] = $entity->id();
-    $row['type'] = $entity->getType();
+    $row['id'] = ['#plain_text' => $entity->id()];
+    $row['type'] = ['#plain_text' => $entity->getType()];
     return $row + parent::buildRow($entity);
   }
 

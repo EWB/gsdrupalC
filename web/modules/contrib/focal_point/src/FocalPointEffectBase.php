@@ -218,6 +218,26 @@ abstract class FocalPointEffectBase extends ResizeImageEffect implements Contain
   }
 
   /**
+   * Returns the focal point config.
+   *
+   * @return \Drupal\Core\Config\ImmutableConfig
+   *   The focal point config.
+   */
+  public function getFocalPointConfig() {
+    return $this->focalPointConfig;
+  }
+
+  /**
+   * Returns the crop storage.
+   *
+   * @return \Drupal\crop\CropStorageInterface
+   *   The crop storage.
+   */
+  public function getCropStorage() {
+    return $this->cropStorage;
+  }
+
+  /**
    * Get the top-left anchor position of the crop area.
    *
    * @param \Drupal\Core\Image\ImageInterface $image

@@ -42,7 +42,7 @@ class AnimateListController extends ControllerBase {
   }
 
   public function animate_list() {
-    $header = [];
+    $header = $rows = [];
     $header[] = ['data' => $this->t('ID')];
     $header[] = ['data' => $this->t('Parent element')];
     $header[] = ['data' => $this->t('Identifiers')];
@@ -100,6 +100,7 @@ class AnimateListController extends ControllerBase {
     $url = Url::fromUri('internal:/admin/config/animate_any', ['attributes' => ['class' => ['button']]]);
     $add = Link::fromTextAndUrl($this->t('Add Animation'), $url)->toString();
     $add_link = '<ul class="action-links"><li>' . $add . '</li></ul>';
+    $help_text = t('Identifiers with common parent element is merged in single row.');
 
     $empty = '<div role="contentinfo" aria-label="Status message" class="messages messages--warning">No record found.</div>';
 
@@ -108,7 +109,7 @@ class AnimateListController extends ControllerBase {
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t($empty),
-      '#prefix' => $add_link,
+      '#prefix' => $add_link . '<div class="description">' . $help_text . '</div>',
     ];
     $output['pager'] = [
       '#type' => 'pager'

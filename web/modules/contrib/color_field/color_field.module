@@ -5,6 +5,8 @@
  * A color field with a custom color picker using the Field Types API.
  */
 
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\color_field\ColorHex;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 
@@ -52,6 +54,7 @@ function color_field_theme() {
       'color' => NULL,
       'width' => NULL,
       'height' => NULL,
+      'attributes' => NULL,
     ],
   ];
   $theme['color_field_formatter_swatch_option'] = [
@@ -64,8 +67,125 @@ function color_field_theme() {
       'color' => NULL,
       'width' => NULL,
       'height' => NULL,
+      'attributes' => NULL,
     ],
   ];
 
   return $theme;
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function color_field_token_info() {
+  $tokens = [];
+  $tokens['color_field']['hex'] = [
+    'name' => t('HEX'),
+    'description' => t("Hex style color values."),
+    'type' => 'hex',
+  ];
+  $tokens['hex']['with_opacity'] = [
+    'name' => t('With Opacity'),
+    'description' => t('HEX style color with opacity'),
+  ];
+  $tokens['color_field']['rgb'] = [
+    'name' => t('RGB'),
+    'description' => t("RGB style color values."),
+    'type' => 'rgb',
+  ];
+  $tokens['rgb']['rgba'] = [
+    'name' => t('RGBA'),
+    'description' => t("Color value expressed as rgba(xx,xx,xx,x.x)."),
+  ];
+
+  $tokens['rgb']['red'] = [
+    'name' => t('Red'),
+    'description' => t("RGB Color value for red only expressed as an int."),
+  ];
+
+  $tokens['rgb']['blue'] = [
+    'name' => t('Blue'),
+    'description' => t("RGB Color value for blue only expressed as an int."),
+  ];
+
+  $tokens['rgb']['green'] = [
+    'name' => t('Green'),
+    'description' => t("RGB Color value for green only expressed as an int."),
+  ];
+
+  $tokens['rgb']['opacity'] = [
+    'name' => t('Opacity'),
+    'description' => t("RGB Color value for opacity only expressed as a float."),
+  ];
+
+  return [
+    'types' => [
+      'color_field' => [
+        'name' => t('Color Field'),
+        'description' => t('Values from a specific color field item.'),
+        'needs-data' => 'color_field',
+      ],
+      'rgb' => [
+        'name' => t('RGB'),
+        'description' => t('RGB Values from a specific color field item.'),
+        'needs-data' => 'color_field',
+      ],
+      'hex' => [
+        'name' => t('HEX'),
+        'description' => t('HEX values from a specific color field item'),
+        'needs-data' => 'color_field',
+      ],
+    ],
+    'tokens' => $tokens,
+  ];
+
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function color_field_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $replacements = [];
+  if ($type === 'color_field' && !empty($data['color_field'])) {
+    /** @var \Drupal\color_field\Plugin\Field\FieldType\ColorFieldType $color_field */
+    $color_field = $data['color_field'];
+    $color_hex = new ColorHex($color_field->color, $color_field->opacity);
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'hex':
+          $replacements[$original] = $color_hex->toString(FALSE);
+          break;
+
+        case 'hex:with_opacity':
+          $replacements[$original] = $color_hex->toString(TRUE);
+          break;
+
+        case 'rgb':
+          $replacements[$original] = $color_hex->toRgb()->toString(FALSE);
+          break;
+
+        case 'rgba':
+          $replacements[$original] = $color_hex->toRgb()->toString(TRUE);
+          break;
+
+        case 'rgb:red':
+          $replacements[$original] = $color_hex->toRgb()->getRed();
+          break;
+
+        case 'rgb:blue':
+          $replacements[$original] = $color_hex->toRgb()->getBlue();
+          break;
+
+        case 'rgb:green':
+          $replacements[$original] = $color_hex->toRgb()->getGreen();
+          break;
+
+        case 'rgb:opacity':
+          $replacements[$original] = $color_hex->toRgb()->getOpacity();
+          break;
+      }
+    }
+  }
+
+  return $replacements;
 }

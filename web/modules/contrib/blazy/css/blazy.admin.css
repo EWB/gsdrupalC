@@ -725,7 +725,6 @@ html.js .form--slick .collapsed .details-legend .details-legend-prefix::after {
 }
 
 .form--slick .form-item.form-type-textfield.is-focused {
-  min-height: 48px;
   z-index: 3;
 }
 

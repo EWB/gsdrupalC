@@ -5,10 +5,12 @@ namespace Drupal\Tests\tvi\Functional;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\Core\Language\LanguageInterface;
 
+/**
+ * TVI PHPUnit Test base.
+ */
 abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
 
   use EntityReferenceTestTrait;
@@ -32,7 +34,14 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'tvi', 'tvi_test', 'views', 'views_ui', 'taxonomy'];
+  public static $modules = [
+    'node',
+    'tvi',
+    'tvi_test',
+    'views',
+    'views_ui',
+    'taxonomy',
+  ];
 
   /**
    * Stores the first term used in the different tests.
@@ -136,64 +145,64 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
 
     $this->term1 = $this->createTerm(
       [
-        'vid' => $this->vocabulary1->id()
+        'vid' => $this->vocabulary1->id(),
       ]
     );
 
     $this->term2 = $this->createTerm(
       [
-        'vid' => $this->vocabulary1->id()
+        'vid' => $this->vocabulary1->id(),
       ]
     );
 
     $this->term3 = $this->createTerm(
       [
-        'vid' => $this->vocabulary1->id()
+        'vid' => $this->vocabulary1->id(),
       ]
     );
 
     $this->term4 = $this->createTerm(
       [
-        'vid' => $this->vocabulary1->id()
+        'vid' => $this->vocabulary1->id(),
       ]
     );
 
     $this->term5 = $this->createTerm(
       [
         'vid' => $this->vocabulary1->id(),
-        'parent' => $this->term2->id()
+        'parent' => $this->term2->id(),
       ]
     );
 
     $this->term6 = $this->createTerm(
       [
         'vid' => $this->vocabulary1->id(),
-        'parent' => $this->term2->id()
+        'parent' => $this->term2->id(),
       ]
     );
 
     $this->term7 = $this->createTerm(
       [
         'vid' => $this->vocabulary1->id(),
-        'parent' => $this->term1->id()
+        'parent' => $this->term1->id(),
       ]
     );
 
     $this->term8 = $this->createTerm(
       [
-        'vid' => $this->vocabulary2->id()
+        'vid' => $this->vocabulary2->id(),
       ]
     );
 
     $this->term9 = $this->createTerm(
       [
-        'vid' => $this->vocabulary2->id()
+        'vid' => $this->vocabulary2->id(),
       ]
     );
 
     $this->term10 = $this->createTerm(
       [
-        'vid' => $this->vocabulary2->id()
+        'vid' => $this->vocabulary2->id(),
       ]
     );
 
@@ -242,7 +251,7 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
   /**
    * Creates and returns a taxonomy term.
    *
-   * Borrowed from TaxonomyTestBase
+   * Borrowed from TaxonomyTestBase.
    *
    * @param array $settings
    *   (optional) An array of values to override the following default
@@ -277,9 +286,8 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
    * Generate TVI configuration for the created vocab and terms.
    */
   protected function createTaxonomyViewsIntegratorConfiguration() {
-    // set global default
-
-    // set vocabulary1 config
+    // Set global default
+    // Set vocabulary1 config.
     $this->config('tvi.taxonomy_vocabulary.' . $this->vocabulary1->id())
       ->set('enable_override', 1)
       ->set('view', 'tvi_page')
@@ -287,12 +295,12 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
       ->set('inherit_settings', 1)
       ->save();
 
-    // set vocabulary2 config
+    // Set vocabulary2 config.
     $this->config('tvi.taxonomy_vocabulary.' . $this->vocabulary2->id())
       ->set('enable_override', 0)
       ->save();
 
-    // term 1
+    // Term 1.
     $this->config('tvi.taxonomy_term.' . $this->term1->id())
       ->set('enable_override', 1)
       ->set('view', 'tvi_page')
@@ -300,7 +308,7 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
       ->set('inherit_settings', 0)
       ->save();
 
-    // term 2
+    // Term 2.
     $this->config('tvi.taxonomy_term.' . $this->term2->id())
       ->set('enable_override', 1)
       ->set('view', 'tvi_page')
@@ -308,17 +316,17 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
       ->set('inherit_settings', 1)
       ->save();
 
-    // term 3
+    // Term 3.
     $this->config('tvi.taxonomy_term.' . $this->term3->id())
       ->set('enable_override', 0)
       ->save();
 
-    // term 4
+    // Term 4.
     $this->config('tvi.taxonomy_term.' . $this->term4->id())
       ->set('enable_override', 0)
       ->save();
 
-    // term 5
+    // Term 5.
     $this->config('tvi.taxonomy_term.' . $this->term5->id())
       ->set('enable_override', 1)
       ->set('view', 'tvi_page')
@@ -326,17 +334,17 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
       ->set('inherit_settings', 0)
       ->save();
 
-    // term 6
+    // Term 6.
     $this->config('tvi.taxonomy_term.' . $this->term6->id())
       ->set('enable_override', 0)
       ->save();
 
-    // term 7
+    // Term 7.
     $this->config('tvi.taxonomy_term.' . $this->term7->id())
       ->set('enable_override', 0)
       ->save();
 
-    // term 8
+    // Term 8.
     $this->config('tvi.taxonomy_term.' . $this->term8->id())
       ->set('enable_override', 1)
       ->set('view', 'tvi_page')
@@ -344,12 +352,12 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
       ->set('inherit_settings', 0)
       ->save();
 
-    // term 9
+    // Term 9.
     $this->config('tvi.taxonomy_term.' . $this->term9->id())
       ->set('enable_override', 0)
       ->save();
 
-    // term 10
+    // Term 10.
     $this->config('tvi.taxonomy_term.' . $this->term10->id())
       ->set('enable_override', 1)
       ->set('view', 'tvi_page')
@@ -357,12 +365,12 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
       ->set('inherit_settings', 1)
       ->save();
 
-    // term 11
+    // Term 11.
     $this->config('tvi.taxonomy_term.' . $this->term11->id())
       ->set('enable_override', 0)
       ->save();
 
-    // term 12
+    // Term 12.
     $this->config('tvi.taxonomy_term.' . $this->term12->id())
       ->set('enable_override', 1)
       ->set('view', 'tvi_page')
@@ -372,4 +380,5 @@ abstract class TaxonomyViewsIntegratorTestBase extends BrowserTestBase {
 
     $this->refreshVariables();
   }
+
 }

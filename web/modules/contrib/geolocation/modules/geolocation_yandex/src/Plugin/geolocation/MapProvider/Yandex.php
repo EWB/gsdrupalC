@@ -118,6 +118,8 @@ class Yandex extends MapProviderBase {
   public function alterRenderArray(array $render_array, array $map_settings, array $context = []) {
     $map_settings = $this->getSettings($map_settings);
 
+    $yandex_url_parts = parse_url(self::$apiBaseUrl);
+
     $render_array['#attached'] = BubbleableMetadata::mergeAttachments(
       empty($render_array['#attached']) ? [] : $render_array['#attached'],
       [
@@ -133,6 +135,19 @@ class Yandex extends MapProviderBase {
                 ],
               ],
             ],
+          ],
+        ],
+        // Add 'preconnect' resource hint.
+        'html_head' => [
+          [
+            [
+              '#tag' => 'link',
+              '#attributes' => [
+                'rel' => 'preconnect',
+                'href' => $yandex_url_parts['scheme'] . "://" . $yandex_url_parts['host'],
+              ],
+            ],
+            'geolocation_yandex_link_preconnect_map',
           ],
         ],
       ]
@@ -152,6 +167,28 @@ class Yandex extends MapProviderBase {
       'right' => t('Right'),
       'left' => t('Left'),
       'bottom' => t('Bottom'),
+    ];
+  }
+
+  /**
+   * Selection of Yandex API packages.
+   *
+   * @see https://tech.yandex.ru/maps/archive/doc/jsapi/2.0/ref/reference/packages-docpage/
+   */
+  public static function getPackages() {
+    return [
+      'full' => t('Full'),
+      'standard' => t('Standard'),
+      'map' => t('Map'),
+      'controls' => t('Controls'),
+      'search' => t('Search'),
+      'geoObjects' => t('GeoObjects'),
+      'clusters' => t('Clusters'),
+      'traffic' => t('Traffic'),
+      'route' => t('Route'),
+      'geoXml' => t('GeoXml'),
+      'editor' => t('Editor'),
+      'overlays' => t('Overlays'),
     ];
   }
 
@@ -179,10 +216,17 @@ class Yandex extends MapProviderBase {
    */
   public function getApiUrl() {
     $config = \Drupal::config('geolocation_yandex.settings');
-
     $api_key = $config->get('api_key');
 
-    return self::$apiBaseUrl . '?apikey=' . $api_key . '&lang=' . self::getApiUrlLangcode() . '&coordorder=longlat';
+    $packages = $config->get('packages');
+    foreach ($packages as &$package) {
+      $package = 'package.' . $package;
+    }
+    $packages_str = implode(',', $packages);
+
+    $base_url = self::$apiBaseUrl;
+    $langcode = self::getApiUrlLangcode();
+    return "$base_url?apikey=$api_key&load=$packages_str&lang=$langcode&coordorder=longlat";
   }
 
   /**

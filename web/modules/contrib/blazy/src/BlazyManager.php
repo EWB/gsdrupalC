@@ -152,10 +152,13 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
 
     // Pass common elements to theme_blazy().
     $element['#attributes']     = $attributes;
-    $element['#content']        = $build['content'];
-    $element['#postscript']     = $build['postscript'];
     $element['#settings']       = $settings;
     $element['#url_attributes'] = $build['url_attributes'];
+
+    // Preparing Blazy to replace other blazy-related content/ item markups.
+    foreach (['content', 'icon', 'overlay', 'preface', 'postscript'] as $key) {
+      $element["#$key"] = empty($element["#$key"]) ? $build[$key] : NestedArray::mergeDeep($element["#$key"], $build[$key]);
+    }
   }
 
   /**
@@ -188,6 +191,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
 
     // The settings.urls is output specific for CSS background purposes with BC.
     if (!empty($settings['urls'])) {
+      // @todo remove .media--background for .b-bg as more relevant for BG.
       $attributes['class'][] = 'b-bg media--background';
       $attributes['data-backgrounds'] = Json::encode($settings['urls']);
 
@@ -225,6 +229,9 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
       ksort($dimensions);
       $settings['urls'] = $srcset;
       $settings['blazy_data']['dimensions'] = $dimensions;
+      $settings['padding_bottom'] = end($dimensions);
+
+      $settings['image_url'] = empty($settings['is_preview']) ? $settings['placeholder'] : $settings['image_url'];
       Blazy::lazyAttributes($attributes, $settings);
     }
     unset($settings['resimage']);
@@ -237,6 +244,7 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     if (!empty($settings['lazy']) && !empty($settings['background'])) {
       // Attach data attributes to either IMG tag, or DIV container.
       $settings['urls'][$settings['width']] = $this->backgroundImage($settings);
+      $settings['image_url'] = empty($settings['is_preview']) ? $settings['placeholder'] : $settings['image_url'];
       Blazy::lazyAttributes($attributes, $settings);
     }
 
@@ -307,7 +315,23 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     // Provides image effect if so configured.
     if (!empty($settings['fx'])) {
       $this->createPlaceholder($settings, $style, $path);
-      $attributes['class'][] = 'media--fx--' . str_replace('_', '-', $settings['fx']);
+
+      // Slick has its own lazy method which makes this useless for Slick.
+      // @todo remove check once Slick supports this, at least by flagging _fx.
+      if ((isset($settings['lazy']) && $settings['lazy'] == 'blazy') || !empty($settings['_fx'])) {
+        $attributes['data-animation'] = $settings['fx'];
+      }
+    }
+
+    // Mimicks private _responsive_image_image_style_url, #3119527.
+    if (empty($settings['image_style']) && !empty($settings['resimage'])) {
+      $fallback = $settings['resimage']->getFallbackImageStyle();
+      if ($fallback == '_empty image_') {
+        $settings['image_url'] = empty($settings['placeholder']) ? BlazyInterface::PLACEHOLDER : $settings['placeholder'];
+      }
+      else {
+        $settings['image_style'] = $fallback;
+      }
     }
   }
 
@@ -352,7 +376,10 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     // This #pre_render doesn't work if called from Views results, hence the
     // output is split either as theme_field() or theme_item_list().
     if (empty($settings['_grid'])) {
-      $settings = $this->prepareBuild($build);
+      $settings = $this->getSettings($build);
+
+      // Runs after ::getSettings.
+      $this->prepareBuild($build);
       $build['#blazy'] = $settings;
       $this->setAttachments($build, $settings);
     }
@@ -380,14 +407,16 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
     unset($element['#build']);
 
     // Checks if we got some signaled attributes.
-    $commerce = isset($element['#ajax_replace_class']);
     $attributes = isset($element['#attributes']) ? $element['#attributes'] : [];
     $attributes = isset($element['#theme_wrappers'], $element['#theme_wrappers']['container']['#attributes']) ? $element['#theme_wrappers']['container']['#attributes'] : $attributes;
-    $settings = $this->prepareBuild($build);
+    $settings   = $this->getSettings($build);
+
+    // Runs after ::getSettings.
+    $this->prepareBuild($build);
 
     // Take over elements for a grid display as this is all we need, learned
     // from the issues such as: #2945524, or product variations.
-    // We'll selectively pass or work out $attributes far below.
+    // We'll selectively pass or work out $attributes not so far below.
     $element = BlazyGrid::build($build, $settings);
     $this->setAttachments($element, $settings);
 
@@ -395,11 +424,12 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
       // Signals other modules if they want to use it.
       // Cannot merge it into BlazyGrid (wrapper_)attributes, done as grid.
       // Use case: Product variations, best served by ElevateZoom Plus.
-      if ($commerce) {
+      if (isset($element['#ajax_replace_class'])) {
         $element['#container_attributes'] = $attributes;
       }
       else {
         // Use case: VIS, can be blended with UL element safely down here.
+        // The $attributes is merged with BlazyGrid::build ones here.
         $element['#attributes'] = NestedArray::mergeDeep($element['#attributes'], $attributes);
       }
     }
@@ -408,26 +438,11 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
   }
 
   /**
-   * Provides attachment and cache for both theme_field() and theme_item_list().
+   * Prepares Blazy settings.
    */
-  private function setAttachments(array &$element, array $settings) {
-    $attachments = $this->attach($settings);
-    $cache = $this->getCacheMetadata($settings);
-    $element['#attached'] = empty($element['#attached']) ? $attachments : NestedArray::mergeDeep($element['#attached'], $attachments);
-    $element['#cache'] = empty($element['#cache']) ? $cache : NestedArray::mergeDeep($element['#cache'], $cache);
-  }
-
-  /**
-   * Prepares Blazy outputs, extract items, and return updated $settings.
-   */
-  protected function prepareBuild(array &$build) {
-    // If children are stored within items, reset.
-    // Blazy comes late to the party after sub-modules decided what they want
-    // where items maybe stored as direct indices, or put into items variable.
-    // @todo simplify this.
+  protected function getSettings(array &$build) {
     $settings = isset($build['settings']) ? $build['settings'] : [];
     $settings += BlazyDefault::htmlSettings();
-    $build = isset($build['items']) ? $build['items'] : $build;
 
     // Supports Blazy multi-breakpoint images if provided, updates $settings.
     // Cases: Blazy within Views gallery, or references without direct image.
@@ -442,27 +457,20 @@ class BlazyManager extends BlazyManagerBase implements TrustedCallbackInterface 
       }
     }
 
-    unset($build['items'], $build['settings']);
     return $settings;
   }
 
   /**
-   * Returns the Responsive image styles and caches tags.
-   *
-   * @param object $responsive
-   *   The responsive image style entity.
-   *
-   * @return array|mixed
-   *   The responsive image styles and cache tags.
+   * Prepares Blazy outputs, extract items as indices.
    */
-  public function getResponsiveImageStyles($responsive) {
-    $cache_tags = $responsive->getCacheTags();
-    $image_styles = $this->entityLoadMultiple('image_style', $responsive->getImageStyleIds());
-
-    foreach ($image_styles as $image_style) {
-      $cache_tags = Cache::mergeTags($cache_tags, $image_style->getCacheTags());
-    }
-    return ['caches' => $cache_tags, 'styles' => $image_styles];
+  protected function prepareBuild(array &$build) {
+    // If children are grouped within items property, reset to indexed keys.
+    // Blazy comes late to the party after sub-modules decided what they want
+    // where items may be stored as direct indices, or put into items property.
+    // Actually the same issue happens at core where contents may be indexed or
+    // grouped. Meaning not a problem at all, only a problem for consistency.
+    $build = isset($build['items']) ? $build['items'] : $build;
+    unset($build['items'], $build['settings']);
   }
 
   /**

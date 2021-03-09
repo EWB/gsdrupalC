@@ -4,6 +4,7 @@ namespace Drupal\geolocation_yandex\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\geolocation_yandex\Plugin\geolocation\MapProvider\Yandex;
 
 /**
  * Implements the Yandex Maps form controller.
@@ -23,6 +24,15 @@ class YandexMapsSettings extends ConfigFormBase {
       '#title' => $this->t('Yandex Maps API Key'),
       '#default_value' => $config->get('api_key'),
       '#description' => $this->t('Yandex Maps requires users to sign up at <a href="https://developer.tech.yandex.ru/">developer.tech.yandex.ru</a>.'),
+    ];
+
+    $form['packages'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Yandex Maps API Packages'),
+      '#options' => Yandex::getPackages(),
+      '#multiple' => TRUE,
+      '#default_value' => $config->get('packages'),
+      '#description' => $this->t('More about <a href="https://tech.yandex.ru/maps/archive/doc/jsapi/2.0/ref/reference/packages-docpage/">packages</a>.'),
     ];
 
     return parent::buildForm($form, $form_state);
@@ -50,7 +60,7 @@ class YandexMapsSettings extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory()->getEditable('geolocation_yandex.settings');
     $config->set('api_key', $form_state->getValue('api_key'));
-
+    $config->set('packages', array_filter(array_values($form_state->getValue('packages'))));
     $config->save();
 
     // Confirmation on form submission.

@@ -50,7 +50,7 @@ class ColorFieldFormatterTokenTest extends ColorFieldFunctionalTestBase {
     ])->save();
 
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
-    $this->assertSession()->responseContains('.node-article { background-color: RGBA(156,89,209,0.95); }');
+    $this->assertSession()->responseContains('.node-article { background-color: rgba(156,89,209,0.95); }');
 
     // Ensure 2 fields on the same entity are both rendered properly.
     FieldStorageConfig::create([
@@ -88,8 +88,8 @@ class ColorFieldFormatterTokenTest extends ColorFieldFunctionalTestBase {
       'field_text_color[0][opacity]' => 1,
     ];
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
-    $this->assertSession()->responseContains('.node-article { background-color: RGBA(0,0,0,0.1); }');
-    $this->assertSession()->responseContains('.node-article { color: RGBA(0,0,0,1); }');
+    $this->assertSession()->responseContains('.node-article { background-color: rgba(0,0,0,0.1); }');
+    $this->assertSession()->responseContains('.node-article { color: rgba(0,0,0,1); }');
   }
 
 }

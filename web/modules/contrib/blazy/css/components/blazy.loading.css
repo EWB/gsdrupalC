@@ -71,3 +71,9 @@
 .media--loading.media--player > span ~ .b-lazy {
   display: none;
 }
+
+/* Must blur to avoid artifacts from showing regardless animation name.
+.b-bg.media--loading[data-animation], */
+.media--loading[data-animation] img {
+  filter: blur(6px);
+}

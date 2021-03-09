@@ -72,7 +72,7 @@ display:
         type: default
         options:
           grouping: {  }
-          row_class: 'media-library-item js-media-library-item js-click-to-select'
+          row_class: 'media-library-item media-library-item--grid js-media-library-item js-click-to-select'
           default_row_class: true
       row:
         type: fields

@@ -35,6 +35,19 @@ namespace Drupal\asset_injector\Entity;
  *     "enable" = "/admin/config/development/asset-injector/js/{asset_injector_js}/enable",
  *     "disable" = "/admin/config/development/asset-injector/js/{asset_injector_js}/disable",
  *     "collection" = "/admin/structure/conditions_group"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "code",
+ *     "conditions_require_all",
+ *     "conditions",
+ *     "contexts",
+ *     "header",
+ *     "preprocess",
+ *     "jquery",
+ *     "noscript",
+ *     "noscriptRegion"
  *   }
  * )
  */

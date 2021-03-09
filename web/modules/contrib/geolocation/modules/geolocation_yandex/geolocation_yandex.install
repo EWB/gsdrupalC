@@ -48,3 +48,13 @@ function geolocation_yandex_update_8001(&$sandbox) {
   $old_config->delete();
   return \Drupal::translation()->translate('Settings from old configuration moved to new one.');
 }
+
+/**
+ * Setting new config "packages" to "full".
+ */
+function geolocation_yandex_update_8002(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('geolocation_yandex.settings');
+  $config->set('packages', ['full']);
+  $config->save();
+}

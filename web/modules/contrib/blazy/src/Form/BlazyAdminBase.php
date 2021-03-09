@@ -172,7 +172,7 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
       $form['background'] = [
         '#type'        => 'checkbox',
         '#title'       => $this->t('Use CSS background'),
-        '#description' => $this->t('Check this to turn the image into CSS background. This opens up the goodness of CSS, such as background cover, fixed attachment, etc. <br /><strong>Important!</strong> Requires an Aspect ratio, otherwise collapsed containers. Unless a min-height is added manually to <strong>.media--background</strong> selector.'),
+        '#description' => $this->t('Check this to turn the image into CSS background. This opens up the goodness of CSS, such as background cover, fixed attachment, etc. <br /><strong>Important!</strong> Requires an Aspect ratio, otherwise collapsed containers. Unless explicitly removed such as for GridStack which manages its own problem, or a min-height is added manually to <strong>.media--background</strong> selector.'),
         '#weight'      => -98,
       ];
     }
@@ -308,13 +308,18 @@ abstract class BlazyAdminBase implements BlazyAdminInterface {
     $settings   = isset($definition['settings']) ? $definition['settings'] : [];
     $lightboxes = $this->blazyManager->getLightboxes();
     $form       = [];
+    $ui_url     = '/admin/config/media/blazy';
+
+    if ($this->blazyManager->getModuleHandler()->moduleExists('blazy_ui')) {
+      $ui_url = Url::fromRoute('blazy.settings')->toString();
+    }
 
     if (empty($definition['no_image_style'])) {
       $form['image_style'] = [
         '#type'        => 'select',
         '#title'       => $this->t('Image style'),
         '#options'     => $this->getEntityAsOptions('image_style'),
-        '#description' => $this->t('The content image style. This will be treated as the fallback image, which is normally smaller, if Responsive image are provided. Otherwise this is the only image displayed. This image style is also used to provide dimensions not only for image/iframe but also any media entity like local video, where no images are even associated with, to have the designated dimensions in tandem with aspect ratio as otherwise no UI to customize for.'),
+        '#description' => $this->t('The content image style. This will be treated as the fallback image to override the global option <a href=":url">Responsive image 1px placeholder</a>, which is normally smaller, if Responsive image are provided. Otherwise this is the only image displayed. This image style is also used to provide dimensions not only for image/iframe but also any media entity like local video, where no images are even associated with, to have the designated dimensions in tandem with aspect ratio as otherwise no UI to customize for.', [':url' => $ui_url]),
         '#weight'      => -100,
       ];
     }

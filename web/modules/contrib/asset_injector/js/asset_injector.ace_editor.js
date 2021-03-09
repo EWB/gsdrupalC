@@ -11,12 +11,17 @@
         return;
       }
 
-      $('.ace-editor').each(function () {
+      $('.ace-editor').once('ace-editor-added').each(function () {
         var textarea = $(this).parent().siblings().find('textarea');
         var mode = $(textarea).attr('data-ace-mode');
 
         if (mode) {
-          $(textarea).hide();
+          $(textarea).css('position', 'absolute')
+            .css('width', "1px")
+            .css('height', "1px")
+            .css('opacity', 0)
+            .attr('tabindex', -1);
+
           var editor = ace.edit(this);
           editor.getSession().setMode('ace/mode/' + mode);
           editor.getSession().setTabSize(2);
@@ -33,6 +38,12 @@
 
           editor.setValue(textarea.val());
           editor.resize();
+
+          // When the form fails to validate because the text area is required,
+          // shift the focus to the editor.
+          textarea.on('focus', function () {
+            editor.textInput.focus()
+          })
         }
       });
     }

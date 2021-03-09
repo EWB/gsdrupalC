@@ -85,7 +85,7 @@ load:
   js:
     js/blazy.load.js: { weight: -1.5 }
   dependencies:
-    - core/drupal
+    - core/drupal.debounce
     - blazy/blazy
     - blazy/dblazy
     - blazy/loading
